@@ -4,10 +4,21 @@
 import { XML_ATTRKEY, XML_CHARKEY, SerializerOptions } from "./serializer.common";
 
 // tslint:disable-next-line:no-null-keyword
-const doc = document.implementation.createDocument(null, null, null);
+let doc: any;
 
-const parser = new DOMParser();
-export function parseXML(str: string, opts: SerializerOptions = {}): Promise<any> {
+let parser: DOMParser | undefined;
+
+export function parseXML(
+  str: string,
+  opts: SerializerOptions = {},
+  backfillParser?: DOMParser
+): Promise<any> {
+  if (!parser) {
+    if (!backfillParser) {
+      throw new Error("no parser, no backfill...");
+    }
+    parser = backfillParser;
+  }
   try {
     const updatedOptions: Required<SerializerOptions> = {
       rootName: opts.rootName ?? "",
@@ -32,7 +43,7 @@ export function parseXML(str: string, opts: SerializerOptions = {}): Promise<any
 
 let errorNS = "";
 try {
-  errorNS = parser.parseFromString("INVALID", "text/xml").getElementsByTagName("parsererror")[0]
+  errorNS = parser?.parseFromString("INVALID", "text/xml").getElementsByTagName("parsererror")[0]
     .namespaceURI!;
 } catch (ignored) {
   // Most browsers will return a document containing <parsererror>, but IE will throw.
