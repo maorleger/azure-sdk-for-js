@@ -11,10 +11,10 @@ import { Socket } from "net";
 import { AuthenticationRequired, MsalClient } from "../client/msalClient";
 import { AuthorizationCodeRequest } from "@azure/msal-node";
 
-import express from "express";
 import open from "open";
 import http from "http";
 import { checkTenantId } from "../util/checkTenantId";
+import url from "url";
 
 const logger = credentialLogger("InteractiveBrowserCredential");
 
@@ -129,11 +129,10 @@ export class InteractiveBrowserCredential implements TokenCredential {
       }
 
       // Create Express App and Routes
-      const app = express();
-
-      app.get("/", async (req, res) => {
+      const app = http.createServer(async (req, res) => {
+        const query = url.parse(req.url!, true).query;
         const tokenRequest: AuthorizationCodeRequest = {
-          code: req.query.code as string,
+          code: query.code as string,
           redirectUri: this.redirectUri,
           scopes: scopeArray
         };
@@ -143,7 +142,8 @@ export class InteractiveBrowserCredential implements TokenCredential {
           const successMessage = `Authentication Complete. You can close the browser and return to the application.`;
           if (authResponse && authResponse.expiresOn) {
             const expiresOnTimestamp = authResponse?.expiresOn.valueOf();
-            res.status(200).send(successMessage);
+            res.writeHead(200);
+            res.end(successMessage);
             logger.getToken.info(formatSuccess(scopeArray));
 
             resolve({
@@ -160,9 +160,10 @@ export class InteractiveBrowserCredential implements TokenCredential {
         } catch (error) {
           const errorMessage = formatError(
             scopeArray,
-            `${req.query["error"]}. ${req.query["error_description"]}`
+            `${query["error"]}. ${query["error_description"]}`
           );
-          res.status(500).send(errorMessage);
+          res.writeHead(500);
+          res.end(errorMessage);
           logger.getToken.info(errorMessage);
           reject(new Error(errorMessage));
         } finally {
