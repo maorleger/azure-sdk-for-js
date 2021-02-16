@@ -3,11 +3,13 @@
 
 /// <reference lib="dom"/>
 import { XML_ATTRKEY, XML_CHARKEY, XmlOptions } from "./xml.common";
+import { DOMParser } from "xmldom";
 
 // tslint:disable-next-line:no-null-keyword
-const doc = document.implementation.createDocument(null, null, null);
 
 const parser = new DOMParser();
+const doc = parser.parseFromString("<xml/>");
+
 export function parseXML(str: string, opts: XmlOptions = {}): Promise<any> {
   try {
     const updatedOptions: Required<XmlOptions> = {
@@ -15,7 +17,7 @@ export function parseXML(str: string, opts: XmlOptions = {}): Promise<any> {
       includeRoot: opts.includeRoot ?? false,
       xmlCharKey: opts.xmlCharKey ?? XML_CHARKEY
     };
-    const dom = parser.parseFromString(str, "application/xml");
+    const dom = parser.parseFromString(str);
     throwIfError(dom);
 
     let obj;

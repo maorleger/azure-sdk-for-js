@@ -6,6 +6,7 @@ import replace from "@rollup/plugin-replace";
 import { terser } from "rollup-plugin-terser";
 import sourcemaps from "rollup-plugin-sourcemaps";
 import viz from "rollup-plugin-visualizer";
+import json from "@rollup/plugin-json";
 
 const pkg = require("./package.json");
 const depNames = Object.keys(pkg.dependencies);
@@ -54,6 +55,48 @@ export function nodeConfig(test = false) {
     baseConfig.plugins.push(terser());
   }
 
+  return baseConfig;
+}
+
+export function webworkerConfig() {
+  const baseConfig = {
+    input: "dist-esm/test/webworker.js",
+    output: {
+      file: "dist-test/webworker.js",
+      format: "iife",
+      sourcemap: true
+    },
+
+    preserveSymlinks: false,
+    plugins: [
+      sourcemaps(),
+      replace({
+        delimiters: ["", ""],
+        values: {
+          "if (isNode)": "if (false)"
+        }
+      }),
+      nodeResolve({
+        mainFields: ["module", "browser"],
+        preferBuiltins: false
+      }),
+      cjs()
+    ]
+  };
+
+  baseConfig.onwarn = (warning) => {
+    if (
+      warning.code === "CIRCULAR_DEPENDENCY" &&
+      warning.importer.indexOf(path.normalize("node_modules/chai/lib") === 0)
+    ) {
+      // Chai contains circular references, but they are not fatal and can be ignored.
+      return;
+    }
+
+    console.error(`(!) ${warning.message}`);
+
+    baseConfig.treeshake = false;
+  };
   return baseConfig;
 }
 
