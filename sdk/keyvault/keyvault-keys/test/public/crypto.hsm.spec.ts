@@ -66,10 +66,11 @@ describe("CryptographyClient for managed HSM (skipped if MHSM is not deployed)",
 
     it("encrypts and decrypts using AES-CBC", async function() {
       keyVaultKey = await hsmClient.createKey(keyName, "AES", { keySize: 256 });
-      cryptoClient = new CryptographyClient(keyVaultKey.id!, credential);
+      cryptoClient = new CryptographyClient(keyVaultKey, credential);
       const text = this.test!.title;
+      // Encryption happens locally!
       const encryptResult = await cryptoClient.encrypt({
-        algorithm: "A256CBCPAD",
+        algorithm: "A256CBC",
         plaintext: stringToUint8Array(text),
         iv: stringToUint8Array(text)
       });

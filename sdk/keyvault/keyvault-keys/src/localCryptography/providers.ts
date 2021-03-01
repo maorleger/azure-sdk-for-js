@@ -3,7 +3,7 @@
 
 import { RSA_PKCS1_OAEP_PADDING, RSA_PKCS1_PADDING } from "constants";
 import { JsonWebKey, KeyOperation } from "../keysModels";
-import { createVerify, publicEncrypt } from "crypto";
+import crypto from "crypto";
 import {
   EncryptOptions,
   EncryptParameters,
@@ -120,7 +120,7 @@ export class RsaCryptographyProvider implements LocalCryptographyProvider {
     return Promise.resolve({
       algorithm: encryptParameters.algorithm,
       keyID: key.kid,
-      result: publicEncrypt(
+      result: crypto.publicEncrypt(
         { key: keyPEM, padding: padding },
         Buffer.from(encryptParameters.plaintext)
       )
@@ -140,7 +140,7 @@ export class RsaCryptographyProvider implements LocalCryptographyProvider {
 
     return Promise.resolve({
       algorithm: algorithm as KeyWrapAlgorithm,
-      result: publicEncrypt({ key: keyPEM, padding }, Buffer.from(keyToWrap)),
+      result: crypto.publicEncrypt({ key: keyPEM, padding }, Buffer.from(keyToWrap)),
       keyID: key.kid
     });
   }
@@ -160,7 +160,7 @@ export class RsaCryptographyProvider implements LocalCryptographyProvider {
       throw new Error(`Invalid signature algorithm ${algorithm} passed to local verifyData`);
     }
 
-    const verifier = createVerify(verifyAlgorithm);
+    const verifier = crypto.createVerify(verifyAlgorithm);
     verifier.update(Buffer.from(data));
     verifier.end();
     return Promise.resolve({
@@ -195,7 +195,111 @@ export class RsaCryptographyProvider implements LocalCryptographyProvider {
   };
 }
 
-export const localCryptographyProviders = [new RsaCryptographyProvider()];
+export class AesCryptographyProvider implements LocalCryptographyProvider {
+  encrypt(
+    key: JsonWebKey,
+    encryptParameters: EncryptParameters,
+    _options: EncryptOptions
+  ): Promise<EncryptResult> {
+    this.ensureValid("encrypt", key);
+    let iv: Uint8Array;
+    if ("iv" in encryptParameters) {
+      iv = encryptParameters.iv;
+    } else {
+      iv = crypto.randomBytes(32);
+    }
+
+    const cryptoParams = this.algorithmNameToCryptoParams[encryptParameters.algorithm];
+
+    // TODO: is this a valid use case???
+    if (!cryptoParams) {
+      throw new Error(
+        `Invalid cryptography algorithm passed to encrypt ${encryptParameters.algorithm}`
+      );
+    }
+    const cipher = crypto.createCipheriv(
+      cryptoParams.name,
+      key.k?.slice(0, cryptoParams.size >> 3),
+      iv
+    );
+    let encrypted = cipher.update(Buffer.from(encryptParameters.plaintext));
+    encrypted = Buffer.concat([encrypted, cipher.final()]);
+
+    return Promise.resolve({
+      algorithm: encryptParameters.algorithm,
+      result: encrypted,
+      iv: iv
+    });
+  }
+
+  ensureValid(operationName: string, key: JsonWebKey) {
+    if (!isNode) {
+      throw new LocalCryptographyUnsupportedError("This operation is only available in NodeJS");
+    }
+    if (key && key.keyOps && !key.keyOps.includes(operationName as KeyOperation)) {
+      throw new Error(`Key does not support the ${operationName} operation`);
+    }
+    if (key && key.kty! !== "oct" && key.kty! !== "oct-HSM") {
+      throw new Error("Key type does not match the algorithm oct");
+    }
+  }
+
+  isApplicable(algorithm: LocalSupportedAlgorithmName) {
+    return this.applicableAlgorithms.includes(algorithm);
+  }
+
+  wrapKey(
+    _key: JsonWebKey,
+    _algorithm: KeyWrapAlgorithm,
+    _keyToWrap: Uint8Array,
+    _options: WrapKeyOptions
+  ): Promise<WrapResult> {
+    throw new Error("Method not implemented.");
+  }
+  verifyData(
+    _key: JsonWebKey,
+    _algorithm: string,
+    _data: Uint8Array,
+    _signature: Uint8Array,
+    _options: VerifyOptions
+  ): Promise<VerifyResult> {
+    throw new Error("Method not implemented.");
+  }
+  createHash(_algorithm: string, _data: Uint8Array): Promise<Buffer> {
+    throw new Error("Method not implemented.");
+  }
+
+  private applicableAlgorithms: LocalSupportedAlgorithmName[] = [
+    "A128KW",
+    "A192KW",
+    "A256KW",
+    "A128CBC",
+    "A192CBC",
+    "A256CBC",
+    "A128CBCPAD",
+    "A192CBCPAD",
+    "A256CBCPAD"
+  ];
+
+  private algorithmNameToCryptoParams: {
+    [s: string]: { name: string; size: number } | undefined;
+  } = {
+    A128KW: undefined,
+    A192KW: undefined,
+    A256KW: undefined,
+    A128CBC: undefined,
+    A192CBC: undefined,
+    A256CBC: { name: "aes-256-cbc", size: 256 },
+    A128CBCPAD: undefined,
+    A192CBCPAD: undefined,
+    A256CBCPAD: undefined
+  };
+}
+
+export const localCryptographyProviders = [
+  new RsaCryptographyProvider(),
+  new AesCryptographyProvider()
+];
 
 export function isLocallySupported(algorithm: string): boolean {
   return (

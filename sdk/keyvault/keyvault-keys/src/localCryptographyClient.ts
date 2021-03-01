@@ -15,9 +15,9 @@ import {
   EncryptParameters,
   WrapKeyOptions,
   SignatureAlgorithm,
-  VerifyDataOptions
-} from "./cryptographyClientModels";
-import { EncryptOptions } from ".";
+  VerifyDataOptions,
+  EncryptOptions
+} from "./";
 import { findLocalProvider } from "./localCryptography/providers";
 import { isNode } from "@azure/core-http";
 
