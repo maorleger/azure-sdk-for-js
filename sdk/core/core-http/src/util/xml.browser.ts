@@ -3,7 +3,12 @@
 
 import { XML_ATTRKEY, XML_CHARKEY, SerializerOptions } from "./serializer.common";
 
-// tslint:disable-next-line:no-null-keyword
+if (!document || !DOMParser || !XMLSerializer || !Node) {
+  throw new Error(
+    "This library depends on the following DOM APIs which are not defined: document, DOMParser, XMLSerializer, Node. Consider adding a polyfill to make these globally available."
+  );
+}
+
 const doc = document.implementation.createDocument(null, null, null);
 
 const parser = new DOMParser();
