@@ -5,7 +5,7 @@ import { XML_ATTRKEY, XML_CHARKEY, SerializerOptions } from "./serializer.common
 
 if (!document || !DOMParser || !XMLSerializer || !Node) {
   throw new Error(
-    "This library depends on the following DOM APIs which are not defined: document, DOMParser, XMLSerializer, Node. Consider adding a polyfill to make these globally available."
+    "This library depends on the following DOM APIs: document, DOMParser, XMLSerializer, Node. Consider adding a polyfill to make these globally available."
   );
 }
 

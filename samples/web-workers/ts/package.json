@@ -1,8 +1,8 @@
 {
-  "name": "samples-cors-typescript-client",
+  "name": "samples-web-workers-ts",
   "private": true,
   "version": "1.0.0",
-  "description": "A simple example of using KeyVault in a web application",
+  "description": "A simple example of using Azure SDK in Web Workers",
   "main": "index.js",
   "scripts": {
     "prestart": "npm install",
@@ -22,7 +22,8 @@
     "last 1 Chrome versions"
   ],
   "dependencies": {
-    "@azure/storage-blob": "^12.5.0-alpha.20210303.1",
+    "@azure/storage-blob": "^12.5.0",
+    "@azure/core-http": "1.2.3",
     "jsdom": "^16.5.0",
     "xmldom": "^0.5.0"
   }

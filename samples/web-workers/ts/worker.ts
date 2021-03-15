@@ -1,8 +1,7 @@
 import "./polyfill.worker";
 import { BlobClient } from "@azure/storage-blob";
 
-const AZURE_BLOB_URI = "";
-const blob = new BlobClient(AZURE_BLOB_URI);
+const blob = new BlobClient(process.env.AZURE_BLOB_URI);
 
 blob
   .download()

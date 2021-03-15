@@ -1,7 +1,19 @@
 import { JSDOM } from "jsdom";
 
 let { window } = new JSDOM();
-globalThis.document = window.document;
-globalThis.DOMParser = window.DOMParser;
-globalThis.XMLSerializer = window.XMLSerializer;
-globalThis.Node = window.Node;
+
+if (!globalThis.document) {
+  globalThis.document = window.document;
+}
+
+if (!globalThis.DOMParser) {
+  globalThis.DOMParser = window.DOMParser;
+}
+
+if (!globalThis.XMLSerializer) {
+  globalThis.XMLSerializer = window.XMLSerializer;
+}
+
+if (!globalThis.Node) {
+  globalThis.Node = window.Node;
+}
