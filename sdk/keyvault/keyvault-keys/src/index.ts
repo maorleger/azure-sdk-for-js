@@ -307,7 +307,11 @@ export class KeyClient {
       }
       return getKeyFromKeyBundle(response);
     } else {
+      console.log("arguments", arguments);
+      console.log("this.vaultUrl", this.vaultUrl);
       const response = await this.client.createKey(this.vaultUrl, name, keyType, options);
+      console.log("created key of name", name);
+      console.log(JSON.stringify(response));
       return getKeyFromKeyBundle(response);
     }
   }

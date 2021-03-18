@@ -38,6 +38,7 @@ export async function authenticate(that: Context, version?: string): Promise<any
   );
 
   const keyVaultUrl = env.KEYVAULT_URI;
+  console.log("keyVaultUrl", keyVaultUrl);
   if (!keyVaultUrl) {
     throw new Error("Missing KEYVAULT_URI environment variable.");
   }

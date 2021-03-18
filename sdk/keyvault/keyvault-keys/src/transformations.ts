@@ -15,7 +15,9 @@ export function getKeyFromKeyBundle(
   const keyBundle = bundle as KeyBundle;
   const deletedKeyBundle = bundle as DeletedKeyBundle;
 
+  console.log("keyBundle", keyBundle);
   const parsedId = parseKeyVaultKeyId(keyBundle.key!.kid!);
+  console.log("parsedId", parsedId);
 
   const attributes: any = keyBundle.attributes || {};
   delete keyBundle.attributes;
