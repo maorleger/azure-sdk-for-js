@@ -1,5 +1,9 @@
 # Release History
 
+## 1.0.1 (Unreleased)
+
+- Provide a clearer error message when required DOM APIs are not available.
+
 ## 1.0.0 (2021-03-15)
 
 GA release of this package.

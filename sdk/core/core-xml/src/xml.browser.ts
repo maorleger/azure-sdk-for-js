@@ -10,7 +10,6 @@ if (!document || !DOMParser || !XMLSerializer || !Node) {
   );
 }
 
-// tslint:disable-next-line:no-null-keyword
 const doc = document.implementation.createDocument(null, null, null);
 
 const parser = new DOMParser();

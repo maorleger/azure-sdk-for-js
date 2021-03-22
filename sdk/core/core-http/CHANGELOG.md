@@ -2,6 +2,7 @@
 
 ## 1.2.4 (Unreleased)
 
+- Provide a clearer error message when required DOM APIs are not available.
 
 ## 1.2.3 (2021-02-04)
 
