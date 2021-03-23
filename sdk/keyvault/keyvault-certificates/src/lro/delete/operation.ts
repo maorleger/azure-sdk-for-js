@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 import { AbortSignalLike } from "@azure/abort-controller";
-import { RequestOptionsBase } from "@azure/core-http";
+import { OperationOptions, RequestOptionsBase } from "@azure/core-http";
 import {
   DeleteCertificateOptions,
   DeletedCertificate,
@@ -42,7 +42,7 @@ export class DeleteCertificatePollOperation extends KeyVaultCertificatePollOpera
     public state: DeleteCertificatePollOperationState,
     private vaultUrl: string,
     private client: KeyVaultClient,
-    private requestOptions: RequestOptionsBase = {}
+    private requestOptions: OperationOptions = {}
   ) {
     super(state, { cancelMessage: "Canceling the deletion of a certificate is not supported." });
   }

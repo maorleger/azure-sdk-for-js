@@ -25,6 +25,6 @@ export const createSpan: <T extends {
   span: Span;
   updatedOptions: T;
 } = createSpanFunction({
-  packagePrefix: packagePrefix,
-  namespace: namespace
+  packagePrefix,
+  namespace
 });

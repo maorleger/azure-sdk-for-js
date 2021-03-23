@@ -129,7 +129,6 @@ import { SDK_VERSION } from "./constants";
 import "@azure/core-paging";
 import { PageSettings, PagedAsyncIterableIterator } from "@azure/core-paging";
 import { challengeBasedAuthenticationPolicy } from "../../keyvault-common/src";
-import { createSpan } from "./tracing";
 import { CreateCertificatePoller } from "./lro/create/poller";
 import { CertificateOperationPoller } from "./lro/operation/poller";
 import { DeleteCertificatePoller } from "./lro/delete/poller";
@@ -154,6 +153,7 @@ import {
   toPublicPolicy
 } from "./transformations";
 import { KeyVaultCertificatePollOperationState } from "./lro/keyVaultCertificatePoller";
+import { withTrace } from "./tracing";
 
 export {
   CertificateClientOptions,
@@ -339,7 +339,7 @@ export class CertificateClient {
   }
 
   private async *listPropertiesOfCertificatesAll(
-    options: RequestOptionsBase = {}
+    options: ListPropertiesOfCertificatesOptions = {}
   ): AsyncIterableIterator<CertificateProperties> {
     const f = {};
 
@@ -374,12 +374,8 @@ export class CertificateClient {
   public listPropertiesOfCertificates(
     options: ListPropertiesOfCertificatesOptions = {}
   ): PagedAsyncIterableIterator<CertificateProperties> {
-    const { span, updatedOptions } = createSpan("listPropertiesOfCertificates", options);
-    const iter = this.listPropertiesOfCertificatesAll(
-      operationOptionsToRequestOptionsBase(updatedOptions)
-    );
+    const iter = this.listPropertiesOfCertificatesAll(options);
 
-    span.end();
     const result = {
       next() {
         return iter.next();
@@ -388,7 +384,7 @@ export class CertificateClient {
         return this;
       },
       byPage: (settings: PageSettings = {}) =>
-        this.listPropertiesOfCertificatesPage(settings, updatedOptions)
+        this.listPropertiesOfCertificatesPage(settings, options)
     };
 
     return result;
@@ -397,7 +393,7 @@ export class CertificateClient {
   private async *listPropertiesOfCertificateVersionsPage(
     certificateName: string,
     continuationState: PageSettings,
-    options: RequestOptionsBase = {}
+    options: ListPropertiesOfCertificateVersionsOptions = {}
   ): AsyncIterableIterator<CertificateProperties[]> {
     if (continuationState.continuationToken == null) {
       const optionsComplete: KeyVaultClientGetCertificateVersionsOptionalParams = {
@@ -431,7 +427,7 @@ export class CertificateClient {
 
   private async *listPropertiesOfCertificateVersionsAll(
     certificateName: string,
-    options: RequestOptionsBase = {}
+    options: ListPropertiesOfCertificateVersionsOptions = {}
   ): AsyncIterableIterator<CertificateProperties> {
     const f = {};
 
@@ -465,13 +461,8 @@ export class CertificateClient {
     certificateName: string,
     options: ListPropertiesOfCertificateVersionsOptions = {}
   ): PagedAsyncIterableIterator<CertificateProperties> {
-    const { span, updatedOptions } = createSpan("listPropertiesOfCertificateVersions", options);
-    const iter = this.listPropertiesOfCertificateVersionsAll(
-      certificateName,
-      operationOptionsToRequestOptionsBase(updatedOptions)
-    );
+    const iter = this.listPropertiesOfCertificateVersionsAll(certificateName, options);
 
-    span.end();
     const result = {
       next() {
         return iter.next();
@@ -480,7 +471,7 @@ export class CertificateClient {
         return this;
       },
       byPage: (settings: PageSettings = {}) =>
-        this.listPropertiesOfCertificateVersionsPage(certificateName, settings, updatedOptions)
+        this.listPropertiesOfCertificateVersionsPage(certificateName, settings, options)
     };
 
     return result;
@@ -551,20 +542,13 @@ export class CertificateClient {
    * Deletes all of the certificate contacts
    * @param options - The optional parameters
    */
-  public async deleteContacts(
+  public deleteContacts(
     options: DeleteContactsOptions = {}
   ): Promise<CertificateContact[] | undefined> {
-    const { span, updatedOptions } = createSpan("deleteContacts", options);
-
-    let result: KeyVaultClientDeleteCertificateContactsResponse;
-
-    try {
-      result = await this.client.deleteCertificateContacts(this.vaultUrl, updatedOptions);
-    } finally {
-      span.end();
-    }
-
-    return coreContactsToCertificateContacts(result._response.parsedBody);
+    return withTrace("CertificateClient.deleteContacts", options, async (updatedOptions) => {
+      const result = await this.client.deleteCertificateContacts(this.vaultUrl, updatedOptions);
+      return coreContactsToCertificateContacts(result._response.parsedBody);
+    });
   }
 
   /**
@@ -583,7 +567,7 @@ export class CertificateClient {
    * @param contacts - The contacts to use
    * @param options - The optional parameters
    */
-  public async setContacts(
+  public setContacts(
     contacts: CertificateContact[],
     options: SetContactsOptions = {}
   ): Promise<CertificateContact[] | undefined> {
@@ -593,20 +577,14 @@ export class CertificateClient {
       phone: x ? x.phone : undefined
     }));
 
-    const { span, updatedOptions } = createSpan("setCertificateContacts", options);
-
-    let result: KeyVaultClientSetCertificateContactsResponse;
-
-    try {
-      result = await this.client.setCertificateContacts(
+    return withTrace("CertificateClient.setContacts", options, async (updatedOptions) => {
+      const result = await this.client.setCertificateContacts(
         this.vaultUrl,
         { contactList: coreContacts },
         updatedOptions
       );
-    } finally {
-      span.end();
-    }
-    return coreContactsToCertificateContacts(result._response.parsedBody);
+      return coreContactsToCertificateContacts(result._response.parsedBody);
+    });
   }
 
   /**
@@ -626,19 +604,11 @@ export class CertificateClient {
    * Sets the certificate contacts.
    * @param options - The optional parameters
    */
-  public async getContacts(
-    options: GetContactsOptions = {}
-  ): Promise<CertificateContact[] | undefined> {
-    const { span, updatedOptions } = createSpan("getCertificateContacts", options);
-
-    let result: KeyVaultClientGetCertificateContactsResponse;
-    try {
-      result = await this.client.getCertificateContacts(this.vaultUrl, updatedOptions);
-    } finally {
-      span.end();
-    }
-
-    return coreContactsToCertificateContacts(result);
+  public getContacts(options: GetContactsOptions = {}): Promise<CertificateContact[] | undefined> {
+    return withTrace("CertificateClient.getContacts", options, async (updatedOptions) => {
+      const result = await this.client.getCertificateContacts(this.vaultUrl, updatedOptions);
+      return coreContactsToCertificateContacts(result);
+    });
   }
 
   private async *listPropertiesOfIssuersPage(
@@ -709,10 +679,8 @@ export class CertificateClient {
   public listPropertiesOfIssuers(
     options: ListPropertiesOfIssuersOptions = {}
   ): PagedAsyncIterableIterator<IssuerProperties> {
-    const { span, updatedOptions } = createSpan("listIssuers", options);
-    const iter = this.listPropertiesOfIssuersAll(updatedOptions);
+    const iter = this.listPropertiesOfIssuersAll(options);
 
-    span.end();
     const result = {
       next() {
         return iter.next();
@@ -720,8 +688,7 @@ export class CertificateClient {
       [Symbol.asyncIterator]() {
         return this;
       },
-      byPage: (settings: PageSettings = {}) =>
-        this.listPropertiesOfIssuersPage(settings, updatedOptions)
+      byPage: (settings: PageSettings = {}) => this.listPropertiesOfIssuersPage(settings, options)
     };
 
     return result;
@@ -741,7 +708,7 @@ export class CertificateClient {
    * @param provider - The issuer provider.
    * @param options - The optional parameters
    */
-  public async createIssuer(
+  public createIssuer(
     issuerName: string,
     provider: string,
     options: CreateIssuerOptions = {}
@@ -752,54 +719,52 @@ export class CertificateClient {
       credentials: { accountId: options.accountId, password: options.password }
     };
 
-    const { span, updatedOptions } = createSpan("createIssuer", unflattenedOptions);
-    const credentials: IssuerCredentials = updatedOptions.credentials || {};
+    return withTrace(
+      "CertificateClient.createIssuer",
+      unflattenedOptions,
+      async (updatedOptions) => {
+        const credentials: IssuerCredentials = updatedOptions.credentials || {};
 
-    const generatedOptions: KeyVaultClientSetCertificateIssuerOptionalParams = {
-      ...updatedOptions
-    };
+        const generatedOptions: KeyVaultClientSetCertificateIssuerOptionalParams = {
+          ...updatedOptions
+        };
 
-    generatedOptions.credentials = {
-      accountId: credentials.accountId || updatedOptions.accountId,
-      password: credentials.password || updatedOptions.password
-    };
+        generatedOptions.credentials = {
+          accountId: credentials.accountId || updatedOptions.accountId,
+          password: credentials.password || updatedOptions.password
+        };
 
-    if (
-      options.organizationId ||
-      (options.administratorContacts && options.administratorContacts.length)
-    ) {
-      generatedOptions.organizationDetails = {
-        id: options.organizationId,
-        adminDetails: options.administratorContacts
-          ? options.administratorContacts.map((x) => ({
-              emailAddress: x.email,
-              phone: x.phone,
-              firstName: x.firstName,
-              lastName: x.lastName
-            }))
-          : undefined
-      };
-    }
+        if (
+          options.organizationId ||
+          (options.administratorContacts && options.administratorContacts.length)
+        ) {
+          generatedOptions.organizationDetails = {
+            id: options.organizationId,
+            adminDetails: options.administratorContacts
+              ? options.administratorContacts.map((x) => ({
+                  emailAddress: x.email,
+                  phone: x.phone,
+                  firstName: x.firstName,
+                  lastName: x.lastName
+                }))
+              : undefined
+          };
+        }
 
-    if (options.enabled !== undefined) {
-      generatedOptions.attributes = {
-        enabled: options.enabled
-      };
-    }
-
-    let result: KeyVaultClientSetCertificateIssuerResponse;
-
-    try {
-      result = await this.client.setCertificateIssuer(
-        this.vaultUrl,
-        issuerName,
-        provider,
-        generatedOptions
-      );
-    } finally {
-      span.end();
-    }
-    return toPublicIssuer(result._response.parsedBody);
+        if (options.enabled !== undefined) {
+          generatedOptions.attributes = {
+            enabled: options.enabled
+          };
+        }
+        const result = await this.client.setCertificateIssuer(
+          this.vaultUrl,
+          issuerName,
+          provider,
+          generatedOptions
+        );
+        return toPublicIssuer(result._response.parsedBody);
+      }
+    );
   }
 
   /**
@@ -818,60 +783,50 @@ export class CertificateClient {
    * @param issuerName - The name of the issuer.
    * @param options - The optional parameters
    */
-  public async updateIssuer(
+  public updateIssuer(
     issuerName: string,
     options: UpdateIssuerOptions = {}
   ): Promise<CertificateIssuer> {
-    const { span, updatedOptions } = createSpan("updateIssuer", options);
-
-    const requestOptions = operationOptionsToRequestOptionsBase(options);
-    const credentials: IssuerCredentials = requestOptions.credentials || {};
-
-    const generatedOptions: KeyVaultClientSetCertificateIssuerOptionalParams = {
-      ...updatedOptions
-    };
-
-    generatedOptions.credentials = {
-      accountId: credentials.accountId || updatedOptions.accountId,
-      password: credentials.password || updatedOptions.password
-    };
-
-    if (
-      options.organizationId ||
-      (options.administratorContacts && options.administratorContacts.length)
-    ) {
-      generatedOptions.organizationDetails = {
-        id: options.organizationId,
-        adminDetails: options.administratorContacts
-          ? options.administratorContacts.map((x) => ({
-              emailAddress: x.email,
-              phone: x.phone,
-              firstName: x.firstName,
-              lastName: x.lastName
-            }))
-          : undefined
+    return withTrace("CertificateClient.updateIssuer", options, async (updatedOptions) => {
+      const generatedOptions: KeyVaultClientSetCertificateIssuerOptionalParams = {
+        ...updatedOptions
       };
-    }
-
-    if (options.enabled) {
-      generatedOptions.attributes = {
-        enabled: options.enabled
+      generatedOptions.credentials = {
+        accountId: updatedOptions.accountId,
+        password: updatedOptions.password
       };
-    }
 
-    let result: KeyVaultClientUpdateCertificateIssuerResponse;
+      if (
+        options.organizationId ||
+        (options.administratorContacts && options.administratorContacts.length)
+      ) {
+        generatedOptions.organizationDetails = {
+          id: options.organizationId,
+          adminDetails: options.administratorContacts
+            ? options.administratorContacts.map((x) => ({
+                emailAddress: x.email,
+                phone: x.phone,
+                firstName: x.firstName,
+                lastName: x.lastName
+              }))
+            : undefined
+        };
+      }
 
-    try {
-      result = await this.client.updateCertificateIssuer(
+      if (options.enabled) {
+        generatedOptions.attributes = {
+          enabled: options.enabled
+        };
+      }
+
+      const result = await this.client.updateCertificateIssuer(
         this.vaultUrl,
         issuerName,
         generatedOptions
       );
-    } finally {
-      span.end();
-    }
 
-    return toPublicIssuer(result._response.parsedBody);
+      return toPublicIssuer(result._response.parsedBody);
+    });
   }
 
   /**
@@ -890,20 +845,15 @@ export class CertificateClient {
    * @param issuerName - The name of the issuer.
    * @param options - The optional parameters
    */
-  public async getIssuer(
-    issuerName: string,
-    options: GetIssuerOptions = {}
-  ): Promise<CertificateIssuer> {
-    const { span, updatedOptions } = createSpan("getCertificateIssuer", options);
-
-    let result: KeyVaultClientGetCertificateIssuerResponse;
-
-    try {
-      result = await this.client.getCertificateIssuer(this.vaultUrl, issuerName, updatedOptions);
-    } finally {
-      span.end();
-    }
-    return toPublicIssuer(result._response.parsedBody);
+  public getIssuer(issuerName: string, options: GetIssuerOptions = {}): Promise<CertificateIssuer> {
+    return withTrace("CertificateClient.getIssuer", options, async (updatedOptions) => {
+      const result = await this.client.getCertificateIssuer(
+        this.vaultUrl,
+        issuerName,
+        updatedOptions
+      );
+      return toPublicIssuer(result._response.parsedBody);
+    });
   }
 
   /**
@@ -920,21 +870,18 @@ export class CertificateClient {
    * @param issuerName - The name of the issuer.
    * @param options - The optional parameters
    */
-  public async deleteIssuer(
+  public deleteIssuer(
     issuerName: string,
     options: DeleteIssuerOptions = {}
   ): Promise<CertificateIssuer> {
-    const { span, updatedOptions } = createSpan("deleteCertificateIssuer", options);
-
-    let result: KeyVaultClientDeleteCertificateIssuerResponse;
-
-    try {
-      result = await this.client.deleteCertificateIssuer(this.vaultUrl, issuerName, updatedOptions);
-    } finally {
-      span.end();
-    }
-
-    return toPublicIssuer(result._response.parsedBody);
+    return withTrace("CertificateClient.deleteIssuer", options, async (updatedOptions) => {
+      const result = await this.client.deleteCertificateIssuer(
+        this.vaultUrl,
+        issuerName,
+        updatedOptions
+      );
+      return toPublicIssuer(result._response.parsedBody);
+    });
   }
 
   /**
@@ -1011,21 +958,19 @@ export class CertificateClient {
    * @param certificateName - The name of the certificate
    * @param options - The optional parameters
    */
-  public async getCertificate(
+  public getCertificate(
     certificateName: string,
     options: GetCertificateOptions = {}
   ): Promise<KeyVaultCertificateWithPolicy> {
-    const { span, updatedOptions } = createSpan("getCertificate", options);
-
-    let result: KeyVaultClientGetCertificateResponse;
-
-    try {
-      result = await this.client.getCertificate(this.vaultUrl, certificateName, "", updatedOptions);
-    } finally {
-      span.end();
-    }
-
-    return getCertificateWithPolicyFromCertificateBundle(result);
+    return withTrace("CertificateClient.getCertificate", options, async (updatedOptions) => {
+      const result = await this.client.getCertificate(
+        this.vaultUrl,
+        certificateName,
+        "",
+        updatedOptions
+      );
+      return getCertificateWithPolicyFromCertificateBundle(result);
+    });
   }
 
   /**
@@ -1057,22 +1002,15 @@ export class CertificateClient {
       throw new Error("The 'version' cannot be empty.");
     }
 
-    const { span, updatedOptions } = createSpan("getCertificateVersion", options);
-
-    let result: KeyVaultClientGetCertificateResponse;
-
-    try {
-      result = await this.client.getCertificate(
+    return withTrace("CertificateClient.getCertificateVersion", options, async (updatedOptions) => {
+      const result = await this.client.getCertificate(
         this.vaultUrl,
         certificateName,
         version,
         updatedOptions
       );
-    } finally {
-      span.end();
-    }
-
-    return getCertificateFromCertificateBundle(result);
+      return getCertificateFromCertificateBundle(result);
+    });
   }
 
   /**
@@ -1100,32 +1038,24 @@ export class CertificateClient {
    * @param certificateBytes - The PFX or ASCII PEM formatted value of the certificate containing both the X.509 certificates and the private key
    * @param options - The optional parameters
    */
-  public async importCertificate(
+  public importCertificate(
     certificateName: string,
     certificateBytes: Uint8Array,
     options: ImportCertificateOptions = {}
   ): Promise<KeyVaultCertificateWithPolicy> {
-    const { span, updatedOptions } = createSpan("importCertificate", options);
-
-    const base64EncodedCertificate = parseCertificateBytes(
-      certificateBytes,
-      options.policy?.contentType
-    );
-
-    let result: KeyVaultClientImportCertificateResponse;
-
-    try {
-      result = await this.client.importCertificate(
+    return withTrace("CertificateClient.importCertificate", options, async (updatedOptions) => {
+      const base64EncodedCertificate = parseCertificateBytes(
+        certificateBytes,
+        options.policy?.contentType
+      );
+      const result = await this.client.importCertificate(
         this.vaultUrl,
         certificateName,
         base64EncodedCertificate,
         updatedOptions
       );
-    } finally {
-      span.end();
-    }
-
-    return getCertificateWithPolicyFromCertificateBundle(result);
+      return getCertificateWithPolicyFromCertificateBundle(result);
+    });
   }
 
   /**
@@ -1145,25 +1075,18 @@ export class CertificateClient {
    * @param certificateName - The name of the certificate
    * @param options - The optional parameters
    */
-  public async getCertificatePolicy(
+  public getCertificatePolicy(
     certificateName: string,
     options: GetCertificatePolicyOptions = {}
   ): Promise<CertificatePolicy> {
-    const { span, updatedOptions } = createSpan("getCertificatePolicy", options);
-
-    let result: KeyVaultClientGetCertificatePolicyResponse;
-
-    try {
-      result = await this.client.getCertificatePolicy(
+    return withTrace("CertificateClient.getCertificatePolicy", options, async (updatedOptions) => {
+      const result = await this.client.getCertificatePolicy(
         this.vaultUrl,
         certificateName,
         updatedOptions
       );
-    } finally {
-      span.end();
-    }
-
-    return toPublicPolicy(result._response.parsedBody);
+      return toPublicPolicy(result._response.parsedBody);
+    });
   }
 
   /**
@@ -1173,27 +1096,25 @@ export class CertificateClient {
    * @param policy - The certificate policy
    * @param options - The optional parameters
    */
-  public async updateCertificatePolicy(
+  public updateCertificatePolicy(
     certificateName: string,
     policy: CertificatePolicy,
     options: UpdateCertificatePolicyOptions = {}
   ): Promise<CertificatePolicy> {
-    const { span, updatedOptions } = createSpan("updateCertificatePolicy", options);
-
-    const corePolicy = toCorePolicy(undefined, policy);
-
-    let result: KeyVaultClientUpdateCertificatePolicyResponse;
-    try {
-      result = await this.client.updateCertificatePolicy(
-        this.vaultUrl,
-        certificateName,
-        corePolicy,
-        updatedOptions
-      );
-    } finally {
-      span.end();
-    }
-    return toPublicPolicy(result._response.parsedBody);
+    return withTrace(
+      "CertificateClient.updateCertificatePolicy",
+      options,
+      async (updatedOptions) => {
+        const corePolicy = toCorePolicy(undefined, policy);
+        const result = await this.client.updateCertificatePolicy(
+          this.vaultUrl,
+          certificateName,
+          corePolicy,
+          updatedOptions
+        );
+        return toPublicPolicy(result._response.parsedBody);
+      }
+    );
   }
 
   /**
@@ -1218,25 +1139,28 @@ export class CertificateClient {
    * @param version - The version of the certificate to update
    * @param options - The options, including what to update
    */
-  public async updateCertificateProperties(
+  public updateCertificateProperties(
     certificateName: string,
     version: string,
     options: UpdateCertificatePropertiesOptions = {}
   ): Promise<KeyVaultCertificate> {
-    const { span, updatedOptions } = createSpan("updateCertificateProperties", options);
+    return withTrace(
+      "CertificateClient.updateCertificateProperties",
+      options,
+      async (updatedOptions) => {
+        const result = await this.client.updateCertificate(
+          this.vaultUrl,
+          certificateName,
+          version,
+          {
+            ...updatedOptions,
+            certificateAttributes: toCoreAttributes(options)
+          }
+        );
 
-    let result: KeyVaultClientUpdateCertificateResponse;
-
-    try {
-      result = await this.client.updateCertificate(this.vaultUrl, certificateName, version, {
-        ...updatedOptions,
-        certificateAttributes: toCoreAttributes(options)
-      });
-    } finally {
-      span.end();
-    }
-
-    return getCertificateFromCertificateBundle(result._response.parsedBody);
+        return getCertificateFromCertificateBundle(result._response.parsedBody);
+      }
+    );
   }
 
   /**
