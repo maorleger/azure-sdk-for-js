@@ -1,9 +1,13 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+/**
+ * @summary Demonstrates how to interact with the Access Control client - fetching, creating, updating, and deleting role definitions and assignments.
+ */
+
 import { KeyVaultAccessControlClient, KeyVaultPermission } from "@azure/keyvault-admin";
 import { DefaultAzureCredential } from "@azure/identity";
-import { v4 as uuidv4 } from "uuid";
+import * as uuid from "uuid";
 
 // Load the .env file if it exists
 import * as dotenv from "dotenv";
@@ -16,7 +20,7 @@ export async function main(): Promise<void> {
   // - AZURE_CLIENT_SECRET: The client secret for the registered application
   // - CLIENT_OBJECT_ID: Object ID of the application, tenant or principal to whom the role will be assigned to
   const credential = new DefaultAzureCredential();
-  const url = process.env["KEYVAULT_URI"] || "<keyvault-url>";
+  const url = process.env["AZURE_MANAGEDHSM_URI"] || "<managedhsm-url>";
   const client = new KeyVaultAccessControlClient(url, credential);
 
   for await (const roleAssignment of client.listRoleAssignments("/")) {
@@ -25,7 +29,7 @@ export async function main(): Promise<void> {
 
   const globalScope = "/";
 
-  const roleDefinitionName = uuidv4();
+  const roleDefinitionName = uuid.v4();
   const permissions: KeyVaultPermission[] = [
     {
       dataActions: [
@@ -44,12 +48,12 @@ export async function main(): Promise<void> {
 
   // This sample uses a custom role but you may assign one of the many built-in roles.
   // Please refer to https://docs.microsoft.com/azure/key-vault/managed-hsm/built-in-roles for more information.
-  const roleAssignmentName = uuidv4();
+  const roleAssignmentName = uuid.v4();
   let assignment = await client.createRoleAssignment(
     globalScope,
     roleAssignmentName,
     roleDefinition.id,
-    process.env["CLIENT_OBJECT_ID"]
+    process.env["CLIENT_OBJECT_ID"] || "<client-object-id>"
   );
   console.log(assignment);
 

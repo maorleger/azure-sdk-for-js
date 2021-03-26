@@ -1,14 +1,18 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-const { KeyVaultBackupClient } = require("@azure/keyvault-admin");
-const { KeyClient } = require("@azure/keyvault-keys");
-const { DefaultAzureCredential } = require("@azure/identity");
+/**
+ * @summary Demonstrates the use of a KeyVaultBackupClient to backup and then perform a selective restore.
+ */
+import { KeyVaultBackupClient } from "@azure/keyvault-admin";
+import { KeyClient } from "@azure/keyvault-keys";
+import { DefaultAzureCredential } from "@azure/identity";
 
 // Load the .env file if it exists
-require("dotenv").config();
+import * as dotenv from "dotenv";
+dotenv.config();
 
-async function main() {
+export async function main(): Promise<void> {
   // DefaultAzureCredential expects the following three environment variables:
   // - AZURE_TENANT_ID: The tenant ID in Azure Active Directory
   // - AZURE_CLIENT_ID: The application (client) ID registered in the AAD tenant
@@ -17,25 +21,25 @@ async function main() {
   // - BLOB_STORAGE_SAS_TOKEN: URI of the Blob Storage instance, with the name of the container where the Key Vault backups will be generated
   // - CLIENT_OBJECT_ID: Object ID of the application, tenant or principal to whom the role will be assigned to
   const credential = new DefaultAzureCredential();
-  const url = process.env["KEYVAULT_URI"] || "<keyvault-url>";
+  const url = process.env["AZURE_MANAGEDHSM_URI"] || "<azure-managedhsm-uri>";
   const client = new KeyVaultBackupClient(url, credential);
 
   const keyClient = new KeyClient(url, credential);
   const keyName = "key-name";
   const key = await keyClient.createRsaKey(keyName);
 
-  const blobStorageUri = process.env["BLOB_STORAGE_URI"];
-  const sasToken = process.env["BLOB_STORAGE_SAS_TOKEN"];
+  const blobStorageUri = process.env["BLOB_STORAGE_URI"] || "<blob-storage-uri>";
+  const sasToken = process.env["BLOB_STORAGE_SAS_TOKEN"] || "<blob-storage-sas-token>";
   const backupPoller = await client.beginBackup(blobStorageUri, sasToken);
   const backupResult = await backupPoller.pollUntilDone();
 
   // The folder name should be at the end of the backupFolderUri, as in: https://<blob-storage-endpoint>/<folder-name>
-  const folderName = backupResult.backupFolderUri.split("/").pop();
+  const folderName = backupResult.backupFolderUri!.split("/").pop();
 
   const selectiveRestorePoller = await client.beginSelectiveRestore(
     blobStorageUri,
     sasToken,
-    folderName,
+    folderName!,
     key.name
   );
   await selectiveRestorePoller.pollUntilDone();
