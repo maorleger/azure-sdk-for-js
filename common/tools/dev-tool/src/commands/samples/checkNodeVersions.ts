@@ -8,12 +8,11 @@ import os from "os";
 
 import { createPrinter } from "../../util/printer";
 import { leafCommand, makeCommandInfo } from "../../framework/command";
-import { S_IRWXO } from "constants";
 import { resolveProject } from "../../util/resolveProject";
 
 const log = createPrinter("check-node-versions-samples");
 
-async function spawnCMD(cmd: string, args: string[], errorMessage?: string): Promise<void> {
+async function spawnCMD(cmd: string, args?: string[], errorMessage?: string): Promise<void> {
   const spawnedProcess = pr.spawn(cmd, args);
   await new Promise((resolve, reject) => {
     spawnedProcess.on("exit", resolve);
@@ -67,69 +66,11 @@ async function cleanup(
   await deleteDockerImages(dockerImageNames);
 }
 
-function buildRunSamplesScript(
-  containerWorkspacePath: string,
-  artifactName: string,
-  envFileName: string,
-  logFilePath?: string
-) {
-  function compileCMD(cmd: string, printToScreen?: boolean) {
-    return printToScreen ? cmd : `${cmd} >> ${logFilePath} 2>&1`;
-  }
-  const printToScreen = logFilePath === undefined;
-  const artifactPath = `${containerWorkspacePath}/${artifactName}`;
-  const envFilePath = `${containerWorkspacePath}/${envFileName}`;
-  const javascriptSamplesPath = `${containerWorkspacePath}/samples/javascript`;
-  const typescriptCompiledSamplesPath = `${containerWorkspacePath}/samples/typescript/dist`;
-  const scriptContent = `#!/bin/sh
-
-function install_dependencies_helper() {
-  local samples_path=\$1;
-  cd \${samples_path};
-  ${compileCMD(`npm install ${artifactPath}`, printToScreen)}
-  ${compileCMD(`npm install`, printToScreen)}
-}
-
-function install_packages() {
-  echo "Using node \$(node -v) to install dependencies";
-  install_dependencies_helper ${containerWorkspacePath}/samples/javascript
-  install_dependencies_helper ${containerWorkspacePath}/samples/typescript;
-  cp ${envFilePath} ${containerWorkspacePath}/samples/javascript/;
-}
-
-function run_samples() {
-  samples_path=\$1;
-  echo "Using node \$(node -v) to run samples in \${samples_path}";
-  cd "\${samples_path}";
-  for SAMPLE in *.js; do
-    node \${SAMPLE};
-  done
-}
-
-function build_typescript() {
-  echo "Using node \$(node -v) to build the typescript samples";
-  cd ${containerWorkspacePath}/samples/typescript
-  ${compileCMD(`npm run build`, printToScreen)}
-  cp ${envFilePath} ${containerWorkspacePath}/samples/typescript/dist/
-}
-
-function main() {
-  install_packages;
-  run_samples "${javascriptSamplesPath}";
-  build_typescript && run_samples "${typescriptCompiledSamplesPath}";
-}
-
-main`;
-  return scriptContent;
-}
-
 function createDockerContextDirectory(
   dockerContextDirectory: string,
-  containerWorkspacePath: string,
-  samples_path: string,
+  samplesPath: string,
   envPath: string,
-  artifactPath?: string,
-  logFilePath?: string
+  artifactPath?: string
 ): void {
   if (artifactPath === undefined) {
     throw new Error("artifact_path is a required argument but it was not passed");
@@ -138,49 +79,69 @@ function createDockerContextDirectory(
   }
   const artifactName = path.basename(artifactPath);
   const envFileName = path.basename(envPath);
-  fs.copySync(samples_path, path.join(dockerContextDirectory, "samples"));
+  fs.copySync(samplesPath, path.join(dockerContextDirectory, "samples"));
   fs.copyFileSync(artifactPath, path.join(dockerContextDirectory, artifactName));
   fs.copyFileSync(envPath, path.join(dockerContextDirectory, envFileName));
-  fs.writeFileSync(
-    path.join(dockerContextDirectory, "run_samples.sh"),
-    buildRunSamplesScript(containerWorkspacePath, artifactName, envFileName, logFilePath),
-    { mode: S_IRWXO }
+  fs.copyFileSync(
+    path.join(__dirname, "Dockerfile"),
+    path.join(dockerContextDirectory, "Dockerfile")
+  );
+  fs.copyFileSync(
+    path.join(__dirname, "run_samples.sh"),
+    path.join(dockerContextDirectory, "run_samples.sh")
   );
 }
 
 async function runDockerContainer(
   dockerContextDirectory: string,
-  dockerImageName: string,
-  dockerContainerName: string,
-  containerWorkspace: string,
-  stdoutListener: (chunk: string | Buffer) => void,
-  stderrListener: (chunk: string | Buffer) => void
+  version: string,
+  artifactName: string
 ): Promise<void> {
-  const args = [
-    "run",
-    "--name",
-    dockerContainerName,
-    "--workdir",
-    containerWorkspace,
-    "-v",
-    `${dockerContextDirectory}:${containerWorkspace}`,
-    dockerImageName,
-    "./run_samples.sh"
-  ];
-  const dockerContainerRunProcess = pr.spawn("docker", args, {
+  console.log("dockerContextDirectory", dockerContextDirectory);
+  const dockerImageName = `check-node-versions-${version}:latest`;
+
+  log.info(`Creating image ${dockerImageName}`);
+  let childProcess = pr.spawn(
+    "docker",
+    [
+      "build",
+      ".",
+      "--build-arg",
+      `NODE_VERSION=${version}`,
+      "--build-arg",
+      `ARTIFACT_PATH=./${artifactName}`,
+      "--tag",
+      dockerImageName
+    ],
+    {
+      cwd: dockerContextDirectory
+    }
+  );
+  await new Promise((resolve, reject) => {
+    childProcess.stdout.on("data", (data) => console.log(data.toString()));
+    childProcess.stderr.on("data", (data) => console.log(data.toString()));
+    childProcess.on("exit", resolve);
+    childProcess.on("error", reject);
+  });
+
+  if (childProcess.exitCode !== 0) {
+    throw new Error(`Failed to build image ${dockerImageName}`);
+  }
+
+  log.info(`Running samples on ${dockerImageName}`);
+  childProcess = pr.spawn("docker", ["run", dockerImageName], {
     cwd: dockerContextDirectory
   });
-  log.info(`Started running the docker container ${dockerContainerName}`);
-  dockerContainerRunProcess.stdout.on("data", stdoutListener);
-  dockerContainerRunProcess.stderr.on("data", stderrListener);
-  const exitCode = await new Promise((resolve, reject) => {
-    dockerContainerRunProcess.on("exit", resolve);
-    dockerContainerRunProcess.on("error", reject);
+
+  await new Promise((resolve, reject) => {
+    childProcess.stdout.on("data", (data) => console.log(data.toString()));
+    childProcess.stderr.on("data", (data) => console.log(data.toString()));
+    childProcess.on("exit", resolve);
+    childProcess.on("error", reject);
   });
-  if (exitCode === 0) {
-    log.info(`Docker container ${dockerContainerName} finished running`);
-  } else {
-    log.error(`Docker container ${dockerContainerName} encountered an error`);
+
+  if (childProcess.exitCode !== 0) {
+    throw new Error(`Failed to run samples on ${dockerImageName}`);
   }
 }
 
@@ -248,13 +209,9 @@ export default leafCommand(commandInfo, async (options) => {
   const keepDockerContextDirectory = options["keep-docker-context"];
   const dockerImageNames = nodeVersions.map((version: string) => `node:${version}-alpine`);
   const dockerContainerNames = nodeVersions.map((version: string) => `${version}-container`);
-  const containerWorkspace = "/workspace";
-  const containerLogFilePath = options["log-in-file"] ? `${containerWorkspace}/log.txt` : undefined;
   const useExistingDockerContainer = options["use-existing-docker-containers"];
   const keepDockerContainers = options["keep-docker-containers"];
   const keepDockerImages = options["keep-docker-images"];
-  const stdoutListener = (chunk: Buffer | string) => log.info(chunk.toString());
-  const stderrListener = (chunk: Buffer | string) => log.error(chunk.toString());
   async function cleanupBefore(): Promise<void> {
     const dockerContextDirectoryChildren = await fs.readdir(dockerContextDirectory);
     await cleanup(
@@ -275,23 +232,14 @@ export default leafCommand(commandInfo, async (options) => {
   function createDockerContextDirectoryThunk(): void {
     createDockerContextDirectory(
       dockerContextDirectory,
-      containerWorkspace,
       samplesPath,
       envFilePath,
-      options["artifact-path"],
-      containerLogFilePath
+      options["artifact-path"]
     );
   }
   async function runContainers(): Promise<void> {
-    const containerRuns = dockerImageNames.map((imageName, containerIndex) => () =>
-      runDockerContainer(
-        dockerContextDirectory,
-        imageName,
-        dockerContainerNames[containerIndex],
-        containerWorkspace,
-        stdoutListener,
-        stderrListener
-      )
+    const containerRuns = nodeVersions.map((version) => () =>
+      runDockerContainer(dockerContextDirectory, version, path.basename(options["artifact-path"]!))
     );
     for (const run of containerRuns) {
       await run();
