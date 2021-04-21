@@ -62,3 +62,66 @@ export function createTraceFunction(prefix: string): TracedFunction {
     }
   };
 }
+
+export function instrument<T extends { constructor: any; prototype: any; name: string }>(
+  obj: T,
+  methods: Array<keyof T["prototype"]>,
+  prefix: string = ""
+): void {
+  const proto = obj.prototype;
+
+  for (const method of methods) {
+    if (typeof proto[method] === "function" && !proto[`__${method}`]) {
+      Object.defineProperty(proto, `__${method}`, {
+        configurable: true,
+        enumerable: false,
+        writable: true,
+        value: proto[method]
+      });
+      Object.defineProperty(proto, method, {
+        configurable: true,
+        enumerable: false,
+        writable: true,
+        value: instrumentFn(obj, proto[method], createTraceFunction(`${prefix}.${method}`))
+      });
+    }
+  }
+}
+
+export function instrumentFn<T extends (...args: any[]) => Promise<ReturnType<T>>>(
+  obj: any,
+  func: T,
+  withTrace: TracedFunction
+): (...funcArgs: Parameters<T>) => Promise<ReturnType<T>> {
+  function isOperationOptions(arg: any): arg is OperationOptions {
+    if (
+      typeof arg === "object" &&
+      ("abortSignal" in arg || "requestOptions" in arg || "tracingOptions" in arg)
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  const spliceOptions = (args: Parameters<T>[]) => {
+    const rest = [];
+    let options: OperationOptions = {};
+
+    for (let arg of args) {
+      if (isOperationOptions(arg)) {
+        options = arg;
+      } else {
+        rest.push(arg);
+      }
+    }
+
+    return { options, rest };
+  };
+
+  return function wrapped(...args: Parameters<T>): Promise<ReturnType<T>> {
+    const { options, rest } = spliceOptions(args);
+    return withTrace(func.name, options, (updatedOptions) =>
+      func.apply(obj, [...rest, updatedOptions])
+    );
+  };
+}
