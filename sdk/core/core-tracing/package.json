@@ -92,6 +92,8 @@
     "util": "^0.12.1",
     "typedoc": "0.15.2",
     "sinon": "^9.0.2",
-    "@types/sinon": "^9.0.4"
+    "@types/sinon": "^9.0.4",
+    "chai": "^4.2.0",
+    "@types/chai": "^4.1.6"
   }
 }
