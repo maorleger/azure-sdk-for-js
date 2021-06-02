@@ -11,3 +11,4 @@ export {
 
 export { matrix } from "./matrix";
 export { isNode, isNode8 } from "./utils";
+export { chaiAzure, SupportsTracingOptions } from "./chai";
