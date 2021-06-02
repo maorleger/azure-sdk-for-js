@@ -49,11 +49,8 @@ export function createTrace(namespace: string, clientName: string): TracedFuncti
     const { updatedOptions, span } = createSpan(operationName, options);
 
     try {
-      // NOTE: we really do need to await on this function here so we can handle any exceptions thrown and properly
-      // close the span.
       const result = await cb(updatedOptions, span);
 
-      // otel 0.16+ needs this or else the code ends up being set as UNSET
       span.setStatus({
         code: SpanStatusCode.OK
       });

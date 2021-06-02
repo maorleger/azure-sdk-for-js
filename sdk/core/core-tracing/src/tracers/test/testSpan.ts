@@ -48,6 +48,11 @@ export class TestSpan extends NoOpSpan {
   readonly parentSpanId?: string;
 
   /**
+   * The exception recorded by span.recordException(), if any.
+   */
+  exception?: Error;
+
+  /**
    * Known attributes, if any.
    */
   readonly attributes: SpanAttributes;
@@ -144,5 +149,13 @@ export class TestSpan extends NoOpSpan {
       this.attributes[key] = attributes[key];
     }
     return this;
+  }
+
+  /**
+   * Records an exception on the Span
+   *
+   */
+  recordException(error: Error) {
+    this.exception = error;
   }
 }
