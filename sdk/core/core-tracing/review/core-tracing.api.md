@@ -237,10 +237,12 @@ export class TestSpan extends NoOpSpan {
     context(): SpanContext;
     end(_endTime?: number): void;
     endCalled: boolean;
+    exception?: Error;
     isRecording(): boolean;
     kind: SpanKind;
     name: string;
     readonly parentSpanId?: string;
+    recordException(error: Error): void;
     setAttribute(key: string, value: SpanAttributeValue): this;
     setAttributes(attributes: SpanAttributes): this;
     setStatus(status: SpanStatus): this;

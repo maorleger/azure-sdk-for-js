@@ -6,7 +6,7 @@ import { TestTracer } from "../src/tracers/test/testTracer";
 import { assert } from "chai";
 import { SpanStatusCode, TestSpan } from "../src";
 
-describe.only("createTrace", () => {
+describe("createTrace", () => {
   let context: Context;
   let existingTracer: Tracer;
   let testTracer: TestTracer;
