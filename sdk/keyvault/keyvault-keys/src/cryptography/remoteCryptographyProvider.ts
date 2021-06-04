@@ -38,9 +38,10 @@ import { getKeyFromKeyBundle } from "../transformations";
 import { createHash } from "./crypto";
 import { CryptographyProvider, CryptographyProviderOperation } from "./models";
 import { logger } from "../log";
-import { createTraceFunction, TracedFunction } from "../../../keyvault-common/src";
+import { createTrace, TracedFunction } from "@azure/core-tracing";
 
-const withTrace: TracedFunction = createTraceFunction(
+const withTrace: TracedFunction = createTrace(
+  "Microsoft.KeyVault",
   "Azure.KeyVault.Keys.RemoteCryptographyProvider"
 );
 

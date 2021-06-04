@@ -38,6 +38,9 @@ export interface CreateSpanFunctionArgs {
 }
 
 // @public
+export function createTrace(namespace: string, clientName: string): TracedFunction;
+
+// @public
 export type Exception = ExceptionWithCode | ExceptionWithMessage | ExceptionWithName | string;
 
 // @public
@@ -262,6 +265,14 @@ export class TestTracer extends NoOpTracer {
 
 // @public
 export type TimeInput = HrTime | number | Date;
+
+// @public
+export interface TracedFunction {
+    // (undocumented)
+    <TOptions extends {
+        tracingOptions?: OperationTracingOptions;
+    }, TReturn>(operationName: string, options: TOptions, cb: (options: TOptions, span: Span) => Promise<TReturn>): Promise<TReturn>;
+}
 
 // @public
 export const enum TraceFlags {

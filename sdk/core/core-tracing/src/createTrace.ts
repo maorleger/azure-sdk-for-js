@@ -1,6 +1,5 @@
-import { Span } from "@opentelemetry/api";
 import { createSpanFunction } from "./createSpan";
-import { OperationTracingOptions, SpanStatusCode } from "./interfaces";
+import { OperationTracingOptions, SpanStatusCode, Span } from "./interfaces";
 
 /**
  * An interface representing a function that is traced.
@@ -9,12 +8,10 @@ import { OperationTracingOptions, SpanStatusCode } from "./interfaces";
  * spans as needed and will handle setting the status / errors as a
  * result of calling the underlying callback.
  *
- * use {@link createTraceFunction} to add tracing to a block of code.
- *
- * @internal
+ * use {@link createTrace} to add tracing to a block of code.
  */
 export interface TracedFunction {
-  <TOptions extends { tracingOptions: OperationTracingOptions }, TReturn>(
+  <TOptions extends { tracingOptions?: OperationTracingOptions }, TReturn>(
     operationName: string,
     options: TOptions,
     cb: (options: TOptions, span: Span) => Promise<TReturn>
@@ -28,7 +25,7 @@ export interface TracedFunction {
  *
  * @example
  *
- * const withTrace = createTraceFunction(
+ * const withTrace = createTrace(
  *   "Microsoft.KeyVault",
  *   "Azure.KeyVault.Certificates.CertificateClient"
  * );
@@ -37,7 +34,6 @@ export interface TracedFunction {
  *     return withTrace("getCertificate", options, (optionsWithTrace) => client.getCertificate(optionsWithTrace));
  *   }
  * }
- * @internal
  */
 export function createTrace(namespace: string, clientName: string): TracedFunction {
   const createSpan = createSpanFunction({
