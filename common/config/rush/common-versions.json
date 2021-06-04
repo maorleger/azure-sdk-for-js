@@ -54,6 +54,7 @@
     // "typescript": [
     //   "~2.4.0"
     // ]
+    "@azure/core-tracing": ["1.0.0-preview.12"],
     // Following is required to allow for backward compatibility with Event Processor Host Track 1
     "@azure/event-hubs": ["^2.1.4"],
     "@opentelemetry/api": ["^0.18.1"],
