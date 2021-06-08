@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 import { AbortSignalLike, AbortSignal } from "@azure/abort-controller";
-import { OperationOptions } from "@azure/core-http";
+import { OperationOptions } from "@azure/core-client";
 import {
   CancelCertificateOperationOptions,
   CertificateOperation,
@@ -64,11 +64,7 @@ export class CertificateOperationPollOperation extends KeyVaultCertificatePollOp
         true,
         updatedOptions
       );
-      return getCertificateOperationFromCoreOperation(
-        certificateName,
-        this.vaultUrl,
-        result._response.parsedBody
-      );
+      return getCertificateOperationFromCoreOperation(certificateName, this.vaultUrl, result);
     });
   }
 
@@ -103,11 +99,7 @@ export class CertificateOperationPollOperation extends KeyVaultCertificatePollOp
         certificateName,
         updatedOptions
       );
-      return getCertificateOperationFromCoreOperation(
-        certificateName,
-        this.vaultUrl,
-        result._response.parsedBody
-      );
+      return getCertificateOperationFromCoreOperation(certificateName, this.vaultUrl, result);
     });
   }
 

@@ -9,7 +9,7 @@ describe("transformations", function() {
   describe("getCertificateOperationFromCoreOperation", function() {
     it("transforms null error to undefined", function() {
       const input: CoreCertificateOperation = {
-        error: null
+        error: undefined
       };
 
       assert.isUndefined(getCertificateOperationFromCoreOperation("", "", input).error);
@@ -18,7 +18,7 @@ describe("transformations", function() {
     it("transforms null inner error to undefined", function() {
       const input: CoreCertificateOperation = {
         error: {
-          innerError: null
+          innerError: undefined
         }
       };
 

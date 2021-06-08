@@ -5,7 +5,7 @@ import chai from "chai";
 import { Context } from "mocha";
 import * as assert from "assert";
 import { env, isPlaybackMode, Recorder, isRecordMode } from "@azure/test-utils-recorder";
-import { isNode } from "@azure/core-http";
+import { isNode } from "@azure/core-util";
 
 import { CertificateClient } from "../../src";
 import { assertThrowsAbortError } from "../utils/utils.common";

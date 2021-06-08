@@ -10,14 +10,11 @@
 /// <reference lib="esnext.asynciterable" />
 
 import {
-  TokenCredential,
-  isTokenCredential,
-  signingPolicy,
   PipelineOptions,
   createPipelineFromOptions,
   InternalPipelineOptions
-} from "@azure/core-http";
-
+} from "@azure/core-rest-pipeline";
+import { TokenCredential, isTokenCredential } from "@azure/core-auth";
 import { logger } from "./log";
 import { PollerLike, PollOperationState } from "@azure/core-lro";
 
@@ -277,7 +274,7 @@ export class CertificateClient {
       ...pipelineOptions,
       loggingOptions: {
         logger: logger.info,
-        allowedHeaderNames: [
+        additionalAllowedHeaderNames: [
           "x-ms-keyvault-region",
           "x-ms-keyvault-network-info",
           "x-ms-keyvault-service-version"
@@ -541,7 +538,7 @@ export class CertificateClient {
   ): Promise<CertificateContact[] | undefined> {
     return withTrace("deleteContacts", options, async (updatedOptions) => {
       const result = await this.client.deleteCertificateContacts(this.vaultUrl, updatedOptions);
-      return coreContactsToCertificateContacts(result._response.parsedBody);
+      return coreContactsToCertificateContacts(result);
     });
   }
 
@@ -577,7 +574,7 @@ export class CertificateClient {
         { contactList: coreContacts },
         updatedOptions
       );
-      return coreContactsToCertificateContacts(result._response.parsedBody);
+      return coreContactsToCertificateContacts(result);
     });
   }
 
@@ -750,7 +747,7 @@ export class CertificateClient {
         provider,
         generatedOptions
       );
-      return toPublicIssuer(result._response.parsedBody);
+      return toPublicIssuer(result);
     });
   }
 
@@ -814,7 +811,7 @@ export class CertificateClient {
         generatedOptions
       );
 
-      return toPublicIssuer(result._response.parsedBody);
+      return toPublicIssuer(result);
     });
   }
 
@@ -841,7 +838,7 @@ export class CertificateClient {
         issuerName,
         updatedOptions
       );
-      return toPublicIssuer(result._response.parsedBody);
+      return toPublicIssuer(result);
     });
   }
 
@@ -869,7 +866,7 @@ export class CertificateClient {
         issuerName,
         updatedOptions
       );
-      return toPublicIssuer(result._response.parsedBody);
+      return toPublicIssuer(result);
     });
   }
 
@@ -1072,7 +1069,7 @@ export class CertificateClient {
         certificateName,
         updatedOptions
       );
-      return toPublicPolicy(result._response.parsedBody);
+      return toPublicPolicy(result);
     });
   }
 
@@ -1096,7 +1093,7 @@ export class CertificateClient {
         corePolicy,
         updatedOptions
       );
-      return toPublicPolicy(result._response.parsedBody);
+      return toPublicPolicy(result);
     });
   }
 
@@ -1132,7 +1129,7 @@ export class CertificateClient {
         ...updatedOptions,
         certificateAttributes: toCoreAttributes(options)
       });
-      return getCertificateFromCertificateBundle(result._response.parsedBody);
+      return getCertificateFromCertificateBundle(result);
     });
   }
 
@@ -1203,11 +1200,7 @@ export class CertificateClient {
         certificateName,
         updatedOptions
       );
-      return getCertificateOperationFromCoreOperation(
-        certificateName,
-        this.vaultUrl,
-        result._response.parsedBody
-      );
+      return getCertificateOperationFromCoreOperation(certificateName, this.vaultUrl, result);
     });
   }
 
@@ -1257,7 +1250,7 @@ export class CertificateClient {
         x509Certificates,
         updatedOptions
       );
-      return getCertificateWithPolicyFromCertificateBundle(result._response.parsedBody);
+      return getCertificateWithPolicyFromCertificateBundle(result);
     });
   }
 
@@ -1288,7 +1281,7 @@ export class CertificateClient {
         certificateName,
         updatedOptions
       );
-      return result._response.parsedBody.value;
+      return result.value;
     });
   }
 
@@ -1318,7 +1311,7 @@ export class CertificateClient {
   ): Promise<KeyVaultCertificateWithPolicy> {
     return withTrace("restoreCertificateBackup", options, async (updatedOptions) => {
       const result = await this.client.restoreCertificate(this.vaultUrl, backup, updatedOptions);
-      return getCertificateWithPolicyFromCertificateBundle(result._response.parsedBody);
+      return getCertificateWithPolicyFromCertificateBundle(result);
     });
   }
 
@@ -1431,7 +1424,7 @@ export class CertificateClient {
         certificateName,
         updatedOptions
       );
-      return getDeletedCertificateFromDeletedCertificateBundle(result._response.parsedBody);
+      return getDeletedCertificateFromDeletedCertificateBundle(result);
     });
   }
 

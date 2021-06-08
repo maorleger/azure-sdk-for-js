@@ -1,8 +1,9 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { delay, OperationOptions } from "@azure/core-http";
+import { OperationOptions } from "@azure/core-client";
 import { Poller, PollOperation, PollOperationState } from "@azure/core-lro";
+import { delay } from "@azure/core-util";
 import { KeyVaultClient } from "../generated/keyVaultClient";
 
 /**

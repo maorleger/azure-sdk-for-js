@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 import { assert } from "chai";
-import { RestError } from "@azure/core-http";
+import { RestError } from "@azure/core-rest-pipeline";
 import { DeleteCertificatePoller } from "../../src/lro/delete/poller";
 import { RecoverDeletedCertificatePoller } from "../../src/lro/recover/poller";
 
@@ -11,7 +11,7 @@ describe("The LROs properly throw on unexpected errors", () => {
 
   describe("delete LRO", () => {
     it("403 doesn't throw", async function() {
-      const code = 403;
+      const code = "403";
       const client: any = {
         async deleteCertificate(): Promise<any> {
           return {
@@ -20,7 +20,7 @@ describe("The LROs properly throw on unexpected errors", () => {
           };
         },
         async getDeletedCertificate(): Promise<any> {
-          throw new RestError(`${code}`, undefined, code);
+          throw new RestError(`${code}`, { code });
         }
       };
       const poller = new DeleteCertificatePoller({
@@ -35,7 +35,7 @@ describe("The LROs properly throw on unexpected errors", () => {
     });
 
     it("404 doesn't throw", async function() {
-      const code = 404;
+      const code = "404";
       const client: any = {
         async deleteCertificate(): Promise<any> {
           return {
@@ -44,7 +44,7 @@ describe("The LROs properly throw on unexpected errors", () => {
           };
         },
         async getDeletedCertificate(): Promise<any> {
-          throw new RestError(`${code}`, undefined, code);
+          throw new RestError(`${code}`, { code });
         }
       };
       const poller = new DeleteCertificatePoller({
@@ -70,7 +70,7 @@ describe("The LROs properly throw on unexpected errors", () => {
             };
           },
           async getDeletedCertificate(): Promise<any> {
-            throw new RestError(`${code}`, undefined, code);
+            throw new RestError(`${code}`, { code: code.toString() });
           }
         };
         const poller = new DeleteCertificatePoller({
@@ -106,7 +106,7 @@ describe("The LROs properly throw on unexpected errors", () => {
           };
         },
         async getCertificate(): Promise<any> {
-          throw new RestError(`${code}`, undefined, code);
+          throw new RestError(`${code}`, { code: code.toString() });
         }
       };
       const poller = new RecoverDeletedCertificatePoller({
@@ -134,7 +134,7 @@ describe("The LROs properly throw on unexpected errors", () => {
           };
         },
         async getCertificate(): Promise<any> {
-          throw new RestError(`${code}`, undefined, code);
+          throw new RestError(`${code}`, { code: code.toString() });
         }
       };
       const poller = new RecoverDeletedCertificatePoller({
@@ -164,7 +164,7 @@ describe("The LROs properly throw on unexpected errors", () => {
             };
           },
           async getCertificate(): Promise<any> {
-            throw new RestError(`${code}`, undefined, code);
+            throw new RestError(`${code}`, { code: code.toString() });
           }
         };
         const poller = new RecoverDeletedCertificatePoller({

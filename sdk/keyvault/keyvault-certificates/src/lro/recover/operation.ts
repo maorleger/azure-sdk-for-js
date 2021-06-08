@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 import { AbortSignalLike } from "@azure/abort-controller";
-import { OperationOptions } from "@azure/core-http";
+import { OperationOptions } from "@azure/core-client";
 import {
   GetCertificateOptions,
   KeyVaultCertificateWithPolicy,
@@ -73,7 +73,7 @@ export class RecoverDeletedCertificatePollOperation extends KeyVaultCertificateP
         certificateName,
         updatedOptions
       );
-      return getCertificateWithPolicyFromCertificateBundle(result._response.parsedBody);
+      return getCertificateWithPolicyFromCertificateBundle(result);
     });
   }
 

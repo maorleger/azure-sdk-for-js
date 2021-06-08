@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { delay, OperationOptions } from "@azure/core-http";
+import { OperationOptions } from "@azure/core-client";
 import { Poller } from "@azure/core-lro";
 import {
   RestoreCertificateBackupPollOperationState,
@@ -55,6 +55,6 @@ export class RestoreCertificateBackupPoller extends Poller<
    * The method used by the poller to wait before attempting to update its operation.
    */
   async delay(): Promise<void> {
-    return delay(this.intervalInMs);
+    return new Promise((resolve) => setTimeout(resolve, this.intervalInMs));
   }
 }
