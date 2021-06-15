@@ -1,5 +1,11 @@
 # Release History
 
+## 4.0.1 (2021-06-15)
+
+### Bug Fixes
+
+- Fixed an issue where an incorrect import path causes bundlers to fail when bundling.
+
 ## 4.0.0 (2021-06-15)
 
 This release marks the general availability of the `@azure/keyvault-admin` package.
