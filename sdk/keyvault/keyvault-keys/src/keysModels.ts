@@ -16,7 +16,7 @@ export { KeyType, KnownKeyTypes, KeyOperation, KnownKeyOperations };
 /**
  * The latest supported Key Vault service API version
  */
-export const LATEST_API_VERSION = "7.2";
+export const LATEST_API_VERSION = "7.3-preview";
 
 /**
  * The optional parameters accepted by the KeyVault's KeyClient
@@ -137,8 +137,19 @@ export interface KeyVaultKey {
    * The properties of the key.
    */
   properties: KeyProperties;
+
+  releasePolicy?: KeyVaultKeyReleasePolicy;
 }
 
+export interface KeyVaultKeyReleasePolicy {
+  /**
+   * Content type and version of key release policy
+   * Defaults to application/json; charset=utf-8 if omitted.
+   */
+  contentType?: string;
+  /** Blob encoding the policy rules under which the key can be released. */
+  data?: Uint8Array;
+}
 /**
  * An interface representing the Properties of {@link KeyVaultKey}
  */
@@ -213,6 +224,8 @@ export interface KeyProperties {
    * the server.**
    */
   readonly managed?: boolean;
+
+  exportable?: boolean;
 }
 
 /**
@@ -304,6 +317,8 @@ export interface CreateKeyOptions extends coreHttp.OperationOptions {
    * Whether to import as a hardware key (HSM) or software key.
    */
   hsm?: boolean;
+  exportable?: boolean;
+  releasePolicy?: KeyVaultKeyReleasePolicy;
 }
 
 /**

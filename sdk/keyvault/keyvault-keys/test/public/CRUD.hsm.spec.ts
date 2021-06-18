@@ -10,6 +10,7 @@ import { authenticate } from "../utils/testAuthentication";
 import TestClient from "../utils/testClient";
 import { CreateOctKeyOptions } from "../../src/keysModels";
 import { getServiceVersion, onVersions } from "../utils/utils.common";
+import { stringToUint8Array, uint8ArrayToString } from "../utils/crypto";
 
 onVersions({ minVer: "7.2" }).describe(
   "Keys client - create, read, update and delete operations for managed HSM",
@@ -48,6 +49,51 @@ onVersions({ minVer: "7.2" }).describe(
       assert.equal(result.name, keyName, "Unexpected key name in result from createKey().");
       assert.equal(result.keyType, "oct-HSM");
       await testClient.flushKey(keyName);
+    });
+
+    onVersions({ minVer: "7.3-preview" }).describe.only("Key Export", () => {
+      it.only("can create an exportable key with release policy", async function(this: Context) {
+        const keyName = testClient.formatName(`${keyPrefix}-${this!.test!.title}-${keySuffix}`);
+        const releasePolicy = {
+          anyOf: [
+            {
+              allOf: [
+                {
+                  claim: "x-ms-attestation-type",
+                  equals: "sevsnpvm"
+                },
+                {
+                  claim: "x-ms-sevsnpvm-authorkeydigest",
+                  equals:
+                    "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+                },
+                {
+                  claim: "x-ms-runtime.vm-configuration.secure-boot",
+                  equals: true
+                }
+              ],
+              authority: "https://sharedeus.eus.test.attest.azure.net/"
+            }
+          ],
+          version: "1.0.0"
+        };
+        const encodedReleasePolicy = stringToUint8Array(JSON.stringify(releasePolicy));
+        // TODO: releasePolicy is a JSON blob, should we convert it in convenience layer?
+        // TODO: update swagger with version parameter that is missing
+        // TODO: non-exportable keys must not have release policy - guard or nah?
+        const result = await hsmClient.createRsaKey(keyName, {
+          exportable: true,
+          releasePolicy: { data: encodedReleasePolicy }
+        });
+
+        // TODO: what's important to test here?
+        assert.isNotEmpty(JSON.parse(uint8ArrayToString(result.releasePolicy!.data!)));
+        assert.isTrue(result.properties.exportable);
+
+        await testClient.flushKey(keyName);
+      });
+
+      it("can import a key with release policy");
     });
   }
 );

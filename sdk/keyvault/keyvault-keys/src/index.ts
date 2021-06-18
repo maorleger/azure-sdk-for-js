@@ -282,13 +282,14 @@ export class KeyClient {
     let unflattenedOptions = {};
 
     if (options) {
-      const { enabled, notBefore, expiresOn: expires, ...remainingOptions } = options;
+      const { enabled, notBefore, expiresOn: expires, exportable, ...remainingOptions } = options;
       unflattenedOptions = {
         ...remainingOptions,
         keyAttributes: {
           enabled,
           notBefore,
-          expires
+          expires,
+          exportable
         }
       };
     }
