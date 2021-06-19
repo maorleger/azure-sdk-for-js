@@ -52,8 +52,8 @@ onVersions({ minVer: "7.2" }).describe(
     });
 
     onVersions({ minVer: "7.3-preview" }).describe.only("Key Export", () => {
-      it.only("can create an exportable key with release policy", async function(this: Context) {
-        const keyName = testClient.formatName(`${keyPrefix}-${this!.test!.title}-${keySuffix}`);
+      it.only("can create an exportable key with release policy and export it", async function(this: Context) {
+        const keyName = recorder.getUniqueName("exportkeytest");
         const releasePolicy = {
           anyOf: [
             {
@@ -89,6 +89,17 @@ onVersions({ minVer: "7.2" }).describe(
         // TODO: what's important to test here?
         assert.isNotEmpty(JSON.parse(uint8ArrayToString(result.releasePolicy!.data!)));
         assert.isTrue(result.properties.exportable);
+
+        // const exportKey = await hsmClient.createRsaKey(`${keyName}-wrap`, { keyOps: ["export"] });
+        // TODO: what algorithms are supported?
+        // TODO: should wrapping key and algorithm be required?
+        // TODO: RestError: export is not supported on this protocol version
+        // const exportedKey = await hsmClient.exportKey(result.name, result.properties.version!, {
+        //   wrappingKey: exportKey.key,
+        //   algorithm: "CKM_RSA_AES_KEY_WRAP"
+        // });
+
+        // console.log(exportedKey);
 
         await testClient.flushKey(keyName);
       });

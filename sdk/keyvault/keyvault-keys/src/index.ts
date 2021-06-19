@@ -59,7 +59,8 @@ import {
   KeyClientOptions,
   CryptographyClientOptions,
   LATEST_API_VERSION,
-  CreateOctKeyOptions
+  CreateOctKeyOptions,
+  ExportKeyOptions
 } from "./keysModels";
 
 import { CryptographyClient } from "./cryptographyClient";
@@ -651,6 +652,21 @@ export class KeyClient {
     });
   }
 
+  exportKey(name: string, version: string, options: ExportKeyOptions = {}) {
+    return withTrace("exportKey", options, async (updatedOptions) => {
+      const { wrappingKey, wrappingKeyId: wrappingKid, algorithm: enc } = updatedOptions;
+      console.log("wrappingKey", wrappingKey);
+      console.log("wrappingKid", wrappingKid);
+      console.log("algorithn", enc);
+      const response = await this.client.export(this.vaultUrl, name, version, {
+        wrappingKey,
+        wrappingKid,
+        enc
+      });
+      console.log("response", response);
+      return getKeyFromKeyBundle(response);
+    });
+  }
   /**
    * @internal
    * @hidden

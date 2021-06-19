@@ -396,6 +396,14 @@ export interface ImportKeyOptions extends coreHttp.OperationOptions {
   expiresOn?: Date;
 }
 
+// TODO: should these be required?
+export interface ExportKeyOptions extends coreHttp.OperationOptions {
+  wrappingKey?: JsonWebKey;
+  // TODO: make this a union type
+  algorithm?: string;
+  wrappingKeyId?: string;
+}
+
 /**
  * Options for {@link updateKeyProperties}.
  */

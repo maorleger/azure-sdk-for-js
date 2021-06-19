@@ -69,10 +69,16 @@ export interface CreateKeyOptions extends coreHttp.OperationOptions {
     curve?: KeyCurveName;
     enabled?: boolean;
     readonly expiresOn?: Date;
+    // (undocumented)
+    exportable?: boolean;
     hsm?: boolean;
     keyOps?: KeyOperation[];
     keySize?: number;
     notBefore?: Date;
+    // Warning: (ae-forgotten-export) The symbol "KeyVaultKeyReleasePolicy" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    releasePolicy?: KeyVaultKeyReleasePolicy;
     tags?: {
         [propertyName: string]: string;
     };
@@ -216,6 +222,10 @@ export class KeyClient {
     createKey(name: string, keyType: KeyType, options?: CreateKeyOptions): Promise<KeyVaultKey>;
     createOctKey(name: string, options?: CreateOctKeyOptions): Promise<KeyVaultKey>;
     createRsaKey(name: string, options?: CreateRsaKeyOptions): Promise<KeyVaultKey>;
+    // Warning: (ae-forgotten-export) The symbol "ExportKeyOptions" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    exportKey(name: string, version: string, options?: ExportKeyOptions): Promise<KeyVaultKey | DeletedKey>;
     getDeletedKey(name: string, options?: GetDeletedKeyOptions): Promise<DeletedKey>;
     getKey(name: string, options?: GetKeyOptions): Promise<KeyVaultKey>;
     importKey(name: string, key: JsonWebKey, options?: ImportKeyOptions): Promise<KeyVaultKey>;
@@ -250,6 +260,8 @@ export interface KeyProperties {
     readonly createdOn?: Date;
     enabled?: boolean;
     expiresOn?: Date;
+    // (undocumented)
+    exportable?: boolean;
     id?: string;
     readonly managed?: boolean;
     name: string;
@@ -275,6 +287,8 @@ export interface KeyVaultKey {
     keyType?: KeyType;
     name: string;
     properties: KeyProperties;
+    // (undocumented)
+    releasePolicy?: KeyVaultKeyReleasePolicy;
 }
 
 // @public
