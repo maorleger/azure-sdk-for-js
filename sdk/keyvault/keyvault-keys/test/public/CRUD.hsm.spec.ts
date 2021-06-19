@@ -101,9 +101,12 @@ onVersions({ minVer: "7.2" }).describe(
 
         // console.log(exportedKey);
 
+        assert.fail("need to export the key");
         await testClient.flushKey(keyName);
       });
 
+      it("errors when creating a key with exportable but without release policy");
+      it("errors when creating a key with release policy but not exportable?");
       it("can import a key with release policy");
 
       it.only("can create a release-able key and release it", async function() {
@@ -157,6 +160,7 @@ onVersions({ minVer: "7.2" }).describe(
         // console.log(exportedKey);
 
         // await testClient.flushKey(keyName);
+        assert.fail("need to release the key");
       });
     });
   }
