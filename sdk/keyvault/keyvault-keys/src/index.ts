@@ -60,7 +60,8 @@ import {
   CryptographyClientOptions,
   LATEST_API_VERSION,
   CreateOctKeyOptions,
-  ExportKeyOptions
+  ExportKeyOptions,
+  ReleaseKeyOptions
 } from "./keysModels";
 
 import { CryptographyClient } from "./cryptographyClient";
@@ -190,6 +191,20 @@ const withTrace = createTraceFunction("Azure.KeyVault.Keys.KeyClient");
  * Vault.
  */
 export class KeyClient {
+  releaseKey(name: string, version: string, options: ReleaseKeyOptions) {
+    return withTrace("releaseKey", options, async (updatedOptions) => {
+      const { nonce, algorithm: enc, target, ...rest } = updatedOptions;
+
+      const result = await this.client.release(this.vaultUrl, name, version, target, {
+        ...rest,
+        enc,
+        nonce
+      });
+
+      console.log(result._response);
+      return result.value;
+    });
+  }
   /**
    * The base URL to the vault
    */
@@ -654,11 +669,12 @@ export class KeyClient {
 
   exportKey(name: string, version: string, options: ExportKeyOptions = {}) {
     return withTrace("exportKey", options, async (updatedOptions) => {
-      const { wrappingKey, wrappingKeyId: wrappingKid, algorithm: enc } = updatedOptions;
+      const { wrappingKey, wrappingKeyId: wrappingKid, algorithm: enc, ...rest } = updatedOptions;
       console.log("wrappingKey", wrappingKey);
       console.log("wrappingKid", wrappingKid);
       console.log("algorithn", enc);
       const response = await this.client.export(this.vaultUrl, name, version, {
+        ...rest,
         wrappingKey,
         wrappingKid,
         enc

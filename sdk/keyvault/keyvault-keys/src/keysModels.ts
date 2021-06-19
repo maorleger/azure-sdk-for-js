@@ -404,6 +404,16 @@ export interface ExportKeyOptions extends coreHttp.OperationOptions {
   wrappingKeyId?: string;
 }
 
+export interface ReleaseKeyOptions extends coreHttp.OperationOptions {
+  /** The attestation assertion for the target of the key release. */
+  target: string;
+  /** A client provided nonce for freshness. */
+  nonce?: string;
+  /** The encryption algorithm to use to protected the exported key material */
+  // TODO: make this a union type
+  algorithm?: string;
+}
+
 /**
  * Options for {@link updateKeyProperties}.
  */

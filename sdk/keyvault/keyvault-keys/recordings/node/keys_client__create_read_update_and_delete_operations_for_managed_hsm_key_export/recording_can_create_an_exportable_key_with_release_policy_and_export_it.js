@@ -2,10 +2,10 @@ let nock = require('nock');
 
 module.exports.hash = "36bf09e1d6d913184667c3436d0d75bd";
 
-module.exports.testInfo = {"uniqueName":{"exportkeytest":"exportkeytest162406111988502774"},"newDate":{}}
+module.exports.testInfo = {"uniqueName":{"exportkeytest":"exportkeytest162406362332703345"},"newDate":{}}
 
 nock('https://azure_managedhsm.managedhsm.azure.net:443', {"encodedQueryParams":true})
-  .post('/keys/exportkeytest162406111988502774/create')
+  .post('/keys/exportkeytest162406362332703345/create')
   .query(true)
   .reply(401, "", [
   'content-type',
@@ -21,7 +21,7 @@ nock('https://azure_managedhsm.managedhsm.azure.net:443', {"encodedQueryParams":
   'content-length',
   '0',
   'x-ms-request-id',
-  '0982ac2c-d092-11eb-8e3c-0022484f830d',
+  'dda99a38-d097-11eb-aedd-000d3ae28186',
   'strict-transport-security',
   'max-age=31536000; includeSubDomains',
   'content-security-policy',
@@ -51,19 +51,19 @@ nock('https://login.microsoftonline.com:443', {"encodedQueryParams":true})
   'P3P',
   'CP="DSP CUR OTPi IND OTRi ONL FIN"',
   'x-ms-request-id',
-  '7c7bf58b-e68e-4fd5-b93f-92f90b6b4c00',
+  '14172d2c-f359-4bbd-a808-9866969b3200',
   'x-ms-ests-server',
-  '2.1.11829.4 - SCUS ProdSlices',
+  '2.1.11829.4 - EUS ProdSlices',
   'Set-Cookie',
-  'fpc=AjqabCa3IHNDiO4wyU6InBE; expires=Mon, 19-Jul-2021 00:05:20 GMT; path=/; secure; HttpOnly; SameSite=None',
+  'fpc=ArEMOhYETEZLgaVcrTZ51nY; expires=Mon, 19-Jul-2021 00:47:04 GMT; path=/; secure; HttpOnly; SameSite=None',
   'Set-Cookie',
-  'esctx=AQABAAAAAAD--DLA3VO7QrddgJg7Wevr2b_W3K5yk7GeZ6RwVauvYB46zbjYHkzc25oyJ52Bal_vK5NBVhd5W3E9bJreS0fyreRhrQasK0d81A9UDmHNHIfE11CrOtjlQhDXXqi-EL79UyZTg4Ort-LKCQ1owdG8d5n-JA4NM3g6n3ojdoVcyit9TYA8tqi55cDAILe0qzkgAA; domain=.login.microsoftonline.com; path=/; secure; HttpOnly; SameSite=None',
+  'esctx=AQABAAAAAAD--DLA3VO7QrddgJg7WevrgBCE-LXDSSwgPGpj9LFHsmObetT5o_QJHtigijj-JBnaIkdszTjGK0E_reyUvfRj6sCDn2X3U9XV5v360zFF3ZiidJgraA7PT9Hi_qASOOobf4CCtFRBJwojKkMDgOshdRvVWmQtiQy9adXNYgByx7MnOFWXKtYSpz_Ck5HiFpQgAA; domain=.login.microsoftonline.com; path=/; secure; HttpOnly; SameSite=None',
   'Set-Cookie',
   'x-ms-gateway-slice=estsfd; path=/; secure; samesite=none; httponly',
   'Set-Cookie',
   'stsservicecookie=estsfd; path=/; secure; samesite=none; httponly',
   'Date',
-  'Sat, 19 Jun 2021 00:05:20 GMT'
+  'Sat, 19 Jun 2021 00:47:04 GMT'
 ]);
 
 nock('https://login.microsoftonline.com:443', {"encodedQueryParams":true})
@@ -84,32 +84,30 @@ nock('https://login.microsoftonline.com:443', {"encodedQueryParams":true})
   'P3P',
   'CP="DSP CUR OTPi IND OTRi ONL FIN"',
   'x-ms-request-id',
-  '718cb721-43a4-4851-a7fe-2824f1390e00',
+  'e3de468e-0135-45c4-ba04-4389a33e0400',
   'x-ms-ests-server',
-  '2.1.11829.8 - WUS2 ProdSlices',
+  '2.1.11829.8 - EUS ProdSlices',
   'Set-Cookie',
-  'fpc=AjqabCa3IHNDiO4wyU6InBE; expires=Mon, 19-Jul-2021 00:05:20 GMT; path=/; secure; HttpOnly; SameSite=None',
+  'fpc=ArEMOhYETEZLgaVcrTZ51nY; expires=Mon, 19-Jul-2021 00:47:04 GMT; path=/; secure; HttpOnly; SameSite=None',
   'Set-Cookie',
-  'esctx=AQABAAAAAAD--DLA3VO7QrddgJg7WevrNOHDQZCv0IZp_SPCC55GMAjyFazZfbS5qRb-xbSXlwflTPIRYI3oOFb1LJaLtVN6ArjA7HQqxQhYE0pmsAdJjHf-VK3JSGWVI2S7ricVXBnTSqWFvn6yljRmsBeiZa1Lf7s4kB0vTGLFU9oV_UPzPKjCDeq_bskFtldXVHdun1wgAA; domain=.login.microsoftonline.com; path=/; secure; HttpOnly; SameSite=None',
+  'esctx=AQABAAAAAAD--DLA3VO7QrddgJg7Wevrj3PxRZjaSAAutluOVV8VofOPtxYt-dtta52ZguPEQZ8OCEVeXPG-dgSoa0EMBMFU6J-5WqH5FskBUO65qHeCTu3LlNE9xABgpS9BHuXRlZCKtB9r9RZ_auV147wPDCN6k_AfVLAOJ-_oFugCg6Q5hJnlO9i9GqWqLdpD0nzhVsggAA; domain=.login.microsoftonline.com; path=/; secure; HttpOnly; SameSite=None',
   'Set-Cookie',
   'x-ms-gateway-slice=estsfd; path=/; secure; samesite=none; httponly',
   'Set-Cookie',
   'stsservicecookie=estsfd; path=/; secure; samesite=none; httponly',
   'Date',
-  'Sat, 19 Jun 2021 00:05:20 GMT',
+  'Sat, 19 Jun 2021 00:47:04 GMT',
   'Content-Length',
   '1753'
 ]);
 
 nock('https://login.microsoftonline.com:443', {"encodedQueryParams":true})
-  .post('/12345678-1234-1234-1234-123456789012/oauth2/v2.0/token', "client_id=azure_client_id&scope=https%3A%2F%2Fsanitized%2F&grant_type=client_credentials&x-client-SKU=msal.js.node&x-client-VER=1.1.0&x-client-OS=linux&x-client-CPU=x64&x-ms-lib-capability=retry-after, h429&x-client-current-telemetry=2|771,0|,&x-client-last-telemetry=2|0|||0,0&client-request-id=ad4837b2-cb74-4e65-a0ad-e84026f5fdce&client_secret=azure_client_secret")
+  .post('/12345678-1234-1234-1234-123456789012/oauth2/v2.0/token', "client_id=azure_client_id&scope=https%3A%2F%2Fsanitized%2F&grant_type=client_credentials&x-client-SKU=msal.js.node&x-client-VER=1.1.0&x-client-OS=linux&x-client-CPU=x64&x-ms-lib-capability=retry-after, h429&x-client-current-telemetry=2|771,0|,&x-client-last-telemetry=2|0|||0,0&client-request-id=3f28b090-5baa-4808-94f4-d37ce11a44e1&client_secret=azure_client_secret")
   .reply(200, {"token_type":"Bearer","expires_in":86399,"ext_expires_in":86399,"access_token":"access_token"}, [
   'Cache-Control',
   'no-store, no-cache',
   'Pragma',
   'no-cache',
-  'Content-Length',
-  '1322',
   'Content-Type',
   'application/json; charset=utf-8',
   'Expires',
@@ -121,25 +119,27 @@ nock('https://login.microsoftonline.com:443', {"encodedQueryParams":true})
   'P3P',
   'CP="DSP CUR OTPi IND OTRi ONL FIN"',
   'x-ms-request-id',
-  'cafaa1fd-eed4-4315-98db-6a877e661000',
+  '59e2480f-077e-4ad6-9607-2f9310850400',
   'x-ms-ests-server',
-  '2.1.11829.8 - WUS2 ProdSlices',
+  '2.1.11829.8 - EUS ProdSlices',
   'x-ms-clitelem',
   '1,0,0,,',
   'Set-Cookie',
-  'fpc=AjqabCa3IHNDiO4wyU6InBEpvNouAQAAAMArX9gOAAAA; expires=Mon, 19-Jul-2021 00:05:21 GMT; path=/; secure; HttpOnly; SameSite=None',
+  'fpc=ArEMOhYETEZLgaVcrTZ51nYpvNouAQAAAIg1X9gOAAAA; expires=Mon, 19-Jul-2021 00:47:04 GMT; path=/; secure; HttpOnly; SameSite=None',
   'Set-Cookie',
   'x-ms-gateway-slice=estsfd; path=/; secure; samesite=none; httponly',
   'Set-Cookie',
   'stsservicecookie=estsfd; path=/; secure; samesite=none; httponly',
   'Date',
-  'Sat, 19 Jun 2021 00:05:20 GMT'
+  'Sat, 19 Jun 2021 00:47:04 GMT',
+  'Content-Length',
+  '1322'
 ]);
 
 nock('https://azure_managedhsm.managedhsm.azure.net:443', {"encodedQueryParams":true})
-  .post('/keys/exportkeytest162406111988502774/create', {"kty":"RSA","attributes":{"exportable":true},"release_policy":{"data":"eyJhbnlPZiI6W3siYWxsT2YiOlt7ImNsYWltIjoieC1tcy1hdHRlc3RhdGlvbi10eXBlIiwiZXF1YWxzIjoic2V2c25wdm0ifSx7ImNsYWltIjoieC1tcy1zZXZzbnB2bS1hdXRob3JrZXlkaWdlc3QiLCJlcXVhbHMiOiIwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAifSx7ImNsYWltIjoieC1tcy1ydW50aW1lLnZtLWNvbmZpZ3VyYXRpb24uc2VjdXJlLWJvb3QiLCJlcXVhbHMiOnRydWV9XSwiYXV0aG9yaXR5IjoiaHR0cHM6Ly9zaGFyZWRldXMuZXVzLnRlc3QuYXR0ZXN0LmF6dXJlLm5ldC8ifV0sInZlcnNpb24iOiIxLjAuMCJ9"}})
+  .post('/keys/exportkeytest162406362332703345/create', {"kty":"RSA","attributes":{"exportable":true},"release_policy":{"data":"eyJhbnlPZiI6W3siYWxsT2YiOlt7ImNsYWltIjoieC1tcy1hdHRlc3RhdGlvbi10eXBlIiwiZXF1YWxzIjoic2V2c25wdm0ifSx7ImNsYWltIjoieC1tcy1zZXZzbnB2bS1hdXRob3JrZXlkaWdlc3QiLCJlcXVhbHMiOiIwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAifSx7ImNsYWltIjoieC1tcy1ydW50aW1lLnZtLWNvbmZpZ3VyYXRpb24uc2VjdXJlLWJvb3QiLCJlcXVhbHMiOnRydWV9XSwiYXV0aG9yaXR5IjoiaHR0cHM6Ly9zaGFyZWRldXMuZXVzLnRlc3QuYXR0ZXN0LmF6dXJlLm5ldC8ifV0sInZlcnNpb24iOiIxLjAuMCJ9"}})
   .query(true)
-  .reply(200, {"attributes":{"created":1624061121,"enabled":true,"exportable":true,"recoverableDays":90,"recoveryLevel":"Recoverable+Purgeable","updated":1624061121},"key":{"e":"AQAB","key_ops":["wrapKey","decrypt","encrypt","unwrapKey","sign","verify"],"kid":"https://azure_managedhsm.managedhsm.azure.net/keys/exportkeytest162406111988502774/2b3eb2c7221f0dc195af2ae43b4cfc1d","kty":"RSA-HSM","n":"vly-Sbm5E70g0-TVUjhA9sg6k0t5BRMXeMqRziCmpZmq4xiX72DNwsYSBmCyN-cv7GC3FeVLJGnMEtMZ714oCZ8vV17WETZj_ZE7SBmUaKUPC17kicwx3TEKWHPgb22QrM-22xeQvu0tkAd1SCIGQ7h4Eprk6kFe0tSv0y1cvKayR8P-i9S0KibwtKd3DBugRCIKwKl0hMpMePmmokx9iyFtytpRLVohdq-ORR1kt4pEUCxuPGqNvWKmk5uv5fQKQt-zzi8kPwciZiuEtg7eJSxofWtRpzjBrpwBxu_a9JV_5xPt3kiMZIrwITm2H2c7a7-AvpKtb7rcKWNuk5DL6Q"},"release_policy":{"contentType":"application/json; charset=utf-8","data":"eyJhbnlPZiI6W3siYWxsT2YiOlt7ImNsYWltIjoieC1tcy1hdHRlc3RhdGlvbi10eXBlIiwiZXF1YWxzIjoic2V2c25wdm0ifSx7ImNsYWltIjoieC1tcy1zZXZzbnB2bS1hdXRob3JrZXlkaWdlc3QiLCJlcXVhbHMiOiIwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAifSx7ImNsYWltIjoieC1tcy1ydW50aW1lLnZtLWNvbmZpZ3VyYXRpb24uc2VjdXJlLWJvb3QiLCJlcXVhbHMiOnRydWV9XSwiYXV0aG9yaXR5IjoiaHR0cHM6Ly9zaGFyZWRldXMuZXVzLnRlc3QuYXR0ZXN0LmF6dXJlLm5ldC8ifV0sInZlcnNpb24iOiIxLjAuMCJ9"}}, [
+  .reply(200, {"attributes":{"created":1624063624,"enabled":true,"exportable":true,"recoverableDays":90,"recoveryLevel":"Recoverable+Purgeable","updated":1624063624},"key":{"e":"AQAB","key_ops":["wrapKey","decrypt","encrypt","unwrapKey","sign","verify"],"kid":"https://azure_managedhsm.managedhsm.azure.net/keys/exportkeytest162406362332703345/b8502bfe07834d0cade46b6755ac1d36","kty":"RSA-HSM","n":"rfhac_eDzHkurlfWyFP9tN3TXw6UXN-NCahLxKov5MxuPnZli2Q0i1Qk0p8fH3YbxP2veic2nlRPV21u9D63nlHhbMVozEXQsoyf-vY5vlh5VX119nt7ozcC_wrxZBzyF9QQBWgSVIiceTjQ9u-LszfMZP74MGg_8tyB6WH-OhR5vy_DASFKun-dYoBuP7JwDIEqi88eQhIumxNubFOEcNxDuiXC78Ds7eGJUKnX6Yo0unVt3bLG-5BhrVbRbioF8UJU86ixI6GOAd9MKbz85d_n7CkSAeZXRIOoH-tBElUBxDVmTUuzdDtp37gaGf2yaBbdlGjItREgTWvhlIWkYQ"},"release_policy":{"contentType":"application/json; charset=utf-8","data":"eyJhbnlPZiI6W3siYWxsT2YiOlt7ImNsYWltIjoieC1tcy1hdHRlc3RhdGlvbi10eXBlIiwiZXF1YWxzIjoic2V2c25wdm0ifSx7ImNsYWltIjoieC1tcy1zZXZzbnB2bS1hdXRob3JrZXlkaWdlc3QiLCJlcXVhbHMiOiIwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAifSx7ImNsYWltIjoieC1tcy1ydW50aW1lLnZtLWNvbmZpZ3VyYXRpb24uc2VjdXJlLWJvb3QiLCJlcXVhbHMiOnRydWV9XSwiYXV0aG9yaXR5IjoiaHR0cHM6Ly9zaGFyZWRldXMuZXVzLnRlc3QuYXR0ZXN0LmF6dXJlLm5ldC8ifV0sInZlcnNpb24iOiIxLjAuMCJ9"}}, [
   'content-type',
   'application/json; charset=utf-8',
   'x-content-type-options',
@@ -147,7 +147,7 @@ nock('https://azure_managedhsm.managedhsm.azure.net:443', {"encodedQueryParams":
   'content-length',
   '1300',
   'x-ms-request-id',
-  '09adca42-d092-11eb-8e3c-0022484f830d',
+  'de07aefc-d097-11eb-aedd-000d3ae28186',
   'x-ms-keyvault-region',
   'eastus2',
   'strict-transport-security',
@@ -157,7 +157,7 @@ nock('https://azure_managedhsm.managedhsm.azure.net:443', {"encodedQueryParams":
   'x-ms-keyvault-network-info',
   'conn_type=Ipv4;addr=50.35.231.105;act_addr_fam=Ipv4;',
   'x-ms-server-latency',
-  '581',
+  '643',
   'cache-control',
   'no-cache',
   'x-frame-options',
@@ -165,9 +165,9 @@ nock('https://azure_managedhsm.managedhsm.azure.net:443', {"encodedQueryParams":
 ]);
 
 nock('https://azure_managedhsm.managedhsm.azure.net:443', {"encodedQueryParams":true})
-  .delete('/keys/exportkeytest162406111988502774')
+  .delete('/keys/exportkeytest162406362332703345')
   .query(true)
-  .reply(200, {"attributes":{"created":1624061121,"enabled":true,"exportable":true,"recoverableDays":90,"recoveryLevel":"Recoverable+Purgeable","updated":1624061121},"deletedDate":1624061121,"key":{"e":"AQAB","key_ops":["wrapKey","encrypt","decrypt","unwrapKey","sign","verify"],"kid":"https://azure_managedhsm.managedhsm.azure.net/keys/exportkeytest162406111988502774/2b3eb2c7221f0dc195af2ae43b4cfc1d","kty":"RSA-HSM","n":"vly-Sbm5E70g0-TVUjhA9sg6k0t5BRMXeMqRziCmpZmq4xiX72DNwsYSBmCyN-cv7GC3FeVLJGnMEtMZ714oCZ8vV17WETZj_ZE7SBmUaKUPC17kicwx3TEKWHPgb22QrM-22xeQvu0tkAd1SCIGQ7h4Eprk6kFe0tSv0y1cvKayR8P-i9S0KibwtKd3DBugRCIKwKl0hMpMePmmokx9iyFtytpRLVohdq-ORR1kt4pEUCxuPGqNvWKmk5uv5fQKQt-zzi8kPwciZiuEtg7eJSxofWtRpzjBrpwBxu_a9JV_5xPt3kiMZIrwITm2H2c7a7-AvpKtb7rcKWNuk5DL6Q"},"recoveryId":"https://azure_managedhsm.managedhsm.azure.net/deletedkeys/exportkeytest162406111988502774","release_policy":{"contentType":"application/json; charset=utf-8","data":"eyJhbnlPZiI6W3siYWxsT2YiOlt7ImNsYWltIjoieC1tcy1hdHRlc3RhdGlvbi10eXBlIiwiZXF1YWxzIjoic2V2c25wdm0ifSx7ImNsYWltIjoieC1tcy1zZXZzbnB2bS1hdXRob3JrZXlkaWdlc3QiLCJlcXVhbHMiOiIwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAifSx7ImNsYWltIjoieC1tcy1ydW50aW1lLnZtLWNvbmZpZ3VyYXRpb24uc2VjdXJlLWJvb3QiLCJlcXVhbHMiOnRydWV9XSwiYXV0aG9yaXR5IjoiaHR0cHM6Ly9zaGFyZWRldXMuZXVzLnRlc3QuYXR0ZXN0LmF6dXJlLm5ldC8ifV0sInZlcnNpb24iOiIxLjAuMCJ9"},"scheduledPurgeDate":1631837121}, [
+  .reply(200, {"attributes":{"created":1624063624,"enabled":true,"exportable":true,"recoverableDays":90,"recoveryLevel":"Recoverable+Purgeable","updated":1624063624},"deletedDate":1624063625,"key":{"e":"AQAB","key_ops":["wrapKey","encrypt","decrypt","unwrapKey","sign","verify"],"kid":"https://azure_managedhsm.managedhsm.azure.net/keys/exportkeytest162406362332703345/b8502bfe07834d0cade46b6755ac1d36","kty":"RSA-HSM","n":"rfhac_eDzHkurlfWyFP9tN3TXw6UXN-NCahLxKov5MxuPnZli2Q0i1Qk0p8fH3YbxP2veic2nlRPV21u9D63nlHhbMVozEXQsoyf-vY5vlh5VX119nt7ozcC_wrxZBzyF9QQBWgSVIiceTjQ9u-LszfMZP74MGg_8tyB6WH-OhR5vy_DASFKun-dYoBuP7JwDIEqi88eQhIumxNubFOEcNxDuiXC78Ds7eGJUKnX6Yo0unVt3bLG-5BhrVbRbioF8UJU86ixI6GOAd9MKbz85d_n7CkSAeZXRIOoH-tBElUBxDVmTUuzdDtp37gaGf2yaBbdlGjItREgTWvhlIWkYQ"},"recoveryId":"https://azure_managedhsm.managedhsm.azure.net/deletedkeys/exportkeytest162406362332703345","release_policy":{"contentType":"application/json; charset=utf-8","data":"eyJhbnlPZiI6W3siYWxsT2YiOlt7ImNsYWltIjoieC1tcy1hdHRlc3RhdGlvbi10eXBlIiwiZXF1YWxzIjoic2V2c25wdm0ifSx7ImNsYWltIjoieC1tcy1zZXZzbnB2bS1hdXRob3JrZXlkaWdlc3QiLCJlcXVhbHMiOiIwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAifSx7ImNsYWltIjoieC1tcy1ydW50aW1lLnZtLWNvbmZpZ3VyYXRpb24uc2VjdXJlLWJvb3QiLCJlcXVhbHMiOnRydWV9XSwiYXV0aG9yaXR5IjoiaHR0cHM6Ly9zaGFyZWRldXMuZXVzLnRlc3QuYXR0ZXN0LmF6dXJlLm5ldC8ifV0sInZlcnNpb24iOiIxLjAuMCJ9"},"scheduledPurgeDate":1631839625}, [
   'content-type',
   'application/json; charset=utf-8',
   'x-content-type-options',
@@ -175,7 +175,7 @@ nock('https://azure_managedhsm.managedhsm.azure.net:443', {"encodedQueryParams":
   'content-length',
   '1459',
   'x-ms-request-id',
-  '0a147260-d092-11eb-8e3c-0022484f830d',
+  'de75b5fa-d097-11eb-aedd-000d3ae28186',
   'x-ms-keyvault-region',
   'eastus2',
   'strict-transport-security',
@@ -185,7 +185,7 @@ nock('https://azure_managedhsm.managedhsm.azure.net:443', {"encodedQueryParams":
   'x-ms-keyvault-network-info',
   'conn_type=Ipv4;addr=50.35.231.105;act_addr_fam=Ipv4;',
   'x-ms-server-latency',
-  '156',
+  '180',
   'cache-control',
   'no-cache',
   'x-frame-options',
@@ -193,13 +193,13 @@ nock('https://azure_managedhsm.managedhsm.azure.net:443', {"encodedQueryParams":
 ]);
 
 nock('https://azure_managedhsm.managedhsm.azure.net:443', {"encodedQueryParams":true})
-  .get('/deletedkeys/exportkeytest162406111988502774')
+  .get('/deletedkeys/exportkeytest162406362332703345')
   .query(true)
-  .reply(200, {"attributes":{"created":1624061121,"enabled":true,"exportable":true,"recoverableDays":90,"recoveryLevel":"Recoverable+Purgeable","updated":1624061121},"deletedDate":1624061121,"key":{"e":"AQAB","key_ops":["verify","sign","unwrapKey","encrypt","decrypt","wrapKey"],"kid":"https://azure_managedhsm.managedhsm.azure.net/keys/exportkeytest162406111988502774/2b3eb2c7221f0dc195af2ae43b4cfc1d","kty":"RSA-HSM","n":"vly-Sbm5E70g0-TVUjhA9sg6k0t5BRMXeMqRziCmpZmq4xiX72DNwsYSBmCyN-cv7GC3FeVLJGnMEtMZ714oCZ8vV17WETZj_ZE7SBmUaKUPC17kicwx3TEKWHPgb22QrM-22xeQvu0tkAd1SCIGQ7h4Eprk6kFe0tSv0y1cvKayR8P-i9S0KibwtKd3DBugRCIKwKl0hMpMePmmokx9iyFtytpRLVohdq-ORR1kt4pEUCxuPGqNvWKmk5uv5fQKQt-zzi8kPwciZiuEtg7eJSxofWtRpzjBrpwBxu_a9JV_5xPt3kiMZIrwITm2H2c7a7-AvpKtb7rcKWNuk5DL6Q"},"recoveryId":"https://azure_managedhsm.managedhsm.azure.net/deletedkeys/exportkeytest162406111988502774","release_policy":{"contentType":"application/json; charset=utf-8","data":"eyJhbnlPZiI6W3siYWxsT2YiOlt7ImNsYWltIjoieC1tcy1hdHRlc3RhdGlvbi10eXBlIiwiZXF1YWxzIjoic2V2c25wdm0ifSx7ImNsYWltIjoieC1tcy1zZXZzbnB2bS1hdXRob3JrZXlkaWdlc3QiLCJlcXVhbHMiOiIwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAifSx7ImNsYWltIjoieC1tcy1ydW50aW1lLnZtLWNvbmZpZ3VyYXRpb24uc2VjdXJlLWJvb3QiLCJlcXVhbHMiOnRydWV9XSwiYXV0aG9yaXR5IjoiaHR0cHM6Ly9zaGFyZWRldXMuZXVzLnRlc3QuYXR0ZXN0LmF6dXJlLm5ldC8ifV0sInZlcnNpb24iOiIxLjAuMCJ9"},"scheduledPurgeDate":1631837121}, [
+  .reply(200, {"attributes":{"created":1624063624,"enabled":true,"exportable":true,"recoverableDays":90,"recoveryLevel":"Recoverable+Purgeable","updated":1624063624},"deletedDate":1624063625,"key":{"e":"AQAB","key_ops":["verify","sign","unwrapKey","encrypt","decrypt","wrapKey"],"kid":"https://azure_managedhsm.managedhsm.azure.net/keys/exportkeytest162406362332703345/b8502bfe07834d0cade46b6755ac1d36","kty":"RSA-HSM","n":"rfhac_eDzHkurlfWyFP9tN3TXw6UXN-NCahLxKov5MxuPnZli2Q0i1Qk0p8fH3YbxP2veic2nlRPV21u9D63nlHhbMVozEXQsoyf-vY5vlh5VX119nt7ozcC_wrxZBzyF9QQBWgSVIiceTjQ9u-LszfMZP74MGg_8tyB6WH-OhR5vy_DASFKun-dYoBuP7JwDIEqi88eQhIumxNubFOEcNxDuiXC78Ds7eGJUKnX6Yo0unVt3bLG-5BhrVbRbioF8UJU86ixI6GOAd9MKbz85d_n7CkSAeZXRIOoH-tBElUBxDVmTUuzdDtp37gaGf2yaBbdlGjItREgTWvhlIWkYQ"},"recoveryId":"https://azure_managedhsm.managedhsm.azure.net/deletedkeys/exportkeytest162406362332703345","release_policy":{"contentType":"application/json; charset=utf-8","data":"eyJhbnlPZiI6W3siYWxsT2YiOlt7ImNsYWltIjoieC1tcy1hdHRlc3RhdGlvbi10eXBlIiwiZXF1YWxzIjoic2V2c25wdm0ifSx7ImNsYWltIjoieC1tcy1zZXZzbnB2bS1hdXRob3JrZXlkaWdlc3QiLCJlcXVhbHMiOiIwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAifSx7ImNsYWltIjoieC1tcy1ydW50aW1lLnZtLWNvbmZpZ3VyYXRpb24uc2VjdXJlLWJvb3QiLCJlcXVhbHMiOnRydWV9XSwiYXV0aG9yaXR5IjoiaHR0cHM6Ly9zaGFyZWRldXMuZXVzLnRlc3QuYXR0ZXN0LmF6dXJlLm5ldC8ifV0sInZlcnNpb24iOiIxLjAuMCJ9"},"scheduledPurgeDate":1631839625}, [
   'x-frame-options',
   'SAMEORIGIN',
   'x-ms-request-id',
-  '0a395fa8-d092-11eb-8e3c-0022484f830d',
+  'de9c9350-d097-11eb-aedd-000d3ae28186',
   'content-type',
   'application/json; charset=utf-8',
   'x-ms-keyvault-region',
@@ -219,11 +219,11 @@ nock('https://azure_managedhsm.managedhsm.azure.net:443', {"encodedQueryParams":
   'x-ms-keyvault-network-info',
   'conn_type=Ipv4;addr=50.35.231.105;act_addr_fam=Ipv4;',
   'x-ms-server-latency',
-  '35'
+  '43'
 ]);
 
 nock('https://azure_managedhsm.managedhsm.azure.net:443', {"encodedQueryParams":true})
-  .delete('/deletedkeys/exportkeytest162406111988502774')
+  .delete('/deletedkeys/exportkeytest162406362332703345')
   .query(true)
   .reply(204, "", [
   'content-type',
@@ -233,7 +233,7 @@ nock('https://azure_managedhsm.managedhsm.azure.net:443', {"encodedQueryParams":
   'content-length',
   '0',
   'x-ms-request-id',
-  '0a4c73e0-d092-11eb-8e3c-0022484f830d',
+  'deae7872-d097-11eb-aedd-000d3ae28186',
   'x-ms-keyvault-region',
   'eastus2',
   'strict-transport-security',
@@ -243,7 +243,7 @@ nock('https://azure_managedhsm.managedhsm.azure.net:443', {"encodedQueryParams":
   'x-ms-keyvault-network-info',
   'conn_type=Ipv4;addr=50.35.231.105;act_addr_fam=Ipv4;',
   'x-ms-server-latency',
-  '138',
+  '125',
   'cache-control',
   'no-cache',
   'x-frame-options',
