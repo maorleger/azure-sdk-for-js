@@ -61,7 +61,8 @@ import {
   LATEST_API_VERSION,
   CreateOctKeyOptions,
   ExportKeyOptions,
-  ReleaseKeyOptions
+  ReleaseKeyOptions,
+  GetRandomBytesOptions
 } from "./keysModels";
 
 import { CryptographyClient } from "./cryptographyClient";
@@ -204,6 +205,14 @@ export class KeyClient {
       console.log(result._response);
       return result.value;
     });
+  }
+
+  getRandomBytes(count: number, options: GetRandomBytesOptions = {}): Promise<Uint8Array | undefined> {
+    return withTrace("getRandomBytes", options, async (updatedOptions) => {
+      const response = await this.client.getRandomBytes(this.vaultUrl, count, updatedOptions)
+      // TODO: should we make the result required and throw if we don't get it?
+      return response.value
+    })
   }
   /**
    * The base URL to the vault

@@ -228,11 +228,19 @@ export class KeyClient {
     exportKey(name: string, version: string, options?: ExportKeyOptions): Promise<KeyVaultKey | DeletedKey>;
     getDeletedKey(name: string, options?: GetDeletedKeyOptions): Promise<DeletedKey>;
     getKey(name: string, options?: GetKeyOptions): Promise<KeyVaultKey>;
+    // Warning: (ae-forgotten-export) The symbol "GetRandomBytesOptions" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    getRandomBytes(count: number, options?: GetRandomBytesOptions): Promise<Uint8Array | undefined>;
     importKey(name: string, key: JsonWebKey, options?: ImportKeyOptions): Promise<KeyVaultKey>;
     listDeletedKeys(options?: ListDeletedKeysOptions): PagedAsyncIterableIterator<DeletedKey>;
     listPropertiesOfKeys(options?: ListPropertiesOfKeysOptions): PagedAsyncIterableIterator<KeyProperties>;
     listPropertiesOfKeyVersions(name: string, options?: ListPropertiesOfKeyVersionsOptions): PagedAsyncIterableIterator<KeyProperties>;
     purgeDeletedKey(name: string, options?: PurgeDeletedKeyOptions): Promise<void>;
+    // Warning: (ae-forgotten-export) The symbol "ReleaseKeyOptions" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    releaseKey(name: string, version: string, options: ReleaseKeyOptions): Promise<string | undefined>;
     restoreKeyBackup(backup: Uint8Array, options?: RestoreKeyBackupOptions): Promise<KeyVaultKey>;
     updateKeyProperties(name: string, keyVersion: string, options?: UpdateKeyPropertiesOptions): Promise<KeyVaultKey>;
     readonly vaultUrl: string;

@@ -11,6 +11,7 @@ import TestClient from "../utils/testClient";
 import { CreateOctKeyOptions } from "../../src/keysModels";
 import { getServiceVersion, onVersions } from "../utils/utils.common";
 import { stringToUint8Array, uint8ArrayToString } from "../utils/crypto";
+import { supportsTracing } from "../../../keyvault-common/test/utils/supportsTracing";
 
 onVersions({ minVer: "7.2" }).describe(
   "Keys client - create, read, update and delete operations for managed HSM",
@@ -52,7 +53,7 @@ onVersions({ minVer: "7.2" }).describe(
     });
 
     onVersions({ minVer: "7.3-preview" }).describe.only("Key Export", () => {
-      it("can create an exportable key with release policy and export it", async function(this: Context) {
+      it.skip("can create an exportable key with release policy and export it", async function(this: Context) {
         const keyName = recorder.getUniqueName("exportkeytest");
         const releasePolicy = {
           anyOf: [
@@ -83,21 +84,25 @@ onVersions({ minVer: "7.2" }).describe(
         // TODO: non-exportable keys must not have release policy - guard or nah?
         const result = await hsmClient.createRsaKey(keyName, {
           exportable: true,
+          keyOps: [ 'wrapKey', 'decrypt', 'encrypt', 'unwrapKey', 'sign', 'verify' ],
           releasePolicy: { data: encodedReleasePolicy }
         });
+        console.log(result)
 
         // TODO: what's important to test here?
         assert.isNotEmpty(JSON.parse(uint8ArrayToString(result.releasePolicy!.data!)));
         assert.isTrue(result.properties.exportable);
 
-        // const exportKey = await hsmClient.createRsaKey(`${keyName}-wrap`, { keyOps: ["export"] });
+        const exportKey = await hsmClient.createRsaKey(`${keyName}-wrap`, { keyOps: ["export"] });
         // TODO: what algorithms are supported?
         // TODO: should wrapping key and algorithm be required?
         // TODO: RestError: export is not supported on this protocol version
-        // const exportedKey = await hsmClient.exportKey(result.name, result.properties.version!, {
-        //   wrappingKey: exportKey.key,
-        //   algorithm: "CKM_RSA_AES_KEY_WRAP"
-        // });
+        const exportedKey = await hsmClient.exportKey(result.name, result.properties.version!, {
+          wrappingKey: exportKey.key,
+          algorithm: "CKM_RSA_AES_KEY_WRAP"
+        });
+
+        console.log(exportedKey)
 
         // console.log(exportedKey);
 
@@ -109,7 +114,7 @@ onVersions({ minVer: "7.2" }).describe(
       it("errors when creating a key with release policy but not exportable?");
       it("can import a key with release policy");
 
-      it.only("can create a release-able key and release it", async function() {
+      it.skip("can create a release-able key and release it", async function() {
         const keyName = recorder.getUniqueName("releasekeytest");
         const releasePolicy = {
           anyOf: [
@@ -157,11 +162,23 @@ onVersions({ minVer: "7.2" }).describe(
         //   algorithm: "CKM_RSA_AES_KEY_WRAP"
         // });
 
+
         // console.log(exportedKey);
 
         // await testClient.flushKey(keyName);
         assert.fail("need to release the key");
       });
     });
+
+  onVersions({ minVer: "7.3-preview" }).describe("getRandomBytes", () => {
+    it("supports fetching a random set of bytes", async () => {
+      const randomBytes = await hsmClient.getRandomBytes(10);
+      assert.equal(randomBytes!.length, 10)
+    })
+
+    it("supports tracing", async () => {
+      await supportsTracing((tracingOptions) => hsmClient.getRandomBytes(10, { tracingOptions }), ["Azure.KeyVault.Keys.KeyClient.getRandomBytes"])
+    })
+  })
   }
 );

@@ -414,6 +414,10 @@ export interface ReleaseKeyOptions extends coreHttp.OperationOptions {
   algorithm?: string;
 }
 
+export interface GetRandomBytesOptions extends coreHttp.OperationOptions {
+
+}
+
 /**
  * Options for {@link updateKeyProperties}.
  */
