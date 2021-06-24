@@ -276,6 +276,7 @@ export interface DeletedKey {
      */
     deletedOn?: Date;
   };
+  releasePolicy?: KeyVaultKeyReleasePolicy;
 }
 
 /**

@@ -52,7 +52,7 @@ onVersions({ minVer: "7.2" }).describe(
       await testClient.flushKey(keyName);
     });
 
-    onVersions({ minVer: "7.3-preview" }).describe.only("Key Export", () => {
+    onVersions({ minVer: "7.3-preview" }).describe("Key Export", () => {
       it.skip("can create an exportable key with release policy and export it", async function(this: Context) {
         const keyName = recorder.getUniqueName("exportkeytest");
         const releasePolicy = {

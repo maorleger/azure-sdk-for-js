@@ -9,10 +9,12 @@ import {
   getKeyFromKeyBundle,
   getKeyPropertiesFromKeyItem
 } from "../../src/transformations";
+import { stringToUint8Array } from "../utils/crypto";
 
 describe("Transformations", () => {
   it("KeyBundle to KeyVaultKey", () => {
     const date = new Date();
+    const releasePolicy = { data: stringToUint8Array("encoded json blob for release policy"), contentType: "application/json; charset=utf-8"}
     const bundle: KeyBundle = {
       key: {
         kid:
@@ -27,12 +29,14 @@ describe("Transformations", () => {
         notBefore: date,
         expires: date,
         created: date,
-        updated: date
+        updated: date,
+        exportable: true,
       },
       tags: {
         tag_name: "tag_value"
       },
-      managed: false
+      managed: false,
+      releasePolicy 
     };
 
     const expectedResult: KeyVaultKey = {
@@ -63,8 +67,10 @@ describe("Transformations", () => {
         updatedOn: date,
         recoveryLevel: "Recoverable",
         recoverableDays: 1,
-        managed: false
-      }
+        managed: false,
+        exportable: true
+      },
+      releasePolicy 
     };
 
     const key: KeyVaultKey = getKeyFromKeyBundle(bundle);
@@ -73,6 +79,7 @@ describe("Transformations", () => {
 
   it("KeyBundle to DeletedKey", () => {
     const date = new Date();
+    const releasePolicy = { data: stringToUint8Array("encoded json blob for release policy"), contentType: "application/json; charset=utf-8"}
     const bundle: DeletedKeyBundle = {
       key: {
         kid:
@@ -87,7 +94,8 @@ describe("Transformations", () => {
         notBefore: date,
         expires: date,
         created: date,
-        updated: date
+        updated: date,
+        exportable: true
       },
       tags: {
         tag_name: "tag_value"
@@ -95,7 +103,8 @@ describe("Transformations", () => {
       managed: false,
       recoveryId: "recovery-id",
       scheduledPurgeDate: date,
-      deletedDate: date
+      deletedDate: date,
+      releasePolicy
     };
 
     const expectedResult: DeletedKey = {
@@ -125,12 +134,14 @@ describe("Transformations", () => {
         createdOn: date,
         updatedOn: date,
         recoveryLevel: "Recoverable",
+        exportable: true,
         recoverableDays: 1,
         managed: false,
         recoveryId: "recovery-id",
         scheduledPurgeDate: date,
-        deletedOn: date
-      }
+        deletedOn: date,
+      },
+      releasePolicy
     };
 
     const key: DeletedKey = getKeyFromKeyBundle(bundle);
