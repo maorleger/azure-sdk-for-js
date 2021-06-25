@@ -147,6 +147,8 @@ export interface DeletedKey {
         readonly scheduledPurgeDate?: Date;
         deletedOn?: Date;
     };
+    // (undocumented)
+    releasePolicy?: KeyVaultKeyReleasePolicy;
 }
 
 // @public

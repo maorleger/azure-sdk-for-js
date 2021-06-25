@@ -84,10 +84,10 @@ onVersions({ minVer: "7.2" }).describe(
         // TODO: non-exportable keys must not have release policy - guard or nah?
         const result = await hsmClient.createRsaKey(keyName, {
           exportable: true,
-          keyOps: [ 'wrapKey', 'decrypt', 'encrypt', 'unwrapKey', 'sign', 'verify' ],
+          keyOps: ["wrapKey", "decrypt", "encrypt", "unwrapKey", "sign", "verify"],
           releasePolicy: { data: encodedReleasePolicy }
         });
-        console.log(result)
+        console.log(result);
 
         // TODO: what's important to test here?
         assert.isNotEmpty(JSON.parse(uint8ArrayToString(result.releasePolicy!.data!)));
@@ -102,7 +102,7 @@ onVersions({ minVer: "7.2" }).describe(
           algorithm: "CKM_RSA_AES_KEY_WRAP"
         });
 
-        console.log(exportedKey)
+        console.log(exportedKey);
 
         // console.log(exportedKey);
 
@@ -114,20 +114,34 @@ onVersions({ minVer: "7.2" }).describe(
       it("errors when creating a key with release policy but not exportable?");
       it("can import a key with release policy");
 
-      it.skip("can create a release-able key and release it", async function() {
+      it.only("can create a release-able key and release it", async function() {
         const keyName = recorder.getUniqueName("releasekeytest");
+        // const releasePolicyOld = {
+        //   anyOf: [
+        //     {
+        //       allOf: [
+        //         {
+        //           claim: "sgx-mrsigner",
+        //           condition: "equals",
+        //           value: "86788fe40448f2a12e20bf8d5e7a1c3139bc5fdc1432b370c1da3489ab649a85"
+        //         },
+        //         { claim: "sgx-is-debuggable", condition: "equals", value: "true" },
+        //         {
+        //           claim: "sgx-mrenclave",
+        //           condition: "equals",
+        //           value: "0000000000000000000000000000000000000000000000000000000000000000"
+        //         }
+        //       ],
+        //       authority: "https://malegeattest.wus.attest.azure.net"
+        //     }
+        //   ],
+        //   version: "1.0"
+        // };
         const releasePolicy = {
           anyOf: [
             {
-              allOf: [
-                {
-                  claim: "x-ms-sgx-mrsigner",
-                  condition: "equals",
-                  value: "86788fe40448f2a12e20bf8d5e7a1c3139bc5fdc1432b370c1da3489ab649a85"
-                },
-                { claim: "x-ms-sgx-is-debuggable", condition: "equals", value: "false" }
-              ],
-              authority: "http://localhost:8023/"
+              allOf: [{ claim: "x-ms-sgx-is-debuggable", condition: "equals", value: "true" }],
+              authority: "https://malegeattest.wus.attest.azure.net"
             }
           ],
           version: "1.0.0"
@@ -147,7 +161,8 @@ onVersions({ minVer: "7.2" }).describe(
 
         // TODO: what is attestation?
         const attestation =
-          "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoiMS4wLjAiLCJhdXRob3JpdHkiOiJodHRwOi8vbG9jYWxob3N0OjgwMjMiLCJqdGkiOiJmY2MxOWI2NS1mMDA3LTQ3ZDEtOTMyYS1jMjM4NjM3ZGNiMWEiLCJpYXQiOjE2MjQwNjM1OTAsImV4cCI6MTYyNDA2NzE5MH0.kCvOUD4jJ86WAYi-TVU5HvxNr-iJd1eyHOK8zR1zJnc";
+          "eyJhbGciOiJIUzI1NiJ9.eyJhYXMtZWhkIjoiZXlKclpYbHpJanBiZXlKbElqb2lRVkZCUWlJc0ltdGxlVjl2Y0hNaU9sc2laR1ZqY25sd2RDSXNJbVZ1WTNKNWNIUWlYU3dpYTJsa0lqb2lOVE16TmpReU5HTXRaV1kzWlMxaU1tRm1MVFU1WmprdE5HUXdPRGhtTURRMFpHVTFJaXdpYTNSNUlqb2lVbE5CSWl3aWJpSTZJbkJPYkhoWVNuRTNPSGRPUkVVd2FXMVNOa1JCWWs5alNrRXpUekp1UlZvNVdFaGtjMDVQTjB0b00xWlJRVTh5VWt0eFlqQk9iRXh4TVhwUFRVOTVZVlJPUW5rNWMzUTRjbG95TURWYU1EWTFjalY2YlRKa1FrSllkRkJUU21Sc1VtSm9WRXd0TlRCcWFFVXpiRUV4WjFVemVYcDJaR0o1U1Zob2NtMDNkWEJFVGtKemFXeFNlR1ZVUW1KUGNWOW1XSE5vT1dGMVVHeGxVM0pOWlZCR2JGbElkVmRNTjJacGNYWktiMHMyZUZSSVZFSmZUa2R1WjBWMlFrMTVPRGRxWlVsbExWbEJUbUYxWkRsRk5GYzFhWHBLZFVwNmJGOHhORkJFY1VWdWVGcFNTM0F5YW1WUGJsZEpTRXRVVm0wMWFsRmhiakZoTlVkdmJGWmxRV2szWlhoalNtRXlNaTFLZERSRWEwNHlWakZMTUZCZlR6YzJSME5ETjNCWlVYVlpTWEkxZFZWclExUmtWVVYxYmxKSWIyaFRWbTFHZVZGaldFSlVkVmxuUVdNMVJFZEpaVGQ1UjNSRFdtOW9WRjlsVmxGQ2NESldVU0lzSW5WelpTSTZJbVZ1WXlKOVhYMCIsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAyMy8iLCJzZ3gtbXJlbmNsYXZlIjoiMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMCIsImlzLWRlYnVnZ2FibGUiOnRydWUsInRlZSI6InNneCIsImlhdCI6MTU4NzQyNTE3MywiZXhwIjoxNjI0NjU5ODgyLCJqdGkiOiJiZTkyYWE4Ni0yMTY1LTRkYWYtODU2My00NGJiODBkODI1NGUifQ.rRcLiNb8uje3tKJi62jvF1hkTapQfqC43IWHcxKIbP8";
+        // "dmVyc2lvbj0gMS4wOwoKYXV0aG9yaXphdGlvbnJ1bGVzIHsgCgk9PiBwZXJtaXQoKTsKfTsKCmlzc3VhbmNlcnVsZXMgeyAKCWM6W3R5cGU9PSJ4LW1zLXNneC1pcy1kZWJ1Z2dhYmxlIl0KCT0-IGlzc3VlKHR5cGU9ImlzLWRlYnVnZ2FibGUiLCB2YWx1ZT0idHJ1ZSIpOwoKCWM6W3R5cGU9PSJ4LW1zLXNneC1tcnNpZ25lciJdCgk9PiBpc3N1ZSh0eXBlPSJzZ3gtbXJzaWduZXIiLCB2YWx1ZT0iODY3ODhmZTQwNDQ4ZjJhMTJlMjBiZjhkNWU3YTFjMzEzOWJjNWZkYzE0MzJiMzcwYzFkYTM0ODlhYjY0OWE4NSIpOwoKCWM6W3R5cGU9PSJ4LW1zLXNneC1tcmVuY2xhdmUiXQoJPT4gaXNzdWUodHlwZT0ic2d4LW1yZW5jbGF2ZSIsIHZhbHVlPSIwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwIik7CgpjOlt0eXBlPT0ieC1tcy1hYXMtZWhkIl0gPT4gaXNzdWUodHlwZT0iYWFzLWVoZCIsIHZhbHVlPSJleUpyWlhseklqcGJleUpsSWpvaVFWRkJRaUlzSW10bGVWOXZjSE1pT2xzaVpHVmpjbmx3ZENJc0ltVnVZM0o1Y0hRaVhTd2lhMmxrSWpvaU5UTXpOalF5TkdNdFpXWTNaUzFpTW1GbUxUVTVaamt0TkdRd09EaG1NRFEwWkdVMUlpd2lhM1I1SWpvaVVsTkJJaXdpYmlJNkluQk9iSGhZU25FM09IZE9SRVV3YVcxU05rUkJZazlqU2tFelR6SnVSVm81V0Voa2MwNVBOMHRvTTFaUlFVOHlVa3R4WWpCT2JFeHhNWHBQVFU5NVlWUk9Rbms1YzNRNGNsb3lNRFZhTURZMWNqVjZiVEprUWtKWWRGQlRTbVJzVW1Kb1ZFd3ROVEJxYUVVemJFRXhaMVV6ZVhwMlpHSjVTVmhvY20wM2RYQkVUa0p6YVd4U2VHVlVRbUpQY1Y5bVdITm9PV0YxVUd4bFUzSk5aVkJHYkZsSWRWZE1OMlpwY1haS2IwczJlRlJJVkVKZlRrZHVaMFYyUWsxNU9EZHFaVWxsTFZsQlRtRjFaRGxGTkZjMWFYcEtkVXA2YkY4eE5GQkVjVVZ1ZUZwU1MzQXlhbVZQYmxkSlNFdFVWbTAxYWxGaGJqRmhOVWR2YkZabFFXazNaWGhqU21FeU1pMUtkRFJFYTA0eVZqRkxNRkJmVHpjMlIwTkROM0JaVVhWWlNYSTFkVlZyUTFSa1ZVVjFibEpJYjJoVFZtMUdlVkZqV0VKVWRWbG5RV00xUkVkSlpUZDVSM1JEV205b1ZGOWxWbEZDY0RKV1VTSXNJblZ6WlNJNkltVnVZeUo5WFgwIik7CgoJYzpbdHlwZT09IngtbXMtYXR0ZXN0YXRpb24tdHlwZSJdCgk9PiBpc3N1ZSh0eXBlPSJ0ZWUiLCB2YWx1ZT1jLnZhbHVlKTsKfTsK";
         const releaseResult = await hsmClient.releaseKey(keyName, result.properties.version!, {
           target: attestation
         });
@@ -162,7 +177,6 @@ onVersions({ minVer: "7.2" }).describe(
         //   algorithm: "CKM_RSA_AES_KEY_WRAP"
         // });
 
-
         // console.log(exportedKey);
 
         // await testClient.flushKey(keyName);
@@ -170,15 +184,18 @@ onVersions({ minVer: "7.2" }).describe(
       });
     });
 
-  onVersions({ minVer: "7.3-preview" }).describe("getRandomBytes", () => {
-    it("supports fetching a random set of bytes", async () => {
-      const randomBytes = await hsmClient.getRandomBytes(10);
-      assert.equal(randomBytes!.length, 10)
-    })
+    onVersions({ minVer: "7.3-preview" }).describe("getRandomBytes", () => {
+      it("supports fetching a random set of bytes", async () => {
+        const randomBytes = await hsmClient.getRandomBytes(10);
+        assert.equal(randomBytes!.length, 10);
+      });
 
-    it("supports tracing", async () => {
-      await supportsTracing((tracingOptions) => hsmClient.getRandomBytes(10, { tracingOptions }), ["Azure.KeyVault.Keys.KeyClient.getRandomBytes"])
-    })
-  })
+      it("supports tracing", async () => {
+        await supportsTracing(
+          (tracingOptions) => hsmClient.getRandomBytes(10, { tracingOptions }),
+          ["Azure.KeyVault.Keys.KeyClient.getRandomBytes"]
+        );
+      });
+    });
   }
 );
