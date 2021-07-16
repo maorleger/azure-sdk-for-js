@@ -13,7 +13,7 @@ import {
   UpdateKeyPropertiesOptions,
   GetKeyOptions
 } from "../../src";
-import { assertThrowsAbortError, getServiceVersion } from "../utils/utils.common";
+import { assertThrowsAbortError, getServiceVersion, onVersions } from "../utils/utils.common";
 import { testPollerProperties } from "../utils/recorderUtils";
 import { authenticate } from "../utils/testAuthentication";
 import TestClient from "../utils/testClient";
@@ -378,5 +378,19 @@ describe("Keys client - create, read, update and delete operations", () => {
       (tracingOptions) => client.createKey(keyName, "RSA", { tracingOptions }),
       ["Azure.KeyVault.Keys.KeyClient.createKey"]
     );
+  });
+
+  onVersions({ minVer: "7.3-preview" }).describe.only("Key rotation", () => {
+    it.only("can rotate an existing key", async () => {
+      const keyName = recorder.getUniqueName("rotatekey");
+      const key = await client.createKey(keyName, "RSA");
+      console.log("key", key);
+      const rotatedKey = await client.rotateKey(keyName);
+      console.log("rotatedKey", rotatedKey);
+    });
+    it("supports tracing");
+    it("errors when rotating a non-existent key");
+    it("can fetch the rotation policy for a key");
+    it("can update the key rotation policy");
   });
 });

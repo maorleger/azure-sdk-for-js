@@ -191,6 +191,10 @@ const withTrace = createTraceFunction("Azure.KeyVault.Keys.KeyClient");
  * Vault.
  */
 export class KeyClient {
+  async rotateKey(keyName: string) {
+    const result = await this.client.rotateKey(this.vaultUrl, keyName);
+    return getKeyFromKeyBundle(result);
+  }
   /**
    * The base URL to the vault
    */
