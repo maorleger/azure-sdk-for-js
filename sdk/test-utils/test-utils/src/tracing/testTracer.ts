@@ -9,8 +9,8 @@ import {
   TraceFlags,
   Context as OTContext,
   context as otContext,
-  getSpanContext,
-  Tracer
+  Tracer,
+  trace
 } from "@azure/core-tracing";
 
 /**
@@ -126,7 +126,7 @@ export class TestTracer implements Tracer {
    * @param options - The SpanOptions used during Span creation.
    */
   startSpan(name: string, options?: SpanOptions, context?: OTContext): TestSpan {
-    const parentContext = getSpanContext(context || otContext.active());
+    const parentContext = trace.getSpanContext(context || otContext.active());
 
     let traceId: string;
     let isRootSpan = false;

@@ -6,11 +6,11 @@ import {
   Span,
   SpanOptions,
   SpanKind,
-  setSpan,
   context as otContext,
+  trace,
   getTracer
-} from "./interfaces";
-import { trace, INVALID_SPAN_CONTEXT } from "@opentelemetry/api";
+} from "./index";
+import { INVALID_SPAN_CONTEXT } from "@opentelemetry/api";
 
 /**
  * Arguments for `createSpanFunction` that allow you to specify the
@@ -74,8 +74,8 @@ export function createSpanFunction(args: CreateSpanFunctionArgs) {
     const tracer = getTracer();
     const tracingOptions = operationOptions?.tracingOptions || {};
     const spanOptions: SpanOptions = {
-      kind: SpanKind.INTERNAL,
-      ...tracingOptions.spanOptions
+      kind: SpanKind.CLIENT,
+      attributes: tracingOptions.spanAttributes || {}
     };
 
     const spanName = args.packagePrefix ? `${args.packagePrefix}.${operationName}` : operationName;
@@ -89,24 +89,24 @@ export function createSpanFunction(args: CreateSpanFunctionArgs) {
 
     if (args.namespace) {
       span.setAttribute("az.namespace", args.namespace);
+      spanOptions.attributes && (spanOptions.attributes["az.namespace"] = args.namespace);
     }
 
-    let newSpanOptions = tracingOptions.spanOptions || {};
+    // let newSpanOptions = tracingOptions.spanOptions || {};
 
-    if (span.isRecording() && args.namespace) {
-      newSpanOptions = {
-        ...tracingOptions.spanOptions,
-        attributes: {
-          ...spanOptions.attributes,
-          "az.namespace": args.namespace
-        }
-      };
-    }
+    // if (span.isRecording() && args.namespace) {
+    //   newSpanOptions = {
+    //     ...tracingOptions.spanOptions,
+    //     attributes: {
+    //       ...spanOptions.attributes,
+    //       "az.namespace": args.namespace
+    //     }
+    //   };
+    // }
 
-    const newTracingOptions: Required<OperationTracingOptions> = {
+    const newTracingOptions: OperationTracingOptions = {
       ...tracingOptions,
-      spanOptions: newSpanOptions,
-      tracingContext: setSpan(tracingOptions.tracingContext || otContext.active(), span)
+      tracingContext: trace.setSpan(tracingOptions.tracingContext || otContext.active(), span)
     };
 
     const newOperationOptions = {

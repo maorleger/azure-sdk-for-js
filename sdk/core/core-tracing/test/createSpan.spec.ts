@@ -3,16 +3,15 @@
 
 import { assert } from "chai";
 import {
-  setSpan,
   SpanKind,
   context as otContext,
-  getSpanContext,
-  Context
-} from "../src/interfaces";
+  Context,
+  OperationTracingOptions,
+  trace
+} from "../src/index";
 
 import { TestSpan } from "./util/testSpan";
 import { createSpanFunction, isTracingDisabled } from "../src/createSpan";
-import { OperationTracingOptions } from "../src/interfaces";
 import { TestTracerProvider } from "./util/testTracerProvider";
 
 describe("createSpan", () => {
@@ -32,7 +31,7 @@ describe("createSpan", () => {
   it("returns a created span with the right metadata", () => {
     const testSpan = tracerProvider.getTracer("test").startSpan("testing");
 
-    const someContext = setSpan(otContext.active(), testSpan);
+    const someContext = trace.setSpan(otContext.active(), testSpan);
 
     const { span, updatedOptions } = <{ span: TestSpan; updatedOptions: any }>(
       createSpan("testMethod", {
@@ -99,16 +98,18 @@ describe("createSpan", () => {
 
     const expected: { tracingOptions?: OperationTracingOptions } = {
       tracingOptions: {
-        spanOptions: {
-          attributes: {
-            "az.namespace": "Microsoft.Test",
-            foo: "bar"
-          }
+        spanAttributes: {
+          "az.namespace": "Microsoft.Test",
+          foo: "bar"
         },
         tracingContext: updatedOptions.tracingOptions!.tracingContext
       }
     };
     assert.deepEqual(updatedOptions, expected);
+  });
+
+  it("merges spanAttributes and deprecated spanOptions", () => {
+    assert.fail("test not implemented");
   });
 
   it("namespace and packagePrefix can be empty (and thus ignored)", () => {
@@ -171,7 +172,7 @@ describe("createSpan", () => {
       assert.ok(parentContext);
       assert.notDeepEqual(parentContext, otContext.active(), "new child context should be created");
       assert.equal(
-        getSpanContext(parentContext!)?.spanId,
+        trace.getSpanContext(parentContext!)?.spanId,
         span.spanContext().spanId,
         "context returned in the updated options should point to our newly created span"
       );
@@ -186,7 +187,7 @@ describe("createSpan", () => {
 
     assert.ok(updatedOptions.tracingOptions.tracingContext);
     assert.equal(
-      getSpanContext(updatedOptions.tracingOptions.tracingContext!)?.spanId,
+      trace.getSpanContext(updatedOptions.tracingOptions.tracingContext!)?.spanId,
       childSpan.spanContext().spanId
     );
   });
@@ -199,7 +200,7 @@ describe("createSpan", () => {
 
     const testSpan = tracerProvider.getTracer("test").startSpan("testing");
 
-    const someContext = setSpan(otContext.active(), testSpan);
+    const someContext = trace.setSpan(otContext.active(), testSpan);
 
     const { span } = <{ span: TestSpan; updatedOptions: any }>createSpan("testMethod", {
       tracingOptions: ({

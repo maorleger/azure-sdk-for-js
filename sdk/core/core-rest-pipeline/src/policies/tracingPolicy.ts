@@ -6,9 +6,10 @@ import {
   OperationTracingOptions,
   createSpanFunction,
   SpanStatusCode,
-  isSpanContextValid
+  isSpanContextValid,
+  SpanOptions,
+  SpanKind
 } from "@azure/core-tracing";
-import { SpanKind } from "@azure/core-tracing";
 import { PipelineResponse, PipelineRequest, SendRequest } from "../interfaces";
 import { PipelinePolicy } from "../pipeline";
 import { URL } from "../util/url";
@@ -56,7 +57,7 @@ export function tracingPolicy(options: TracingPolicyOptions = {}): PipelinePolic
       const tracingOptions: OperationTracingOptions = {
         ...request.tracingOptions,
         spanOptions: {
-          ...request.tracingOptions.spanOptions,
+          ...(request.tracingOptions.spanOptions as SpanOptions),
           kind: SpanKind.CLIENT
         }
       };

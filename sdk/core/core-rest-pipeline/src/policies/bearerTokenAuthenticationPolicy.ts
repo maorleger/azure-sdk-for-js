@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 import { TokenCredential, GetTokenOptions, AccessToken } from "@azure/core-auth";
+import { SpanOptions } from "../../../core-tracing/types/core-tracing";
 import { PipelineResponse, PipelineRequest, SendRequest } from "../interfaces";
 import { PipelinePolicy } from "../pipeline";
 import { createTokenCycler } from "../util/tokenCycler";
@@ -95,7 +96,11 @@ async function defaultAuthorizeRequest(options: AuthorizeRequestOptions): Promis
   const { scopes, getAccessToken, request } = options;
   const getTokenOptions: GetTokenOptions = {
     abortSignal: request.abortSignal,
-    tracingOptions: request.tracingOptions
+    tracingOptions: {
+      spanOptions: request.tracingOptions?.spanOptions as SpanOptions,
+      tracingContext: request.tracingOptions?.tracingContext,
+      spanAttributes: request.tracingOptions?.spanAttributes
+    }
   };
   const accessToken = await getAccessToken(scopes, getTokenOptions);
 

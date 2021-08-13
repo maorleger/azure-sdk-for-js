@@ -28,6 +28,7 @@ export declare type SpanAttributeValue =
 
 /**
  * An interface that enables manual propagation of Spans.
+ * @deprecated
  */
 export interface SpanOptions {
   /**

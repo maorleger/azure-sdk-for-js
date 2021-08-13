@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 import { AbortSignalLike } from "@azure/abort-controller";
-import { OperationTracingOptions } from "@azure/core-tracing";
+import { OperationTracingOptions, SpanOptions } from "@azure/core-tracing";
 import { TransferProgressEvent, RequestOptionsBase } from "./webResource";
 import { HttpOperationResponse } from "./httpOperationResponse";
 
@@ -67,7 +67,8 @@ export function operationOptionsToRequestOptionsBase<T extends OperationOptions>
   }
 
   if (tracingOptions) {
-    result.spanOptions = tracingOptions.spanOptions;
+    result.spanOptions = tracingOptions.spanOptions as SpanOptions;
+    result.spanAttributes = tracingOptions.spanAttributes;
     result.tracingContext = tracingOptions.tracingContext;
   }
 

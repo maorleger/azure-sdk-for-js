@@ -49,8 +49,9 @@ export interface GetTokenOptions {
     };
     tenantId?: string;
     tracingOptions?: {
-        spanOptions?: SpanOptions;
+        spanOptions?: unknown;
         tracingContext?: Context;
+        spanAttributes?: SpanAttributes;
     };
 }
 
@@ -94,7 +95,7 @@ export interface SpanContext {
     traceId: string;
 }
 
-// @public
+// @public @deprecated
 export interface SpanOptions {
     attributes?: SpanAttributes;
 }

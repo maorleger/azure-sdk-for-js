@@ -13,7 +13,6 @@ import {
   SpanContext,
   TraceFlags,
   TraceState,
-  setSpan,
   context,
   SpanStatusCode,
   SpanStatus,
@@ -204,7 +203,7 @@ describe("tracingPolicy", function() {
     mockTracerProvider.setTracer(mockTracer);
 
     const request = new WebResource();
-    request.tracingContext = setSpan(context.active(), ROOT_SPAN);
+    request.tracingContext = trace.setSpan(context.active(), ROOT_SPAN);
 
     const policy = tracingPolicy().create(mockPolicy, new RequestPolicyOptions());
     await policy.sendRequest(request);
@@ -231,7 +230,7 @@ describe("tracingPolicy", function() {
     mockTracerProvider.setTracer(mockTracer);
 
     const request = new WebResource();
-    request.tracingContext = setSpan(context.active(), ROOT_SPAN);
+    request.tracingContext = trace.setSpan(context.active(), ROOT_SPAN);
 
     const policy = tracingPolicy().create(mockPolicy, new RequestPolicyOptions());
     await policy.sendRequest(request);
@@ -259,7 +258,7 @@ describe("tracingPolicy", function() {
     const mockTracer = new MockTracer(mockTraceId, mockSpanId, TraceFlags.SAMPLED, mockTraceState);
     mockTracerProvider.setTracer(mockTracer);
     const request = new WebResource();
-    request.tracingContext = setSpan(context.active(), ROOT_SPAN);
+    request.tracingContext = trace.setSpan(context.active(), ROOT_SPAN);
 
     const policy = tracingPolicy().create(mockPolicy, new RequestPolicyOptions());
     await policy.sendRequest(request);
@@ -287,7 +286,7 @@ describe("tracingPolicy", function() {
     const mockTracer = new MockTracer(mockTraceId, mockSpanId, TraceFlags.SAMPLED, mockTraceState);
     mockTracerProvider.setTracer(mockTracer);
     const request = new WebResource();
-    request.tracingContext = setSpan(context.active(), ROOT_SPAN);
+    request.tracingContext = trace.setSpan(context.active(), ROOT_SPAN);
 
     const policy = tracingPolicy().create(
       {
@@ -344,7 +343,7 @@ describe("tracingPolicy", function() {
     mockTracerProvider.setTracer(mockTracer);
 
     const request = new WebResource();
-    request.tracingContext = setSpan(context.active(), ROOT_SPAN);
+    request.tracingContext = trace.setSpan(context.active(), ROOT_SPAN);
 
     const policy = tracingPolicy().create(mockPolicy, new RequestPolicyOptions());
     await policy.sendRequest(request);

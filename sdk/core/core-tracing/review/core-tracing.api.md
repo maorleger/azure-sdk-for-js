@@ -4,20 +4,32 @@
 
 ```ts
 
-// @public
-export interface Context {
-    deleteValue(key: symbol): Context;
-    getValue(key: symbol): unknown;
-    setValue(key: symbol, value: unknown): Context;
-}
+import { Context } from '@opentelemetry/api';
+import { context } from '@opentelemetry/api';
+import { ContextAPI } from '@opentelemetry/api';
+import { Exception } from '@opentelemetry/api';
+import { HrTime } from '@opentelemetry/api';
+import { isSpanContextValid } from '@opentelemetry/api';
+import { Link } from '@opentelemetry/api';
+import { Span } from '@opentelemetry/api';
+import { SpanAttributes } from '@opentelemetry/api';
+import { SpanAttributeValue } from '@opentelemetry/api';
+import { SpanContext } from '@opentelemetry/api';
+import { SpanKind } from '@opentelemetry/api';
+import { SpanOptions } from '@opentelemetry/api';
+import { SpanStatus } from '@opentelemetry/api';
+import { SpanStatusCode } from '@opentelemetry/api';
+import { TimeInput } from '@opentelemetry/api';
+import { trace } from '@opentelemetry/api';
+import { TraceFlags } from '@opentelemetry/api';
+import { Tracer } from '@opentelemetry/api';
+import { TraceState } from '@opentelemetry/api';
 
-// @public
-export const context: ContextAPI;
+export { Context }
 
-// @public
-export interface ContextAPI {
-    active(): Context;
-}
+export { context }
+
+export { ContextAPI }
 
 // @public
 export function createSpanFunction(args: CreateSpanFunctionArgs): <T extends {
@@ -33,32 +45,7 @@ export interface CreateSpanFunctionArgs {
     packagePrefix: string;
 }
 
-// @public
-export type Exception = ExceptionWithCode | ExceptionWithMessage | ExceptionWithName | string;
-
-// @public
-export interface ExceptionWithCode {
-    code: string | number;
-    message?: string;
-    name?: string;
-    stack?: string;
-}
-
-// @public
-export interface ExceptionWithMessage {
-    code?: string | number;
-    message: string;
-    name?: string;
-    stack?: string;
-}
-
-// @public
-export interface ExceptionWithName {
-    code?: string | number;
-    message?: string;
-    name: string;
-    stack?: string;
-}
+export { Exception }
 
 // @public
 export function extractSpanContextFromTraceParentHeader(traceParentHeader: string): SpanContext | undefined;
@@ -78,21 +65,18 @@ export function getTracer(): Tracer;
 // @public
 export function getTracer(name: string, version?: string): Tracer;
 
-// @public
-export type HrTime = [number, number];
+export { HrTime }
 
-// @public
-export function isSpanContextValid(context: SpanContext): boolean;
+export { isSpanContextValid }
 
-// @public
-export interface Link {
-    attributes?: SpanAttributes;
-    context: SpanContext;
-}
+export { Link }
 
 // @public
 export interface OperationTracingOptions {
-    spanOptions?: SpanOptions;
+    // (undocumented)
+    spanAttributes?: SpanAttributes;
+    // @deprecated
+    spanOptions?: unknown;
     tracingContext?: Context;
 }
 
@@ -102,86 +86,31 @@ export function setSpan(context: Context, span: Span): Context;
 // @public
 export function setSpanContext(context: Context, spanContext: SpanContext): Context;
 
-// @public
-export interface Span {
-    addEvent(name: string, attributesOrStartTime?: SpanAttributes | TimeInput, startTime?: TimeInput): this;
-    end(endTime?: TimeInput): void;
-    isRecording(): boolean;
-    recordException(exception: Exception, time?: TimeInput): void;
-    setAttribute(key: string, value: SpanAttributeValue): this;
-    setAttributes(attributes: SpanAttributes): this;
-    setStatus(status: SpanStatus): this;
-    spanContext(): SpanContext;
-    updateName(name: string): this;
-}
+export { Span }
 
-// @public
-export interface SpanAttributes {
-    [attributeKey: string]: SpanAttributeValue | undefined;
-}
+export { SpanAttributes }
 
-// @public
-export type SpanAttributeValue = string | number | boolean | Array<null | undefined | string> | Array<null | undefined | number> | Array<null | undefined | boolean>;
+export { SpanAttributeValue }
 
-// @public
-export interface SpanContext {
-    spanId: string;
-    traceFlags: number;
-    traceId: string;
-    traceState?: TraceState;
-}
+export { SpanContext }
 
-// @public
-export enum SpanKind {
-    CLIENT = 2,
-    CONSUMER = 4,
-    INTERNAL = 0,
-    PRODUCER = 3,
-    SERVER = 1
-}
+export { SpanKind }
 
-// @public
-export interface SpanOptions {
-    attributes?: SpanAttributes;
-    kind?: SpanKind;
-    links?: Link[];
-    startTime?: TimeInput;
-}
+export { SpanOptions }
 
-// @public
-export interface SpanStatus {
-    code: SpanStatusCode;
-    message?: string;
-}
+export { SpanStatus }
 
-// @public
-export enum SpanStatusCode {
-    ERROR = 2,
-    OK = 1,
-    UNSET = 0
-}
+export { SpanStatusCode }
 
-// @public
-export type TimeInput = HrTime | number | Date;
+export { TimeInput }
 
-// @public
-export const enum TraceFlags {
-    NONE = 0,
-    SAMPLED = 1
-}
+export { trace }
 
-// @public
-export interface Tracer {
-    startSpan(name: string, options?: SpanOptions, context?: Context): Span;
-}
+export { TraceFlags }
 
-// @public
-export interface TraceState {
-    get(key: string): string | undefined;
-    serialize(): string;
-    set(key: string, value: string): TraceState;
-    unset(key: string): TraceState;
-}
+export { Tracer }
+
+export { TraceState }
 
 
 // (No @packageDocumentation comment for this package)

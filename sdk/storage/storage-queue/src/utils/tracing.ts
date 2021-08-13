@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 import { OperationOptions, RequestOptionsBase } from "@azure/core-http";
-import { createSpanFunction } from "@azure/core-tracing";
+import { createSpanFunction, SpanOptions } from "@azure/core-tracing";
 
 /**
  * Creates a span using the global tracer.
@@ -22,9 +22,10 @@ export const createSpan = createSpanFunction({
  */
 export function convertTracingToRequestOptionsBase(
   options?: OperationOptions
-): Pick<RequestOptionsBase, "spanOptions" | "tracingContext"> {
+): Pick<RequestOptionsBase, "spanOptions" | "tracingContext" | "spanAttributes"> {
   return {
-    spanOptions: options?.tracingOptions?.spanOptions,
+    spanOptions: options?.tracingOptions?.spanOptions as SpanOptions,
+    spanAttributes: options?.tracingOptions?.spanAttributes,
     tracingContext: options?.tracingOptions?.tracingContext
   };
 }

@@ -9,7 +9,7 @@ import { HttpOperationResponse } from "./httpOperationResponse";
 import { OperationResponse } from "./operationResponse";
 import { ProxySettings } from "./serviceClient";
 import { AbortSignalLike } from "@azure/abort-controller";
-import { SpanOptions, Context } from "@azure/core-tracing";
+import { SpanOptions, Context, SpanAttributes } from "@azure/core-tracing";
 import { SerializerOptions } from "./util/serializer.common";
 
 export type HttpMethods =
@@ -702,8 +702,14 @@ export interface RequestOptionsBase {
 
   /**
    * Tracing: Options used to create a span when tracing is enabled.
+   * @deprecated
    */
   spanOptions?: SpanOptions;
+
+  /**
+   * Tracing: Attributes to set on a span.
+   */
+  spanAttributes?: SpanAttributes;
 
   /**
    * Tracing: Context used when creating spans.

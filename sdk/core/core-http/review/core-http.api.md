@@ -12,6 +12,7 @@ import { GetTokenOptions } from '@azure/core-auth';
 import { isTokenCredential } from '@azure/core-auth';
 import { OperationTracingOptions } from '@azure/core-tracing';
 import { Span } from '@azure/core-tracing';
+import { SpanAttributes } from '@azure/core-tracing';
 import { SpanOptions } from '@azure/core-tracing';
 import { TokenCredential } from '@azure/core-auth';
 
@@ -613,6 +614,8 @@ export interface RequestOptionsBase {
     onUploadProgress?: (progress: TransferProgressEvent) => void;
     serializerOptions?: SerializerOptions;
     shouldDeserialize?: boolean | ((response: HttpOperationResponse) => boolean);
+    spanAttributes?: SpanAttributes;
+    // @deprecated
     spanOptions?: SpanOptions;
     timeout?: number;
     tracingContext?: Context;

@@ -26,7 +26,7 @@ import {
 } from "../src";
 import { Test_CPK_INFO } from "./utils/constants";
 import { base64encode } from "../src/utils/utils.common";
-import { context, setSpan } from "@azure/core-tracing";
+import { context, trace } from "@azure/core-tracing";
 dotenv.config();
 
 describe("BlobClient", () => {
@@ -711,7 +711,7 @@ describe("BlobClient", () => {
 
     const result = await blobClient.download(undefined, undefined, {
       tracingOptions: {
-        tracingContext: setSpan(context.active(), rootSpan)
+        tracingContext: trace.setSpan(context.active(), rootSpan)
       }
     });
     assert.deepStrictEqual(await bodyToString(result, content.length), content);
