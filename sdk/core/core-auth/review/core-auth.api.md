@@ -49,7 +49,7 @@ export interface GetTokenOptions {
     };
     tenantId?: string;
     tracingOptions?: {
-        spanOptions?: SpanOptions;
+        spanOptions?: any;
         tracingContext?: Context;
     };
 }

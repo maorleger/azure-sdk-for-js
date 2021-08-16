@@ -92,7 +92,8 @@ export interface Link {
 
 // @public
 export interface OperationTracingOptions {
-    spanOptions?: SpanOptions;
+    // @deprecated
+    spanOptions?: any;
     tracingContext?: Context;
 }
 
