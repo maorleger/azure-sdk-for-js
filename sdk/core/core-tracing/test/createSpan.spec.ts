@@ -215,6 +215,10 @@ describe("createSpan", () => {
     delete process.env.AZURE_TRACING_DISABLED;
   });
 
+  it("merges deprecated tracingOptions.spanOptions with new spanOptions parameter", () => {});
+
+  it("lets new spanOptions parameter take priority", () => {});
+
   describe("IsTracingDisabled", () => {
     beforeEach(function(this: Mocha.Context) {
       if (typeof process === "undefined") {

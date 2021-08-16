@@ -69,14 +69,17 @@ export function isTracingDisabled(): boolean {
 export function createSpanFunction(args: CreateSpanFunctionArgs) {
   return function<T extends { tracingOptions?: OperationTracingOptions }>(
     operationName: string,
-    operationOptions: T | undefined
+    operationOptions?: T,
+    spanOptions?: SpanOptions
   ): { span: Span; updatedOptions: T } {
     const tracer = getTracer();
     const tracingOptions = operationOptions?.tracingOptions || {};
-    const spanOptions: SpanOptions = {
+    const mergedSpanOptions: SpanOptions = {
       kind: SpanKind.INTERNAL,
-      ...tracingOptions.spanOptions
+      ...tracingOptions.spanOptions,
+      ...spanOptions
     };
+    console.log(mergedSpanOptions);
 
     const spanName = args.packagePrefix ? `${args.packagePrefix}.${operationName}` : operationName;
 
@@ -84,7 +87,7 @@ export function createSpanFunction(args: CreateSpanFunctionArgs) {
     if (isTracingDisabled()) {
       span = trace.wrapSpanContext(INVALID_SPAN_CONTEXT);
     } else {
-      span = tracer.startSpan(spanName, spanOptions, tracingOptions.tracingContext);
+      span = tracer.startSpan(spanName, mergedSpanOptions, tracingOptions.tracingContext);
     }
 
     if (args.namespace) {
@@ -97,7 +100,7 @@ export function createSpanFunction(args: CreateSpanFunctionArgs) {
       newSpanOptions = {
         ...tracingOptions.spanOptions,
         attributes: {
-          ...spanOptions.attributes,
+          ...mergedSpanOptions.attributes,
           "az.namespace": args.namespace
         }
       };
