@@ -39,8 +39,7 @@ export function createTraceFunction(prefix: string): TracedFunction {
   });
 
   return async function(operationName, options, cb) {
-    const { updatedOptions, span } = createSpan(operationName, options);
-
+    const { updatedOptions, span } = createSpan(operationName, options, {});
     try {
       // NOTE: we really do need to await on this function here so we can handle any exceptions thrown and properly
       // close the span.

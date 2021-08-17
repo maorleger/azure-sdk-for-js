@@ -448,18 +448,18 @@ export interface SpanOptions {
    */
   attributes?: SpanAttributes;
 
-  /** {@link Link}s span to other spans */
-  links?: Link[];
+  /** {@link Link}s span to other spans; @deprecated */
+  links?: any;
 
   /**
-   * The type of Span. Default to SpanKind.INTERNAL
+   * The type of Span. Default to SpanKind.INTERNAL @deprecated
    */
-  kind?: SpanKind;
+  kind?: any;
 
   /**
-   * A manually specified start time for the created `Span` object.
+   * A manually specified start time for the created `Span` object. @deprecated
    */
-  startTime?: TimeInput;
+  startTime?: any;
 }
 
 /**
@@ -468,9 +468,8 @@ export interface SpanOptions {
 export interface OperationTracingOptions {
   /**
    * OpenTelemetry SpanOptions used to create a span when tracing is enabled.
-   * @deprecated
    */
-  spanOptions?: any;
+  spanOptions?: SpanOptions;
 
   /**
    * OpenTelemetry context to use for created Spans.

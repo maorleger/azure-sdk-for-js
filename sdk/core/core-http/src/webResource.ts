@@ -702,8 +702,9 @@ export interface RequestOptionsBase {
 
   /**
    * Tracing: Options used to create a span when tracing is enabled.
+   * @deprecated
    */
-  spanOptions?: SpanOptions;
+  spanOptions?: any;
 
   /**
    * Tracing: Context used when creating spans.

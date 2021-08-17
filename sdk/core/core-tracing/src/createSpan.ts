@@ -8,7 +8,10 @@ import {
   SpanKind,
   setSpan,
   context as otContext,
-  getTracer
+  getTracer,
+  Link,
+  TimeInput,
+  SpanAttributes
 } from "./interfaces";
 import { trace, INVALID_SPAN_CONTEXT } from "@opentelemetry/api";
 
@@ -48,6 +51,12 @@ export function isTracingDisabled(): boolean {
   return Boolean(azureTracingDisabledValue);
 }
 
+export interface CreateSpanOptions {
+  links?: Link[];
+  kind?: SpanKind;
+  startTime?: TimeInput;
+  spanAttributes?: SpanAttributes;
+}
 /**
  * Creates a function that can be used to create spans using the global tracer.
  *
@@ -70,7 +79,7 @@ export function createSpanFunction(args: CreateSpanFunctionArgs) {
   return function<T extends { tracingOptions?: OperationTracingOptions }>(
     operationName: string,
     operationOptions?: T,
-    spanOptions?: SpanOptions
+    spanOptions?: CreateSpanOptions
   ): { span: Span; updatedOptions: T } {
     const tracer = getTracer();
     const tracingOptions = operationOptions?.tracingOptions || {};
@@ -79,7 +88,6 @@ export function createSpanFunction(args: CreateSpanFunctionArgs) {
       ...tracingOptions.spanOptions,
       ...spanOptions
     };
-    console.log(mergedSpanOptions);
 
     const spanName = args.packagePrefix ? `${args.packagePrefix}.${operationName}` : operationName;
 
@@ -111,6 +119,7 @@ export function createSpanFunction(args: CreateSpanFunctionArgs) {
       spanOptions: newSpanOptions,
       tracingContext: setSpan(tracingOptions.tracingContext || otContext.active(), span)
     };
+    const opName = newTracingOptions.tracingContext.getValue(Symbol.for("az.operationName"));
 
     const newOperationOptions = {
       ...operationOptions,

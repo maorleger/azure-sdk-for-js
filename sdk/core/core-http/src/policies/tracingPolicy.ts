@@ -17,6 +17,7 @@ import {
 import { WebResourceLike } from "../webResource";
 import { HttpOperationResponse } from "../httpOperationResponse";
 import { URLBuilder } from "../url";
+import { SpanAttributeValue } from "../../../core-auth/types/latest/core-auth";
 
 const createSpan = createSpanFunction({
   packagePrefix: "",
@@ -68,7 +69,10 @@ export class TracingPolicy extends BaseRequestPolicy {
     span.setAttributes({
       "http.method": request.method,
       "http.url": request.url,
-      requestId: request.requestId
+      requestId: request.requestId,
+      "az.namespace": request.tracingContext?.getValue(
+        Symbol.for("az.namespace")
+      ) as SpanAttributeValue
     });
 
     if (this.userAgent) {

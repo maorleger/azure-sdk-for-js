@@ -93,7 +93,7 @@ export interface Link {
 // @public
 export interface OperationTracingOptions {
     // @deprecated
-    spanOptions?: any;
+    spanOptions?: SpanOptions;
     tracingContext?: Context;
 }
 
@@ -144,9 +144,12 @@ export enum SpanKind {
 // @public
 export interface SpanOptions {
     attributes?: SpanAttributes;
-    kind?: SpanKind;
-    links?: Link[];
-    startTime?: TimeInput;
+    // @deprecated
+    kind?: any;
+    // @deprecated
+    links?: any;
+    // @deprecated
+    startTime?: any;
 }
 
 // @public

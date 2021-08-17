@@ -613,7 +613,8 @@ export interface RequestOptionsBase {
     onUploadProgress?: (progress: TransferProgressEvent) => void;
     serializerOptions?: SerializerOptions;
     shouldDeserialize?: boolean | ((response: HttpOperationResponse) => boolean);
-    spanOptions?: SpanOptions;
+    // @deprecated
+    spanOptions?: any;
     timeout?: number;
     tracingContext?: Context;
 }
