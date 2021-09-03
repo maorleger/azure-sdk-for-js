@@ -1,5 +1,5 @@
-import { context, SpanKind, SpanOptions, SpanStatusCode, trace } from "@opentelemetry/api";
-import { OperationTracingOptions, Context, Span, setSpan } from ".";
+import { context, SpanOptions, SpanStatusCode, trace } from "@opentelemetry/api";
+import { OperationTracingOptions, Span } from ".";
 import { knownSpanAttributes } from "./createSpan";
 
 export function createTrace<
@@ -53,6 +53,7 @@ export function withTrace<TOptions extends { tracingOptions?: OperationTracingOp
         return result;
       } catch (err) {
         span.setStatus({ code: SpanStatusCode.ERROR, message: err.message });
+        span.recordException(err);
         throw err;
       } finally {
         span.end();
@@ -60,21 +61,3 @@ export function withTrace<TOptions extends { tracingOptions?: OperationTracingOp
     }
   );
 }
-
-const wt = createTrace({ namespace: "", packageName: "", packageVersion: "" });
-wt(
-  "f",
-  (updatedOptions, span) => {
-    return Promise.resolve(5);
-  },
-  {},
-  { kind: SpanKind.CLIENT }
-);
-const f = withTrace(
-  "foo",
-  (updatedOptions, span) => {
-    return Promise.resolve(5);
-  },
-  {},
-  {}
-);

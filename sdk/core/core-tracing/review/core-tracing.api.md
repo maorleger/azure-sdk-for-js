@@ -17,6 +17,8 @@ export const context: ContextAPI;
 // @public
 export interface ContextAPI {
     active(): Context;
+    // (undocumented)
+    with<A extends unknown[], F extends (...args: A) => ReturnType<F>>(context: Context, fn: F, thisArg?: ThisParameterType<F>, ...args: A): ReturnType<F>;
 }
 
 // @public
