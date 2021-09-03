@@ -3,6 +3,7 @@
 
 // Tracers and wrappers
 export { createSpanFunction, CreateSpanFunctionArgs } from "./createSpan";
+export { TraceOptions, createTrace, withTrace } from "./createTrace";
 
 // Shared interfaces
 export {
