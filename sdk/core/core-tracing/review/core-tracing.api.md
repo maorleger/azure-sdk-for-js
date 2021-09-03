@@ -38,7 +38,7 @@ export interface CreateSpanFunctionArgs {
 // @public
 export function createTrace<TOptions extends {
     tracingOptions?: OperationTracingOptions;
-}, T>(options: Omit<TraceOptions, "spanOptions">): (operationName: string, cb: (updatedOptions: any, span: Span) => Promise<T>, operationOptions?: TOptions | undefined, spanOptions?: SpanOptions | undefined) => Promise<T>;
+}, T>(options: Omit<TraceOptions, keyof SpanOptions>): (spanName: string, cb: (updatedOptions: any, span: Span) => Promise<T>, operationOptions?: TOptions | undefined, spanOptions?: SpanOptions | undefined) => Promise<T>;
 
 // @public
 export type Exception = ExceptionWithCode | ExceptionWithMessage | ExceptionWithName | string;
@@ -178,10 +178,13 @@ export const enum TraceFlags {
 
 // @public
 export interface TraceOptions {
+    attributes?: SpanAttributes;
     azureNamespace: string;
+    kind?: SpanKind;
+    links?: Link[];
     packageName?: string;
     packageVersion?: string;
-    spanOptions?: SpanOptions;
+    startTime?: TimeInput;
 }
 
 // @public
@@ -200,7 +203,7 @@ export interface TraceState {
 // @public
 export function withTrace<TOptions extends {
     tracingOptions?: OperationTracingOptions;
-}, T>(operationName: string, cb: (updatedOptions: TOptions, span: Span) => Promise<T>, operationOptions?: TOptions, options?: TraceOptions): Promise<T>;
+}, T>(spanName: string, cb: (updatedOptions: TOptions, span: Span) => Promise<T>, operationOptions?: TOptions, traceOptions?: TraceOptions): Promise<T>;
 
 
 // (No @packageDocumentation comment for this package)
