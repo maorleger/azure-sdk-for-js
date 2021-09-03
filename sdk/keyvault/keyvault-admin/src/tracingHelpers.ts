@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 import { OperationOptions } from "@azure/core-client";
-import { createSpanFunction, Span, SpanStatusCode } from "@azure/core-tracing";
+import { context, createSpanFunction, Span, SpanStatusCode } from "@azure/core-tracing";
 
 /**
  * An interface representing a function that is traced.
@@ -44,7 +44,13 @@ export function createTraceFunction(prefix: string): TracedFunction {
     try {
       // NOTE: we really do need to await on this function here so we can handle any exceptions thrown and properly
       // close the span.
-      const result = await cb(updatedOptions, span);
+      const result = await context.with(
+        updatedOptions.tracingOptions!.tracingContext!,
+        cb,
+        undefined,
+        updatedOptions,
+        span
+      );
 
       // otel 0.16+ needs this or else the code ends up being set as UNSET
       span.setStatus({
@@ -56,6 +62,7 @@ export function createTraceFunction(prefix: string): TracedFunction {
         code: SpanStatusCode.ERROR,
         message: err.message
       });
+      span.recordException(err);
       throw err;
     } finally {
       span.end();

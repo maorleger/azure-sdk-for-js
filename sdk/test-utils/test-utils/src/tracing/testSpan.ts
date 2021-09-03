@@ -10,7 +10,8 @@ import {
   SpanAttributes,
   SpanStatusCode,
   SpanAttributeValue,
-  Span
+  Span,
+  Exception
 } from "@azure/core-tracing";
 
 /**
@@ -55,6 +56,7 @@ export class TestSpan implements Span {
   private _context: SpanContext;
   private readonly _tracer: Tracer;
 
+  recordedException?: Exception;
   /**
    * Starts a new Span.
    * @param parentTracer-  The tracer that created this Span
@@ -149,8 +151,8 @@ export class TestSpan implements Span {
   addEvent(): this {
     throw new Error("Method not implemented.");
   }
-  recordException(): void {
-    throw new Error("Method not implemented.");
+  recordException(exception: Exception): void {
+    this.recordedException = exception;
   }
   updateName(): this {
     throw new Error("Method not implemented.");
