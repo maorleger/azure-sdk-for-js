@@ -32,6 +32,7 @@ import { logger } from "./log";
 import { v4 as v4uuid } from "uuid";
 import { bearerTokenAuthenticationPolicy } from "@azure/core-rest-pipeline";
 import { createChallengeCallbacks } from "./challengeAuthenticationCallbacks";
+import { FullOperationResponse } from "@azure/core-client";
 
 const withTrace = createTraceFunction("Azure.KeyVault.Admin.KeyVaultAccessControlClient");
 
@@ -51,6 +52,7 @@ export class KeyVaultAccessControlClient {
    * A reference to the auto-generated Key Vault HTTP client.
    */
   private readonly client: KeyVaultClient;
+  private readonly enableKeepAlive: boolean = true;
 
   /**
    * Creates an instance of the KeyVaultAccessControlClient.
@@ -78,8 +80,23 @@ export class KeyVaultAccessControlClient {
 
     const serviceVersion = options.serviceVersion || LATEST_API_VERSION;
 
+    const { redirectOptions, keepAliveOptions, ...rest } = options;
+
+    switch (redirectOptions?.handleRedirects) {
+      case true:
+        redirectOptions.maxRetries = undefined;
+        break;
+      case false:
+        redirectOptions.maxRetries = 0;
+        break;
+    }
+
+    if (keepAliveOptions?.enable === false) {
+      this.enableKeepAlive = false;
+    }
+
     const clientOptions = {
-      ...options,
+      redirectOptions,
       loggingOptions: {
         logger: logger.info,
         additionalAllowedHeaderNames: [
@@ -87,7 +104,8 @@ export class KeyVaultAccessControlClient {
           "x-ms-keyvault-network-info",
           "x-ms-keyvault-service-version"
         ]
-      }
+      },
+      ...rest
     };
 
     this.client = new KeyVaultClient(serviceVersion, clientOptions);
@@ -411,6 +429,24 @@ export class KeyVaultAccessControlClient {
     });
   }
 
+  public async getRoleDefinitionWithResponse(
+    roleScope: KeyVaultRoleScope,
+    name: string,
+    options: GetRoleDefinitionOptions = {}
+  ): Promise<KeyVaultRoleDefinition & withResponse> {
+    let _response = undefined;
+    const response = await this.client.roleDefinitions.get(this.vaultUrl, roleScope, name, {
+      ...options,
+      onResponse:
+        options.onResponse ??
+        ((rawResponse) => {
+          _response = rawResponse;
+        })
+    });
+
+    return { ...mappings.roleDefinition.generatedToPublic(response), _response };
+  }
+
   /**
    * Creates or updates a role definition in an Azure Key Vault.
    *
@@ -474,4 +510,11 @@ export class KeyVaultAccessControlClient {
       await this.client.roleDefinitions.delete(this.vaultUrl, roleScope, name, updatedOptions);
     });
   }
+}
+
+interface withResponse {
+  /**
+   * @deprecated Please pass the `onResponse` callback option to get the raw response.
+   */
+  _response?: FullOperationResponse;
 }

@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 import { CommonClientOptions, OperationOptions } from "@azure/core-client";
+import { ExponentialRetryPolicyOptions, RedirectPolicyOptions } from "@azure/core-rest-pipeline";
 import { SUPPORTED_API_VERSIONS } from "./constants";
 import {
   DataAction as KeyVaultDataAction,
@@ -20,6 +21,30 @@ export interface AccessControlClientOptions extends CommonClientOptions {
    * The accepted versions of the Key Vault's service API.
    */
   serviceVersion?: SUPPORTED_API_VERSIONS;
+
+  retryOptions?: ExponentialRetryPolicyOptions & {
+    /** @deprecated This field will be ignored and removed in the next major version */
+    mode?: RetryMode;
+  };
+
+  redirectOptions?: RedirectPolicyOptions & {
+    /** @deprecated Please use FOOBAR */
+    handleRedirects?: boolean;
+  };
+
+  keepAliveOptions?: {
+    /**
+     * @deprecated Please use `disableKeepAlive` as an option per request instead.
+     */
+    enable: boolean;
+  };
+}
+
+/**
+ * Move this to core-rest-pipeline?
+ */
+export enum RetryMode {
+  Exponential
 }
 
 /**

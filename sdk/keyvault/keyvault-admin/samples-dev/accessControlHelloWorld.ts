@@ -9,7 +9,8 @@ import {
   KeyVaultAccessControlClient,
   KeyVaultPermission,
   KnownKeyVaultDataAction,
-  KnownKeyVaultRoleScope
+  KnownKeyVaultRoleScope,
+  RetryMode
 } from "@azure/keyvault-admin";
 import { DefaultAzureCredential } from "@azure/identity";
 import * as uuid from "uuid";
@@ -28,7 +29,11 @@ export async function main(): Promise<void> {
   if (!url) {
     throw new Error("Missing environment variable AZURE_MANAGEDHSM_URI.");
   }
-  const client = new KeyVaultAccessControlClient(url, credential);
+  const client = new KeyVaultAccessControlClient(url, credential. {
+    retryOptions: {
+      mode: RetryMode.Exponential
+    }
+  });
 
   for await (const roleAssignment of client.listRoleAssignments("/")) {
     console.log(roleAssignment);
@@ -49,27 +54,38 @@ export async function main(): Promise<void> {
   });
   console.log(roleDefinition);
 
-  // This sample uses a custom role but you may assign one of the many built-in roles.
-  // Please refer to https://docs.microsoft.com/azure/key-vault/managed-hsm/built-in-roles for more information.
-  const roleAssignmentName = uuid.v4();
-  const clientObjectId = process.env["CLIENT_OBJECT_ID"];
-  if (!clientObjectId) {
-    throw new Error("Missing environment variable CLIENT_OBJECT_ID.");
-  }
-  let assignment = await client.createRoleAssignment(
-    globalScope,
-    roleAssignmentName,
-    roleDefinition.id,
-    clientObjectId
-  );
-  console.log(assignment);
+  let response = await client.getRoleDefinitionWithResponse(globalScope, roleDefinitionName, {});
+  console.log(response._response?.status);
+  // console.log(response._response);
+  let tryAgain = await client.getRoleDefinitionWithResponse(globalScope, roleDefinitionName, {
+    onResponse: (response) => {
+      console.log("inside the callback...", response.status);
+    }
+  });
+  console.log("is response set?", tryAgain._response?.status);
+  return;
 
-  assignment = await client.getRoleAssignment(globalScope, roleAssignmentName);
-  console.log(assignment);
+  // // This sample uses a custom role but you may assign one of the many built-in roles.
+  // // Please refer to https://docs.microsoft.com/azure/key-vault/managed-hsm/built-in-roles for more information.
+  // const roleAssignmentName = uuid.v4();
+  // const clientObjectId = process.env["CLIENT_OBJECT_ID"];
+  // if (!clientObjectId) {
+  //   throw new Error("Missing environment variable CLIENT_OBJECT_ID.");
+  // }
+  // let assignment = await client.createRoleAssignment(
+  //   globalScope,
+  //   roleAssignmentName,
+  //   roleDefinition.id,
+  //   clientObjectId
+  // );
+  // console.log(assignment);
 
-  await client.deleteRoleAssignment(globalScope, roleAssignmentName);
+  // assignment = await client.getRoleAssignment(globalScope, roleAssignmentName);
+  // console.log(assignment);
 
-  await client.deleteRoleDefinition(globalScope, roleDefinition.name);
+  // await client.deleteRoleAssignment(globalScope, roleAssignmentName);
+
+  // await client.deleteRoleDefinition(globalScope, roleDefinition.name);
 }
 
 main().catch((err) => {

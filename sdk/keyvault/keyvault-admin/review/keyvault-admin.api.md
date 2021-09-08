@@ -5,6 +5,7 @@
 ```ts
 
 import { CommonClientOptions } from '@azure/core-client';
+import { FullOperationResponse } from '@azure/core-client';
 import { OperationOptions } from '@azure/core-client';
 import { PagedAsyncIterableIterator } from '@azure/core-paging';
 import { PollerLike } from '@azure/core-lro';
@@ -44,6 +45,10 @@ export class KeyVaultAccessControlClient {
     deleteRoleDefinition(roleScope: KeyVaultRoleScope, name: string, options?: DeleteRoleDefinitionOptions): Promise<void>;
     getRoleAssignment(roleScope: KeyVaultRoleScope, name: string, options?: GetRoleAssignmentOptions): Promise<KeyVaultRoleAssignment>;
     getRoleDefinition(roleScope: KeyVaultRoleScope, name: string, options?: GetRoleDefinitionOptions): Promise<KeyVaultRoleDefinition>;
+    // Warning: (ae-forgotten-export) The symbol "withResponse" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    getRoleDefinitionWithResponse(roleScope: KeyVaultRoleScope, name: string, options?: GetRoleDefinitionOptions): Promise<KeyVaultRoleDefinition & withResponse>;
     listRoleAssignments(roleScope: KeyVaultRoleScope, options?: ListRoleAssignmentsOptions): PagedAsyncIterableIterator<KeyVaultRoleAssignment>;
     listRoleDefinitions(roleScope: KeyVaultRoleScope, options?: ListRoleDefinitionsOptions): PagedAsyncIterableIterator<KeyVaultRoleDefinition>;
     setRoleDefinition(roleScope: KeyVaultRoleScope, options?: SetRoleDefinitionOptions): Promise<KeyVaultRoleDefinition>;
