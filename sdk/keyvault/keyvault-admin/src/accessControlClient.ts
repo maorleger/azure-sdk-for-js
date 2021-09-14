@@ -5,7 +5,6 @@
 import { TokenCredential } from "@azure/core-auth";
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
 
-import { createTraceFunction } from "./tracingHelpers";
 import { KeyVaultClient } from "./generated/keyVaultClient";
 import { RoleAssignmentsListForScopeOptionalParams } from "./generated/models";
 

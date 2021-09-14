@@ -9,9 +9,10 @@ import {
   TraceFlags,
   Context as OTContext,
   context as otContext,
-  getSpanContext,
-  Tracer
-} from "@azure/core-tracing";
+  Tracer,
+  Span,
+  trace
+} from "@opentelemetry/api";
 
 /**
  * Simple representation of a Span that only has name and child relationships.
@@ -125,8 +126,10 @@ export class TestTracer implements Tracer {
    * @param name - The name of the span.
    * @param options - The SpanOptions used during Span creation.
    */
-  startSpan(name: string, options?: SpanOptions, context?: OTContext): TestSpan {
-    const parentContext = getSpanContext(context || otContext.active());
+  startSpan(name: string, options?: SpanOptions, ctx?: OTContext): TestSpan {
+    const parentContext = trace.getSpanContext(otContext.active());
+    console.log("ctx", ctx);
+    console.log("parentContex", parentContext);
 
     let traceId: string;
     let isRootSpan = false;
@@ -159,11 +162,35 @@ export class TestTracer implements Tracer {
     return span;
   }
 
-  /**
-   * Added to support testing. We do not support `startActiveSpan` in general because it uses async_hooks
-   * which is experimental. Only added to support TestTracerProvider compatibility with OTel Tracers.
-   */
-  startActiveSpan(): never {
-    throw new Error("Method not implemented.");
+  startActiveSpan<F extends (span: Span) => ReturnType<F>>(
+    name: string,
+    arg2?: F | SpanOptions,
+    arg3?: F | OTContext,
+    arg4?: F
+  ): ReturnType<F> | undefined {
+    let opts: SpanOptions | undefined;
+    let ctx: OTContext | undefined;
+    let fn: F;
+
+    if (arguments.length < 2) {
+      return;
+    } else if (arguments.length === 2) {
+      fn = arg2 as F;
+    } else if (arguments.length === 3) {
+      opts = arg2 as SpanOptions | undefined;
+      fn = arg3 as F;
+    } else {
+      opts = arg2 as SpanOptions | undefined;
+      ctx = arg3 as OTContext | undefined;
+      fn = arg4 as F;
+    }
+    console.log("ctx(activeSpan)", ctx);
+
+    const parentContext = otContext.active();
+    console.log("parentContext(activeSpan)", parentContext);
+    const span = this.startSpan(name, opts);
+    const contextWithSpanSet = trace.setSpan(parentContext, span);
+
+    return otContext.with(contextWithSpanSet, fn, undefined, span);
   }
 }

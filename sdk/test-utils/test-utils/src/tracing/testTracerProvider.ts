@@ -9,7 +9,7 @@ export class TestTracerProvider implements TracerProvider {
 
   getTracer(name: string, _version?: string): TestTracer {
     if (!this.tracerCache.has(name)) {
-      this.tracerCache.set(name, new TestTracer(name, name));
+      this.tracerCache.set(name, new TestTracer(name));
     }
     return this.tracerCache.get(name)!;
   }

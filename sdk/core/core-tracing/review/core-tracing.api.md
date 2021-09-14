@@ -36,9 +36,9 @@ export interface CreateSpanFunctionArgs {
 }
 
 // @public
-export function createTrace<TOptions extends {
-    tracingOptions?: OperationTracingOptions;
-}, T>(options: Omit<TraceOptions, keyof SpanOptions>): (spanName: string, cb: (updatedOptions: any, span: Span) => Promise<T>, operationOptions?: TOptions | undefined, spanOptions?: SpanOptions | undefined) => Promise<T>;
+export function createTrace(options: Omit<TraceOptions, keyof SpanOptions>): <TOptions extends {
+    tracingOptions?: OperationTracingOptions | undefined;
+}, T>(spanName: string, cb: (updatedOptions: TOptions, span: Span) => Promise<T>, operationOptions?: TOptions | undefined, spanOptions?: SpanOptions | undefined) => Promise<T>;
 
 // @public
 export type Exception = ExceptionWithCode | ExceptionWithMessage | ExceptionWithName | string;

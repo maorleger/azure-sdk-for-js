@@ -53,15 +53,15 @@ export interface TraceOptions {
  * @param options - Options that will be used whenever the returned function is invoked.
  * @returns - A function that can be used to add tracing to a given operation.
  */
-export function createTrace<TOptions extends { tracingOptions?: OperationTracingOptions }, T>(
-  options: Omit<TraceOptions, keyof SpanOptions>
-) {
-  return (
+export function createTrace(options: Omit<TraceOptions, keyof SpanOptions>) {
+  return function<TOptions extends { tracingOptions?: OperationTracingOptions }, T>(
     spanName: string,
-    cb: (updatedOptions: any, span: Span) => Promise<T>,
+    cb: (updatedOptions: TOptions, span: Span) => Promise<T>,
     operationOptions?: TOptions,
     spanOptions?: SpanOptions
-  ) => withTrace(spanName, cb, operationOptions, { ...options, ...spanOptions });
+  ) {
+    return withTrace(spanName, cb, operationOptions, { ...options, ...spanOptions });
+  };
 }
 
 /**
@@ -79,10 +79,7 @@ export function withTrace<TOptions extends { tracingOptions?: OperationTracingOp
   operationOptions?: TOptions,
   traceOptions?: TraceOptions
 ): Promise<T> {
-  const tracer = trace.getTracer(
-    traceOptions?.packageName || "Azure.Core",
-    traceOptions?.packageVersion
-  );
+  const tracer = trace.getTracer("azure/core-tracing", traceOptions?.packageVersion);
 
   const spanOptions: SpanOptions = traceOptions || {};
   const currentContext = operationOptions?.tracingOptions?.tracingContext || context.active();
@@ -103,7 +100,7 @@ export function withTrace<TOptions extends { tracingOptions?: OperationTracingOp
     } as TOptions;
 
     try {
-      const result = await cb(newOperationOptions, span);
+      const result = await cb(newOperationOptions as TOptions, span);
       span.setStatus({ code: SpanStatusCode.OK });
       return result;
     } catch (err) {
