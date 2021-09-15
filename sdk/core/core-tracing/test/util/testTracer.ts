@@ -2,15 +2,16 @@
 // Licensed under the MIT license.
 
 import { TestSpan } from "./testSpan";
+import { getSpanContext } from "../../src/interfaces";
+
 import {
   SpanContext,
   SpanOptions,
   TraceFlags,
   Context as OTContext,
   context as otContext,
-  getSpanContext,
   Tracer
-} from "../../src/interfaces";
+} from "@opentelemetry/api";
 
 /**
  * Simple representation of a Span that only has name and child relationships.

@@ -2,17 +2,11 @@
 // Licensed under the MIT license.
 
 import { assert } from "chai";
-import {
-  setSpan,
-  SpanKind,
-  context as otContext,
-  getSpanContext,
-  Context
-} from "../src/interfaces";
 
+import { Context, SpanKind, context as otContext } from "@opentelemetry/api";
 import { TestSpan } from "./util/testSpan";
 import { createSpanFunction, isTracingDisabled, knownSpanAttributes } from "../src/createSpan";
-import { OperationTracingOptions } from "../src/interfaces";
+import { OperationTracingOptions, setSpan, getSpanContext } from "../src/interfaces";
 import { TestTracerProvider } from "./util/testTracerProvider";
 
 describe("createSpan", () => {

@@ -12,7 +12,7 @@ import {
   SpanAttributeValue,
   Span,
   SpanOptions
-} from "../../src/interfaces";
+} from "@opentelemetry/api";
 
 /**
  * A mock span useful for testing.

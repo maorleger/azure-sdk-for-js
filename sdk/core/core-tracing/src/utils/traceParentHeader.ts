@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { SpanContext, TraceFlags } from "../interfaces";
+import { SpanContext, TraceFlags } from "@opentelemetry/api";
 
 const VERSION = "00";
 

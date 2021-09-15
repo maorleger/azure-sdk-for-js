@@ -1,16 +1,8 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import {
-  OperationTracingOptions,
-  Span,
-  SpanOptions,
-  setSpan,
-  context as otContext,
-  getTracer,
-  Context,
-  SpanKind
-} from "./interfaces";
+import { Span, SpanOptions, context as otContext, Context, SpanKind } from "@opentelemetry/api";
+import { setSpan, OperationTracingOptions, getTracer } from "./interfaces";
 import { trace, INVALID_SPAN_CONTEXT } from "@opentelemetry/api";
 
 /**

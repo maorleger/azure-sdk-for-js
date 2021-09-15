@@ -4,27 +4,17 @@
 // Tracers and wrappers
 export { createSpanFunction, CreateSpanFunctionArgs } from "./createSpan";
 
-// Shared interfaces
 export {
   context,
   Context,
   ContextAPI,
   Exception,
-  ExceptionWithCode,
-  ExceptionWithMessage,
-  ExceptionWithName,
-  getSpan,
-  getSpanContext,
-  getTracer,
   HrTime,
   isSpanContextValid,
   Link,
-  OperationTracingOptions,
-  setSpan,
-  setSpanContext,
   Span,
-  SpanAttributes,
   SpanAttributeValue,
+  SpanAttributes,
   SpanContext,
   SpanKind,
   SpanOptions,
@@ -34,7 +24,37 @@ export {
   TraceFlags,
   Tracer,
   TraceState
-} from "./interfaces";
+} from "@opentelemetry/api";
+// Shared interfaces
+export {
+  // context,
+  // Context,
+  // ContextAPI,
+  // Exception,
+  // ExceptionWithCode,
+  // ExceptionWithMessage,
+  // ExceptionWithName,
+  getSpan,
+  getSpanContext,
+  getTracer,
+  // HrTime,
+  // isSpanContextValid,
+  // Link,
+  OperationTracingOptions,
+  setSpan,
+  setSpanContext // Span,
+} from // SpanAttributes,
+// SpanAttributeValue,
+// SpanContext,
+// SpanKind,
+// SpanOptions,
+// SpanStatus,
+// SpanStatusCode,
+// TimeInput,
+// TraceFlags,
+// Tracer,
+// TraceState
+"./interfaces";
 
 // Utilities
 export {
