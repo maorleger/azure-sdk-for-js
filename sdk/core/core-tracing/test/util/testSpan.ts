@@ -57,6 +57,11 @@ export class TestSpan implements Span {
   private readonly _tracer: Tracer;
 
   /**
+   * The recorded exception passed to `recordException`, if any.
+   */
+  recordedException?: Error;
+
+  /**
    * Starts a new Span.
    * @param parentTracer-  The tracer that created this Span
    * @param name - The name of the span.
@@ -148,8 +153,8 @@ export class TestSpan implements Span {
   addEvent(): this {
     throw new Error("Method not implemented.");
   }
-  recordException(): void {
-    throw new Error("Method not implemented.");
+  recordException(exception: Error): void {
+    this.recordedException = exception;
   }
   updateName(): this {
     throw new Error("Method not implemented.");

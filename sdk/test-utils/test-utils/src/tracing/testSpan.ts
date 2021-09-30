@@ -11,7 +11,7 @@ import {
   SpanStatusCode,
   SpanAttributeValue,
   Span,
-  Exception
+  SpanOptions
 } from "@azure/core-tracing";
 
 /**
@@ -56,7 +56,11 @@ export class TestSpan implements Span {
   private _context: SpanContext;
   private readonly _tracer: Tracer;
 
-  recordedException?: Exception;
+  /**
+   * The recorded exception passed to `recordException`, if any.
+   */
+  recordedException?: Error;
+
   /**
    * Starts a new Span.
    * @param parentTracer-  The tracer that created this Span
@@ -70,22 +74,20 @@ export class TestSpan implements Span {
     parentTracer: Tracer,
     name: string,
     context: SpanContext,
-    kind: SpanKind,
     parentSpanId?: string,
-    startTime: TimeInput = Date.now(),
-    attributes: SpanAttributes = {}
+    options?: SpanOptions
   ) {
     this._tracer = parentTracer;
     this.name = name;
-    this.kind = kind;
-    this.startTime = startTime;
+    this.kind = options?.kind || SpanKind.INTERNAL;
+    this.startTime = options?.startTime || Date.now();
     this.parentSpanId = parentSpanId;
+    this.attributes = options?.attributes || {};
     this.status = {
       code: SpanStatusCode.OK
     };
     this.endCalled = false;
     this._context = context;
-    this.attributes = attributes;
   }
 
   /**
@@ -151,7 +153,7 @@ export class TestSpan implements Span {
   addEvent(): this {
     throw new Error("Method not implemented.");
   }
-  recordException(exception: Exception): void {
+  recordException(exception: Error): void {
     this.recordedException = exception;
   }
   updateName(): this {

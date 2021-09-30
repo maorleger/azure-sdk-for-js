@@ -4,11 +4,11 @@
 import { TestSpan } from "./testSpan";
 import {
   SpanContext,
-  SpanKind,
   SpanOptions,
   TraceFlags,
   Context as OTContext,
   context as otContext,
+  Context,
   Tracer,
   Span,
   trace
@@ -39,7 +39,6 @@ export interface SpanGraph {
    */
   roots: SpanGraphNode[];
 }
-
 /**
  * A mock tracer useful for testing
  */
@@ -126,10 +125,8 @@ export class TestTracer implements Tracer {
    * @param name - The name of the span.
    * @param options - The SpanOptions used during Span creation.
    */
-  startSpan(name: string, options?: SpanOptions, ctx?: OTContext): TestSpan {
-    const parentContext = trace.getSpanContext(otContext.active());
-    console.log("ctx", ctx);
-    console.log("parentContex", parentContext);
+  startSpan(name: string, options?: SpanOptions, context?: OTContext): TestSpan {
+    const parentContext = trace.getSpanContext(context || otContext.active());
 
     let traceId: string;
     let isRootSpan = false;
@@ -146,15 +143,7 @@ export class TestTracer implements Tracer {
       spanId: this.getNextSpanId(),
       traceFlags: TraceFlags.NONE
     };
-    const span = new TestSpan(
-      this,
-      name,
-      spanContext,
-      options?.kind || SpanKind.INTERNAL,
-      parentContext ? parentContext.spanId : undefined,
-      options?.startTime,
-      options?.attributes
-    );
+    const span = new TestSpan(this, name, spanContext, parentContext?.spanId, options);
     this.knownSpans.push(span);
     if (isRootSpan) {
       this.rootSpans.push(span);
@@ -162,14 +151,26 @@ export class TestTracer implements Tracer {
     return span;
   }
 
+  startActiveSpan<F extends (span: Span) => ReturnType<F>>(name: string, fn: F): ReturnType<F>;
+  startActiveSpan<F extends (span: Span) => ReturnType<F>>(
+    name: string,
+    opts: SpanOptions | undefined,
+    fn: F
+  ): ReturnType<F>;
+  startActiveSpan<F extends (span: Span) => ReturnType<F>>(
+    name: string,
+    opts: SpanOptions | undefined,
+    ctx: Context | undefined,
+    fn: F
+  ): ReturnType<F>;
   startActiveSpan<F extends (span: Span) => ReturnType<F>>(
     name: string,
     arg2?: F | SpanOptions,
-    arg3?: F | OTContext,
+    arg3?: F | Context,
     arg4?: F
   ): ReturnType<F> | undefined {
     let opts: SpanOptions | undefined;
-    let ctx: OTContext | undefined;
+    let ctx: Context | undefined;
     let fn: F;
 
     if (arguments.length < 2) {
@@ -181,14 +182,12 @@ export class TestTracer implements Tracer {
       fn = arg3 as F;
     } else {
       opts = arg2 as SpanOptions | undefined;
-      ctx = arg3 as OTContext | undefined;
+      ctx = arg3 as Context | undefined;
       fn = arg4 as F;
     }
-    console.log("ctx(activeSpan)", ctx);
 
-    const parentContext = otContext.active();
-    console.log("parentContext(activeSpan)", parentContext);
-    const span = this.startSpan(name, opts);
+    const parentContext = ctx ?? otContext.active();
+    const span = this.startSpan(name, opts, parentContext);
     const contextWithSpanSet = trace.setSpan(parentContext, span);
 
     return otContext.with(contextWithSpanSet, fn, undefined, span);

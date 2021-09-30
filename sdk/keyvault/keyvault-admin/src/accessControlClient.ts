@@ -31,8 +31,12 @@ import { logger } from "./log";
 import { v4 as v4uuid } from "uuid";
 import { bearerTokenAuthenticationPolicy } from "@azure/core-rest-pipeline";
 import { createChallengeCallbacks } from "./challengeAuthenticationCallbacks";
+import { createTrace } from "@azure/core-tracing";
 
-const withTrace = createTraceFunction("Azure.KeyVault.Admin.KeyVaultAccessControlClient");
+const withTrace = createTrace({
+  azureNamespace: "Microsoft.KeyVault"
+  // TODO: the name needs to match to get a tracer...
+});
 
 /**
  * The KeyVaultAccessControlClient provides methods to manage

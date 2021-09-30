@@ -4,13 +4,15 @@
 import { TestSpan } from "./testSpan";
 import {
   SpanContext,
-  SpanOptions,
   TraceFlags,
   Context as OTContext,
   context as otContext,
-  getSpanContext,
-  Tracer
-} from "../../src/interfaces";
+  Context,
+  Span,
+  SpanOptions,
+  Tracer,
+  trace
+} from "@opentelemetry/api";
 
 /**
  * Simple representation of a Span that only has name and child relationships.
@@ -125,7 +127,7 @@ export class TestTracer implements Tracer {
    * @param options - The SpanOptions used during Span creation.
    */
   startSpan(name: string, options?: SpanOptions, context?: OTContext): TestSpan {
-    const parentContext = getSpanContext(context || otContext.active());
+    const parentContext = trace.getSpanContext(context || otContext.active());
 
     let traceId: string;
     let isRootSpan = false;
@@ -150,11 +152,45 @@ export class TestTracer implements Tracer {
     return span;
   }
 
-  /**
-   * Added to support testing. We do not support `startActiveSpan` in general because it uses async_hooks
-   * which is experimental. Only added to support TestTracerProvider compatibility with OTel Tracers.
-   */
-  startActiveSpan(): never {
-    throw new Error("Method not implemented.");
+  startActiveSpan<F extends (span: Span) => ReturnType<F>>(name: string, fn: F): ReturnType<F>;
+  startActiveSpan<F extends (span: Span) => ReturnType<F>>(
+    name: string,
+    opts: SpanOptions | undefined,
+    fn: F
+  ): ReturnType<F>;
+  startActiveSpan<F extends (span: Span) => ReturnType<F>>(
+    name: string,
+    opts: SpanOptions | undefined,
+    ctx: Context | undefined,
+    fn: F
+  ): ReturnType<F>;
+  startActiveSpan<F extends (span: Span) => ReturnType<F>>(
+    name: string,
+    arg2?: F | SpanOptions,
+    arg3?: F | Context,
+    arg4?: F
+  ): ReturnType<F> | undefined {
+    let opts: SpanOptions | undefined;
+    let ctx: Context | undefined;
+    let fn: F;
+
+    if (arguments.length < 2) {
+      return;
+    } else if (arguments.length === 2) {
+      fn = arg2 as F;
+    } else if (arguments.length === 3) {
+      opts = arg2 as SpanOptions | undefined;
+      fn = arg3 as F;
+    } else {
+      opts = arg2 as SpanOptions | undefined;
+      ctx = arg3 as Context | undefined;
+      fn = arg4 as F;
+    }
+
+    const parentContext = ctx ?? otContext.active();
+    const span = this.startSpan(name, opts, parentContext);
+    const contextWithSpanSet = trace.setSpan(parentContext, span);
+
+    return otContext.with(contextWithSpanSet, fn, undefined, span);
   }
 }

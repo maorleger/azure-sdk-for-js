@@ -36,9 +36,9 @@ export interface CreateSpanFunctionArgs {
 }
 
 // @public
-export function createTrace(options: Omit<TraceOptions, keyof SpanOptions>): <TOptions extends {
+export function createTrace(options: Omit<TraceOptions, keyof SpanOptions>): <T extends {
     tracingOptions?: OperationTracingOptions | undefined;
-}, T>(spanName: string, cb: (updatedOptions: TOptions, span: Span) => Promise<T>, operationOptions?: TOptions | undefined, spanOptions?: SpanOptions | undefined) => Promise<T>;
+}, TReturn>(spanName: string, operationOptions: T, cb: (options: T, span: Span) => Promise<TReturn>, spanOptions?: SpanOptions | undefined) => Promise<TReturn>;
 
 // @public
 export type Exception = ExceptionWithCode | ExceptionWithMessage | ExceptionWithName | string;
@@ -201,9 +201,9 @@ export interface TraceState {
 }
 
 // @public
-export function withTrace<TOptions extends {
+export function withTrace<T extends {
     tracingOptions?: OperationTracingOptions;
-}, T>(spanName: string, cb: (updatedOptions: TOptions, span: Span) => Promise<T>, operationOptions?: TOptions, traceOptions?: TraceOptions): Promise<T>;
+}, TReturn>(spanName: string, operationOptions: T, cb: (options: T, span: Span) => Promise<TReturn>, traceOptions?: TraceOptions): Promise<TReturn>;
 
 
 // (No @packageDocumentation comment for this package)

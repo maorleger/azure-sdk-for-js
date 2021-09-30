@@ -54,13 +54,13 @@ export interface TraceOptions {
  * @returns - A function that can be used to add tracing to a given operation.
  */
 export function createTrace(options: Omit<TraceOptions, keyof SpanOptions>) {
-  return function<TOptions extends { tracingOptions?: OperationTracingOptions }, T>(
+  return function<T extends { tracingOptions?: OperationTracingOptions }, TReturn>(
     spanName: string,
-    cb: (updatedOptions: TOptions, span: Span) => Promise<T>,
-    operationOptions?: TOptions,
+    operationOptions: T,
+    cb: (options: T, span: Span) => Promise<TReturn>,
     spanOptions?: SpanOptions
   ) {
-    return withTrace(spanName, cb, operationOptions, { ...options, ...spanOptions });
+    return withTrace(spanName, operationOptions, cb, { ...options, ...spanOptions });
   };
 }
 
@@ -73,13 +73,14 @@ export function createTrace(options: Omit<TraceOptions, keyof SpanOptions>) {
  * @param traceOptions - Additional configuration options.
  * @returns - The callback's return value.
  */
-export function withTrace<TOptions extends { tracingOptions?: OperationTracingOptions }, T>(
+export async function withTrace<T extends { tracingOptions?: OperationTracingOptions }, TReturn>(
   spanName: string,
-  cb: (updatedOptions: TOptions, span: Span) => Promise<T>,
-  operationOptions?: TOptions,
+  operationOptions: T,
+  cb: (options: T, span: Span) => Promise<TReturn>,
   traceOptions?: TraceOptions
-): Promise<T> {
-  const tracer = trace.getTracer("azure/core-tracing", traceOptions?.packageVersion);
+): Promise<TReturn> {
+  // TODO: our tests need to account for multiple tracers - possibly by using an InMemoryExporter?
+  const tracer = trace.getTracer("azure/core-tracing");
 
   const spanOptions: SpanOptions = traceOptions || {};
   const currentContext = operationOptions?.tracingOptions?.tracingContext || context.active();
@@ -97,10 +98,10 @@ export function withTrace<TOptions extends { tracingOptions?: OperationTracingOp
       tracingOptions: {
         tracingContext: context.active()
       }
-    } as TOptions;
+    } as T;
 
     try {
-      const result = await cb(newOperationOptions as TOptions, span);
+      const result = await cb(newOperationOptions, span);
       span.setStatus({ code: SpanStatusCode.OK });
       return result;
     } catch (err) {
