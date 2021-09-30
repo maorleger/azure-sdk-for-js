@@ -17,7 +17,6 @@ import {
 } from "./requestPolicy";
 import { WebResourceLike } from "../webResource";
 import { HttpOperationResponse } from "../httpOperationResponse";
-import { URLBuilder } from "../url";
 import { logger } from "../log";
 
 const createSpan = createSpanFunction({
@@ -72,11 +71,9 @@ export class TracingPolicy extends BaseRequestPolicy {
 
   tryCreateSpan(request: WebResourceLike): Span | undefined {
     try {
-      const path = URLBuilder.parse(request.url).getPath() || "/";
-
       // Passing spanOptions as part of tracingOptions to maintain compatibility @azure/core-tracing@preview.13 and earlier.
       // We can pass this as a separate parameter once we upgrade to the latest core-tracing.
-      const { span } = createSpan(path, {
+      const { span } = createSpan(`HTTP ${request.method}`, {
         tracingOptions: {
           spanOptions: {
             ...(request as any).spanOptions,
