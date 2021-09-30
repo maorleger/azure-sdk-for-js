@@ -2,16 +2,15 @@
 // Licensed under the MIT license.
 
 import {
-  OperationTracingOptions,
+  trace,
+  INVALID_SPAN_CONTEXT,
   Span,
   SpanOptions,
-  setSpan,
-  context as otContext,
-  getTracer,
+  SpanKind,
   Context,
-  SpanKind
-} from "./interfaces";
-import { trace, INVALID_SPAN_CONTEXT } from "@opentelemetry/api";
+  context
+} from "@opentelemetry/api";
+import { OperationTracingOptions, getTracer } from "./interfaces";
 
 /**
  * Arguments for `createSpanFunction` that allow you to specify the
@@ -178,7 +177,7 @@ export function createSpanFunction(args: CreateSpanFunctionArgs) {
       startSpanOptions
     );
 
-    let tracingContext = tracingOptions?.tracingContext || otContext.active();
+    let tracingContext = tracingOptions?.tracingContext || context.active();
 
     const spanName = args.packagePrefix ? `${args.packagePrefix}.${operationName}` : operationName;
     const span = startSpan(spanName, spanOptions, tracingContext);
@@ -199,7 +198,7 @@ export function createSpanFunction(args: CreateSpanFunctionArgs) {
     const newTracingOptions = {
       ...tracingOptions,
       spanOptions: newSpanOptions,
-      tracingContext: setSpan(tracingContext, span)
+      tracingContext: trace.setSpan(tracingContext, span)
     };
 
     const newOperationOptions = {

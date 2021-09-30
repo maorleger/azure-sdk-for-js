@@ -1480,6 +1480,7 @@ packages:
   /@opentelemetry/tracing/0.22.0_@opentelemetry+api@1.0.3:
     resolution: {integrity: sha512-EFrKTFndiEdh/KnzwDgo/EcphG/5z/NyLck8oiUUY+YMP7hskXNYHjTWSAv9UxtYe1MzgLbjmAateTuMmFIVNw==}
     engines: {node: '>=8.0.0'}
+    deprecated: Package renamed to @opentelemetry/sdk-trace-base
     peerDependencies:
       '@opentelemetry/api': ^1.0.0
     dependencies:
