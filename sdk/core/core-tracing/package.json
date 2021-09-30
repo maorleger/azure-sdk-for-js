@@ -92,6 +92,7 @@
     "util": "^0.12.1",
     "typedoc": "0.15.2",
     "sinon": "^9.0.2",
-    "@types/sinon": "^9.0.4"
+    "@types/sinon": "^9.0.4",
+    "@opentelemetry/sdk-trace-base": "^0.25.0"
   }
 }

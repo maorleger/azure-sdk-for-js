@@ -213,13 +213,6 @@ export interface ContextAPI {
    * Get the currently active context
    */
   active(): Context;
-
-  with<A extends unknown[], F extends (...args: A) => ReturnType<F>>(
-    context: Context,
-    fn: F,
-    thisArg?: ThisParameterType<F>,
-    ...args: A
-  ): ReturnType<F>;
 }
 
 /**
