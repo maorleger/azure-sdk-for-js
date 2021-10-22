@@ -94,8 +94,8 @@ export interface BearerTokenAuthenticationPolicyOptions {
 async function defaultAuthorizeRequest(options: AuthorizeRequestOptions): Promise<void> {
   const { scopes, getAccessToken, request } = options;
   const getTokenOptions: GetTokenOptions = {
-    abortSignal: request.abortSignal,
-    tracingOptions: request.tracingOptions
+    abortSignal: request.abortSignal
+    // tracingOptions: request.tracingOptions
   };
   const accessToken = await getAccessToken(scopes, getTokenOptions);
 

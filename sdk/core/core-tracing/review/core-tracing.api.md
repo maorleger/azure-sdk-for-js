@@ -25,7 +25,7 @@ export interface CreateTracingContextOptions {
 // @public (undocumented)
 export interface OperationTracingOptions {
     // (undocumented)
-    context?: TracingContext;
+    tracingContext?: TracingContext;
 }
 
 // @public (undocumented)
@@ -50,7 +50,7 @@ export interface Tracer {
 // @public (undocumented)
 export interface TracerCreateSpanOptions {
     // (undocumented)
-    context?: TracingContext;
+    tracingContext?: TracingContext;
 }
 
 // @public (undocumented)

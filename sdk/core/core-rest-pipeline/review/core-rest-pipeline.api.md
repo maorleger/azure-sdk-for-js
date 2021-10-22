@@ -323,7 +323,7 @@ export function throttlingRetryPolicy(): PipelinePolicy;
 export const throttlingRetryPolicyName = "throttlingRetryPolicy";
 
 // @public
-export function tracingPolicy(options?: TracingPolicyOptions): PipelinePolicy;
+export function tracingPolicy(_options: any): PipelinePolicy;
 
 // @public
 export const tracingPolicyName = "tracingPolicy";

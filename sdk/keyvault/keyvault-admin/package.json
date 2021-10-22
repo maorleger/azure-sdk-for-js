@@ -109,7 +109,7 @@
     "@azure/core-lro": "^2.2.0",
     "@azure/core-paging": "^1.1.1",
     "@azure/core-rest-pipeline": "^1.1.0",
-    "@azure/core-tracing": "1.0.0-preview.13",
+    "@azure/core-tracing": "1.0.0-preview.14",
     "@azure/logger": "^1.0.0",
     "@types/uuid": "^8.0.0",
     "tslib": "^2.2.0",
@@ -155,6 +155,14 @@
     "sinon": "^9.0.2",
     "source-map-support": "^0.5.9",
     "typedoc": "0.15.2",
-    "typescript": "~4.2.0"
+    "@opentelemetry/sdk-trace-node": "^1.0.0",
+    "@opentelemetry/sdk-trace-base": "^1.0.0",
+    "@opentelemetry/api": "^1.0.1",
+    "typescript": "~4.2.0",
+    "@opentelemetry/instrumentation-http": "^0.26.0",
+    "@opentelemetry/instrumentation": "^0.26.0",
+    "@opentelemetry/sdk-node": "^0.26.0",
+    "@opentelemetry/auto-instrumentations-node": "^0.25.0",
+    "@opentelemetry/exporter-jaeger": "^1.0.0"
   }
 }

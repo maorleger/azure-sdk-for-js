@@ -32,6 +32,7 @@ import { logger } from "./log";
 import { v4 as v4uuid } from "uuid";
 import { bearerTokenAuthenticationPolicy } from "@azure/core-rest-pipeline";
 import { createChallengeCallbacks } from "./challengeAuthenticationCallbacks";
+import { createTracingClient, TracingClient } from "@azure/core-tracing";
 
 const withTrace = createTraceFunction("Azure.KeyVault.Admin.KeyVaultAccessControlClient");
 
@@ -51,6 +52,7 @@ export class KeyVaultAccessControlClient {
    * A reference to the auto-generated Key Vault HTTP client.
    */
   private readonly client: KeyVaultClient;
+  tracingClient: TracingClient;
 
   /**
    * Creates an instance of the KeyVaultAccessControlClient.
@@ -74,6 +76,7 @@ export class KeyVaultAccessControlClient {
     credential: TokenCredential,
     options: AccessControlClientOptions = {}
   ) {
+    this.tracingClient = createTracingClient({ namespace: "Microsoft.KeyVault" });
     this.vaultUrl = vaultUrl;
 
     const serviceVersion = options.serviceVersion || LATEST_API_VERSION;
@@ -118,28 +121,32 @@ export class KeyVaultAccessControlClient {
    * @param principalId - The principal ID assigned to the role. This maps to the ID inside the Active Directory. It can point to a user, service principal, or security group.
    * @param options - The optional parameters.
    */
-  public createRoleAssignment(
+  public async createRoleAssignment(
     roleScope: KeyVaultRoleScope,
     name: string,
     roleDefinitionId: string,
     principalId: string,
     options: CreateRoleAssignmentOptions = {}
   ): Promise<KeyVaultRoleAssignment> {
-    return withTrace("createRoleAssignment", options, async (updatedOptions) => {
-      const response = await this.client.roleAssignments.create(
-        this.vaultUrl,
-        roleScope,
-        name,
-        {
-          properties: {
-            roleDefinitionId,
-            principalId
-          }
-        },
-        updatedOptions
-      );
-      return mappings.roleAssignment.generatedToPublic(response);
-    });
+    return this.tracingClient.withTrace(
+      `AdminClient.createRoleAssignment`,
+      async (updatedOptions) => {
+        const response = await this.client.roleAssignments.create(
+          this.vaultUrl,
+          roleScope,
+          name,
+          {
+            properties: {
+              roleDefinitionId,
+              principalId
+            }
+          },
+          updatedOptions
+        );
+        return mappings.roleAssignment.generatedToPublic(response);
+      },
+      options
+    );
   }
 
   /**

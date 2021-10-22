@@ -536,7 +536,7 @@ export interface CreateTracingContextOptions {
 }
 
 export interface TracerCreateSpanOptions {
-  context?: TracingContext;
+  tracingContext?: TracingContext;
 }
 export interface Tracer {
   startSpan(
@@ -584,5 +584,5 @@ export interface TracingContext {
 }
 
 export interface OperationTracingOptions {
-  context?: TracingContext;
+  tracingContext?: TracingContext;
 }

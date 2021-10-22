@@ -5,7 +5,6 @@ import {
   TracingContext,
   TracingSpan
 } from "./interfaces";
-import { createTracingContext } from "./tracingContext";
 import * as api from "@opentelemetry/api";
 import { setSpan } from "@opentelemetry/api/build/src/trace/context-utils";
 import { SpanAttributeValue } from "@opentelemetry/api";
@@ -15,7 +14,7 @@ export class OpenTelemetryTracer implements Tracer {
     name: string,
     options: TracerCreateSpanOptions
   ): { span: TracingSpan; tracingContext: TracingContext } {
-    let context = options.context || api.context.active();
+    let context = options.tracingContext || api.context.active();
     const span = api.trace.getTracer("@azure/core-tracing").startSpan(name);
     context = setSpan(context, span);
     return {
@@ -30,7 +29,7 @@ export class OpenTelemetryTracer implements Tracer {
     ...callbackArgs: Parameters<Callback>
   ): ReturnType<Callback> {
     return api.context.with(
-      options.context || api.context.active(),
+      options.tracingContext || api.context.active(),
       callback,
       callbackThis,
       ...callbackArgs

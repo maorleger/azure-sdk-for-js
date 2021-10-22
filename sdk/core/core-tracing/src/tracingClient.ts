@@ -22,7 +22,7 @@ export class TracingClientImpl implements TracingClient {
     options?: Options
   ): { span: TracingSpan; updatedOptions: Options } {
     let { span, tracingContext } = this._tracer.startSpan(name, {
-      context: options?.tracingOptions?.context
+      tracingContext: options?.tracingOptions?.tracingContext
     });
     tracingContext = tracingContext.setValue(knownContextKeys.Namespace, this._namespace);
     span.setAttribute("az.namespace", this._namespace);
@@ -30,13 +30,13 @@ export class TracingClientImpl implements TracingClient {
       span,
       updatedOptions: {
         tracingOptions: {
-          context: tracingContext
+          tracingContext
         }
       } as Options
     };
   }
   async withTrace<
-    Options extends { tracingOptions?: { context?: TracingContext } },
+    Options extends { tracingOptions?: { tracingContext?: TracingContext } },
     Callback extends (
       updatedOptions: Options,
       span: Omit<TracingSpan, "end">
@@ -51,9 +51,7 @@ export class TracingClientImpl implements TracingClient {
     try {
       span.setStatus({ status: "success" });
       const result = await this.withContext(
-        async () => {
-          return await Promise.resolve(fn.call(callbackThis, updatedOptions, span));
-        },
+        () => Promise.resolve(fn.call(callbackThis, updatedOptions, span)),
         updatedOptions?.tracingOptions || {},
         callbackThis
       );

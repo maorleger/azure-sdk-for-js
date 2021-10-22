@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 import { OperationOptions } from "@azure/core-http";
-import { createSpanFunction, Span, SpanStatusCode } from "@azure/core-tracing";
+// import { createSpanFunction, Span, SpanStatusCode } from "@azure/core-tracing";
 
 /**
  * An interface representing a function that is traced.
@@ -19,7 +19,7 @@ export interface TracedFunction {
   <TOptions extends OperationOptions, TReturn>(
     operationName: string,
     options: TOptions,
-    cb: (options: TOptions, span: Span) => Promise<TReturn>
+    cb: (options: TOptions, span: any) => Promise<TReturn>
   ): Promise<TReturn>;
 }
 
@@ -32,33 +32,35 @@ export interface TracedFunction {
  *
  * @internal
  */
-export function createTraceFunction(prefix: string): TracedFunction {
-  const createSpan = createSpanFunction({
-    namespace: "Microsoft.KeyVault",
-    packagePrefix: prefix
-  });
+export function createTraceFunction(_prefix: string): TracedFunction {
+  // const createSpan = createSpanFunction({
+  //   namespace: "Microsoft.KeyVault",
+  //   packagePrefix: prefix
+  // });
 
   return async function(operationName, options, cb) {
-    const { updatedOptions, span } = createSpan(operationName, options);
+    console.log(`kv common - ${operationName}`);
+    return cb(options, undefined);
+    // const { updatedOptions, span } = createSpan(operationName, options);
 
-    try {
-      // NOTE: we really do need to await on this function here so we can handle any exceptions thrown and properly
-      // close the span.
-      const result = await cb(updatedOptions, span);
+    // try {
+    //   // NOTE: we really do need to await on this function here so we can handle any exceptions thrown and properly
+    //   // close the span.
+    //   const result = await cb(updatedOptions, span);
 
-      // otel 0.16+ needs this or else the code ends up being set as UNSET
-      span.setStatus({
-        code: SpanStatusCode.OK
-      });
-      return result;
-    } catch (err) {
-      span.setStatus({
-        code: SpanStatusCode.ERROR,
-        message: err.message
-      });
-      throw err;
-    } finally {
-      span.end();
-    }
+    //   // otel 0.16+ needs this or else the code ends up being set as UNSET
+    //   span.setStatus({
+    //     code: SpanStatusCode.OK
+    //   });
+    //   return result;
+    // } catch (err) {
+    //   span.setStatus({
+    //     code: SpanStatusCode.ERROR,
+    //     message: err.message
+    //   });
+    //   throw err;
+    // } finally {
+    //   span.end();
+    // }
   };
 }

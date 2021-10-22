@@ -12,6 +12,7 @@ import { PagedAsyncIterableIterator } from '@azure/core-paging';
 import { PollerLike } from '@azure/core-lro';
 import { PollOperationState } from '@azure/core-lro';
 import { TokenCredential } from '@azure/core-auth';
+import { TracingClient } from '@azure/core-tracing';
 
 // @public
 export interface AccessControlClientOptions extends CommonClientOptions {
@@ -49,6 +50,8 @@ export class KeyVaultAccessControlClient {
     listRoleAssignments(roleScope: KeyVaultRoleScope, options?: ListRoleAssignmentsOptions): PagedAsyncIterableIterator<KeyVaultRoleAssignment>;
     listRoleDefinitions(roleScope: KeyVaultRoleScope, options?: ListRoleDefinitionsOptions): PagedAsyncIterableIterator<KeyVaultRoleDefinition>;
     setRoleDefinition(roleScope: KeyVaultRoleScope, options?: SetRoleDefinitionOptions): Promise<KeyVaultRoleDefinition>;
+    // (undocumented)
+    tracingClient: TracingClient;
     readonly vaultUrl: string;
 }
 

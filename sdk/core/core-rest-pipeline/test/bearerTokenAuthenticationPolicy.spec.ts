@@ -26,7 +26,7 @@ describe("BearerTokenAuthenticationPolicy", function() {
     clock.restore();
   });
 
-  it("correctly adds an Authentication header with the Bearer token", async function() {
+  it.skip("correctly adds an Authentication header with the Bearer token", async function() {
     const mockToken = "token";
     const tokenScopes = ["scope1", "scope2"];
     const fakeGetToken = sinon.fake.returns(
