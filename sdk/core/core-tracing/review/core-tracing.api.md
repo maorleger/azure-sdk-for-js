@@ -4,14 +4,6 @@
 
 ```ts
 
-// @public @deprecated
-export function createSpanFunction(..._args: unknown[]): <T extends {
-    tracingOptions?: OperationTracingOptions | undefined;
-}>(_operationName: string, operationOptions?: T | undefined) => {
-    span: TracingSpan;
-    updatedOptions: T;
-};
-
 // @public
 export function createTracingClient(options?: TracingClientOptions): TracingClient;
 
@@ -40,10 +32,6 @@ export type SpanStatus = {
 } | {
     status: "error";
     error: Error | string;
-} | {
-    code: 0 | 1 | 2;
-    message?: string;
-    status?: "otel";
 };
 
 // @public

@@ -64,7 +64,6 @@ describe("Tracer", () => {
     it("supports all TracingSpan methods", () => {
       const span: TracingSpan = new NoOpSpan();
       span.setStatus({ status: "success" });
-      span.setStatus({ code: 0, message: "otel" });
       span.setAttribute("foo", "bar");
       span.end();
       assert.isEmpty(span.serialize());
