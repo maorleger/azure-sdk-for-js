@@ -3,13 +3,12 @@
 
 import { RestError } from "@azure/core-rest-pipeline";
 import { FullOperationResponse, OperationOptions, OperationSpec } from "@azure/core-client";
-import { SpanStatusCode } from "@azure/core-tracing";
 import { URL, URLSearchParams } from "./utils/url";
 import { logger } from "./logger";
 import { GeneratedClient, StringIndexType as GeneratedStringIndexType } from "./generated";
 import { TextAnalyticsAction } from "./textAnalyticsAction";
-import { createSpan } from "./tracing";
 import { LroResponse } from "@azure/core-lro";
+import { createTracingClient } from "@azure/core-tracing";
 
 /**
  * @internal
@@ -312,34 +311,26 @@ export async function sendGetRequest<TOptions extends OperationOptions>(
   options: TOptions,
   path: string
 ): Promise<LroResponse<unknown>> {
-  const { span, updatedOptions: finalOptions } = createSpan(
-    `TextAnalyticsClient-${spanStr}`,
+  return createTracingClient().withTrace(
+    `TextAnalyticsClient.${spanStr}`,
+    async (finalOptions) => {
+      const { flatResponse, rawResponse } = await getRawResponse(
+        (paramOptions) =>
+          client.sendOperationRequest(
+            { options: paramOptions },
+            {
+              ...spec,
+              path,
+              httpMethod: "GET"
+            }
+          ),
+        finalOptions
+      );
+      return {
+        flatResponse: flatResponse,
+        rawResponse
+      };
+    },
     options
   );
-  try {
-    const { flatResponse, rawResponse } = await getRawResponse(
-      (paramOptions) =>
-        client.sendOperationRequest(
-          { options: paramOptions },
-          {
-            ...spec,
-            path,
-            httpMethod: "GET"
-          }
-        ),
-      finalOptions
-    );
-    return {
-      flatResponse: flatResponse,
-      rawResponse
-    };
-  } catch (e) {
-    span.setStatus({
-      code: SpanStatusCode.ERROR,
-      message: e.message
-    });
-    throw e;
-  } finally {
-    span.end();
-  }
 }

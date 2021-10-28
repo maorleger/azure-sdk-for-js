@@ -12,6 +12,7 @@ import { PagedAsyncIterableIterator } from '@azure/core-paging';
 import { PollerLike } from '@azure/core-lro';
 import { PollOperationState } from '@azure/core-lro';
 import { TokenCredential } from '@azure/core-auth';
+import { TracingClient } from '@azure/core-tracing';
 
 // @public
 export interface AnalysisPollOperationState<TResult> extends PollOperationState<TResult>, OperationMetadata {
@@ -701,6 +702,8 @@ export class TextAnalyticsClient {
     recognizeLinkedEntities(documents: TextDocumentInput[], options?: RecognizeLinkedEntitiesOptions): Promise<RecognizeLinkedEntitiesResultArray>;
     recognizePiiEntities(inputs: string[], language?: string, options?: RecognizePiiEntitiesOptions): Promise<RecognizePiiEntitiesResultArray>;
     recognizePiiEntities(inputs: TextDocumentInput[], options?: RecognizePiiEntitiesOptions): Promise<RecognizePiiEntitiesResultArray>;
+    // (undocumented)
+    tracingClient: TracingClient;
 }
 
 // @public
@@ -772,7 +775,6 @@ export type TokenSentimentValue = "positive" | "mixed" | "negative";
 
 // @public
 export type WarningCode = string;
-
 
 // (No @packageDocumentation comment for this package)
 

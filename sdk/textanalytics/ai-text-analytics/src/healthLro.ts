@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 import { LongRunningOperation, LroResponse, PollerLike, RawResponse } from "@azure/core-lro";
-import { SpanStatusCode } from "@azure/core-tracing";
 import { createSerializer, OperationOptions, OperationSpec } from "@azure/core-client";
 import {
   AnalyzeHealthcareEntitiesResult,
@@ -17,9 +16,7 @@ import {
   GeneratedClientHealthStatusResponse,
   TextDocumentInput
 } from "./generated";
-import { createSpan } from "./tracing";
 import {
-  addStrEncodingParam,
   getRawResponse,
   handleInvalidDocumentBatch,
   sendGetRequest,
@@ -38,6 +35,7 @@ import { processAndCombineSuccessfulAndErroneousDocuments } from "./textAnalytic
 import { getPagedAsyncIterator, PagedResult } from "@azure/core-paging";
 import { AnalysisPollOperationState } from "./pollerModels";
 import { TextAnalyticsOperationOptions } from "./textAnalyticsOperationOptions";
+import { createTracingClient, TracingClient } from "@azure/core-tracing";
 
 /**
  * Options for the begin analyze healthcare entities operation.
@@ -97,6 +95,7 @@ const healthStatusOperationSpec: OperationSpec = {
 export class HealthLro implements LongRunningOperation<PagedAnalyzeHealthcareEntitiesResult> {
   public requestMethod = "POST";
   public requestPath = "/entities/health/jobs";
+  private tracingClient: TracingClient;
   constructor(
     // eslint-disable-next-line @azure/azure-sdk/ts-use-interface-parameters
     private client: GeneratedClient,
@@ -110,34 +109,31 @@ export class HealthLro implements LongRunningOperation<PagedAnalyzeHealthcareEnt
       includeStatistics?: boolean;
     },
     private documents: TextDocumentInput[]
-  ) {}
+  ) {
+    this.tracingClient = createTracingClient({
+      namespace: "Microsoft.CognitiveServices"
+    });
+  }
   async sendInitialRequest(): Promise<LroResponse<PagedAnalyzeHealthcareEntitiesResult>> {
-    const { span, updatedOptions: finalOptions } = createSpan(
+    return this.tracingClient.withTrace(
       "TextAnalyticsClient-beginAnalyzeHealthcare",
-      {
-        ...this.baseOptions,
-        ...addStrEncodingParam(this.initOptions)
-      }
+      async (updatedOptions) => {
+        try {
+          const { flatResponse, rawResponse } = await getRawResponse(
+            (paramOptions) => this.client.health({ documents: this.documents }, paramOptions),
+            updatedOptions
+          );
+          return {
+            flatResponse: flatResponse as PagedAnalyzeHealthcareEntitiesResult,
+            rawResponse
+          };
+        } catch (err) {
+          handleInvalidDocumentBatch(err);
+          throw err;
+        }
+      },
+      { ...this.baseOptions, ...this.initOptions }
     );
-    try {
-      const { flatResponse, rawResponse } = await getRawResponse(
-        (paramOptions) => this.client.health({ documents: this.documents }, paramOptions),
-        finalOptions
-      );
-      return {
-        flatResponse: flatResponse as PagedAnalyzeHealthcareEntitiesResult,
-        rawResponse
-      };
-    } catch (e) {
-      const exception = handleInvalidDocumentBatch(e);
-      span.setStatus({
-        code: SpanStatusCode.ERROR,
-        message: exception.message
-      });
-      throw exception;
-    } finally {
-      span.end();
-    }
   }
   async sendPollRequest(path: string): Promise<LroResponse<PagedAnalyzeHealthcareEntitiesResult>> {
     return sendGetRequest(

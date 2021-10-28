@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 import { LongRunningOperation, LroResponse, PollerLike, RawResponse } from "@azure/core-lro";
-import { SpanStatusCode } from "@azure/core-tracing";
 import { createSerializer, OperationOptions, OperationSpec } from "@azure/core-client";
 import {
   GeneratedClient,
@@ -11,8 +10,7 @@ import {
   JobManifestTasks,
   TextDocumentInput
 } from "./generated";
-import { createSpan } from "./tracing";
-import { getRawResponse, handleInvalidDocumentBatch, sendGetRequest } from "./util";
+import { getRawResponse, sendGetRequest } from "./util";
 import * as Mappers from "./generated/models/mappers";
 import {
   accept,
@@ -29,6 +27,7 @@ import {
   createAnalyzeActionsResult,
   PagedAnalyzeActionsResult
 } from "./analyzeActionsResult";
+import { createTracingClient, TracingClient } from "@azure/core-tracing";
 
 /**
  * Options for the begin analyze actions operation.
@@ -114,6 +113,7 @@ const analyzeStatusOperationSpec: OperationSpec = {
 export class AnalyzeLro implements LongRunningOperation<PagedAnalyzeActionsResult> {
   public requestMethod = "POST";
   public requestPath = "/analyze";
+  private tracingClient: TracingClient;
   constructor(
     // eslint-disable-next-line @azure/azure-sdk/ts-use-interface-parameters
     private client: GeneratedClient,
@@ -126,39 +126,34 @@ export class AnalyzeLro implements LongRunningOperation<PagedAnalyzeActionsResul
     },
     private documents: TextDocumentInput[],
     private tasks: JobManifestTasks
-  ) {}
-  async sendInitialRequest(): Promise<LroResponse<PagedAnalyzeActionsResult>> {
-    const { span, updatedOptions: finalOptions } = createSpan("TextAnalyticsClient-beginAnalyze", {
-      ...this.baseOptions,
-      ...this.initOptions
+  ) {
+    this.tracingClient = createTracingClient({
+      namespace: "Microsoft.CognitiveServices"
     });
-    try {
-      const { flatResponse, rawResponse } = await getRawResponse(
-        (paramOptions) =>
-          this.client.analyze({
-            body: {
-              analysisInput: { documents: this.documents },
-              tasks: this.tasks,
-              displayName: this.initOptions.displayName
-            },
-            ...paramOptions
-          }),
-        finalOptions
-      );
-      return {
-        flatResponse: flatResponse as PagedAnalyzeActionsResult,
-        rawResponse
-      };
-    } catch (e) {
-      const exception = handleInvalidDocumentBatch(e);
-      span.setStatus({
-        code: SpanStatusCode.ERROR,
-        message: exception.message
-      });
-      throw exception;
-    } finally {
-      span.end();
-    }
+  }
+  async sendInitialRequest(): Promise<LroResponse<PagedAnalyzeActionsResult>> {
+    return this.tracingClient.withTrace(
+      "TextAnalyticsClient.beginAnalyze",
+      async (updatedOptions) => {
+        const { flatResponse, rawResponse } = await getRawResponse(
+          (paramOptions) =>
+            this.client.analyze({
+              body: {
+                analysisInput: { documents: this.documents },
+                tasks: this.tasks,
+                displayName: this.initOptions.displayName
+              },
+              ...paramOptions
+            }),
+          updatedOptions
+        );
+        return {
+          flatResponse: flatResponse as PagedAnalyzeActionsResult,
+          rawResponse
+        };
+      },
+      { ...this.baseOptions, ...this.initOptions }
+    );
   }
   async sendPollRequest(path: string): Promise<LroResponse<PagedAnalyzeActionsResult>> {
     return sendGetRequest(
