@@ -927,6 +927,7 @@ export const RandomBytes: coreHttp.CompositeMapper = {
     modelProperties: {
       value: {
         serializedName: "value",
+        required: true,
         type: {
           name: "Base64Url"
         }

@@ -8,8 +8,10 @@ azure-arm: false
 generate-metadata: false
 add-credentials: false
 use-core-v2: false
+use-extension:
+  "@autorest/typescript": "6.0.0-beta.6"
 license-header: MICROSOFT_MIT_NO_VERSION
-input-file: https://raw.githubusercontent.com/Azure/azure-rest-api-specs/f4a4badda9e19dca5cab216f3dd8b45362aeb90b/specification/keyvault/data-plane/Microsoft.KeyVault/preview/7.3-preview/keys.json
+input-file: https://raw.githubusercontent.com/Azure/azure-rest-api-specs/4458bc6ef2a6394ee6e2af57e91fb16aa59a30ae/specification/keyvault/data-plane/Microsoft.KeyVault/stable/7.3/keys.json
 output-folder: ../
 source-code-folder-path: ./src/generated
 disable-async-iterators: true

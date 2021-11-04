@@ -407,7 +407,7 @@ describe("Keys client - create, read, update and delete operations", () => {
     );
   });
 
-  onVersions({ minVer: "7.3-preview" }).describe("key rotation", () => {
+  onVersions({ minVer: "7.3" }).describe("key rotation", () => {
     if (isPublicCloud() || isRecordMode() || isPlaybackMode()) {
       // Key Rotation is a preview feature that is not supported in all clouds yet.
       // Once 7.3 GAs we should be able to run this unconditionally.

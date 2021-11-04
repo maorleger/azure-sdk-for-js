@@ -786,7 +786,7 @@ export class KeyClient {
   public getRandomBytes(count: number, options: GetRandomBytesOptions = {}): Promise<Uint8Array> {
     return withTrace("getRandomBytes", options, async (updatedOptions) => {
       const response = await this.client.getRandomBytes(this.vaultUrl, count, updatedOptions);
-      return response.value!;
+      return response.value;
     });
   }
 

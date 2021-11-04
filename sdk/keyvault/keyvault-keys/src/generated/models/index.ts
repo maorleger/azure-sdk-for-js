@@ -326,9 +326,9 @@ export interface LifetimeActions {
 
 /** A condition to be satisfied for an action to be executed. */
 export interface LifetimeActionsTrigger {
-  /** Time after creation to attempt rotate. It will be in ISO 8601 format. Example: 90 days : "P90D" */
+  /** Time after creation to attempt to rotate. It only applies to rotate. It will be in ISO 8601 duration format. Example: 90 days : "P90D" */
   timeAfterCreate?: string;
-  /** Time before expiry to attempt rotate. It will be in ISO 8601 format. Example: 90 days : "P90D" */
+  /** Time before expiry to attempt to rotate or notify. It will be in ISO 8601 duration format. Example: 90 days : "P90D" */
   timeBeforeExpiry?: string;
 }
 
@@ -363,7 +363,7 @@ export interface GetRandomBytesRequest {
 /** The get random bytes response object containing the bytes. */
 export interface RandomBytes {
   /** The bytes encoded as a base64url string. */
-  value?: Uint8Array;
+  value: Uint8Array;
 }
 
 /** Properties of the key pair backing a certificate. */
@@ -428,20 +428,20 @@ export type DeletedKeyItem = KeyItem & {
   readonly deletedDate?: Date;
 };
 
-/** Known values of {@link ApiVersion73Preview} that the service accepts. */
-export enum KnownApiVersion73Preview {
-  /** Api Version '7.3-preview' */
-  Seven3Preview = "7.3-preview"
+/** Known values of {@link ApiVersion73} that the service accepts. */
+export enum KnownApiVersion73 {
+  /** Api Version '7.3' */
+  Seven3 = "7.3"
 }
 
 /**
- * Defines values for ApiVersion73Preview. \
- * {@link KnownApiVersion73Preview} can be used interchangeably with ApiVersion73Preview,
+ * Defines values for ApiVersion73. \
+ * {@link KnownApiVersion73} can be used interchangeably with ApiVersion73,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **7.3-preview**: Api Version '7.3-preview'
+ * **7.3**: Api Version '7.3'
  */
-export type ApiVersion73Preview = string;
+export type ApiVersion73 = string;
 
 /** Known values of {@link JsonWebKeyType} that the service accepts. */
 export enum KnownJsonWebKeyType {
