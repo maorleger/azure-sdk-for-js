@@ -14,7 +14,7 @@ import * as Mappers from "./models/mappers";
 import { KeyVaultClientContext } from "./keyVaultClientContext";
 import {
   KeyVaultClientOptionalParams,
-  ApiVersion73Preview,
+  ApiVersion73,
   KeyVaultClientFullBackupOptionalParams,
   KeyVaultClientFullBackupResponse,
   KeyVaultClientFullBackupStatusOptionalParams,
@@ -34,7 +34,7 @@ export class KeyVaultClient extends KeyVaultClientContext {
    * @param options The parameter options
    */
   constructor(
-    apiVersion: ApiVersion73Preview,
+    apiVersion: ApiVersion73,
     options?: KeyVaultClientOptionalParams
   ) {
     super(apiVersion, options);
@@ -43,7 +43,8 @@ export class KeyVaultClient extends KeyVaultClientContext {
   }
 
   /**
-   * Creates a full backup using a user-provided SAS token to an Azure blob storage container.
+   * Creates a full backup using a user-provided SAS token to an Azure blob storage container. This
+   * operation is supported only by the Managed HSM service.
    * @param vaultBaseUrl The vault name, for example https://myvault.vault.azure.net.
    * @param options The options parameters.
    */

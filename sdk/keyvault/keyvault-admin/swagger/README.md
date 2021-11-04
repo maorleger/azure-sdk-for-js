@@ -8,11 +8,13 @@ azure-arm: false
 disable-async-iterators: true
 api-version-parameter: choice
 generate-metadata: false
+use-extension:
+  "@autorest/typescript": "6.0.0-beta.6"
 add-credentials: false
 license-header: MICROSOFT_MIT_NO_VERSION
 input-file:
-  - https://raw.githubusercontent.com/Azure/azure-rest-api-specs/7a42f16c75e5005c59b75fe7f0888c1103294d43/specification/keyvault/data-plane/Microsoft.KeyVault/preview/7.3-preview/rbac.json
-  - https://raw.githubusercontent.com/Azure/azure-rest-api-specs/7a42f16c75e5005c59b75fe7f0888c1103294d43/specification/keyvault/data-plane/Microsoft.KeyVault/preview/7.3-preview/backuprestore.json
+  - https://raw.githubusercontent.com/Azure/azure-rest-api-specs/4458bc6ef2a6394ee6e2af57e91fb16aa59a30ae/specification/keyvault/data-plane/Microsoft.KeyVault/stable/7.3/rbac.json
+  - https://raw.githubusercontent.com/Azure/azure-rest-api-specs/4458bc6ef2a6394ee6e2af57e91fb16aa59a30ae/specification/keyvault/data-plane/Microsoft.KeyVault/stable/7.3/backuprestore.json
 output-folder: ../
 source-code-folder-path: ./src/generated
 package-version: 4.2.0-beta.2
