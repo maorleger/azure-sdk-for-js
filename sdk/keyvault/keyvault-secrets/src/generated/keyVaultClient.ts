@@ -12,12 +12,14 @@ import * as Mappers from "./models/mappers";
 import { KeyVaultClientContext } from "./keyVaultClientContext";
 import {
   KeyVaultClientOptionalParams,
-  ApiVersion73Preview,
+  ApiVersion73,
   KeyVaultClientSetSecretOptionalParams,
   KeyVaultClientSetSecretResponse,
+  KeyVaultClientDeleteSecretOptionalParams,
   KeyVaultClientDeleteSecretResponse,
   KeyVaultClientUpdateSecretOptionalParams,
   KeyVaultClientUpdateSecretResponse,
+  KeyVaultClientGetSecretOptionalParams,
   KeyVaultClientGetSecretResponse,
   KeyVaultClientGetSecretsOptionalParams,
   KeyVaultClientGetSecretsResponse,
@@ -25,9 +27,14 @@ import {
   KeyVaultClientGetSecretVersionsResponse,
   KeyVaultClientGetDeletedSecretsOptionalParams,
   KeyVaultClientGetDeletedSecretsResponse,
+  KeyVaultClientGetDeletedSecretOptionalParams,
   KeyVaultClientGetDeletedSecretResponse,
+  KeyVaultClientPurgeDeletedSecretOptionalParams,
+  KeyVaultClientRecoverDeletedSecretOptionalParams,
   KeyVaultClientRecoverDeletedSecretResponse,
+  KeyVaultClientBackupSecretOptionalParams,
   KeyVaultClientBackupSecretResponse,
+  KeyVaultClientRestoreSecretOptionalParams,
   KeyVaultClientRestoreSecretResponse,
   KeyVaultClientGetSecretsNextOptionalParams,
   KeyVaultClientGetSecretsNextResponse,
@@ -37,7 +44,7 @@ import {
   KeyVaultClientGetDeletedSecretsNextResponse
 } from "./models";
 
-/** @hidden */
+/** @internal */
 export class KeyVaultClient extends KeyVaultClientContext {
   /**
    * Initializes a new instance of the KeyVaultClient class.
@@ -45,7 +52,7 @@ export class KeyVaultClient extends KeyVaultClientContext {
    * @param options The parameter options
    */
   constructor(
-    apiVersion: ApiVersion73Preview,
+    apiVersion: ApiVersion73,
     options?: KeyVaultClientOptionalParams
   ) {
     super(apiVersion, options);
@@ -87,7 +94,7 @@ export class KeyVaultClient extends KeyVaultClientContext {
   deleteSecret(
     vaultBaseUrl: string,
     secretName: string,
-    options?: coreHttp.OperationOptions
+    options?: KeyVaultClientDeleteSecretOptionalParams
   ): Promise<KeyVaultClientDeleteSecretResponse> {
     const operationArguments: coreHttp.OperationArguments = {
       vaultBaseUrl,
@@ -140,7 +147,7 @@ export class KeyVaultClient extends KeyVaultClientContext {
     vaultBaseUrl: string,
     secretName: string,
     secretVersion: string,
-    options?: coreHttp.OperationOptions
+    options?: KeyVaultClientGetSecretOptionalParams
   ): Promise<KeyVaultClientGetSecretResponse> {
     const operationArguments: coreHttp.OperationArguments = {
       vaultBaseUrl,
@@ -228,7 +235,7 @@ export class KeyVaultClient extends KeyVaultClientContext {
   getDeletedSecret(
     vaultBaseUrl: string,
     secretName: string,
-    options?: coreHttp.OperationOptions
+    options?: KeyVaultClientGetDeletedSecretOptionalParams
   ): Promise<KeyVaultClientGetDeletedSecretResponse> {
     const operationArguments: coreHttp.OperationArguments = {
       vaultBaseUrl,
@@ -252,7 +259,7 @@ export class KeyVaultClient extends KeyVaultClientContext {
   purgeDeletedSecret(
     vaultBaseUrl: string,
     secretName: string,
-    options?: coreHttp.OperationOptions
+    options?: KeyVaultClientPurgeDeletedSecretOptionalParams
   ): Promise<coreHttp.RestResponse> {
     const operationArguments: coreHttp.OperationArguments = {
       vaultBaseUrl,
@@ -275,7 +282,7 @@ export class KeyVaultClient extends KeyVaultClientContext {
   recoverDeletedSecret(
     vaultBaseUrl: string,
     secretName: string,
-    options?: coreHttp.OperationOptions
+    options?: KeyVaultClientRecoverDeletedSecretOptionalParams
   ): Promise<KeyVaultClientRecoverDeletedSecretResponse> {
     const operationArguments: coreHttp.OperationArguments = {
       vaultBaseUrl,
@@ -298,7 +305,7 @@ export class KeyVaultClient extends KeyVaultClientContext {
   backupSecret(
     vaultBaseUrl: string,
     secretName: string,
-    options?: coreHttp.OperationOptions
+    options?: KeyVaultClientBackupSecretOptionalParams
   ): Promise<KeyVaultClientBackupSecretResponse> {
     const operationArguments: coreHttp.OperationArguments = {
       vaultBaseUrl,
@@ -321,7 +328,7 @@ export class KeyVaultClient extends KeyVaultClientContext {
   restoreSecret(
     vaultBaseUrl: string,
     secretBundleBackup: Uint8Array,
-    options?: coreHttp.OperationOptions
+    options?: KeyVaultClientRestoreSecretOptionalParams
   ): Promise<KeyVaultClientRestoreSecretResponse> {
     const operationArguments: coreHttp.OperationArguments = {
       vaultBaseUrl,
@@ -424,7 +431,7 @@ const setSecretOperationSpec: coreHttp.OperationSpec = {
       contentType: ["options", "contentType"],
       secretAttributes: ["options", "secretAttributes"]
     },
-    mapper: Mappers.SecretSetParameters
+    mapper: { ...Mappers.SecretSetParameters, required: true }
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.vaultBaseUrl, Parameters.secretName],
@@ -465,7 +472,7 @@ const updateSecretOperationSpec: coreHttp.OperationSpec = {
       secretAttributes: ["options", "secretAttributes"],
       tags: ["options", "tags"]
     },
-    mapper: Mappers.SecretUpdateParameters
+    mapper: { ...Mappers.SecretUpdateParameters, required: true }
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
@@ -620,7 +627,7 @@ const restoreSecretOperationSpec: coreHttp.OperationSpec = {
   },
   requestBody: {
     parameterPath: { secretBundleBackup: ["secretBundleBackup"] },
-    mapper: Mappers.SecretRestoreParameters
+    mapper: { ...Mappers.SecretRestoreParameters, required: true }
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.vaultBaseUrl],

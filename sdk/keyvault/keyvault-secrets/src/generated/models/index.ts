@@ -70,7 +70,7 @@ export interface KeyVaultError {
    * The key vault server error.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly error?: ErrorModel | null;
+  readonly error?: ErrorModel;
 }
 
 /** The key vault server error. */
@@ -89,7 +89,7 @@ export interface ErrorModel {
    * The key vault server error.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly innerError?: ErrorModel | null;
+  readonly innerError?: ErrorModel;
 }
 
 /** The secret update parameters. */
@@ -214,23 +214,23 @@ export type DeletedSecretItem = SecretItem & {
   readonly deletedDate?: Date;
 };
 
-/** Known values of {@link ApiVersion73Preview} that the service accepts. */
-export const enum KnownApiVersion73Preview {
-  /** Api Version '7.3-preview' */
-  Seven3Preview = "7.3-preview"
+/** Known values of {@link ApiVersion73} that the service accepts. */
+export enum KnownApiVersion73 {
+  /** Api Version '7.3' */
+  Seven3 = "7.3"
 }
 
 /**
- * Defines values for ApiVersion73Preview. \
- * {@link KnownApiVersion73Preview} can be used interchangeably with ApiVersion73Preview,
+ * Defines values for ApiVersion73. \
+ * {@link KnownApiVersion73} can be used interchangeably with ApiVersion73,
  *  this enum contains the known values that the service supports.
- * ### Know values supported by the service
- * **7.3-preview**: Api Version '7.3-preview'
+ * ### Known values supported by the service
+ * **7.3**: Api Version '7.3'
  */
-export type ApiVersion73Preview = string;
+export type ApiVersion73 = string;
 
 /** Known values of {@link DeletionRecoveryLevel} that the service accepts. */
-export const enum KnownDeletionRecoveryLevel {
+export enum KnownDeletionRecoveryLevel {
   /** Denotes a vault state in which deletion is an irreversible operation, without the possibility for recovery. This level corresponds to no protection being available against a Delete operation; the data is irretrievably lost upon accepting a Delete operation at the entity level or higher (vault, resource group, subscription etc.) */
   Purgeable = "Purgeable",
   /** Denotes a vault state in which deletion is recoverable, and which also permits immediate and permanent deletion (i.e. purge). This level guarantees the recoverability of the deleted entity during the retention interval (90 days), unless a Purge operation is requested, or the subscription is cancelled. System wil permanently delete it after 90 days, if not recovered */
@@ -251,7 +251,7 @@ export const enum KnownDeletionRecoveryLevel {
  * Defines values for DeletionRecoveryLevel. \
  * {@link KnownDeletionRecoveryLevel} can be used interchangeably with DeletionRecoveryLevel,
  *  this enum contains the known values that the service supports.
- * ### Know values supported by the service
+ * ### Known values supported by the service
  * **Purgeable**: Denotes a vault state in which deletion is an irreversible operation, without the possibility for recovery. This level corresponds to no protection being available against a Delete operation; the data is irretrievably lost upon accepting a Delete operation at the entity level or higher (vault, resource group, subscription etc.) \
  * **Recoverable+Purgeable**: Denotes a vault state in which deletion is recoverable, and which also permits immediate and permanent deletion (i.e. purge). This level guarantees the recoverability of the deleted entity during the retention interval (90 days), unless a Purge operation is requested, or the subscription is cancelled. System wil permanently delete it after 90 days, if not recovered \
  * **Recoverable**: Denotes a vault state in which deletion is recoverable without the possibility for immediate and permanent deletion (i.e. purge). This level guarantees the recoverability of the deleted entity during the retention interval(90 days) and while the subscription is still available. System wil permanently delete it after 90 days, if not recovered \
@@ -284,6 +284,10 @@ export type KeyVaultClientSetSecretResponse = SecretBundle & {
     parsedBody: SecretBundle;
   };
 };
+
+/** Optional parameters. */
+export interface KeyVaultClientDeleteSecretOptionalParams
+  extends coreHttp.OperationOptions {}
 
 /** Contains response data for the deleteSecret operation. */
 export type KeyVaultClientDeleteSecretResponse = DeletedSecretBundle & {
@@ -319,6 +323,10 @@ export type KeyVaultClientUpdateSecretResponse = SecretBundle & {
     parsedBody: SecretBundle;
   };
 };
+
+/** Optional parameters. */
+export interface KeyVaultClientGetSecretOptionalParams
+  extends coreHttp.OperationOptions {}
 
 /** Contains response data for the getSecret operation. */
 export type KeyVaultClientGetSecretResponse = SecretBundle & {
@@ -389,6 +397,10 @@ export type KeyVaultClientGetDeletedSecretsResponse = DeletedSecretListResult & 
   };
 };
 
+/** Optional parameters. */
+export interface KeyVaultClientGetDeletedSecretOptionalParams
+  extends coreHttp.OperationOptions {}
+
 /** Contains response data for the getDeletedSecret operation. */
 export type KeyVaultClientGetDeletedSecretResponse = DeletedSecretBundle & {
   /** The underlying HTTP response. */
@@ -400,6 +412,14 @@ export type KeyVaultClientGetDeletedSecretResponse = DeletedSecretBundle & {
     parsedBody: DeletedSecretBundle;
   };
 };
+
+/** Optional parameters. */
+export interface KeyVaultClientPurgeDeletedSecretOptionalParams
+  extends coreHttp.OperationOptions {}
+
+/** Optional parameters. */
+export interface KeyVaultClientRecoverDeletedSecretOptionalParams
+  extends coreHttp.OperationOptions {}
 
 /** Contains response data for the recoverDeletedSecret operation. */
 export type KeyVaultClientRecoverDeletedSecretResponse = SecretBundle & {
@@ -413,6 +433,10 @@ export type KeyVaultClientRecoverDeletedSecretResponse = SecretBundle & {
   };
 };
 
+/** Optional parameters. */
+export interface KeyVaultClientBackupSecretOptionalParams
+  extends coreHttp.OperationOptions {}
+
 /** Contains response data for the backupSecret operation. */
 export type KeyVaultClientBackupSecretResponse = BackupSecretResult & {
   /** The underlying HTTP response. */
@@ -424,6 +448,10 @@ export type KeyVaultClientBackupSecretResponse = BackupSecretResult & {
     parsedBody: BackupSecretResult;
   };
 };
+
+/** Optional parameters. */
+export interface KeyVaultClientRestoreSecretOptionalParams
+  extends coreHttp.OperationOptions {}
 
 /** Contains response data for the restoreSecret operation. */
 export type KeyVaultClientRestoreSecretResponse = SecretBundle & {
