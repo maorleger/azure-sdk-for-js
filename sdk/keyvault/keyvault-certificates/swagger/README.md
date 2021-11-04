@@ -8,13 +8,14 @@ typescript:
 disable-async-iterators: true
 api-version-parameter: choice
 v3: true
+use-core-v2: false
 use-extension:
-  "@autorest/typescript": "6.0.0-dev.20210114.1"
+  "@autorest/typescript": "6.0.0-beta.6"
 azure-arm: false
 generate-metadata: false
 add-credentials: false
 license-header: MICROSOFT_MIT_NO_VERSION
-input-file: https://raw.githubusercontent.com/Azure/azure-rest-api-specs/7a42f16c75e5005c59b75fe7f0888c1103294d43/specification/keyvault/data-plane/Microsoft.KeyVault/preview/7.3-preview/certificates.json
+input-file: https://raw.githubusercontent.com/Azure/azure-rest-api-specs/4458bc6ef2a6394ee6e2af57e91fb16aa59a30ae/specification/keyvault/data-plane/Microsoft.KeyVault/stable/7.3/certificates.json
 output-folder: ../
 source-code-folder-path: ./src/generated
 hide-clients: true

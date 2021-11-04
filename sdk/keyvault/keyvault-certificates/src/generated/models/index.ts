@@ -60,7 +60,7 @@ export interface KeyVaultError {
    * The key vault server error.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly error?: ErrorModel | null;
+  readonly error?: ErrorModel;
 }
 
 /** The key vault server error. */
@@ -503,23 +503,23 @@ export type DeletedCertificateBundle = CertificateBundle & {
   readonly deletedDate?: Date;
 };
 
-/** Known values of {@link ApiVersion73Preview} that the service accepts. */
-export const enum KnownApiVersion73Preview {
-  /** Api Version '7.3-preview' */
-  Seven3Preview = "7.3-preview"
+/** Known values of {@link ApiVersion73} that the service accepts. */
+export enum KnownApiVersion73 {
+  /** Api Version '7.3' */
+  Seven3 = "7.3"
 }
 
 /**
- * Defines values for ApiVersion73Preview. \
- * {@link KnownApiVersion73Preview} can be used interchangeably with ApiVersion73Preview,
+ * Defines values for ApiVersion73. \
+ * {@link KnownApiVersion73} can be used interchangeably with ApiVersion73,
  *  this enum contains the known values that the service supports.
- * ### Know values supported by the service
- * **7.3-preview**: Api Version '7.3-preview'
+ * ### Known values supported by the service
+ * **7.3**: Api Version '7.3'
  */
-export type ApiVersion73Preview = string;
+export type ApiVersion73 = string;
 
 /** Known values of {@link DeletionRecoveryLevel} that the service accepts. */
-export const enum KnownDeletionRecoveryLevel {
+export enum KnownDeletionRecoveryLevel {
   /** Denotes a vault state in which deletion is an irreversible operation, without the possibility for recovery. This level corresponds to no protection being available against a Delete operation; the data is irretrievably lost upon accepting a Delete operation at the entity level or higher (vault, resource group, subscription etc.) */
   Purgeable = "Purgeable",
   /** Denotes a vault state in which deletion is recoverable, and which also permits immediate and permanent deletion (i.e. purge). This level guarantees the recoverability of the deleted entity during the retention interval (90 days), unless a Purge operation is requested, or the subscription is cancelled. System wil permanently delete it after 90 days, if not recovered */
@@ -540,7 +540,7 @@ export const enum KnownDeletionRecoveryLevel {
  * Defines values for DeletionRecoveryLevel. \
  * {@link KnownDeletionRecoveryLevel} can be used interchangeably with DeletionRecoveryLevel,
  *  this enum contains the known values that the service supports.
- * ### Know values supported by the service
+ * ### Known values supported by the service
  * **Purgeable**: Denotes a vault state in which deletion is an irreversible operation, without the possibility for recovery. This level corresponds to no protection being available against a Delete operation; the data is irretrievably lost upon accepting a Delete operation at the entity level or higher (vault, resource group, subscription etc.) \
  * **Recoverable+Purgeable**: Denotes a vault state in which deletion is recoverable, and which also permits immediate and permanent deletion (i.e. purge). This level guarantees the recoverability of the deleted entity during the retention interval (90 days), unless a Purge operation is requested, or the subscription is cancelled. System wil permanently delete it after 90 days, if not recovered \
  * **Recoverable**: Denotes a vault state in which deletion is recoverable without the possibility for immediate and permanent deletion (i.e. purge). This level guarantees the recoverability of the deleted entity during the retention interval(90 days) and while the subscription is still available. System wil permanently delete it after 90 days, if not recovered \
@@ -552,7 +552,7 @@ export const enum KnownDeletionRecoveryLevel {
 export type DeletionRecoveryLevel = string;
 
 /** Known values of {@link JsonWebKeyType} that the service accepts. */
-export const enum KnownJsonWebKeyType {
+export enum KnownJsonWebKeyType {
   EC = "EC",
   ECHSM = "EC-HSM",
   RSA = "RSA",
@@ -565,7 +565,7 @@ export const enum KnownJsonWebKeyType {
  * Defines values for JsonWebKeyType. \
  * {@link KnownJsonWebKeyType} can be used interchangeably with JsonWebKeyType,
  *  this enum contains the known values that the service supports.
- * ### Know values supported by the service
+ * ### Known values supported by the service
  * **EC** \
  * **EC-HSM** \
  * **RSA** \
@@ -576,7 +576,7 @@ export const enum KnownJsonWebKeyType {
 export type JsonWebKeyType = string;
 
 /** Known values of {@link JsonWebKeyCurveName} that the service accepts. */
-export const enum KnownJsonWebKeyCurveName {
+export enum KnownJsonWebKeyCurveName {
   P256 = "P-256",
   P384 = "P-384",
   P521 = "P-521",
@@ -587,7 +587,7 @@ export const enum KnownJsonWebKeyCurveName {
  * Defines values for JsonWebKeyCurveName. \
  * {@link KnownJsonWebKeyCurveName} can be used interchangeably with JsonWebKeyCurveName,
  *  this enum contains the known values that the service supports.
- * ### Know values supported by the service
+ * ### Known values supported by the service
  * **P-256** \
  * **P-384** \
  * **P-521** \
@@ -596,7 +596,7 @@ export const enum KnownJsonWebKeyCurveName {
 export type JsonWebKeyCurveName = string;
 
 /** Known values of {@link KeyUsageType} that the service accepts. */
-export const enum KnownKeyUsageType {
+export enum KnownKeyUsageType {
   DigitalSignature = "digitalSignature",
   NonRepudiation = "nonRepudiation",
   KeyEncipherment = "keyEncipherment",
@@ -612,7 +612,7 @@ export const enum KnownKeyUsageType {
  * Defines values for KeyUsageType. \
  * {@link KnownKeyUsageType} can be used interchangeably with KeyUsageType,
  *  this enum contains the known values that the service supports.
- * ### Know values supported by the service
+ * ### Known values supported by the service
  * **digitalSignature** \
  * **nonRepudiation** \
  * **keyEncipherment** \
@@ -648,6 +648,10 @@ export type KeyVaultClientGetCertificatesResponse = CertificateListResult & {
   };
 };
 
+/** Optional parameters. */
+export interface KeyVaultClientDeleteCertificateOptionalParams
+  extends coreHttp.OperationOptions {}
+
 /** Contains response data for the deleteCertificate operation. */
 export type KeyVaultClientDeleteCertificateResponse = DeletedCertificateBundle & {
   /** The underlying HTTP response. */
@@ -659,6 +663,10 @@ export type KeyVaultClientDeleteCertificateResponse = DeletedCertificateBundle &
     parsedBody: DeletedCertificateBundle;
   };
 };
+
+/** Optional parameters. */
+export interface KeyVaultClientSetCertificateContactsOptionalParams
+  extends coreHttp.OperationOptions {}
 
 /** Contains response data for the setCertificateContacts operation. */
 export type KeyVaultClientSetCertificateContactsResponse = Contacts & {
@@ -672,6 +680,10 @@ export type KeyVaultClientSetCertificateContactsResponse = Contacts & {
   };
 };
 
+/** Optional parameters. */
+export interface KeyVaultClientGetCertificateContactsOptionalParams
+  extends coreHttp.OperationOptions {}
+
 /** Contains response data for the getCertificateContacts operation. */
 export type KeyVaultClientGetCertificateContactsResponse = Contacts & {
   /** The underlying HTTP response. */
@@ -683,6 +695,10 @@ export type KeyVaultClientGetCertificateContactsResponse = Contacts & {
     parsedBody: Contacts;
   };
 };
+
+/** Optional parameters. */
+export interface KeyVaultClientDeleteCertificateContactsOptionalParams
+  extends coreHttp.OperationOptions {}
 
 /** Contains response data for the deleteCertificateContacts operation. */
 export type KeyVaultClientDeleteCertificateContactsResponse = Contacts & {
@@ -763,6 +779,10 @@ export type KeyVaultClientUpdateCertificateIssuerResponse = IssuerBundle & {
   };
 };
 
+/** Optional parameters. */
+export interface KeyVaultClientGetCertificateIssuerOptionalParams
+  extends coreHttp.OperationOptions {}
+
 /** Contains response data for the getCertificateIssuer operation. */
 export type KeyVaultClientGetCertificateIssuerResponse = IssuerBundle & {
   /** The underlying HTTP response. */
@@ -774,6 +794,10 @@ export type KeyVaultClientGetCertificateIssuerResponse = IssuerBundle & {
     parsedBody: IssuerBundle;
   };
 };
+
+/** Optional parameters. */
+export interface KeyVaultClientDeleteCertificateIssuerOptionalParams
+  extends coreHttp.OperationOptions {}
 
 /** Contains response data for the deleteCertificateIssuer operation. */
 export type KeyVaultClientDeleteCertificateIssuerResponse = IssuerBundle & {
@@ -854,6 +878,10 @@ export type KeyVaultClientGetCertificateVersionsResponse = CertificateListResult
   };
 };
 
+/** Optional parameters. */
+export interface KeyVaultClientGetCertificatePolicyOptionalParams
+  extends coreHttp.OperationOptions {}
+
 /** Contains response data for the getCertificatePolicy operation. */
 export type KeyVaultClientGetCertificatePolicyResponse = CertificatePolicy & {
   /** The underlying HTTP response. */
@@ -865,6 +893,10 @@ export type KeyVaultClientGetCertificatePolicyResponse = CertificatePolicy & {
     parsedBody: CertificatePolicy;
   };
 };
+
+/** Optional parameters. */
+export interface KeyVaultClientUpdateCertificatePolicyOptionalParams
+  extends coreHttp.OperationOptions {}
 
 /** Contains response data for the updateCertificatePolicy operation. */
 export type KeyVaultClientUpdateCertificatePolicyResponse = CertificatePolicy & {
@@ -901,6 +933,10 @@ export type KeyVaultClientUpdateCertificateResponse = CertificateBundle & {
   };
 };
 
+/** Optional parameters. */
+export interface KeyVaultClientGetCertificateOptionalParams
+  extends coreHttp.OperationOptions {}
+
 /** Contains response data for the getCertificate operation. */
 export type KeyVaultClientGetCertificateResponse = CertificateBundle & {
   /** The underlying HTTP response. */
@@ -912,6 +948,10 @@ export type KeyVaultClientGetCertificateResponse = CertificateBundle & {
     parsedBody: CertificateBundle;
   };
 };
+
+/** Optional parameters. */
+export interface KeyVaultClientUpdateCertificateOperationOptionalParams
+  extends coreHttp.OperationOptions {}
 
 /** Contains response data for the updateCertificateOperation operation. */
 export type KeyVaultClientUpdateCertificateOperationResponse = CertificateOperation & {
@@ -925,6 +965,10 @@ export type KeyVaultClientUpdateCertificateOperationResponse = CertificateOperat
   };
 };
 
+/** Optional parameters. */
+export interface KeyVaultClientGetCertificateOperationOptionalParams
+  extends coreHttp.OperationOptions {}
+
 /** Contains response data for the getCertificateOperation operation. */
 export type KeyVaultClientGetCertificateOperationResponse = CertificateOperation & {
   /** The underlying HTTP response. */
@@ -936,6 +980,10 @@ export type KeyVaultClientGetCertificateOperationResponse = CertificateOperation
     parsedBody: CertificateOperation;
   };
 };
+
+/** Optional parameters. */
+export interface KeyVaultClientDeleteCertificateOperationOptionalParams
+  extends coreHttp.OperationOptions {}
 
 /** Contains response data for the deleteCertificateOperation operation. */
 export type KeyVaultClientDeleteCertificateOperationResponse = CertificateOperation & {
@@ -970,6 +1018,10 @@ export type KeyVaultClientMergeCertificateResponse = CertificateBundle & {
   };
 };
 
+/** Optional parameters. */
+export interface KeyVaultClientBackupCertificateOptionalParams
+  extends coreHttp.OperationOptions {}
+
 /** Contains response data for the backupCertificate operation. */
 export type KeyVaultClientBackupCertificateResponse = BackupCertificateResult & {
   /** The underlying HTTP response. */
@@ -981,6 +1033,10 @@ export type KeyVaultClientBackupCertificateResponse = BackupCertificateResult & 
     parsedBody: BackupCertificateResult;
   };
 };
+
+/** Optional parameters. */
+export interface KeyVaultClientRestoreCertificateOptionalParams
+  extends coreHttp.OperationOptions {}
 
 /** Contains response data for the restoreCertificate operation. */
 export type KeyVaultClientRestoreCertificateResponse = CertificateBundle & {
@@ -1015,6 +1071,10 @@ export type KeyVaultClientGetDeletedCertificatesResponse = DeletedCertificateLis
   };
 };
 
+/** Optional parameters. */
+export interface KeyVaultClientGetDeletedCertificateOptionalParams
+  extends coreHttp.OperationOptions {}
+
 /** Contains response data for the getDeletedCertificate operation. */
 export type KeyVaultClientGetDeletedCertificateResponse = DeletedCertificateBundle & {
   /** The underlying HTTP response. */
@@ -1026,6 +1086,14 @@ export type KeyVaultClientGetDeletedCertificateResponse = DeletedCertificateBund
     parsedBody: DeletedCertificateBundle;
   };
 };
+
+/** Optional parameters. */
+export interface KeyVaultClientPurgeDeletedCertificateOptionalParams
+  extends coreHttp.OperationOptions {}
+
+/** Optional parameters. */
+export interface KeyVaultClientRecoverDeletedCertificateOptionalParams
+  extends coreHttp.OperationOptions {}
 
 /** Contains response data for the recoverDeletedCertificate operation. */
 export type KeyVaultClientRecoverDeletedCertificateResponse = CertificateBundle & {
