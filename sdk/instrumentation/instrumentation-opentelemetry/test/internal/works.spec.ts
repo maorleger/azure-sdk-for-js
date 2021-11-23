@@ -7,7 +7,7 @@ import { createTracingClient, TracingClient, useInstrumenter } from "@azure/core
 
 // So like we can have some low-level support with ways to inspect the instrumenter
 // check the spans, etc.
-describe("in-memory", () => {
+describe.only("in-memory", () => {
   const instrumenter = new InMemoryInstrumenter();
 
   beforeEach(() => {

@@ -60,27 +60,13 @@ export class InMemoryInstrumenter implements Instrumenter {
   >(
     context: TracingContext,
     callback: Callback,
-    _callbackThis?: ThisParameterType<Callback>,
-    ..._callbackArgs: CallbackArgs
-  ): ReturnType<Callback> {
-    return this.withContextInternal(context, callback) as any;
-  }
-  async withContextInternal<
-    TReturn,
-    CallbackArgs extends unknown[],
-    Callback extends (...args: CallbackArgs) => Promise<TReturn>
-  >(
-    context: TracingContext,
-    callback: Callback,
     callbackThis?: ThisParameterType<Callback>,
     ...callbackArgs: CallbackArgs
-  ): Promise<any> {
+  ): ReturnType<Callback> {
     this.contexts.push(context);
-    try {
-      return await callback.call(callbackThis, ...callbackArgs);
-    } finally {
+    return Promise.resolve(callback.call(callbackThis, ...callbackArgs)).finally(() => {
       this.contexts.pop();
-    }
+    }) as ReturnType<Callback>;
   }
   parseTraceparentHeader(_traceparentHeader: string): TracingSpanContext | undefined {
     return;
