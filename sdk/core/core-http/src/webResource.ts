@@ -9,8 +9,8 @@ import { HttpOperationResponse } from "./httpOperationResponse";
 import { OperationResponse } from "./operationResponse";
 import { ProxySettings } from "./serviceClient";
 import { AbortSignalLike } from "@azure/abort-controller";
-import { SpanOptions, Context } from "@azure/core-tracing";
 import { SerializerOptions } from "./util/serializer.common";
+import { TracingContext } from "@azure/core-tracing";
 
 /**
  * List of supported HTTP methods.
@@ -142,7 +142,7 @@ export interface WebResourceLike {
   /**
    * Tracing: Context used when creating spans.
    */
-  tracingContext?: Context;
+  tracingContext?: TracingContext;
 
   /**
    * Validates that the required properties such as method, url, headers["Content-Type"],
@@ -287,12 +287,12 @@ export class WebResource implements WebResourceLike {
   /**
    * Tracing: Options used to create a span when tracing is enabled.
    */
-  spanOptions?: SpanOptions;
+  spanOptions?: any;
 
   /**
    * Tracing: Context used when creating Spans.
    */
-  tracingContext?: Context;
+  tracingContext?: TracingContext;
 
   constructor(
     url?: string,
@@ -714,11 +714,11 @@ export interface RequestPrepareOptions {
   /**
    * Tracing: Options used to create a span when tracing is enabled.
    */
-  spanOptions?: SpanOptions;
+  spanOptions?: any;
   /**
    * Tracing: Context used when creating spans.
    */
-  tracingContext?: Context;
+  tracingContext?: TracingContext;
 }
 
 /**
@@ -778,7 +778,7 @@ export interface RequestOptionsBase {
   /**
    * Tracing: Context used when creating spans.
    */
-  tracingContext?: Context;
+  tracingContext?: TracingContext;
 
   /**
    * May contain other properties.

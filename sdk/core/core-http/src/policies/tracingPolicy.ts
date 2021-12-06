@@ -2,12 +2,10 @@
 // Licensed under the MIT license.
 
 import {
-  getTraceParentHeader,
-  createSpanFunction,
-  SpanKind,
-  SpanStatusCode,
-  isSpanContextValid,
-  Span
+  createTracingClient,
+  TracingClient,
+  TracingSpan,
+  TracingSpanOptions
 } from "@azure/core-tracing";
 import {
   RequestPolicyFactory,
@@ -19,11 +17,6 @@ import { WebResourceLike } from "../webResource";
 import { HttpOperationResponse } from "../httpOperationResponse";
 import { URLBuilder } from "../url";
 import { logger } from "../log";
-
-const createSpan = createSpanFunction({
-  packagePrefix: "",
-  namespace: ""
-});
 
 /**
  * Options to customize the tracing policy.
@@ -53,6 +46,7 @@ export function tracingPolicy(tracingOptions: TracingPolicyOptions = {}): Reques
  */
 export class TracingPolicy extends BaseRequestPolicy {
   private userAgent?: string;
+  private tracingClient: TracingClient;
 
   constructor(
     nextPolicy: RequestPolicy,
@@ -61,21 +55,44 @@ export class TracingPolicy extends BaseRequestPolicy {
   ) {
     super(nextPolicy, options);
     this.userAgent = tracingOptions.userAgent;
+    this.tracingClient = createTracingClient({ namespace: "", packageName: "@azure/core-http" });
   }
 
   public async sendRequest(request: WebResourceLike): Promise<HttpOperationResponse> {
-    if (!request.tracingContext) {
-      return this._nextPolicy.sendRequest(request);
+    const path = URLBuilder.parse(request.url).getPath() || "/";
+
+    // Passing spanOptions as part of tracingOptions to maintain compatibility @azure/core-tracing@preview.13 and earlier.
+    // We can pass this as a separate parameter once we upgrade to the latest core-tracing.
+    const spanOptions: TracingSpanOptions = {
+      spanKind: "client"
+    };
+
+    const { span, tracingContext } = this.tracingClient.startSpan(
+      path,
+      { tracingOptions: { tracingContext: request.tracingContext } },
+      spanOptions
+    );
+
+    span.setAttribute("http.method", request.method);
+    span.setAttribute("http.url", request.url);
+    span.setAttribute("requestId", request.requestId);
+
+    if (this.userAgent) {
+      span.setAttribute("http.user_agent", this.userAgent);
     }
 
-    const span = this.tryCreateSpan(request);
-
-    if (!span) {
-      return this._nextPolicy.sendRequest(request);
+    const requestHeaders = this.tracingClient.createRequestHeaders(span.spanContext);
+    for (const headerName in requestHeaders) {
+      request.headers.set(headerName, requestHeaders[headerName]);
     }
 
     try {
-      const response = await this._nextPolicy.sendRequest(request);
+      const response = await this.tracingClient.withContext(
+        tracingContext,
+        this._nextPolicy.sendRequest,
+        undefined,
+        request
+      );
       this.tryProcessResponse(span, response);
       return response;
     } catch (err) {
@@ -84,71 +101,15 @@ export class TracingPolicy extends BaseRequestPolicy {
     }
   }
 
-  tryCreateSpan(request: WebResourceLike): Span | undefined {
-    try {
-      const path = URLBuilder.parse(request.url).getPath() || "/";
-
-      // Passing spanOptions as part of tracingOptions to maintain compatibility @azure/core-tracing@preview.13 and earlier.
-      // We can pass this as a separate parameter once we upgrade to the latest core-tracing.
-      const { span } = createSpan(path, {
-        tracingOptions: {
-          spanOptions: {
-            ...(request as any).spanOptions,
-            kind: SpanKind.CLIENT
-          },
-          tracingContext: request.tracingContext
-        }
-      });
-
-      // If the span is not recording, don't do any more work.
-      if (!span.isRecording()) {
-        span.end();
-        return undefined;
-      }
-
-      const namespaceFromContext = request.tracingContext?.getValue(Symbol.for("az.namespace"));
-
-      if (typeof namespaceFromContext === "string") {
-        span.setAttribute("az.namespace", namespaceFromContext);
-      }
-
-      span.setAttributes({
-        "http.method": request.method,
-        "http.url": request.url,
-        requestId: request.requestId
-      });
-
-      if (this.userAgent) {
-        span.setAttribute("http.user_agent", this.userAgent);
-      }
-
-      // set headers
-      const spanContext = span.spanContext();
-      const traceParentHeader = getTraceParentHeader(spanContext);
-      if (traceParentHeader && isSpanContextValid(spanContext)) {
-        request.headers.set("traceparent", traceParentHeader);
-        const traceState = spanContext.traceState && spanContext.traceState.serialize();
-        // if tracestate is set, traceparent MUST be set, so only set tracestate after traceparent
-        if (traceState) {
-          request.headers.set("tracestate", traceState);
-        }
-      }
-      return span;
-    } catch (error) {
-      logger.warning(`Skipping creating a tracing span due to an error: ${error.message}`);
-      return undefined;
-    }
-  }
-
-  private tryProcessError(span: Span, err: any): void {
+  private tryProcessError(span: TracingSpan, error: any): void {
     try {
       span.setStatus({
-        code: SpanStatusCode.ERROR,
-        message: err.message
+        status: "error",
+        error
       });
 
-      if (err.statusCode) {
-        span.setAttribute("http.status_code", err.statusCode);
+      if (error.statusCode) {
+        span.setAttribute("http.status_code", error.statusCode);
       }
       span.end();
     } catch (error) {
@@ -156,16 +117,14 @@ export class TracingPolicy extends BaseRequestPolicy {
     }
   }
 
-  private tryProcessResponse(span: Span, response: HttpOperationResponse): void {
+  private tryProcessResponse(span: TracingSpan, response: HttpOperationResponse): void {
     try {
       span.setAttribute("http.status_code", response.status);
       const serviceRequestId = response.headers.get("x-ms-request-id");
       if (serviceRequestId) {
         span.setAttribute("serviceRequestId", serviceRequestId);
       }
-      span.setStatus({
-        code: SpanStatusCode.OK
-      });
+      span.setStatus({ status: "success" });
       span.end();
     } catch (error) {
       logger.warning(`Skipping tracing span processing due to an error: ${error.message}`);
