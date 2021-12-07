@@ -59,8 +59,6 @@ export class TracingPolicy extends BaseRequestPolicy {
   }
 
   public async sendRequest(request: WebResourceLike): Promise<HttpOperationResponse> {
-    const path = URLBuilder.parse(request.url).getPath() || "/";
-
     // Passing spanOptions as part of tracingOptions to maintain compatibility @azure/core-tracing@preview.13 and earlier.
     // We can pass this as a separate parameter once we upgrade to the latest core-tracing.
     const spanOptions: TracingSpanOptions = {
@@ -68,7 +66,7 @@ export class TracingPolicy extends BaseRequestPolicy {
     };
 
     const { span, tracingContext } = this.tracingClient.startSpan(
-      path,
+      `HTTP ${request.method}`,
       { tracingOptions: { tracingContext: request.tracingContext } },
       spanOptions
     );
