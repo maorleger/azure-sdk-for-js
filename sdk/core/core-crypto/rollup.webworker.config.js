@@ -21,22 +21,19 @@ export function webworkerConfig() {
           // replace dynamic checks with if (false) since this is for
           // browser only. Rollup's dead code elimination will remove
           // any code guarded by if (isNode) { ... }
-          "if (isNode)": "if (false)"
-        }
+          "if (isNode)": "if (false)",
+        },
       }),
       nodeResolve({
         mainFields: ["module", "browser"],
-        preferBuiltins: false
+        preferBuiltins: false,
       }),
-      cjs()
-    ]
+      cjs(),
+    ],
   };
 
   baseConfig.onwarn = (warning) => {
-    if (
-      warning.code === "CIRCULAR_DEPENDENCY" &&
-      warning.importer.indexOf(path.normalize("node_modules/chai/lib") === 0)
-    ) {
+    if (warning.code === "CIRCULAR_DEPENDENCY" && warning.importer.includes("node_modules/chai")) {
       // Chai contains circular references, but they are not fatal and can be ignored.
       return;
     }

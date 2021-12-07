@@ -17,10 +17,7 @@ const input = "dist-esm/src/index.js";
 const production = process.env.NODE_ENV === "production";
 
 const ignoreKnownWarnings = (warning) => {
-  if (
-    warning.code === "CIRCULAR_DEPENDENCY" &&
-    warning.importer.indexOf(path.normalize("node_modules/chai/lib") === 0)
-  ) {
+  if (warning.code === "CIRCULAR_DEPENDENCY" && warning.importer.includes("node_modules/chai")) {
     // Chai contains circular references, but they are not fatal and can be ignored.
     return;
   }
