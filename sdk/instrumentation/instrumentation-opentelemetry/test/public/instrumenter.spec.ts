@@ -11,7 +11,6 @@ import { TestTracer } from "./util/testTracer";
 import { resetTracer, setTracer } from "./util/testTracerProvider";
 import sinon from "sinon";
 import { Context } from "mocha";
-import { OpenTelemetrySpanWrapper } from "../../src/spanWrapper";
 
 describe("OpenTelemetryInstrumenter", () => {
   const instrumenter = new OpenTelemetryInstrumenter();
@@ -76,57 +75,6 @@ describe("OpenTelemetryInstrumenter", () => {
           traceparent: expectedTraceParentHeader
         });
       });
-
-      describe("when traceState is provided", () => {
-        it("should return a traceState header", () => {
-          const spanContext: SpanContext = {
-            spanId: "2222222222222222",
-            traceId: "11111111111111111111111111111111",
-            traceFlags: TraceFlags.NONE,
-            traceState: new TraceState()
-          };
-          spanContext.traceState = spanContext.traceState!.set("foo", "bar");
-
-          const expectedTraceParentHeader = `00-11111111111111111111111111111111-2222222222222222-00`;
-          const expectedTraceStateHeader = `foo=bar`;
-
-          const headers = instrumenter.createRequestHeaders(spanContext);
-
-          assert.deepEqual(headers, {
-            traceparent: expectedTraceParentHeader,
-            tracestate: expectedTraceStateHeader
-          });
-        });
-      });
-
-      describe("when a traceState is not provided", () => {
-        it("does not include it in the result set", () => {
-          const spanContext: SpanContext = {
-            spanId: "2222222222222222",
-            traceId: "11111111111111111111111111111111",
-            traceFlags: TraceFlags.NONE
-          };
-
-          const headers = instrumenter.createRequestHeaders(spanContext);
-
-          assert.notExists(headers.tracestate);
-        });
-      });
-
-      describe("when a traceState is not empty", () => {
-        it("does not include it in the result set", () => {
-          const spanContext: SpanContext = {
-            spanId: "2222222222222222",
-            traceId: "11111111111111111111111111111111",
-            traceFlags: TraceFlags.NONE,
-            traceState: new TraceState()
-          };
-
-          const headers = instrumenter.createRequestHeaders(spanContext);
-
-          assert.notExists(headers.tracestate);
-        });
-      });
     });
 
     describe("with an incomplete span context", () => {
@@ -155,22 +103,6 @@ describe("OpenTelemetryInstrumenter", () => {
 
         assert.isEmpty(headers);
       });
-
-      describe("when a traceState is provided", () => {
-        it("does not include it when traceparent is invalid", () => {
-          const spanContext: SpanContext = {
-            spanId: "",
-            traceId: "11111111111111111111111111111111",
-            traceFlags: TraceFlags.NONE,
-            traceState: new TraceState()
-          };
-          spanContext.traceState = spanContext.traceState!.set("foo", "bar");
-
-          const headers = instrumenter.createRequestHeaders(spanContext);
-
-          assert.isEmpty(headers);
-        });
-      });
     });
   });
 
@@ -178,7 +110,7 @@ describe("OpenTelemetryInstrumenter", () => {
   // Once the new APIs are available we should move away from those.
   describe("#startSpan", () => {
     function unwrap(span: TracingSpan): TestSpan {
-      return (span as OpenTelemetrySpanWrapper).unwrap() as TestSpan;
+      return (span as any).unwrap() as TestSpan;
     }
     let tracer: TestTracer;
     const packageName = "test-package";
@@ -308,10 +240,7 @@ describe("OpenTelemetryInstrumenter", () => {
           attributes: {
             attr1: "value1"
           },
-          context: {
-            ...linkedSpan.spanContext,
-            traceState: undefined
-          }
+          context: linkedSpan.spanContext
         });
       });
     });
@@ -321,11 +250,15 @@ describe("OpenTelemetryInstrumenter", () => {
     it("passes the correct arguments to OpenTelemetry", function(this: Context) {
       const contextSpy = sinon.spy(context, "with");
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      const callback = (arg1: number) => arg1 + 42;
+      let callbackArgs: any[] = [];
+      const callback = (...args: any[]) => {
+        callbackArgs = args;
+      };
       const callbackArg = 37;
-      instrumenter.withContext(context.active(), callback, this, callbackArg);
+      instrumenter.withContext(context.active(), callback, callbackArg);
 
-      assert.isTrue(contextSpy.calledWith(context.active(), callback, this, callbackArg));
+      assert.isTrue(contextSpy.calledWith(context.active()));
+      assert.sameMembers(callbackArgs, [callbackArg]);
     });
 
     it("Returns the value of the callback", () => {

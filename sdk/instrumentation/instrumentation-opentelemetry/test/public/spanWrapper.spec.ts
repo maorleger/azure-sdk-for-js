@@ -2,18 +2,19 @@
 // Licensed under the MIT license.
 
 import { assert } from "chai";
-import { OpenTelemetrySpanWrapper } from "../../src/spanWrapper";
+import { createSpanWrapper } from "../../src/spanWrapper";
 import { SpanStatusCode } from "@opentelemetry/api";
 import { TestSpan } from "./util/testSpan";
 import { TestTracer } from "./util/testTracer";
+import { TracingSpan } from "../../../../core/core-tracing/types/core-tracing";
 
 describe("OpenTelemetrySpanWrapper", () => {
   let otSpan: TestSpan;
-  let span: OpenTelemetrySpanWrapper;
+  let span: TracingSpan;
 
   beforeEach(() => {
     otSpan = new TestTracer().startSpan("test");
-    span = new OpenTelemetrySpanWrapper(otSpan);
+    span = createSpanWrapper(otSpan);
   });
 
   describe("#setStatus", () => {

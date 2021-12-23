@@ -20,7 +20,6 @@ export interface TracingClient {
    * @param name - The name of the span. By convention this should be `${className}.${methodName}`.
    * @param operationOptions - The original options passed to the method. The callback will receive these options with the newly created {@link TracingContext}.
    * @param callback - The callback to be invoked with the updated options and newly created {@link TracingSpan}.
-   * @param callbackThis - An optional `this` parameter to bind the callback to.
    */
   withSpan<
     Options extends { tracingOptions?: OperationTracingOptions },
@@ -32,8 +31,7 @@ export interface TracingClient {
     name: string,
     operationOptions: Options,
     callback: Callback,
-    spanOptions?: TracingSpanOptions,
-    callbackThis?: ThisParameterType<Callback>
+    spanOptions?: TracingSpanOptions
   ): Promise<ReturnType<Callback>>;
   /**
    * Start a given span but does not set it as the active span.
@@ -61,7 +59,6 @@ export interface TracingClient {
    *
    * @param context - The {@link TracingContext} to use as the active context in the scope of the callback.
    * @param callback - The callback to be invoked with the given context set as the globally active context.
-   * @param callbackThis - An optional `this` parameter to bind the callback to.
    * @param callbackArgs - The callback arguments.
    */
   withContext<
@@ -70,7 +67,6 @@ export interface TracingClient {
   >(
     context: TracingContext,
     callback: Callback,
-    callbackThis?: ThisParameterType<Callback>,
     ...callbackArgs: CallbackArgs
   ): ReturnType<Callback>;
 
@@ -136,10 +132,6 @@ export interface TracingSpanContext {
    * https://www.w3.org/TR/trace-context/#trace-flags
    */
   traceFlags: number;
-  /**
-   * An implementation-specific value representing system-specific trace info to serialize.
-   */
-  traceState?: unknown;
 }
 
 /**
@@ -172,7 +164,6 @@ export interface Instrumenter {
   >(
     context: TracingContext,
     callback: Callback,
-    callbackThis?: ThisParameterType<Callback>,
     ...callbackArgs: CallbackArgs
   ): ReturnType<Callback>;
 

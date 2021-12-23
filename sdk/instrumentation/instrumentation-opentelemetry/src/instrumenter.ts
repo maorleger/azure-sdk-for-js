@@ -10,14 +10,9 @@ import {
 } from "@azure/core-tracing";
 
 import { trace, context } from "@opentelemetry/api";
-import { OpenTelemetrySpanWrapper } from "./spanWrapper";
+import { createSpanWrapper } from "./spanWrapper";
 
-import {
-  toTracestateHeader,
-  toTraceparentHeader,
-  toSpanOptions,
-  fromTraceparentHeader
-} from "./transformations";
+import { toTraceparentHeader, toSpanOptions, fromTraceparentHeader } from "./transformations";
 
 export class OpenTelemetryInstrumenter implements Instrumenter {
   startSpan(
@@ -31,7 +26,7 @@ export class OpenTelemetryInstrumenter implements Instrumenter {
     const ctx = spanOptions?.tracingContext || context.active();
 
     return {
-      span: new OpenTelemetrySpanWrapper(span),
+      span: createSpanWrapper(span),
       tracingContext: trace.setSpan(ctx, span)
     };
   }
@@ -41,10 +36,9 @@ export class OpenTelemetryInstrumenter implements Instrumenter {
   >(
     tracingContext: TracingContext,
     callback: Callback,
-    callbackThis?: ThisParameterType<Callback>,
     ...callbackArgs: CallbackArgs
   ): ReturnType<Callback> {
-    return context.with(tracingContext, callback, callbackThis, ...callbackArgs);
+    return context.with(tracingContext, callback, undefined, ...callbackArgs);
   }
 
   parseTraceparentHeader(traceparentHeader: string): TracingSpanContext | undefined {
@@ -56,12 +50,6 @@ export class OpenTelemetryInstrumenter implements Instrumenter {
     const traceparentHeader = toTraceparentHeader(spanContext);
     if (traceparentHeader) {
       headers["traceparent"] = traceparentHeader;
-
-      // if tracestate is set, traceparent MUST be set, so only set tracestate after traceparent
-      const tracestateHeader = toTracestateHeader(spanContext);
-      if (tracestateHeader) {
-        headers["tracestate"] = tracestateHeader;
-      }
     }
 
     return headers;

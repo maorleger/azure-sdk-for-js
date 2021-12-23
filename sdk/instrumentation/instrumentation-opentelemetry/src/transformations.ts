@@ -14,8 +14,7 @@ import {
   SpanContext,
   SpanKind,
   SpanOptions,
-  TraceFlags,
-  TraceState
+  TraceFlags
 } from "@opentelemetry/api";
 
 import { TRACEPARENT_HEADER_VERSION } from "./constants";
@@ -54,10 +53,7 @@ type SpanKindMapping = {
 function toOpenTelemetryLinks(spanLinks: TracingSpanLink[] = []): Link[] {
   return spanLinks.map((tracingSpanLink) => {
     return {
-      context: {
-        ...tracingSpanLink.spanContext,
-        traceState: tracingSpanLink.spanContext.traceState as TraceState
-      },
+      context: tracingSpanLink.spanContext,
       attributes: toOpenTelemetrySpanAttributes(tracingSpanLink.attributes)
     };
   });
@@ -160,33 +156,4 @@ export function fromTraceparentHeader(traceparentHeader: string): SpanContext | 
   };
 
   return spanContext;
-}
-
-/**
- * Creates a tracestate header from a Span's context.
- *
- *
- * @param spanContext - The Span's context
- * @returns - A serialized tracestate header if {@link spanContext.traceState} is valid, otherwise undefined.
- */
-export function toTracestateHeader(spanContext: TracingSpanContext): string | undefined {
-  const traceState = spanContext.traceState;
-
-  if (traceState === undefined || traceState === null) {
-    return;
-  }
-
-  if (typeof traceState !== "object") {
-    return;
-  }
-
-  if (typeof (traceState as TraceState).serialize !== "function") {
-    return;
-  }
-
-  const serializedTraceState = (traceState as TraceState).serialize();
-
-  // https://www.w3.org/TR/trace-context/#tracestate-header-field-values
-  // Return undefined instead of an empty string to indicate that the tracestate header should not be set.
-  return serializedTraceState || undefined;
 }
