@@ -5,8 +5,12 @@ import { assert } from "chai";
 import { Context } from "mocha";
 import sinon from "sinon";
 import { Instrumenter, TracingSpan, TracingContext, TracingClient } from "../src/interfaces";
-import { NoOpInstrumenter, NoOpSpan, useInstrumenter } from "../src/instrumenter";
-import { createTracingClient, TracingClientImpl } from "../src/tracingClient";
+import {
+  createDefaultInstrumenter,
+  createDefaultTracingSpan,
+  useInstrumenter
+} from "../src/instrumenter";
+import { createTracingClient } from "../src/tracingClient";
 import { knownContextKeys, createTracingContext } from "../src/tracingContext";
 
 describe("TracingClient", () => {
@@ -17,8 +21,8 @@ describe("TracingClient", () => {
   const expectedNamespace = "Microsoft.Test";
 
   beforeEach(() => {
-    instrumenter = new NoOpInstrumenter();
-    span = new NoOpSpan();
+    instrumenter = createDefaultInstrumenter();
+    span = createDefaultTracingSpan();
     context = createTracingContext();
 
     useInstrumenter(instrumenter);
@@ -111,7 +115,7 @@ describe("TracingClient", () => {
 
     it("passes options and span to callback", async () => {
       await client.withSpan(spanName, { foo: "foo", bar: "bar" } as any, (options, currentSpan) => {
-        assert.instanceOf(currentSpan, NoOpSpan);
+        assert.exists(currentSpan);
         assert.exists(options);
         assert.equal(options.foo, "foo");
         assert.equal(options.bar, "bar");
@@ -120,7 +124,7 @@ describe("TracingClient", () => {
     });
 
     it("promisifies synchronous functions", async () => {
-      const result = await (client as TracingClientImpl).withSpan(spanName, {}, () => {
+      const result = await client.withSpan(spanName, {}, () => {
         return 5;
       });
       assert.equal(result, 5);
