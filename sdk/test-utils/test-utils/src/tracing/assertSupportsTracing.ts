@@ -1,39 +1,8 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT license.
-
-import { OperationTracingOptions, useInstrumenter } from "@azure/core-tracing";
 import { assert } from "chai";
 import { MockInstrumenter } from "./mockInstrumenter";
 import { MockTracingSpan } from "./mockTracingSpan";
 import { SpanGraph, SpanGraphNode } from "./spanGraphModel";
-
-/**
- * Augments Chai with support for Azure Tracing functionality
- *
- * Sample usage:
- *
- * ```ts
- * import chai from "chai";
- * import { chaiAzureTrace } from "@azure/test-utils";
- * chai.use(chaiAzureTrace);
- *
- * it("supportsTracing", async () => {
- *   await assert.supportsTracing((updatedOptions) => myClient.doSomething(updatedOptions), ["myClient.doSomething"]);
- * });
- * ```
- * @param chai - The Chai instance
- */
-function chaiAzureTrace(chai: Chai.ChaiStatic): void {
-  // expect(() => {}).to.supportsTracing() syntax
-  chai.Assertion.addMethod("supportTracing", function <
-    T
-  >(this: Chai.AssertionStatic, expectedSpanNames: string[], options?: T) {
-    return assert.supportsTracing(this._obj, expectedSpanNames, options, this._obj);
-  });
-
-  // assert.supportsTracing(() => {}) syntax
-  chai.assert.supportsTracing = supportsTracing;
-}
+import { OperationTracingOptions, useInstrumenter } from "@azure/core-tracing";
 
 const instrumenter = new MockInstrumenter();
 /**
@@ -44,7 +13,7 @@ const instrumenter = new MockInstrumenter();
  * @param options - Options for either Core HTTP operations or custom options for the callback
  * @param thisArg - optional this parameter for the callback
  */
-async function supportsTracing<
+export async function supportsTracing<
   Options extends { tracingOptions?: OperationTracingOptions },
   Callback extends (options: Options) => Promise<unknown>
 >(
@@ -128,25 +97,3 @@ function getSpanGraph(traceId: string, instrumenter: MockInstrumenter): SpanGrap
     roots,
   };
 }
-
-/* eslint-disable @typescript-eslint/no-namespace */
-declare global {
-  export namespace Chai {
-    interface Assertion {
-      supportTracing<T>(expectedSpanNames: string[], options?: T): Promise<void>;
-    }
-    interface Assert {
-      supportsTracing<
-        Options extends { tracingOptions?: OperationTracingOptions },
-        Callback extends (options: Options) => Promise<unknown>
-      >(
-        callback: Callback,
-        expectedSpanNames: string[],
-        options?: Options,
-        thisArg?: ThisParameterType<Callback>
-      ): Promise<void>;
-    }
-  }
-}
-
-export { chaiAzureTrace };
