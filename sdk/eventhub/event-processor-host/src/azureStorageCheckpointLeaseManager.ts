@@ -230,7 +230,7 @@ export class AzureStorageCheckpointLeaseManager implements CheckpointManager, Le
     } catch (error) {
       const statusCode = (error as StorageError).statusCode;
       const code = (error as StorageError).code;
-      // https://docs.microsoft.com/en-us/rest/api/storageservices/blob-service-error-codes
+      // https://docs.microsoft.com/rest/api/storageservices/blob-service-error-codes
       // LeaseIdMissing || BlobAlreadyExists
       if (
         (statusCode === 412 && code && code.toLowerCase() === "leaseidmissing") ||

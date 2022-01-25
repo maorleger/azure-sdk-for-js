@@ -530,7 +530,7 @@ export interface BlobDataSourceProperties {
   storageAccounts?: StorageAccount[];
   /** The name of a container within the associated Storage account. This container contains either the blob(s) to be read from or written to. Required on PUT (CreateOrReplace) requests. */
   container?: string;
-  /** The blob path pattern. Not a regular expression. It represents a pattern against which blob names will be matched to determine whether or not they should be included as input or output to the job. See https://docs.microsoft.com/en-us/rest/api/streamanalytics/stream-analytics-input or https://docs.microsoft.com/en-us/rest/api/streamanalytics/stream-analytics-output for a more detailed explanation and example. */
+  /** The blob path pattern. Not a regular expression. It represents a pattern against which blob names will be matched to determine whether or not they should be included as input or output to the job. See https://docs.microsoft.com/rest/api/streamanalytics/stream-analytics-input or https://docs.microsoft.com/rest/api/streamanalytics/stream-analytics-output for a more detailed explanation and example. */
   pathPattern?: string;
   /** The date format. Wherever {date} appears in pathPattern, the value of this property is used as the date format instead. */
   dateFormat?: string;
@@ -596,7 +596,7 @@ export interface OAuthBasedDataSourceProperties {
 
 /** Describes one input parameter of a function. */
 export interface FunctionInput {
-  /** The (Azure Stream Analytics supported) data type of the function input parameter. A list of valid Azure Stream Analytics data types are described at https://msdn.microsoft.com/en-us/library/azure/dn835065.aspx */
+  /** The (Azure Stream Analytics supported) data type of the function input parameter. A list of valid Azure Stream Analytics data types are described at https://msdn.microsoft.com/library/azure/dn835065.aspx */
   dataType?: string;
   /** A flag indicating if the parameter is a configuration parameter. True if this input parameter is expected to be a constant. Default is false. */
   isConfigurationParameter?: boolean;
@@ -604,7 +604,7 @@ export interface FunctionInput {
 
 /** Describes the output of a function. */
 export interface FunctionOutput {
-  /** The (Azure Stream Analytics supported) data type of the function output. A list of valid Azure Stream Analytics data types are described at https://msdn.microsoft.com/en-us/library/azure/dn835065.aspx */
+  /** The (Azure Stream Analytics supported) data type of the function output. A list of valid Azure Stream Analytics data types are described at https://msdn.microsoft.com/library/azure/dn835065.aspx */
   dataType?: string;
 }
 
@@ -628,7 +628,7 @@ export interface AzureMachineLearningWebServiceInputs {
 export interface AzureMachineLearningWebServiceInputColumn {
   /** The name of the input column. */
   name?: string;
-  /** The (Azure Machine Learning supported) data type of the input column. A list of valid  Azure Machine Learning data types are described at https://msdn.microsoft.com/en-us/library/azure/dn905923.aspx . */
+  /** The (Azure Machine Learning supported) data type of the input column. A list of valid  Azure Machine Learning data types are described at https://msdn.microsoft.com/library/azure/dn905923.aspx . */
   dataType?: string;
   /** The zero based index of the function parameter this input maps to. */
   mapTo?: number;
@@ -638,7 +638,7 @@ export interface AzureMachineLearningWebServiceInputColumn {
 export interface AzureMachineLearningWebServiceOutputColumn {
   /** The name of the output column. */
   name?: string;
-  /** The (Azure Machine Learning supported) data type of the output column. A list of valid  Azure Machine Learning data types are described at https://msdn.microsoft.com/en-us/library/azure/dn905923.aspx . */
+  /** The (Azure Machine Learning supported) data type of the output column. A list of valid  Azure Machine Learning data types are described at https://msdn.microsoft.com/library/azure/dn905923.aspx . */
   dataType?: string;
 }
 
@@ -670,7 +670,7 @@ export type ParquetSerialization = Serialization & {
 export type CsvSerialization = Serialization & {
   /** Polymorphic discriminator, which specifies the different types this object can be */
   type: "Csv";
-  /** Specifies the delimiter that will be used to separate comma-separated value (CSV) records. See https://docs.microsoft.com/en-us/rest/api/streamanalytics/stream-analytics-input or https://docs.microsoft.com/en-us/rest/api/streamanalytics/stream-analytics-output for a list of supported values. Required on PUT (CreateOrReplace) requests. */
+  /** Specifies the delimiter that will be used to separate comma-separated value (CSV) records. See https://docs.microsoft.com/rest/api/streamanalytics/stream-analytics-input or https://docs.microsoft.com/rest/api/streamanalytics/stream-analytics-output for a list of supported values. Required on PUT (CreateOrReplace) requests. */
   fieldDelimiter?: string;
   /** Specifies the encoding of the incoming data in the case of input and the encoding of outgoing data in the case of output. Required on PUT (CreateOrReplace) requests. */
   encoding?: Encoding;
@@ -765,7 +765,7 @@ export type BlobOutputDataSource = OutputDataSource & {
   storageAccounts?: StorageAccount[];
   /** The name of a container within the associated Storage account. This container contains either the blob(s) to be read from or written to. Required on PUT (CreateOrReplace) requests. */
   container?: string;
-  /** The blob path pattern. Not a regular expression. It represents a pattern against which blob names will be matched to determine whether or not they should be included as input or output to the job. See https://docs.microsoft.com/en-us/rest/api/streamanalytics/stream-analytics-input or https://docs.microsoft.com/en-us/rest/api/streamanalytics/stream-analytics-output for a more detailed explanation and example. */
+  /** The blob path pattern. Not a regular expression. It represents a pattern against which blob names will be matched to determine whether or not they should be included as input or output to the job. See https://docs.microsoft.com/rest/api/streamanalytics/stream-analytics-input or https://docs.microsoft.com/rest/api/streamanalytics/stream-analytics-output for a more detailed explanation and example. */
   pathPattern?: string;
   /** The date format. Wherever {date} appears in pathPattern, the value of this property is used as the date format instead. */
   dateFormat?: string;
@@ -883,7 +883,7 @@ export type DocumentDbOutputDataSource = OutputDataSource & {
   accountKey?: string;
   /** The name of the DocumentDB database. Required on PUT (CreateOrReplace) requests. */
   database?: string;
-  /** The collection name pattern for the collections to be used. The collection name format can be constructed using the optional {partition} token, where partitions start from 0. See the DocumentDB section of https://docs.microsoft.com/en-us/rest/api/streamanalytics/stream-analytics-output for more information. Required on PUT (CreateOrReplace) requests. */
+  /** The collection name pattern for the collections to be used. The collection name format can be constructed using the optional {partition} token, where partitions start from 0. See the DocumentDB section of https://docs.microsoft.com/rest/api/streamanalytics/stream-analytics-output for more information. Required on PUT (CreateOrReplace) requests. */
   collectionNamePattern?: string;
   /** The name of the field in output events used to specify the key for partitioning output across collections. If 'collectionNamePattern' contains the {partition} token, this property is required to be specified. */
   partitionKey?: string;
@@ -1010,7 +1010,7 @@ export type ProxyResource = Resource & {};
 export type AzureMachineLearningWebServiceFunctionRetrieveDefaultDefinitionParameters = FunctionRetrieveDefaultDefinitionParameters & {
   /** Polymorphic discriminator, which specifies the different types this object can be */
   bindingType: "Microsoft.MachineLearning/WebService";
-  /** The Request-Response execute endpoint of the Azure Machine Learning web service. Find out more here: https://docs.microsoft.com/en-us/azure/machine-learning/machine-learning-consume-web-services#request-response-service-rrs */
+  /** The Request-Response execute endpoint of the Azure Machine Learning web service. Find out more here: https://docs.microsoft.com/azure/machine-learning/machine-learning-consume-web-services#request-response-service-rrs */
   executeEndpoint?: string;
   /** The function type. */
   udfType?: "Scalar";
@@ -1034,7 +1034,7 @@ export type BlobStreamInputDataSource = StreamInputDataSource & {
   storageAccounts?: StorageAccount[];
   /** The name of a container within the associated Storage account. This container contains either the blob(s) to be read from or written to. Required on PUT (CreateOrReplace) requests. */
   container?: string;
-  /** The blob path pattern. Not a regular expression. It represents a pattern against which blob names will be matched to determine whether or not they should be included as input or output to the job. See https://docs.microsoft.com/en-us/rest/api/streamanalytics/stream-analytics-input or https://docs.microsoft.com/en-us/rest/api/streamanalytics/stream-analytics-output for a more detailed explanation and example. */
+  /** The blob path pattern. Not a regular expression. It represents a pattern against which blob names will be matched to determine whether or not they should be included as input or output to the job. See https://docs.microsoft.com/rest/api/streamanalytics/stream-analytics-input or https://docs.microsoft.com/rest/api/streamanalytics/stream-analytics-output for a more detailed explanation and example. */
   pathPattern?: string;
   /** The date format. Wherever {date} appears in pathPattern, the value of this property is used as the date format instead. */
   dateFormat?: string;
@@ -1104,7 +1104,7 @@ export type BlobReferenceInputDataSource = ReferenceInputDataSource & {
   storageAccounts?: StorageAccount[];
   /** The name of a container within the associated Storage account. This container contains either the blob(s) to be read from or written to. Required on PUT (CreateOrReplace) requests. */
   container?: string;
-  /** The blob path pattern. Not a regular expression. It represents a pattern against which blob names will be matched to determine whether or not they should be included as input or output to the job. See https://docs.microsoft.com/en-us/rest/api/streamanalytics/stream-analytics-input or https://docs.microsoft.com/en-us/rest/api/streamanalytics/stream-analytics-output for a more detailed explanation and example. */
+  /** The blob path pattern. Not a regular expression. It represents a pattern against which blob names will be matched to determine whether or not they should be included as input or output to the job. See https://docs.microsoft.com/rest/api/streamanalytics/stream-analytics-input or https://docs.microsoft.com/rest/api/streamanalytics/stream-analytics-output for a more detailed explanation and example. */
   pathPattern?: string;
   /** The date format. Wherever {date} appears in pathPattern, the value of this property is used as the date format instead. */
   dateFormat?: string;
@@ -1217,7 +1217,7 @@ export type AzureDataLakeStoreOutputDataSourceProperties = OAuthBasedDataSourceP
 export type AzureMachineLearningWebServiceFunctionBinding = FunctionBinding & {
   /** Polymorphic discriminator, which specifies the different types this object can be */
   type: "Microsoft.MachineLearning/WebService";
-  /** The Request-Response execute endpoint of the Azure Machine Learning web service. Find out more here: https://docs.microsoft.com/en-us/azure/machine-learning/machine-learning-consume-web-services#request-response-service-rrs */
+  /** The Request-Response execute endpoint of the Azure Machine Learning web service. Find out more here: https://docs.microsoft.com/azure/machine-learning/machine-learning-consume-web-services#request-response-service-rrs */
   endpoint?: string;
   /** The API key used to authenticate with Request-Response endpoint. */
   apiKey?: string;
@@ -1277,7 +1277,7 @@ export type StreamingJob = TrackedResource & {
   eventsOutOfOrderMaxDelayInSeconds?: number;
   /** The maximum tolerable delay in seconds where events arriving late could be included.  Supported range is -1 to 1814399 (20.23:59:59 days) and -1 is used to specify wait indefinitely. If the property is absent, it is interpreted to have a value of -1. */
   eventsLateArrivalMaxDelayInSeconds?: number;
-  /** The data locale of the stream analytics job. Value should be the name of a supported .NET Culture from the set https://msdn.microsoft.com/en-us/library/system.globalization.culturetypes(v=vs.110).aspx. Defaults to 'en-US' if none specified. */
+  /** The data locale of the stream analytics job. Value should be the name of a supported .NET Culture from the set https://msdn.microsoft.com/library/system.globalization.culturetypes(v=vs.110).aspx. Defaults to 'en-US' if none specified. */
   dataLocale?: string;
   /** Controls certain runtime behaviors of the streaming job. */
   compatibilityLevel?: CompatibilityLevel;

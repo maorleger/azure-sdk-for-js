@@ -314,7 +314,7 @@ export class DataLakePathClient extends StorageClient {
   /**
    * Create a directory or path.
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/datalakestoragegen2/path/create
+   * @see https://docs.microsoft.com/rest/api/storageservices/datalakestoragegen2/path/create
    *
    * @param resourceType - Resource type, "directory" or "file".
    * @param options - Optional. Options when creating path.
@@ -348,7 +348,7 @@ export class DataLakePathClient extends StorageClient {
   /**
    * Create a directory or file. If the resource already exists, it is not changed.
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/datalakestoragegen2/path/create
+   * @see https://docs.microsoft.com/rest/api/storageservices/datalakestoragegen2/path/create
    *
    * @param resourceType - Resource type, "directory" or "file".
    * @param options -
@@ -418,7 +418,7 @@ export class DataLakePathClient extends StorageClient {
   /**
    * Delete current path (directory or file).
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/datalakestoragegen2/path/delete
+   * @see https://docs.microsoft.com/rest/api/storageservices/datalakestoragegen2/path/delete
    *
    * @param recursive - Required and valid only when the resource is a directory. If "true", all paths beneath the directory will be deleted.
    * @param options - Optional. Options when deleting path.
@@ -461,7 +461,7 @@ export class DataLakePathClient extends StorageClient {
   /**
    * Delete current path (directory or file) if it exists.
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/datalakestoragegen2/path/delete
+   * @see https://docs.microsoft.com/rest/api/storageservices/datalakestoragegen2/path/delete
    *
    * @param recursive - Required and valid only when the resource is a directory. If "true", all paths beneath the directory will be deleted.
    * @param options -
@@ -503,7 +503,7 @@ export class DataLakePathClient extends StorageClient {
   /**
    * Returns the access control data for a path (directory of file).
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/datalakestoragegen2/path/getproperties
+   * @see https://docs.microsoft.com/rest/api/storageservices/datalakestoragegen2/path/getproperties
    *
    * @param options - Optional. Options when getting file access control.
    */
@@ -536,7 +536,7 @@ export class DataLakePathClient extends StorageClient {
   /**
    * Set the access control data for a path (directory of file).
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/datalakestoragegen2/path/update
+   * @see https://docs.microsoft.com/rest/api/storageservices/datalakestoragegen2/path/update
    *
    * @param acl - The POSIX access control list for the file or directory.
    * @param options - Optional. Options when setting path access control.
@@ -569,7 +569,7 @@ export class DataLakePathClient extends StorageClient {
   /**
    * Sets the Access Control on a path and sub paths.
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/datalakestoragegen2/path/update
+   * @see https://docs.microsoft.com/rest/api/storageservices/datalakestoragegen2/path/update
    *
    * @param acl - The POSIX access control list for the file or directory.
    * @param options - Optional. Options
@@ -598,7 +598,7 @@ export class DataLakePathClient extends StorageClient {
   /**
    * Modifies the Access Control on a path and sub paths.
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/datalakestoragegen2/path/update
+   * @see https://docs.microsoft.com/rest/api/storageservices/datalakestoragegen2/path/update
    *
    * @param acl - The POSIX access control list for the file or directory.
    * @param options - Optional. Options
@@ -627,7 +627,7 @@ export class DataLakePathClient extends StorageClient {
   /**
    * Removes the Access Control on a path and sub paths.
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/datalakestoragegen2/path/update
+   * @see https://docs.microsoft.com/rest/api/storageservices/datalakestoragegen2/path/update
    *
    * @param acl - The POSIX access control list for the file or directory.
    * @param options - Optional. Options
@@ -656,7 +656,7 @@ export class DataLakePathClient extends StorageClient {
   /**
    * Sets the file permissions on a path.
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/datalakestoragegen2/path/update
+   * @see https://docs.microsoft.com/rest/api/storageservices/datalakestoragegen2/path/update
    *
    * @param permissions - The POSIX access permissions for the file owner, the file owning group, and others.
    * @param options - Optional. Options when setting path permissions.
@@ -695,7 +695,7 @@ export class DataLakePathClient extends StorageClient {
    * the methods of {@link DataLakeFileSystemClient} that list paths using the `includeMetadata` option, which
    * will retain their original casing.
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/get-blob-properties
+   * @see https://docs.microsoft.com/rest/api/storageservices/get-blob-properties
    *
    * @param options - Optional. Options when getting path properties.
    */
@@ -725,7 +725,7 @@ export class DataLakePathClient extends StorageClient {
    *
    * If no value provided, or no value provided for the specified blob HTTP headers,
    * these blob HTTP headers without a value will be cleared.
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/set-blob-properties
+   * @see https://docs.microsoft.com/rest/api/storageservices/set-blob-properties
    *
    * @param httpHeaders -
    * @param options -
@@ -764,7 +764,7 @@ export class DataLakePathClient extends StorageClient {
    * If no option provided, or no metadata defined in the parameter, the path
    * metadata will be removed.
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/set-blob-metadata
+   * @see https://docs.microsoft.com/rest/api/storageservices/set-blob-metadata
    *
    * @param metadata - Optional. Replace existing metadata with this value.
    *                              If no value provided the existing metadata will be removed.
@@ -795,7 +795,7 @@ export class DataLakePathClient extends StorageClient {
   /**
    * Move directory or file within same file system.
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/datalakestoragegen2/path/create
+   * @see https://docs.microsoft.com/rest/api/storageservices/datalakestoragegen2/path/create
    *
    * @param destinationPath - Destination directory path like "directory" or file path "directory/file".
    *                                 If the destinationPath is authenticated with SAS, add the SAS to the destination path like "directory/file?sasToken".
@@ -806,7 +806,7 @@ export class DataLakePathClient extends StorageClient {
   /**
    * Move directory or file to another file system.
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/datalakestoragegen2/path/create
+   * @see https://docs.microsoft.com/rest/api/storageservices/datalakestoragegen2/path/create
    *
    * @param destinationFileSystem - Destination file system like "filesystem".
    * @param destinationPath - Destination directory path like "directory" or file path "directory/file"
@@ -893,7 +893,7 @@ export class DataLakeDirectoryClient extends DataLakePathClient {
   /**
    * Create a directory.
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/datalakestoragegen2/path/create
+   * @see https://docs.microsoft.com/rest/api/storageservices/datalakestoragegen2/path/create
    *
    * @param resourceType - Resource type, must be "directory" for DataLakeDirectoryClient.
    * @param options - Optional. Options when creating directory.
@@ -906,7 +906,7 @@ export class DataLakeDirectoryClient extends DataLakePathClient {
   /**
    * Create a directory.
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/datalakestoragegen2/path/create
+   * @see https://docs.microsoft.com/rest/api/storageservices/datalakestoragegen2/path/create
    *
    * @param options - Optional. Options when creating directory.
    */
@@ -951,7 +951,7 @@ export class DataLakeDirectoryClient extends DataLakePathClient {
   /**
    * Create a directory if it doesn't already exists.
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/datalakestoragegen2/path/create
+   * @see https://docs.microsoft.com/rest/api/storageservices/datalakestoragegen2/path/create
    *
    * @param resourceType - Resource type, must be "directory" for DataLakeDirectoryClient.
    * @param options -
@@ -964,7 +964,7 @@ export class DataLakeDirectoryClient extends DataLakePathClient {
   /**
    * Create a directory if it doesn't already exists.
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/datalakestoragegen2/path/create
+   * @see https://docs.microsoft.com/rest/api/storageservices/datalakestoragegen2/path/create
    *
    * @param options -
    */
@@ -1041,7 +1041,7 @@ export class DataLakeDirectoryClient extends DataLakePathClient {
    * Generates a Service Shared Access Signature (SAS) URI based on the client properties
    * and parameters passed in. The SAS is signed by the shared key credential of the client.
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/constructing-a-service-sas
+   * @see https://docs.microsoft.com/rest/api/storageservices/constructing-a-service-sas
    *
    * @param options - Optional parameters.
    * @returns The SAS URI consisting of the URI to the resource represented by this client, followed by the generated SAS token.
@@ -1149,7 +1149,7 @@ export class DataLakeFileClient extends DataLakePathClient {
   /**
    * Create a file.
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/datalakestoragegen2/path/create
+   * @see https://docs.microsoft.com/rest/api/storageservices/datalakestoragegen2/path/create
    *
    * @param resourceType - Resource type, must be "file" for DataLakeFileClient.
    * @param options - Optional. Options when creating file.
@@ -1162,7 +1162,7 @@ export class DataLakeFileClient extends DataLakePathClient {
   /**
    * Create a file.
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/datalakestoragegen2/path/create
+   * @see https://docs.microsoft.com/rest/api/storageservices/datalakestoragegen2/path/create
    *
    * @param options - Optional. Options when creating file.
    */
@@ -1207,7 +1207,7 @@ export class DataLakeFileClient extends DataLakePathClient {
   /**
    * Create a file if it doesn't already exists.
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/datalakestoragegen2/path/create
+   * @see https://docs.microsoft.com/rest/api/storageservices/datalakestoragegen2/path/create
    *
    * @param resourceType - Resource type, must be "file" for DataLakeFileClient.
    * @param options -
@@ -1220,7 +1220,7 @@ export class DataLakeFileClient extends DataLakePathClient {
   /**
    * Create a file if it doesn't already exists.
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/datalakestoragegen2/path/create
+   * @see https://docs.microsoft.com/rest/api/storageservices/datalakestoragegen2/path/create
    *
    * @param options - Optional. Options when creating file.
    */
@@ -1268,7 +1268,7 @@ export class DataLakeFileClient extends DataLakePathClient {
    * * In Node.js, data returns in a Readable stream readableStreamBody
    * * In browsers, data returns in a promise contentAsBlob
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/get-blob
+   * @see https://docs.microsoft.com/rest/api/storageservices/get-blob
    *
    * * Example usage (Node.js):
    *
@@ -1355,7 +1355,7 @@ export class DataLakeFileClient extends DataLakePathClient {
    * Uploads data to be appended to a file. Data can only be appended to a file.
    * To apply perviously uploaded data to a file, call flush.
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/datalakestoragegen2/path/update
+   * @see https://docs.microsoft.com/rest/api/storageservices/datalakestoragegen2/path/update
    *
    * @param body - Content to be uploaded.
    * @param offset - Append offset in bytes.
@@ -1977,7 +1977,7 @@ export class DataLakeFileClient extends DataLakePathClient {
    * Generates a Service Shared Access Signature (SAS) URI based on the client properties
    * and parameters passed in. The SAS is signed by the shared key credential of the client.
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/constructing-a-service-sas
+   * @see https://docs.microsoft.com/rest/api/storageservices/constructing-a-service-sas
    *
    * @param options - Optional parameters.
    * @returns The SAS URI consisting of the URI to the resource represented by this client, followed by the generated SAS token.

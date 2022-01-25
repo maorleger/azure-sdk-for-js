@@ -4391,7 +4391,7 @@ export type ExtendedDatabaseBlobAuditingPolicy = ProxyResource & {
    *
    * These are groups that cover all sql statements and stored procedures executed against the database, and should not be used in combination with other groups as this will result in duplicate audit logs.
    *
-   * For more information, see [Database-Level Audit Action Groups](https://docs.microsoft.com/en-us/sql/relational-databases/security/auditing/sql-server-audit-action-groups-and-actions#database-level-audit-action-groups).
+   * For more information, see [Database-Level Audit Action Groups](https://docs.microsoft.com/sql/relational-databases/security/auditing/sql-server-audit-action-groups-and-actions#database-level-audit-action-groups).
    *
    * For Database auditing policy, specific Actions can also be specified (note that Actions cannot be specified for Server auditing policy). The supported actions to audit are:
    * SELECT
@@ -4412,7 +4412,7 @@ export type ExtendedDatabaseBlobAuditingPolicy = ProxyResource & {
    * SELECT on DATABASE::myDatabase by public
    * SELECT on SCHEMA::mySchema by public
    *
-   * For more information, see [Database-Level Audit Actions](https://docs.microsoft.com/en-us/sql/relational-databases/security/auditing/sql-server-audit-action-groups-and-actions#database-level-audit-actions)
+   * For more information, see [Database-Level Audit Actions](https://docs.microsoft.com/sql/relational-databases/security/auditing/sql-server-audit-action-groups-and-actions#database-level-audit-actions)
    */
   auditActionsAndGroups?: string[];
   /** Specifies whether storageAccountAccessKey value is the storage's secondary key. */
@@ -4510,7 +4510,7 @@ export type ExtendedServerBlobAuditingPolicy = ProxyResource & {
    *
    * These are groups that cover all sql statements and stored procedures executed against the database, and should not be used in combination with other groups as this will result in duplicate audit logs.
    *
-   * For more information, see [Database-Level Audit Action Groups](https://docs.microsoft.com/en-us/sql/relational-databases/security/auditing/sql-server-audit-action-groups-and-actions#database-level-audit-action-groups).
+   * For more information, see [Database-Level Audit Action Groups](https://docs.microsoft.com/sql/relational-databases/security/auditing/sql-server-audit-action-groups-and-actions#database-level-audit-action-groups).
    *
    * For Database auditing policy, specific Actions can also be specified (note that Actions cannot be specified for Server auditing policy). The supported actions to audit are:
    * SELECT
@@ -4531,7 +4531,7 @@ export type ExtendedServerBlobAuditingPolicy = ProxyResource & {
    * SELECT on DATABASE::myDatabase by public
    * SELECT on SCHEMA::mySchema by public
    *
-   * For more information, see [Database-Level Audit Actions](https://docs.microsoft.com/en-us/sql/relational-databases/security/auditing/sql-server-audit-action-groups-and-actions#database-level-audit-actions)
+   * For more information, see [Database-Level Audit Actions](https://docs.microsoft.com/sql/relational-databases/security/auditing/sql-server-audit-action-groups-and-actions#database-level-audit-actions)
    */
   auditActionsAndGroups?: string[];
   /** Specifies whether storageAccountAccessKey value is the storage's secondary key. */
@@ -4627,7 +4627,7 @@ export type ServerBlobAuditingPolicy = ProxyResource & {
    *
    * These are groups that cover all sql statements and stored procedures executed against the database, and should not be used in combination with other groups as this will result in duplicate audit logs.
    *
-   * For more information, see [Database-Level Audit Action Groups](https://docs.microsoft.com/en-us/sql/relational-databases/security/auditing/sql-server-audit-action-groups-and-actions#database-level-audit-action-groups).
+   * For more information, see [Database-Level Audit Action Groups](https://docs.microsoft.com/sql/relational-databases/security/auditing/sql-server-audit-action-groups-and-actions#database-level-audit-action-groups).
    *
    * For Database auditing policy, specific Actions can also be specified (note that Actions cannot be specified for Server auditing policy). The supported actions to audit are:
    * SELECT
@@ -4648,7 +4648,7 @@ export type ServerBlobAuditingPolicy = ProxyResource & {
    * SELECT on DATABASE::myDatabase by public
    * SELECT on SCHEMA::mySchema by public
    *
-   * For more information, see [Database-Level Audit Actions](https://docs.microsoft.com/en-us/sql/relational-databases/security/auditing/sql-server-audit-action-groups-and-actions#database-level-audit-actions)
+   * For more information, see [Database-Level Audit Actions](https://docs.microsoft.com/sql/relational-databases/security/auditing/sql-server-audit-action-groups-and-actions#database-level-audit-actions)
    */
   auditActionsAndGroups?: string[];
   /** Specifies whether storageAccountAccessKey value is the storage's secondary key. */
@@ -4735,7 +4735,7 @@ export type DatabaseBlobAuditingPolicy = ProxyResource & {
    *
    * These are groups that cover all sql statements and stored procedures executed against the database, and should not be used in combination with other groups as this will result in duplicate audit logs.
    *
-   * For more information, see [Database-Level Audit Action Groups](https://docs.microsoft.com/en-us/sql/relational-databases/security/auditing/sql-server-audit-action-groups-and-actions#database-level-audit-action-groups).
+   * For more information, see [Database-Level Audit Action Groups](https://docs.microsoft.com/sql/relational-databases/security/auditing/sql-server-audit-action-groups-and-actions#database-level-audit-action-groups).
    *
    * For Database auditing policy, specific Actions can also be specified (note that Actions cannot be specified for Server auditing policy). The supported actions to audit are:
    * SELECT
@@ -4756,7 +4756,7 @@ export type DatabaseBlobAuditingPolicy = ProxyResource & {
    * SELECT on DATABASE::myDatabase by public
    * SELECT on SCHEMA::mySchema by public
    *
-   * For more information, see [Database-Level Audit Actions](https://docs.microsoft.com/en-us/sql/relational-databases/security/auditing/sql-server-audit-action-groups-and-actions#database-level-audit-actions)
+   * For more information, see [Database-Level Audit Actions](https://docs.microsoft.com/sql/relational-databases/security/auditing/sql-server-audit-action-groups-and-actions#database-level-audit-actions)
    */
   auditActionsAndGroups?: string[];
   /** Specifies whether storageAccountAccessKey value is the storage's secondary key. */

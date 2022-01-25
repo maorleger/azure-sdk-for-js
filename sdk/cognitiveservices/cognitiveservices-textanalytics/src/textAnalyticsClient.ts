@@ -55,7 +55,7 @@ class TextAnalyticsClient extends TextAnalyticsClientContext {
   /**
    * To get even more information on each recognized entity we recommend using the Bing Entity Search
    * API by querying for the recognized entities names. See the <a
-   * href="https://docs.microsoft.com/en-us/azure/cognitive-services/text-analytics/text-analytics-supported-languages">Supported
+   * href="https://docs.microsoft.com/azure/cognitive-services/text-analytics/text-analytics-supported-languages">Supported
    * languages in Text Analytics API</a> for the list of enabled languages.
    * @summary The API returns a list of recognized entities in a given document.
    * @param [options] The optional parameters
@@ -82,7 +82,7 @@ class TextAnalyticsClient extends TextAnalyticsClientContext {
 
   /**
    * See the <a
-   * href="https://docs.microsoft.com/en-us/azure/cognitive-services/text-analytics/overview#supported-languages">Text
+   * href="https://docs.microsoft.com/azure/cognitive-services/text-analytics/overview#supported-languages">Text
    * Analytics Documentation</a> for details about the languages that are supported by key phrase
    * extraction.
    * @summary The API returns a list of strings denoting the key talking points in the input text.
@@ -111,7 +111,7 @@ class TextAnalyticsClient extends TextAnalyticsClientContext {
   /**
    * Scores close to 1 indicate positive sentiment, while scores close to 0 indicate negative
    * sentiment. A score of 0.5 indicates the lack of sentiment (e.g. a factoid statement). See the <a
-   * href="https://docs.microsoft.com/en-us/azure/cognitive-services/text-analytics/overview#supported-languages">Text
+   * href="https://docs.microsoft.com/azure/cognitive-services/text-analytics/overview#supported-languages">Text
    * Analytics Documentation</a> for details about the languages that are supported by sentiment
    * analysis.
    * @summary The API returns a numeric score between 0 and 1.

@@ -7393,7 +7393,7 @@ export interface StatelessServiceDescription {
    * The endpoint exposed on this instance is removed prior to starting the delay, which prevents
    * new connections to this instance.
    * In addition, clients that have subscribed to service endpoint change
-   * events(https://docs.microsoft.com/en-us/dotnet/api/system.fabric.fabricclient.servicemanagementclient.registerservicenotificationfilterasync),
+   * events(https://docs.microsoft.com/dotnet/api/system.fabric.fabricclient.servicemanagementclient.registerservicenotificationfilterasync),
    * can do
    * the following upon receiving the endpoint removal notification:
    * - Stop sending new requests to this instance.
@@ -8202,7 +8202,7 @@ export interface StatelessServiceUpdateDescription {
    * The endpoint exposed on this instance is removed prior to starting the delay, which prevents
    * new connections to this instance.
    * In addition, clients that have subscribed to service endpoint change
-   * events(https://docs.microsoft.com/en-us/dotnet/api/system.fabric.fabricclient.servicemanagementclient.registerservicenotificationfilterasync),
+   * events(https://docs.microsoft.com/dotnet/api/system.fabric.fabricclient.servicemanagementclient.registerservicenotificationfilterasync),
    * can do
    * the following upon receiving the endpoint removal notification:
    * - Stop sending new requests to this instance.
@@ -8372,15 +8372,15 @@ export interface ImageStoreInfo {
   /**
    * the ImageStore's file system usage for copied application and cluster packages. [Removing
    * application and cluster
-   * packages](https://docs.microsoft.com/en-us/rest/api/servicefabric/sfclient-api-deleteimagestorecontent)
+   * packages](https://docs.microsoft.com/rest/api/servicefabric/sfclient-api-deleteimagestorecontent)
    * will free up this space.
    */
   usedByCopy?: UsageInfo;
   /**
    * the ImageStore's file system usage for registered and cluster packages. [Unregistering
-   * application](https://docs.microsoft.com/en-us/rest/api/servicefabric/sfclient-api-unprovisionapplicationtype)
+   * application](https://docs.microsoft.com/rest/api/servicefabric/sfclient-api-unprovisionapplicationtype)
    * and [cluster
-   * packages](https://docs.microsoft.com/en-us/rest/api/servicefabric/sfclient-api-unprovisionapplicationtype)
+   * packages](https://docs.microsoft.com/rest/api/servicefabric/sfclient-api-unprovisionapplicationtype)
    * will free up this space.
    */
   usedByRegister?: UsageInfo;

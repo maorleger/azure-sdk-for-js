@@ -31,7 +31,7 @@ export class NewsOperations {
    * that are relevant to the search query. This section provides technical details about the query
    * parameters and headers that you use to request news and the JSON response objects that contain
    * them.  For examples that show how to make requests, see [Searching the web for
-   * news](https://docs.microsoft.com/en-us/azure/cognitive-services/bing-news-search/search-the-web).
+   * news](https://docs.microsoft.com/azure/cognitive-services/bing-news-search/search-the-web).
    * @param query The user's search query string. The query string cannot be empty. The query string
    * may contain [Bing Advanced Operators](http://msdn.microsoft.com/library/ff795620.aspx). For
    * example, to limit news to a specific domain, use the
@@ -78,7 +78,7 @@ export class NewsOperations {
    * by category. This section provides technical details about the query parameters and headers that
    * you use to request news and the JSON response objects that contain them.  For examples that show
    * how to make requests, see [Searching the web for
-   * news](https://docs.microsoft.com/en-us/azure/cognitive-services/bing-news-search/search-the-web).
+   * news](https://docs.microsoft.com/azure/cognitive-services/bing-news-search/search-the-web).
    * @param [options] The optional parameters
    * @returns Promise<Models.NewsCategoryResponse>
    */
@@ -106,7 +106,7 @@ export class NewsOperations {
    * news topics that are currently trending on Bing. This section provides technical details about
    * the query parameters and headers that you use to request news and the JSON response objects that
    * contain them.  For examples that show how to make requests, see [Searching the web for
-   * news](https://docs.microsoft.com/en-us/azure/cognitive-services/bing-news-search/search-the-web).
+   * news](https://docs.microsoft.com/azure/cognitive-services/bing-news-search/search-the-web).
    * @param [options] The optional parameters
    * @returns Promise<Models.NewsTrendingResponse>
    */

@@ -2796,7 +2796,7 @@ export type Alert = Resource & {
    */
   readonly systemAlertId?: string;
   /**
-   * The name of Azure Security Center pricing tier which powering this alert. Learn more: https://docs.microsoft.com/en-us/azure/security-center/security-center-pricing
+   * The name of Azure Security Center pricing tier which powering this alert. Learn more: https://docs.microsoft.com/azure/security-center/security-center-pricing
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly productComponentName?: string;
@@ -2811,7 +2811,7 @@ export type Alert = Resource & {
    */
   readonly description?: string;
   /**
-   * The risk level of the threat that was detected. Learn more: https://docs.microsoft.com/en-us/azure/security-center/security-center-alerts-overview#how-are-alerts-classified.
+   * The risk level of the threat that was detected. Learn more: https://docs.microsoft.com/azure/security-center/security-center-alerts-overview#how-are-alerts-classified.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly severity?: AlertSeverity;

@@ -34,7 +34,7 @@ export class IndexDocumentsBatch<T> {
 
   /**
    * Update a set of documents in the index.
-   * For more details about how merging works, see https://docs.microsoft.com/en-us/rest/api/searchservice/AddUpdate-or-Delete-Documents
+   * For more details about how merging works, see https://docs.microsoft.com/rest/api/searchservice/AddUpdate-or-Delete-Documents
    * @param documents - The updated documents.
    */
   public merge(documents: T[]): void {
@@ -50,7 +50,7 @@ export class IndexDocumentsBatch<T> {
 
   /**
    * Update a set of documents in the index or uploads them if they don't exist.
-   * For more details about how merging works, see https://docs.microsoft.com/en-us/rest/api/searchservice/AddUpdate-or-Delete-Documents
+   * For more details about how merging works, see https://docs.microsoft.com/rest/api/searchservice/AddUpdate-or-Delete-Documents
    * @param documents - The new/updated documents.
    */
   public mergeOrUpload(documents: T[]): void {

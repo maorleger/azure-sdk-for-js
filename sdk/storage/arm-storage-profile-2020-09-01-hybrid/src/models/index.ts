@@ -1474,12 +1474,12 @@ export interface ManagementPolicyRule {
 
 /**
  * The Storage Account ManagementPolicies Rules. See more details in:
- * https://docs.microsoft.com/en-us/azure/storage/common/storage-lifecycle-managment-concepts.
+ * https://docs.microsoft.com/azure/storage/common/storage-lifecycle-managment-concepts.
  */
 export interface ManagementPolicySchema {
   /**
    * The Storage Account ManagementPolicies Rules. See more details in:
-   * https://docs.microsoft.com/en-us/azure/storage/common/storage-lifecycle-managment-concepts.
+   * https://docs.microsoft.com/azure/storage/common/storage-lifecycle-managment-concepts.
    */
   rules: ManagementPolicyRule[];
 }
@@ -1495,7 +1495,7 @@ export interface ManagementPolicy extends Resource {
   readonly lastModifiedTime?: Date;
   /**
    * The Storage Account ManagementPolicy, in JSON format. See more details in:
-   * https://docs.microsoft.com/en-us/azure/storage/common/storage-lifecycle-managment-concepts.
+   * https://docs.microsoft.com/azure/storage/common/storage-lifecycle-managment-concepts.
    */
   policy: ManagementPolicySchema;
 }

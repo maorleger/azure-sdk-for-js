@@ -78,7 +78,7 @@ export interface ImageReference {
    * region and must be in the same subscription as the Azure Batch account. If the image version
    * is not specified in the imageId, the latest version will be used. For information about the
    * firewall settings for the Batch Compute Node agent to communicate with the Batch service see
-   * https://docs.microsoft.com/en-us/azure/batch/batch-api-basics#virtual-network-vnet-and-firewall-configuration.
+   * https://docs.microsoft.com/azure/batch/batch-api-basics#virtual-network-vnet-and-firewall-configuration.
    */
   virtualMachineImageId?: string;
   /**
@@ -624,7 +624,7 @@ export interface JobNetworkConfiguration {
    * created with a Virtual Machine configuration, enable ports 29876 and 29877, as well as port 22
    * for Linux and port 3389 for Windows. Port 443 is also required to be open for outbound
    * connections for communications to Azure Storage. For more details see:
-   * https://docs.microsoft.com/en-us/azure/batch/batch-api-basics#virtual-network-vnet-and-firewall-configuration
+   * https://docs.microsoft.com/azure/batch/batch-api-basics#virtual-network-vnet-and-firewall-configuration
    */
   subnetId: string;
 }
@@ -1127,7 +1127,7 @@ export interface JobManagerTask {
    * for example using "cmd /c MyCommand" in Windows or "/bin/sh -c MyCommand" in Linux. If the
    * command line refers to file paths, it should use a relative path (relative to the Task working
    * directory), or use the Batch provided environment variable
-   * (https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables).
+   * (https://docs.microsoft.com/azure/batch/batch-compute-node-environment-variables).
    */
   commandLine: string;
   /**
@@ -1263,7 +1263,7 @@ export interface JobPreparationTask {
    * for example using "cmd /c MyCommand" in Windows or "/bin/sh -c MyCommand" in Linux. If the
    * command line refers to file paths, it should use a relative path (relative to the Task working
    * directory), or use the Batch provided environment variable
-   * (https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables).
+   * (https://docs.microsoft.com/azure/batch/batch-compute-node-environment-variables).
    */
   commandLine: string;
   /**
@@ -1355,7 +1355,7 @@ export interface JobReleaseTask {
    * for example using "cmd /c MyCommand" in Windows or "/bin/sh -c MyCommand" in Linux. If the
    * command line refers to file paths, it should use a relative path (relative to the Task working
    * directory), or use the Batch provided environment variable
-   * (https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables).
+   * (https://docs.microsoft.com/azure/batch/batch-compute-node-environment-variables).
    */
   commandLine: string;
   /**
@@ -1437,7 +1437,7 @@ export interface StartTask {
    * using "cmd /c MyCommand" in Windows or "/bin/sh -c MyCommand" in Linux. If the command line
    * refers to file paths, it should use a relative path (relative to the Task working directory),
    * or use the Batch provided environment variable
-   * (https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables).
+   * (https://docs.microsoft.com/azure/batch/batch-compute-node-environment-variables).
    */
   commandLine: string;
   /**
@@ -1716,9 +1716,9 @@ export interface DiffDiskSettings {
    * property can be used by user in the request to choose the location e.g., cache disk space for
    * Ephemeral OS disk provisioning. For more information on Ephemeral OS disk size requirements,
    * please refer to Ephemeral OS disk size requirements for Windows VMs at
-   * https://docs.microsoft.com/en-us/azure/virtual-machines/windows/ephemeral-os-disks#size-requirements
+   * https://docs.microsoft.com/azure/virtual-machines/windows/ephemeral-os-disks#size-requirements
    * and Linux VMs at
-   * https://docs.microsoft.com/en-us/azure/virtual-machines/linux/ephemeral-os-disks#size-requirements.
+   * https://docs.microsoft.com/azure/virtual-machines/linux/ephemeral-os-disks#size-requirements.
    * Possible values include: 'CacheDisk'
    */
   placement?: DiffDiskPlacement;
@@ -1769,9 +1769,9 @@ export interface VirtualMachineConfiguration {
    * Existing disks cannot be attached, each attached disk is empty. When the Compute Node is
    * removed from the Pool, the disk and all data associated with it is also deleted. The disk is
    * not formatted after being attached, it must be formatted before use - for more information see
-   * https://docs.microsoft.com/en-us/azure/virtual-machines/linux/classic/attach-disk#initialize-a-new-data-disk-in-linux
+   * https://docs.microsoft.com/azure/virtual-machines/linux/classic/attach-disk#initialize-a-new-data-disk-in-linux
    * and
-   * https://docs.microsoft.com/en-us/azure/virtual-machines/windows/attach-disk-ps#add-an-empty-data-disk-to-a-virtual-machine.
+   * https://docs.microsoft.com/azure/virtual-machines/windows/attach-disk-ps#add-an-empty-data-disk-to-a-virtual-machine.
    */
   dataDisks?: DataDisk[];
   /**
@@ -1955,7 +1955,7 @@ export interface NetworkConfiguration {
    * configuration, enable ports 29876 and 29877, as well as port 22 for Linux and port 3389 for
    * Windows. For Pools created with a cloud service configuration, enable ports 10100, 20100, and
    * 30100. Also enable outbound connections to Azure Storage on port 443. For more details see:
-   * https://docs.microsoft.com/en-us/azure/batch/batch-api-basics#virtual-network-vnet-and-firewall-configuration
+   * https://docs.microsoft.com/azure/batch/batch-api-basics#virtual-network-vnet-and-firewall-configuration
    */
   subnetId?: string;
   /**
@@ -4100,7 +4100,7 @@ export interface CloudTask {
    * MyCommand" in Windows or "/bin/sh -c MyCommand" in Linux. If the command line refers to file
    * paths, it should use a relative path (relative to the Task working directory), or use the
    * Batch provided environment variable
-   * (https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables).
+   * (https://docs.microsoft.com/azure/batch/batch-compute-node-environment-variables).
    */
   commandLine?: string;
   /**
@@ -4230,7 +4230,7 @@ export interface TaskAddParameter {
    * MyCommand" in Windows or "/bin/sh -c MyCommand" in Linux. If the command line refers to file
    * paths, it should use a relative path (relative to the Task working directory), or use the
    * Batch provided environment variable
-   * (https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables).
+   * (https://docs.microsoft.com/azure/batch/batch-compute-node-environment-variables).
    */
   commandLine: string;
   /**
@@ -5036,7 +5036,7 @@ export interface PoolEnableAutoScaleParameter {
    * validity before it is applied to the Pool. If the formula is not valid, the Batch service
    * rejects the request with detailed error information. For more information about specifying
    * this formula, see Automatically scale Compute Nodes in an Azure Batch Pool
-   * (https://azure.microsoft.com/en-us/documentation/articles/batch-automatic-scaling).
+   * (https://azure.microsoft.com/documentation/articles/batch-automatic-scaling).
    */
   autoScaleFormula?: string;
   /**
@@ -5061,7 +5061,7 @@ export interface PoolEvaluateAutoScaleParameter {
    * its results calculated, but it is not applied to the Pool. To apply the formula to the Pool,
    * 'Enable automatic scaling on a Pool'. For more information about specifying this formula, see
    * Automatically scale Compute Nodes in an Azure Batch Pool
-   * (https://azure.microsoft.com/en-us/documentation/articles/batch-automatic-scaling).
+   * (https://azure.microsoft.com/documentation/articles/batch-automatic-scaling).
    */
   autoScaleFormula: string;
 }
@@ -5486,7 +5486,7 @@ export interface PoolListUsageMetricsOptions {
   endTime?: Date;
   /**
    * An OData $filter clause. For more information on constructing this filter, see
-   * https://docs.microsoft.com/en-us/rest/api/batchservice/odata-filters-in-batch#list-account-usage-metrics.
+   * https://docs.microsoft.com/rest/api/batchservice/odata-filters-in-batch#list-account-usage-metrics.
    */
   filter?: string;
   /**
@@ -5571,7 +5571,7 @@ export interface PoolAddOptions {
 export interface PoolListOptions {
   /**
    * An OData $filter clause. For more information on constructing this filter, see
-   * https://docs.microsoft.com/en-us/rest/api/batchservice/odata-filters-in-batch#list-pools.
+   * https://docs.microsoft.com/rest/api/batchservice/odata-filters-in-batch#list-pools.
    */
   filter?: string;
   /**
@@ -6089,7 +6089,7 @@ export interface PoolRemoveNodesOptions {
 export interface AccountListSupportedImagesOptions {
   /**
    * An OData $filter clause. For more information on constructing this filter, see
-   * https://docs.microsoft.com/en-us/rest/api/batchservice/odata-filters-in-batch#list-support-images.
+   * https://docs.microsoft.com/rest/api/batchservice/odata-filters-in-batch#list-support-images.
    */
   filter?: string;
   /**
@@ -6124,7 +6124,7 @@ export interface AccountListSupportedImagesOptions {
 export interface AccountListPoolNodeCountsOptions {
   /**
    * An OData $filter clause. For more information on constructing this filter, see
-   * https://docs.microsoft.com/en-us/rest/api/batchservice/odata-filters-in-batch.
+   * https://docs.microsoft.com/rest/api/batchservice/odata-filters-in-batch.
    */
   filter?: string;
   /**
@@ -6559,7 +6559,7 @@ export interface JobAddOptions {
 export interface JobListOptions {
   /**
    * An OData $filter clause. For more information on constructing this filter, see
-   * https://docs.microsoft.com/en-us/rest/api/batchservice/odata-filters-in-batch#list-jobs.
+   * https://docs.microsoft.com/rest/api/batchservice/odata-filters-in-batch#list-jobs.
    */
   filter?: string;
   /**
@@ -6602,7 +6602,7 @@ export interface JobListOptions {
 export interface JobListFromJobScheduleOptions {
   /**
    * An OData $filter clause. For more information on constructing this filter, see
-   * https://docs.microsoft.com/en-us/rest/api/batchservice/odata-filters-in-batch#list-jobs-in-a-job-schedule.
+   * https://docs.microsoft.com/rest/api/batchservice/odata-filters-in-batch#list-jobs-in-a-job-schedule.
    */
   filter?: string;
   /**
@@ -6645,7 +6645,7 @@ export interface JobListFromJobScheduleOptions {
 export interface JobListPreparationAndReleaseTaskStatusOptions {
   /**
    * An OData $filter clause. For more information on constructing this filter, see
-   * https://docs.microsoft.com/en-us/rest/api/batchservice/odata-filters-in-batch#list-job-preparation-and-release-status.
+   * https://docs.microsoft.com/rest/api/batchservice/odata-filters-in-batch#list-job-preparation-and-release-status.
    */
   filter?: string;
   /**
@@ -6734,7 +6734,7 @@ export interface CertificateAddOptions {
 export interface CertificateListOptions {
   /**
    * An OData $filter clause. For more information on constructing this filter, see
-   * https://docs.microsoft.com/en-us/rest/api/batchservice/odata-filters-in-batch#list-certificates.
+   * https://docs.microsoft.com/rest/api/batchservice/odata-filters-in-batch#list-certificates.
    */
   filter?: string;
   /**
@@ -7060,7 +7060,7 @@ export interface FileGetPropertiesFromComputeNodeOptions {
 export interface FileListFromTaskOptions {
   /**
    * An OData $filter clause. For more information on constructing this filter, see
-   * https://docs.microsoft.com/en-us/rest/api/batchservice/odata-filters-in-batch#list-task-files.
+   * https://docs.microsoft.com/rest/api/batchservice/odata-filters-in-batch#list-task-files.
    */
   filter?: string;
   /**
@@ -7095,7 +7095,7 @@ export interface FileListFromTaskOptions {
 export interface FileListFromComputeNodeOptions {
   /**
    * An OData $filter clause. For more information on constructing this filter, see
-   * https://docs.microsoft.com/en-us/rest/api/batchservice/odata-filters-in-batch#list-compute-node-files.
+   * https://docs.microsoft.com/rest/api/batchservice/odata-filters-in-batch#list-compute-node-files.
    */
   filter?: string;
   /**
@@ -7555,7 +7555,7 @@ export interface JobScheduleAddOptions {
 export interface JobScheduleListOptions {
   /**
    * An OData $filter clause. For more information on constructing this filter, see
-   * https://docs.microsoft.com/en-us/rest/api/batchservice/odata-filters-in-batch#list-job-schedules.
+   * https://docs.microsoft.com/rest/api/batchservice/odata-filters-in-batch#list-job-schedules.
    */
   filter?: string;
   /**
@@ -7623,7 +7623,7 @@ export interface TaskAddOptions {
 export interface TaskListOptions {
   /**
    * An OData $filter clause. For more information on constructing this filter, see
-   * https://docs.microsoft.com/en-us/rest/api/batchservice/odata-filters-in-batch#list-tasks.
+   * https://docs.microsoft.com/rest/api/batchservice/odata-filters-in-batch#list-tasks.
    */
   filter?: string;
   /**
@@ -8252,7 +8252,7 @@ export interface ComputeNodeUploadBatchServiceLogsOptions {
 export interface ComputeNodeListOptions {
   /**
    * An OData $filter clause. For more information on constructing this filter, see
-   * https://docs.microsoft.com/en-us/rest/api/batchservice/odata-filters-in-batch#list-nodes-in-a-pool.
+   * https://docs.microsoft.com/rest/api/batchservice/odata-filters-in-batch#list-nodes-in-a-pool.
    */
   filter?: string;
   /**

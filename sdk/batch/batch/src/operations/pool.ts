@@ -465,7 +465,7 @@ export class Pool {
    * formula is validated and its results calculated, but it is not applied to the Pool. To apply the
    * formula to the Pool, 'Enable automatic scaling on a Pool'. For more information about specifying
    * this formula, see Automatically scale Compute Nodes in an Azure Batch Pool
-   * (https://azure.microsoft.com/en-us/documentation/articles/batch-automatic-scaling).
+   * (https://azure.microsoft.com/documentation/articles/batch-automatic-scaling).
    * @param [options] The optional parameters
    * @returns Promise<Models.PoolEvaluateAutoScaleResponse>
    */
@@ -480,7 +480,7 @@ export class Pool {
    * formula is validated and its results calculated, but it is not applied to the Pool. To apply the
    * formula to the Pool, 'Enable automatic scaling on a Pool'. For more information about specifying
    * this formula, see Automatically scale Compute Nodes in an Azure Batch Pool
-   * (https://azure.microsoft.com/en-us/documentation/articles/batch-automatic-scaling).
+   * (https://azure.microsoft.com/documentation/articles/batch-automatic-scaling).
    * @param callback The callback
    */
   evaluateAutoScale(
@@ -494,7 +494,7 @@ export class Pool {
    * formula is validated and its results calculated, but it is not applied to the Pool. To apply the
    * formula to the Pool, 'Enable automatic scaling on a Pool'. For more information about specifying
    * this formula, see Automatically scale Compute Nodes in an Azure Batch Pool
-   * (https://azure.microsoft.com/en-us/documentation/articles/batch-automatic-scaling).
+   * (https://azure.microsoft.com/documentation/articles/batch-automatic-scaling).
    * @param options The optional parameters
    * @param callback The callback
    */

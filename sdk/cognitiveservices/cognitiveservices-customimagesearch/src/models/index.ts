@@ -758,19 +758,19 @@ export interface CustomInstanceImageSearchOptionalParams extends msRest.RequestO
    * A comma-delimited list of one or more languages to use for user interface strings. The list is
    * in decreasing order of preference. For additional information, including expected format, see
    * [RFC2616](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html). This header and the
-   * [setLang](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-images-api-v7-reference#setlang)
+   * [setLang](https://docs.microsoft.com/rest/api/cognitiveservices/bing-images-api-v7-reference#setlang)
    * query parameter are mutually exclusive; do not specify both. If you set this header, you must
    * also specify the
-   * [cc](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-images-api-v7-reference#cc)
+   * [cc](https://docs.microsoft.com/rest/api/cognitiveservices/bing-images-api-v7-reference#cc)
    * query parameter. To determine the market to return results for, Bing uses the first supported
    * language it finds from the list and combines it with the cc parameter value. If the list does
    * not include a supported language, Bing finds the closest language and market that supports the
    * request or it uses an aggregated or default market for the results. To determine the market
    * that Bing used, see the BingAPIs-Market header. Use this header and the cc query parameter
    * only if you specify multiple languages. Otherwise, use the
-   * [mkt](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-images-api-v7-reference#mkt)
+   * [mkt](https://docs.microsoft.com/rest/api/cognitiveservices/bing-images-api-v7-reference#mkt)
    * and
-   * [setLang](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-images-api-v7-reference#setlang)
+   * [setLang](https://docs.microsoft.com/rest/api/cognitiveservices/bing-images-api-v7-reference#setlang)
    * query parameters. A user interface string is a string that's used as a label in a user
    * interface. There are few user interface strings in the JSON response objects. Any links to
    * Bing.com properties in the response objects apply the specified language.
@@ -876,9 +876,9 @@ export interface CustomInstanceImageSearchOptionalParams extends msRest.RequestO
   /**
    * A 2-character country code of the country where the results come from. For a list of possible
    * values, see [Market
-   * Codes](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-images-api-v7-reference#market-codes).
+   * Codes](https://docs.microsoft.com/rest/api/cognitiveservices/bing-images-api-v7-reference#market-codes).
    * If you set this parameter, you must also specify the
-   * [Accept-Language](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-images-api-v7-reference#acceptlanguage)
+   * [Accept-Language](https://docs.microsoft.com/rest/api/cognitiveservices/bing-images-api-v7-reference#acceptlanguage)
    * header. Bing uses the first supported language it finds from the languages list, and combine
    * that language with the country code that you specify to determine the market to return results
    * for. If the languages list does not include a supported language, Bing finds the closest
@@ -886,7 +886,7 @@ export interface CustomInstanceImageSearchOptionalParams extends msRest.RequestO
    * for the results instead of a specified one. You should use this query parameter and the
    * Accept-Language query parameter only if you specify multiple languages; otherwise, you should
    * use the mkt and setLang query parameters. This parameter and the
-   * [mkt](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-images-api-v7-reference#mkt)
+   * [mkt](https://docs.microsoft.com/rest/api/cognitiveservices/bing-images-api-v7-reference#mkt)
    * query parameter are mutually exclusive—do not specify both.
    */
   countryCode?: string;
@@ -915,7 +915,7 @@ export interface CustomInstanceImageSearchOptionalParams extends msRest.RequestO
   /**
    * An ID that uniquely identifies an image. Use this parameter to ensure that the specified image
    * is the first image in the list of images that Bing returns. The
-   * [Image](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-images-api-v7-reference#image)
+   * [Image](https://docs.microsoft.com/rest/api/cognitiveservices/bing-images-api-v7-reference#image)
    * object's imageId field contains the ID that you set this parameter to.
    */
   id?: string;
@@ -960,14 +960,14 @@ export interface CustomInstanceImageSearchOptionalParams extends msRest.RequestO
    * country where Bing delivers results. The market must be in the form <language code>-<country
    * code>. For example, en-US. The string is case insensitive. For a list of possible market
    * values, see [Market
-   * Codes](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-images-api-v7-reference#market-codes).
+   * Codes](https://docs.microsoft.com/rest/api/cognitiveservices/bing-images-api-v7-reference#market-codes).
    * NOTE: If known, you are encouraged to always specify the market. Specifying the market helps
    * Bing route the request and return an appropriate and optimal response. If you specify a market
    * that is not listed in [Market
-   * Codes](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-images-api-v7-reference#market-codes),
+   * Codes](https://docs.microsoft.com/rest/api/cognitiveservices/bing-images-api-v7-reference#market-codes),
    * Bing uses a best fit market code based on an internal mapping that is subject to change. This
    * parameter and the
-   * [cc](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-images-api-v7-reference#cc)
+   * [cc](https://docs.microsoft.com/rest/api/cognitiveservices/bing-images-api-v7-reference#cc)
    * query parameter are mutually exclusive—do not specify both.
    */
   market?: string;
@@ -1014,13 +1014,13 @@ export interface CustomInstanceImageSearchOptionalParams extends msRest.RequestO
   /**
    * The zero-based offset that indicates the number of images to skip before returning images. The
    * default is 0. The offset should be less than
-   * ([totalEstimatedMatches](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-images-api-v7-reference#totalestimatedmatches)
+   * ([totalEstimatedMatches](https://docs.microsoft.com/rest/api/cognitiveservices/bing-images-api-v7-reference#totalestimatedmatches)
    * - count). Use this parameter along with the count parameter to page results. For example, if
    * your user interface displays 20 images per page, set count to 20 and offset to 0 to get the
    * first page of results. For each subsequent page, increment offset by 20 (for example, 0, 20,
    * 40). It is possible for multiple pages to include some overlap in results. To prevent
    * duplicates, see
-   * [nextOffset](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-images-api-v7-reference#nextoffset).
+   * [nextOffset](https://docs.microsoft.com/rest/api/cognitiveservices/bing-images-api-v7-reference#nextoffset).
    * Use this parameter only with the Image API. Do not specify this parameter when calling the
    * Trending Images API or the Web Search API.
    */
@@ -1057,7 +1057,7 @@ export interface CustomInstanceImageSearchOptionalParams extends msRest.RequestO
    * (English). Although optional, you should always specify the language. Typically, you set
    * setLang to the same language specified by mkt unless the user wants the user interface strings
    * displayed in a different language. This parameter and the
-   * [Accept-Language](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-images-api-v7-reference#acceptlanguage)
+   * [Accept-Language](https://docs.microsoft.com/rest/api/cognitiveservices/bing-images-api-v7-reference#acceptlanguage)
    * header are mutually exclusive; do not specify both. A user interface string is a string that's
    * used as a label in a user interface. There are few user interface strings in the JSON response
    * objects. Also, any links to Bing.com properties in the response objects apply the specified

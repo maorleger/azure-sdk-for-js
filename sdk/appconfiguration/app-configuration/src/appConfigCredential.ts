@@ -46,7 +46,7 @@ export class AppConfigCredential implements ServiceClientCredentials {
     webResource.headers.set("x-ms-date", utcNow);
     webResource.headers.set("x-ms-content-sha256", contentHash);
     // Syntax for Authorization header
-    // Reference - https://docs.microsoft.com/en-us/azure/azure-app-configuration/rest-api-authentication-hmac#syntax
+    // Reference - https://docs.microsoft.com/azure/azure-app-configuration/rest-api-authentication-hmac#syntax
     webResource.headers.set(
       "Authorization",
       `HMAC-SHA256 Credential=${this.credential}&SignedHeaders=${signedHeaders}&Signature=${signature}`

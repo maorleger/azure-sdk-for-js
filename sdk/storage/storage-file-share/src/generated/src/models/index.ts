@@ -1631,7 +1631,7 @@ export type PermissionCopyModeType = "source" | "override";
 /** Optional parameters. */
 export interface ServiceSetPropertiesOptionalParams
   extends coreHttp.OperationOptions {
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
 }
 
@@ -1647,7 +1647,7 @@ export type ServiceSetPropertiesResponse = ServiceSetPropertiesHeaders & {
 /** Optional parameters. */
 export interface ServiceGetPropertiesOptionalParams
   extends coreHttp.OperationOptions {
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
 }
 
@@ -1669,7 +1669,7 @@ export type ServiceGetPropertiesResponse = ServiceGetPropertiesHeaders &
 /** Optional parameters. */
 export interface ServiceListSharesSegmentOptionalParams
   extends coreHttp.OperationOptions {
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** Filters the results to return only entries whose name begins with the specified prefix. */
   prefix?: string;
@@ -1698,7 +1698,7 @@ export type ServiceListSharesSegmentResponse = ServiceListSharesSegmentHeaders &
 
 /** Optional parameters. */
 export interface ShareCreateOptionalParams extends coreHttp.OperationOptions {
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** A name-value pair to associate with a file storage object. */
   metadata?: { [propertyName: string]: string };
@@ -1726,7 +1726,7 @@ export interface ShareGetPropertiesOptionalParams
   extends coreHttp.OperationOptions {
   /** Parameter group */
   leaseAccessConditions?: LeaseAccessConditions;
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** The snapshot parameter is an opaque DateTime value that, when present, specifies the share snapshot to query. */
   shareSnapshot?: string;
@@ -1745,7 +1745,7 @@ export type ShareGetPropertiesResponse = ShareGetPropertiesHeaders & {
 export interface ShareDeleteOptionalParams extends coreHttp.OperationOptions {
   /** Parameter group */
   leaseAccessConditions?: LeaseAccessConditions;
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** The snapshot parameter is an opaque DateTime value that, when present, specifies the share snapshot to query. */
   shareSnapshot?: string;
@@ -1765,7 +1765,7 @@ export type ShareDeleteResponse = ShareDeleteHeaders & {
 /** Optional parameters. */
 export interface ShareAcquireLeaseOptionalParams
   extends coreHttp.OperationOptions {
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** The snapshot parameter is an opaque DateTime value that, when present, specifies the share snapshot to query. */
   shareSnapshot?: string;
@@ -1789,7 +1789,7 @@ export type ShareAcquireLeaseResponse = ShareAcquireLeaseHeaders & {
 /** Optional parameters. */
 export interface ShareReleaseLeaseOptionalParams
   extends coreHttp.OperationOptions {
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** The snapshot parameter is an opaque DateTime value that, when present, specifies the share snapshot to query. */
   shareSnapshot?: string;
@@ -1809,7 +1809,7 @@ export type ShareReleaseLeaseResponse = ShareReleaseLeaseHeaders & {
 /** Optional parameters. */
 export interface ShareChangeLeaseOptionalParams
   extends coreHttp.OperationOptions {
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** The snapshot parameter is an opaque DateTime value that, when present, specifies the share snapshot to query. */
   shareSnapshot?: string;
@@ -1831,7 +1831,7 @@ export type ShareChangeLeaseResponse = ShareChangeLeaseHeaders & {
 /** Optional parameters. */
 export interface ShareRenewLeaseOptionalParams
   extends coreHttp.OperationOptions {
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** The snapshot parameter is an opaque DateTime value that, when present, specifies the share snapshot to query. */
   shareSnapshot?: string;
@@ -1853,7 +1853,7 @@ export interface ShareBreakLeaseOptionalParams
   extends coreHttp.OperationOptions {
   /** Parameter group */
   leaseAccessConditions?: LeaseAccessConditions;
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** The snapshot parameter is an opaque DateTime value that, when present, specifies the share snapshot to query. */
   shareSnapshot?: string;
@@ -1875,7 +1875,7 @@ export type ShareBreakLeaseResponse = ShareBreakLeaseHeaders & {
 /** Optional parameters. */
 export interface ShareCreateSnapshotOptionalParams
   extends coreHttp.OperationOptions {
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** A name-value pair to associate with a file storage object. */
   metadata?: { [propertyName: string]: string };
@@ -1893,7 +1893,7 @@ export type ShareCreateSnapshotResponse = ShareCreateSnapshotHeaders & {
 /** Optional parameters. */
 export interface ShareCreatePermissionOptionalParams
   extends coreHttp.OperationOptions {
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
 }
 
@@ -1909,7 +1909,7 @@ export type ShareCreatePermissionResponse = ShareCreatePermissionHeaders & {
 /** Optional parameters. */
 export interface ShareGetPermissionOptionalParams
   extends coreHttp.OperationOptions {
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
 }
 
@@ -1933,7 +1933,7 @@ export interface ShareSetPropertiesOptionalParams
   extends coreHttp.OperationOptions {
   /** Parameter group */
   leaseAccessConditions?: LeaseAccessConditions;
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** Specifies the maximum size of the share, in gigabytes. */
   quota?: number;
@@ -1957,7 +1957,7 @@ export interface ShareSetMetadataOptionalParams
   extends coreHttp.OperationOptions {
   /** Parameter group */
   leaseAccessConditions?: LeaseAccessConditions;
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** A name-value pair to associate with a file storage object. */
   metadata?: { [propertyName: string]: string };
@@ -1977,7 +1977,7 @@ export interface ShareGetAccessPolicyOptionalParams
   extends coreHttp.OperationOptions {
   /** Parameter group */
   leaseAccessConditions?: LeaseAccessConditions;
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
 }
 
@@ -2001,7 +2001,7 @@ export interface ShareSetAccessPolicyOptionalParams
   extends coreHttp.OperationOptions {
   /** Parameter group */
   leaseAccessConditions?: LeaseAccessConditions;
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** The ACL for the share. */
   shareAcl?: SignedIdentifier[];
@@ -2021,7 +2021,7 @@ export interface ShareGetStatisticsOptionalParams
   extends coreHttp.OperationOptions {
   /** Parameter group */
   leaseAccessConditions?: LeaseAccessConditions;
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
 }
 
@@ -2042,7 +2042,7 @@ export type ShareGetStatisticsResponse = ShareGetStatisticsHeaders &
 
 /** Optional parameters. */
 export interface ShareRestoreOptionalParams extends coreHttp.OperationOptions {
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** Provides a client-generated, opaque value with a 1 KB character limit that is recorded in the analytics logs when storage analytics logging is enabled. */
   requestId?: string;
@@ -2064,7 +2064,7 @@ export type ShareRestoreResponse = ShareRestoreHeaders & {
 /** Optional parameters. */
 export interface DirectoryCreateOptionalParams
   extends coreHttp.OperationOptions {
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** A name-value pair to associate with a file storage object. */
   metadata?: { [propertyName: string]: string };
@@ -2086,7 +2086,7 @@ export type DirectoryCreateResponse = DirectoryCreateHeaders & {
 /** Optional parameters. */
 export interface DirectoryGetPropertiesOptionalParams
   extends coreHttp.OperationOptions {
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** The snapshot parameter is an opaque DateTime value that, when present, specifies the share snapshot to query. */
   shareSnapshot?: string;
@@ -2104,7 +2104,7 @@ export type DirectoryGetPropertiesResponse = DirectoryGetPropertiesHeaders & {
 /** Optional parameters. */
 export interface DirectoryDeleteOptionalParams
   extends coreHttp.OperationOptions {
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
 }
 
@@ -2120,7 +2120,7 @@ export type DirectoryDeleteResponse = DirectoryDeleteHeaders & {
 /** Optional parameters. */
 export interface DirectorySetPropertiesOptionalParams
   extends coreHttp.OperationOptions {
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** If specified the permission (security descriptor) shall be set for the directory/file. This header can be used if Permission size is <= 8KB, else x-ms-file-permission-key header shall be used. Default value: Inherit. If SDDL is specified as input, it must have owner, group and dacl. Note: Only one of the x-ms-file-permission or x-ms-file-permission-key should be specified. */
   filePermission?: string;
@@ -2140,7 +2140,7 @@ export type DirectorySetPropertiesResponse = DirectorySetPropertiesHeaders & {
 /** Optional parameters. */
 export interface DirectorySetMetadataOptionalParams
   extends coreHttp.OperationOptions {
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** A name-value pair to associate with a file storage object. */
   metadata?: { [propertyName: string]: string };
@@ -2158,7 +2158,7 @@ export type DirectorySetMetadataResponse = DirectorySetMetadataHeaders & {
 /** Optional parameters. */
 export interface DirectoryListFilesAndDirectoriesSegmentOptionalParams
   extends coreHttp.OperationOptions {
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** Filters the results to return only entries whose name begins with the specified prefix. */
   prefix?: string;
@@ -2192,7 +2192,7 @@ export type DirectoryListFilesAndDirectoriesSegmentResponse = DirectoryListFiles
 /** Optional parameters. */
 export interface DirectoryListHandlesOptionalParams
   extends coreHttp.OperationOptions {
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** A string value that identifies the portion of the list to be returned with the next list operation. The operation returns a marker value within the response body if the list returned was not complete. The marker value may then be used in a subsequent call to request the next set of list items. The marker value is opaque to the client. */
   marker?: string;
@@ -2222,7 +2222,7 @@ export type DirectoryListHandlesResponse = DirectoryListHandlesHeaders &
 /** Optional parameters. */
 export interface DirectoryForceCloseHandlesOptionalParams
   extends coreHttp.OperationOptions {
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** A string value that identifies the portion of the list to be returned with the next list operation. The operation returns a marker value within the response body if the list returned was not complete. The marker value may then be used in a subsequent call to request the next set of list items. The marker value is opaque to the client. */
   marker?: string;
@@ -2247,7 +2247,7 @@ export interface FileCreateOptionalParams extends coreHttp.OperationOptions {
   leaseAccessConditions?: LeaseAccessConditions;
   /** Parameter group */
   fileHttpHeaders?: FileHttpHeaders;
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** A name-value pair to associate with a file storage object. */
   metadata?: { [propertyName: string]: string };
@@ -2270,7 +2270,7 @@ export type FileCreateResponse = FileCreateHeaders & {
 export interface FileDownloadOptionalParams extends coreHttp.OperationOptions {
   /** Parameter group */
   leaseAccessConditions?: LeaseAccessConditions;
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** Return file data only from the specified byte range. */
   range?: string;
@@ -2307,7 +2307,7 @@ export interface FileGetPropertiesOptionalParams
   extends coreHttp.OperationOptions {
   /** Parameter group */
   leaseAccessConditions?: LeaseAccessConditions;
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** The snapshot parameter is an opaque DateTime value that, when present, specifies the share snapshot to query. */
   shareSnapshot?: string;
@@ -2326,7 +2326,7 @@ export type FileGetPropertiesResponse = FileGetPropertiesHeaders & {
 export interface FileDeleteOptionalParams extends coreHttp.OperationOptions {
   /** Parameter group */
   leaseAccessConditions?: LeaseAccessConditions;
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
 }
 
@@ -2346,7 +2346,7 @@ export interface FileSetHttpHeadersOptionalParams
   leaseAccessConditions?: LeaseAccessConditions;
   /** Parameter group */
   fileHttpHeaders?: FileHttpHeaders;
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** If specified the permission (security descriptor) shall be set for the directory/file. This header can be used if Permission size is <= 8KB, else x-ms-file-permission-key header shall be used. Default value: Inherit. If SDDL is specified as input, it must have owner, group and dacl. Note: Only one of the x-ms-file-permission or x-ms-file-permission-key should be specified. */
   filePermission?: string;
@@ -2370,7 +2370,7 @@ export interface FileSetMetadataOptionalParams
   extends coreHttp.OperationOptions {
   /** Parameter group */
   leaseAccessConditions?: LeaseAccessConditions;
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** A name-value pair to associate with a file storage object. */
   metadata?: { [propertyName: string]: string };
@@ -2388,7 +2388,7 @@ export type FileSetMetadataResponse = FileSetMetadataHeaders & {
 /** Optional parameters. */
 export interface FileAcquireLeaseOptionalParams
   extends coreHttp.OperationOptions {
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** Specifies the duration of the lease, in seconds, or negative one (-1) for a lease that never expires. A non-infinite lease can be between 15 and 60 seconds. A lease duration cannot be changed using renew or change. */
   duration?: number;
@@ -2410,7 +2410,7 @@ export type FileAcquireLeaseResponse = FileAcquireLeaseHeaders & {
 /** Optional parameters. */
 export interface FileReleaseLeaseOptionalParams
   extends coreHttp.OperationOptions {
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** Provides a client-generated, opaque value with a 1 KB character limit that is recorded in the analytics logs when storage analytics logging is enabled. */
   requestId?: string;
@@ -2428,7 +2428,7 @@ export type FileReleaseLeaseResponse = FileReleaseLeaseHeaders & {
 /** Optional parameters. */
 export interface FileChangeLeaseOptionalParams
   extends coreHttp.OperationOptions {
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** Proposed lease ID, in a GUID string format. The File service returns 400 (Invalid request) if the proposed lease ID is not in the correct format. See Guid Constructor (String) for a list of valid GUID string formats. */
   proposedLeaseId?: string;
@@ -2450,7 +2450,7 @@ export interface FileBreakLeaseOptionalParams
   extends coreHttp.OperationOptions {
   /** Parameter group */
   leaseAccessConditions?: LeaseAccessConditions;
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** Provides a client-generated, opaque value with a 1 KB character limit that is recorded in the analytics logs when storage analytics logging is enabled. */
   requestId?: string;
@@ -2470,7 +2470,7 @@ export interface FileUploadRangeOptionalParams
   extends coreHttp.OperationOptions {
   /** Parameter group */
   leaseAccessConditions?: LeaseAccessConditions;
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** Initial data. */
   body?: coreHttp.HttpRequestBody;
@@ -2494,7 +2494,7 @@ export interface FileUploadRangeFromURLOptionalParams
   leaseAccessConditions?: LeaseAccessConditions;
   /** Parameter group */
   sourceModifiedAccessConditions?: SourceModifiedAccessConditions;
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** Bytes of source data in the specified range. */
   sourceRange?: string;
@@ -2518,7 +2518,7 @@ export interface FileGetRangeListOptionalParams
   extends coreHttp.OperationOptions {
   /** Parameter group */
   leaseAccessConditions?: LeaseAccessConditions;
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** The snapshot parameter is an opaque DateTime value that, when present, specifies the share snapshot to query. */
   shareSnapshot?: string;
@@ -2549,7 +2549,7 @@ export interface FileStartCopyOptionalParams extends coreHttp.OperationOptions {
   leaseAccessConditions?: LeaseAccessConditions;
   /** Parameter group */
   copyFileSmbInfo?: CopyFileSmbInfo;
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** A name-value pair to associate with a file storage object. */
   metadata?: { [propertyName: string]: string };
@@ -2572,7 +2572,7 @@ export type FileStartCopyResponse = FileStartCopyHeaders & {
 export interface FileAbortCopyOptionalParams extends coreHttp.OperationOptions {
   /** Parameter group */
   leaseAccessConditions?: LeaseAccessConditions;
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
 }
 
@@ -2588,7 +2588,7 @@ export type FileAbortCopyResponse = FileAbortCopyHeaders & {
 /** Optional parameters. */
 export interface FileListHandlesOptionalParams
   extends coreHttp.OperationOptions {
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** A string value that identifies the portion of the list to be returned with the next list operation. The operation returns a marker value within the response body if the list returned was not complete. The marker value may then be used in a subsequent call to request the next set of list items. The marker value is opaque to the client. */
   marker?: string;
@@ -2616,7 +2616,7 @@ export type FileListHandlesResponse = FileListHandlesHeaders &
 /** Optional parameters. */
 export interface FileForceCloseHandlesOptionalParams
   extends coreHttp.OperationOptions {
-  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
+  /** The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting Timeouts for File Service Operations.</a> */
   timeoutInSeconds?: number;
   /** A string value that identifies the portion of the list to be returned with the next list operation. The operation returns a marker value within the response body if the list returned was not complete. The marker value may then be used in a subsequent call to request the next set of list items. The marker value is opaque to the client. */
   marker?: string;

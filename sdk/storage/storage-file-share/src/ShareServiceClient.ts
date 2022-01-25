@@ -389,7 +389,7 @@ export class ShareServiceClient extends StorageClient {
   /**
    * Gets the properties of a storage account’s file service, including properties
    * for Storage Analytics and CORS (Cross-Origin Resource Sharing) rules.
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/get-file-service-properties
+   * @see https://docs.microsoft.com/rest/api/storageservices/get-file-service-properties
    *
    * @param options - Options to Get Properties operation.
    * @returns Response data for the Get Properties operation.
@@ -417,7 +417,7 @@ export class ShareServiceClient extends StorageClient {
   /**
    * Sets properties for a storage account’s file service endpoint, including properties
    * for Storage Analytics, CORS (Cross-Origin Resource Sharing) rules and soft delete settings.
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/set-file-service-properties
+   * @see https://docs.microsoft.com/rest/api/storageservices/set-file-service-properties
    *
    * @param properties -
    * @param options - Options to Set Properties operation.
@@ -708,7 +708,7 @@ export class ShareServiceClient extends StorageClient {
    * Generates an account Shared Access Signature (SAS) URI based on the client properties
    * and parameters passed in. The SAS is signed by the shared key credential of the client.
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/create-account-sas
+   * @see https://docs.microsoft.com/rest/api/storageservices/create-account-sas
    *
    * @param expiresOn - Optional. The time at which the shared access signature becomes invalid. Default to an hour later if not specified.
    * @param permissions - Specifies the list of permissions to be associated with the SAS.

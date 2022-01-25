@@ -16,7 +16,7 @@ const logger = credentialLogger("AuthorizationCodeCredential");
  * that was obtained through the authorization code flow, described in more detail
  * in the Azure Active Directory documentation:
  *
- * https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow
+ * https://docs.microsoft.com/azure/active-directory/develop/v2-oauth2-auth-code-flow
  */
 export class AuthorizationCodeCredential implements TokenCredential {
   private msalFlow: MsalFlow;

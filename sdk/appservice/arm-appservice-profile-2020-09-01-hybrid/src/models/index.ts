@@ -3404,7 +3404,7 @@ export interface SiteAuthSettings extends ProxyOnlyResource {
    * The OAuth 2.0 scopes that will be requested as part of Microsoft Account authentication.
    * This setting is optional. If not specified, "wl.basic" is used as the default scope.
    * Microsoft Account Scopes and permissions documentation:
-   * https://msdn.microsoft.com/en-us/library/dn631845.aspx
+   * https://msdn.microsoft.com/library/dn631845.aspx
    */
   microsoftAccountOAuthScopes?: string[];
 }

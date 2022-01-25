@@ -2210,7 +2210,7 @@ export interface VirtualNetworkPeering extends SubResource {
   /**
    * The reference of the remote virtual network. The remote virtual network can be in the same or
    * different region (preview). See here to register for the preview and learn more
-   * (https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-create-peering).
+   * (https://docs.microsoft.com/azure/virtual-network/virtual-network-create-peering).
    */
   remoteVirtualNetwork?: SubResource;
   /**

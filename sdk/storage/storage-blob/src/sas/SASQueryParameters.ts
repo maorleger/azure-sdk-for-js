@@ -59,7 +59,7 @@ export interface SASQueryParametersOptions {
   /**
    * Optional. The signed identifier (only for {@link BlobSASSignatureValues}).
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/establishing-a-stored-access-policy
+   * @see https://docs.microsoft.com/rest/api/storageservices/establishing-a-stored-access-policy
    */
   identifier?: string;
   /**
@@ -162,7 +162,7 @@ export class SASQueryParameters {
   /**
    * Optional. The signed identifier (only for {@link BlobSASSignatureValues}).
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/establishing-a-stored-access-policy
+   * @see https://docs.microsoft.com/rest/api/storageservices/establishing-a-stored-access-policy
    */
   public readonly identifier?: string;
 

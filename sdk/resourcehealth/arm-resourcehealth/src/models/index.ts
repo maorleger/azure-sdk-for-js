@@ -297,7 +297,7 @@ export type ReasonChronicityTypes = "Transient" | "Persistent";
 /** Optional parameters. */
 export interface AvailabilityStatusesListBySubscriptionIdOptionalParams
   extends coreClient.OperationOptions {
-  /** The filter to apply on the operation. For more information please see https://docs.microsoft.com/en-us/rest/api/apimanagement/apis?redirectedfrom=MSDN */
+  /** The filter to apply on the operation. For more information please see https://docs.microsoft.com/rest/api/apimanagement/apis?redirectedfrom=MSDN */
   filter?: string;
   /** Setting $expand=recommendedactions in url query expands the recommendedactions in the response. */
   expand?: string;
@@ -309,7 +309,7 @@ export type AvailabilityStatusesListBySubscriptionIdResponse = AvailabilityStatu
 /** Optional parameters. */
 export interface AvailabilityStatusesListByResourceGroupOptionalParams
   extends coreClient.OperationOptions {
-  /** The filter to apply on the operation. For more information please see https://docs.microsoft.com/en-us/rest/api/apimanagement/apis?redirectedfrom=MSDN */
+  /** The filter to apply on the operation. For more information please see https://docs.microsoft.com/rest/api/apimanagement/apis?redirectedfrom=MSDN */
   filter?: string;
   /** Setting $expand=recommendedactions in url query expands the recommendedactions in the response. */
   expand?: string;
@@ -321,7 +321,7 @@ export type AvailabilityStatusesListByResourceGroupResponse = AvailabilityStatus
 /** Optional parameters. */
 export interface AvailabilityStatusesGetByResourceOptionalParams
   extends coreClient.OperationOptions {
-  /** The filter to apply on the operation. For more information please see https://docs.microsoft.com/en-us/rest/api/apimanagement/apis?redirectedfrom=MSDN */
+  /** The filter to apply on the operation. For more information please see https://docs.microsoft.com/rest/api/apimanagement/apis?redirectedfrom=MSDN */
   filter?: string;
   /** Setting $expand=recommendedactions in url query expands the recommendedactions in the response. */
   expand?: string;
@@ -333,7 +333,7 @@ export type AvailabilityStatusesGetByResourceResponse = AvailabilityStatus;
 /** Optional parameters. */
 export interface AvailabilityStatusesListOptionalParams
   extends coreClient.OperationOptions {
-  /** The filter to apply on the operation. For more information please see https://docs.microsoft.com/en-us/rest/api/apimanagement/apis?redirectedfrom=MSDN */
+  /** The filter to apply on the operation. For more information please see https://docs.microsoft.com/rest/api/apimanagement/apis?redirectedfrom=MSDN */
   filter?: string;
   /** Setting $expand=recommendedactions in url query expands the recommendedactions in the response. */
   expand?: string;
@@ -345,7 +345,7 @@ export type AvailabilityStatusesListResponse = AvailabilityStatusListResult;
 /** Optional parameters. */
 export interface AvailabilityStatusesListBySubscriptionIdNextOptionalParams
   extends coreClient.OperationOptions {
-  /** The filter to apply on the operation. For more information please see https://docs.microsoft.com/en-us/rest/api/apimanagement/apis?redirectedfrom=MSDN */
+  /** The filter to apply on the operation. For more information please see https://docs.microsoft.com/rest/api/apimanagement/apis?redirectedfrom=MSDN */
   filter?: string;
   /** Setting $expand=recommendedactions in url query expands the recommendedactions in the response. */
   expand?: string;
@@ -357,7 +357,7 @@ export type AvailabilityStatusesListBySubscriptionIdNextResponse = AvailabilityS
 /** Optional parameters. */
 export interface AvailabilityStatusesListByResourceGroupNextOptionalParams
   extends coreClient.OperationOptions {
-  /** The filter to apply on the operation. For more information please see https://docs.microsoft.com/en-us/rest/api/apimanagement/apis?redirectedfrom=MSDN */
+  /** The filter to apply on the operation. For more information please see https://docs.microsoft.com/rest/api/apimanagement/apis?redirectedfrom=MSDN */
   filter?: string;
   /** Setting $expand=recommendedactions in url query expands the recommendedactions in the response. */
   expand?: string;
@@ -369,7 +369,7 @@ export type AvailabilityStatusesListByResourceGroupNextResponse = AvailabilitySt
 /** Optional parameters. */
 export interface AvailabilityStatusesListNextOptionalParams
   extends coreClient.OperationOptions {
-  /** The filter to apply on the operation. For more information please see https://docs.microsoft.com/en-us/rest/api/apimanagement/apis?redirectedfrom=MSDN */
+  /** The filter to apply on the operation. For more information please see https://docs.microsoft.com/rest/api/apimanagement/apis?redirectedfrom=MSDN */
   filter?: string;
   /** Setting $expand=recommendedactions in url query expands the recommendedactions in the response. */
   expand?: string;
@@ -381,7 +381,7 @@ export type AvailabilityStatusesListNextResponse = AvailabilityStatusListResult;
 /** Optional parameters. */
 export interface ChildAvailabilityStatusesGetByResourceOptionalParams
   extends coreClient.OperationOptions {
-  /** The filter to apply on the operation. For more information please see https://docs.microsoft.com/en-us/rest/api/apimanagement/apis?redirectedfrom=MSDN */
+  /** The filter to apply on the operation. For more information please see https://docs.microsoft.com/rest/api/apimanagement/apis?redirectedfrom=MSDN */
   filter?: string;
   /** Setting $expand=recommendedactions in url query expands the recommendedactions in the response. */
   expand?: string;
@@ -393,7 +393,7 @@ export type ChildAvailabilityStatusesGetByResourceResponse = AvailabilityStatus;
 /** Optional parameters. */
 export interface ChildAvailabilityStatusesListOptionalParams
   extends coreClient.OperationOptions {
-  /** The filter to apply on the operation. For more information please see https://docs.microsoft.com/en-us/rest/api/apimanagement/apis?redirectedfrom=MSDN */
+  /** The filter to apply on the operation. For more information please see https://docs.microsoft.com/rest/api/apimanagement/apis?redirectedfrom=MSDN */
   filter?: string;
   /** Setting $expand=recommendedactions in url query expands the recommendedactions in the response. */
   expand?: string;
@@ -405,7 +405,7 @@ export type ChildAvailabilityStatusesListResponse = AvailabilityStatusListResult
 /** Optional parameters. */
 export interface ChildAvailabilityStatusesListNextOptionalParams
   extends coreClient.OperationOptions {
-  /** The filter to apply on the operation. For more information please see https://docs.microsoft.com/en-us/rest/api/apimanagement/apis?redirectedfrom=MSDN */
+  /** The filter to apply on the operation. For more information please see https://docs.microsoft.com/rest/api/apimanagement/apis?redirectedfrom=MSDN */
   filter?: string;
   /** Setting $expand=recommendedactions in url query expands the recommendedactions in the response. */
   expand?: string;
@@ -417,7 +417,7 @@ export type ChildAvailabilityStatusesListNextResponse = AvailabilityStatusListRe
 /** Optional parameters. */
 export interface ChildResourcesListOptionalParams
   extends coreClient.OperationOptions {
-  /** The filter to apply on the operation. For more information please see https://docs.microsoft.com/en-us/rest/api/apimanagement/apis?redirectedfrom=MSDN */
+  /** The filter to apply on the operation. For more information please see https://docs.microsoft.com/rest/api/apimanagement/apis?redirectedfrom=MSDN */
   filter?: string;
   /** Setting $expand=recommendedactions in url query expands the recommendedactions in the response. */
   expand?: string;
@@ -429,7 +429,7 @@ export type ChildResourcesListResponse = AvailabilityStatusListResult;
 /** Optional parameters. */
 export interface ChildResourcesListNextOptionalParams
   extends coreClient.OperationOptions {
-  /** The filter to apply on the operation. For more information please see https://docs.microsoft.com/en-us/rest/api/apimanagement/apis?redirectedfrom=MSDN */
+  /** The filter to apply on the operation. For more information please see https://docs.microsoft.com/rest/api/apimanagement/apis?redirectedfrom=MSDN */
   filter?: string;
   /** Setting $expand=recommendedactions in url query expands the recommendedactions in the response. */
   expand?: string;

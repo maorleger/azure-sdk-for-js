@@ -127,7 +127,7 @@ export namespace HostContext {
     if (!name || name.match(/^[a-z0-9](([a-z0-9\-[^\-])){1,61}[a-z0-9]$/gi) === null) {
       throw new Error(
         `Azure Storage lease container name "${name}" is invalid. Please check ` +
-          `naming conventions at https://msdn.microsoft.com/en-us/library/azure/dd135715.aspx`
+          `naming conventions at https://msdn.microsoft.com/library/azure/dd135715.aspx`
       );
     }
   }

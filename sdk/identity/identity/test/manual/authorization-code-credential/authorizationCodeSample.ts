@@ -27,7 +27,7 @@ config();
 // settings in the AAD tenant, one of the following errors will be displayed on
 // the authorization page:
 //
-// https://docs.microsoft.com/en-us/azure/active-directory/manage-apps/application-sign-in-unexpected-user-consent-error
+// https://docs.microsoft.com/azure/active-directory/manage-apps/application-sign-in-unexpected-user-consent-error
 
 const port = process.env.PORT || 8080;
 const tenantId = process.env.AZURE_TENANT_ID;

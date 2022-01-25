@@ -59,7 +59,7 @@ export interface QnADTO {
   answer: string;
   /**
    * Source from which Q-A was indexed. eg.
-   * https://docs.microsoft.com/en-us/azure/cognitive-services/QnAMaker/FAQs
+   * https://docs.microsoft.com/azure/cognitive-services/QnAMaker/FAQs
    */
   source?: string;
   /**

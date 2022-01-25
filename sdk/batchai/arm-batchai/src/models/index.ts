@@ -438,7 +438,7 @@ export interface ImageReference {
    * The virtual machine image must be in the same region and subscription as
    * the cluster. For information about the firewall settings for the Batch
    * node agent to communicate with the Batch service see
-   * https://docs.microsoft.com/en-us/azure/batch/batch-api-basics#virtual-network-vnet-and-firewall-configuration.
+   * https://docs.microsoft.com/azure/batch/batch-api-basics#virtual-network-vnet-and-firewall-configuration.
    * Note, you need to provide publisher, offer and sku of the base OS image of
    * which the custom image has been derived from.
    */

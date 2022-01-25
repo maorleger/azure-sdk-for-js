@@ -1448,8 +1448,8 @@ export interface DiffDiskSettings {
    * <br><br> **CacheDisk** <br><br> **ResourceDisk** <br><br> Default: **CacheDisk** if one is
    * configured for the VM size otherwise **ResourceDisk** is used.<br><br> Refer to VM size
    * documentation for Windows VM at
-   * https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes and Linux VM at
-   * https://docs.microsoft.com/en-us/azure/virtual-machines/linux/sizes to check which VM sizes
+   * https://docs.microsoft.com/azure/virtual-machines/windows/sizes and Linux VM at
+   * https://docs.microsoft.com/azure/virtual-machines/linux/sizes to check which VM sizes
    * exposes a cache disk. Possible values include: 'CacheDisk', 'ResourceDisk'
    */
   placement?: DiffDiskPlacement;
@@ -1758,9 +1758,9 @@ export interface WindowsConfiguration {
   /**
    * Specifies the time zone of the virtual machine. e.g. "Pacific Standard Time". <br><br>
    * Possible values can be
-   * [TimeZoneInfo.Id](https://docs.microsoft.com/en-us/dotnet/api/system.timezoneinfo.id?#System_TimeZoneInfo_Id)
+   * [TimeZoneInfo.Id](https://docs.microsoft.com/dotnet/api/system.timezoneinfo.id?#System_TimeZoneInfo_Id)
    * value from time zones returned by
-   * [TimeZoneInfo.GetSystemTimeZones](https://docs.microsoft.com/en-us/dotnet/api/system.timezoneinfo.getsystemtimezones).
+   * [TimeZoneInfo.GetSystemTimeZones](https://docs.microsoft.com/dotnet/api/system.timezoneinfo.getsystemtimezones).
    */
   timeZone?: string;
   /**
@@ -1922,7 +1922,7 @@ export interface OSProfile {
    * property** <br><br> This property cannot be updated after the VM is created. <br><br>
    * customData is passed to the VM to be saved as a file, for more information see [Custom Data on
    * Azure
-   * VMs](https://azure.microsoft.com/en-us/blog/custom-data-and-cloud-init-on-windows-azure/)
+   * VMs](https://azure.microsoft.com/blog/custom-data-and-cloud-init-on-windows-azure/)
    * <br><br> For using cloud-init for your Linux VM, see [Using cloud-init to customize a Linux VM
    * during
    * creation](https://docs.microsoft.com/azure/virtual-machines/virtual-machines-linux-using-cloud-init?toc=%2fazure%2fvirtual-machines%2flinux%2ftoc.json)

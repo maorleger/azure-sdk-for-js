@@ -9,7 +9,7 @@
   If your Event Hubs instance doesn't have any events, then please run "sendBatch.ts" sample
   to populate Event Hubs before running this sample.
 
-  See https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-event-processor-host
+  See https://docs.microsoft.com/azure/event-hubs/event-hubs-event-processor-host
   to learn about Event Processor Host.
 */
 

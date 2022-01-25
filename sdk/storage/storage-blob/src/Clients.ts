@@ -531,12 +531,12 @@ export interface BlobStartCopyFromURLOptions extends CommonOptions {
   sourceConditions?: ModifiedAccessConditions;
   /**
    * Access tier.
-   * More Details - https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-storage-tiers
+   * More Details - https://docs.microsoft.com/azure/storage/blobs/storage-blob-storage-tiers
    */
   tier?: BlockBlobTier | PremiumPageBlobTier | string;
   /**
    * Rehydrate Priority - possible values include 'High', 'Standard'.
-   * More Details - https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-rehydration#rehydrate-an-archived-blob-to-an-online-tier
+   * More Details - https://docs.microsoft.com/azure/storage/blobs/storage-blob-rehydration#rehydrate-an-archived-blob-to-an-online-tier
    */
   rehydratePriority?: RehydratePriority;
   /**
@@ -644,7 +644,7 @@ export interface BlobSetTierOptions extends CommonOptions {
   conditions?: LeaseAccessConditions & TagConditions;
   /**
    * Rehydrate Priority - possible values include 'High', 'Standard'.
-   * More Details - https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-rehydration#rehydrate-an-archived-blob-to-an-online-tier
+   * More Details - https://docs.microsoft.com/azure/storage/blobs/storage-blob-rehydration#rehydrate-an-archived-blob-to-an-online-tier
    */
   rehydratePriority?: RehydratePriority;
 }
@@ -759,7 +759,7 @@ export interface CommonGenerateSasUrlOptions {
   /**
    * Optional. The name of the access policy on the container this SAS references if any.
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/establishing-a-stored-access-policy
+   * @see https://docs.microsoft.com/rest/api/storageservices/establishing-a-stored-access-policy
    */
   identifier?: string;
 
@@ -1085,7 +1085,7 @@ export class BlobClient extends StorageClient {
    * * In Node.js, data returns in a Readable stream readableStreamBody
    * * In browsers, data returns in a promise blobBody
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/get-blob
+   * @see https://docs.microsoft.com/rest/api/storageservices/get-blob
    *
    * @param offset - From which position of the blob to download, greater than or equal to 0
    * @param count - How much data to be downloaded, greater than 0. Will download to the end when undefined
@@ -1291,7 +1291,7 @@ export class BlobClient extends StorageClient {
   /**
    * Returns all user-defined metadata, standard HTTP properties, and system properties
    * for the blob. It does not return the content of the blob.
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/get-blob-properties
+   * @see https://docs.microsoft.com/rest/api/storageservices/get-blob-properties
    *
    * WARNING: The `metadata` object returned in the response will have its keys in lowercase, even if
    * they originally contained uppercase characters. This differs from the metadata keys returned by
@@ -1340,7 +1340,7 @@ export class BlobClient extends StorageClient {
    * during garbage collection. Note that in order to delete a blob, you must delete
    * all of its snapshots. You can delete both at the same time with the Delete
    * Blob operation.
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/delete-blob
+   * @see https://docs.microsoft.com/rest/api/storageservices/delete-blob
    *
    * @param options - Optional options to Blob Delete operation.
    */
@@ -1374,7 +1374,7 @@ export class BlobClient extends StorageClient {
    * during garbage collection. Note that in order to delete a blob, you must delete
    * all of its snapshots. You can delete both at the same time with the Delete
    * Blob operation.
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/delete-blob
+   * @see https://docs.microsoft.com/rest/api/storageservices/delete-blob
    *
    * @param options - Optional options to Blob Delete operation.
    */
@@ -1415,7 +1415,7 @@ export class BlobClient extends StorageClient {
    * Restores the contents and metadata of soft deleted blob and any associated
    * soft deleted snapshots. Undelete Blob is supported only on version 2017-07-29
    * or later.
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/undelete-blob
+   * @see https://docs.microsoft.com/rest/api/storageservices/undelete-blob
    *
    * @param options - Optional options to Blob Undelete operation.
    */
@@ -1442,7 +1442,7 @@ export class BlobClient extends StorageClient {
    *
    * If no value provided, or no value provided for the specified blob HTTP headers,
    * these blob HTTP headers without a value will be cleared.
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/set-blob-properties
+   * @see https://docs.microsoft.com/rest/api/storageservices/set-blob-properties
    *
    * @param blobHTTPHeaders - If no value provided, or no value provided for
    *                                                   the specified blob HTTP headers, these blob HTTP
@@ -1487,7 +1487,7 @@ export class BlobClient extends StorageClient {
    *
    * If no option provided, or no metadata defined in the parameter, the blob
    * metadata will be removed.
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/set-blob-metadata
+   * @see https://docs.microsoft.com/rest/api/storageservices/set-blob-metadata
    *
    * @param metadata - Replace existing metadata with this value.
    *                               If no value provided the existing metadata will be removed.
@@ -1603,7 +1603,7 @@ export class BlobClient extends StorageClient {
 
   /**
    * Creates a read-only snapshot of a blob.
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/snapshot-blob
+   * @see https://docs.microsoft.com/rest/api/storageservices/snapshot-blob
    *
    * @param options - Optional options to the Blob Create Snapshot operation.
    */
@@ -1651,7 +1651,7 @@ export class BlobClient extends StorageClient {
    * an Azure file in any Azure storage account.
    * Only storage accounts created on or after June 7th, 2012 allow the Copy Blob
    * operation to copy from another storage account.
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/copy-blob
+   * @see https://docs.microsoft.com/rest/api/storageservices/copy-blob
    *
    * Example using automatic polling:
    *
@@ -1739,7 +1739,7 @@ export class BlobClient extends StorageClient {
   /**
    * Aborts a pending asynchronous Copy Blob operation, and leaves a destination blob with zero
    * length and full metadata. Version 2012-02-12 and newer.
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/abort-copy-blob
+   * @see https://docs.microsoft.com/rest/api/storageservices/abort-copy-blob
    *
    * @param copyId - Id of the Copy From URL operation.
    * @param options - Optional options to the Blob Abort Copy From URL operation.
@@ -1769,7 +1769,7 @@ export class BlobClient extends StorageClient {
   /**
    * The synchronous Copy From URL operation copies a blob or an internet resource to a new blob. It will not
    * return a response until the copy is complete.
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/copy-blob-from-url
+   * @see https://docs.microsoft.com/rest/api/storageservices/copy-blob-from-url
    *
    * @param copySource - The source URL to copy from, Shared Access Signature(SAS) maybe needed for authentication
    * @param options -
@@ -1823,7 +1823,7 @@ export class BlobClient extends StorageClient {
    * storage only). A premium page blob's tier determines the allowed size, IOPS,
    * and bandwidth of the blob. A block blob's tier determines Hot/Cool/Archive
    * storage type. This operation does not update the blob's ETag.
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/set-blob-tier
+   * @see https://docs.microsoft.com/rest/api/storageservices/set-blob-tier
    *
    * @param tier - The tier to be set on the blob. Valid values are Hot, Cool, or Archive.
    * @param options - Optional options to the Blob Set Tier operation.
@@ -2130,7 +2130,7 @@ export class BlobClient extends StorageClient {
    * an Azure file in any Azure storage account.
    * Only storage accounts created on or after June 7th, 2012 allow the Copy Blob
    * operation to copy from another storage account.
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/copy-blob
+   * @see https://docs.microsoft.com/rest/api/storageservices/copy-blob
    *
    * @param copySource - url to the source Azure Blob/File.
    * @param options - Optional options to the Blob Start Copy From URL operation.
@@ -2185,7 +2185,7 @@ export class BlobClient extends StorageClient {
    * Generates a Blob Service Shared Access Signature (SAS) URI based on the client properties
    * and parameters passed in. The SAS is signed by the shared key credential of the client.
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/constructing-a-service-sas
+   * @see https://docs.microsoft.com/rest/api/storageservices/constructing-a-service-sas
    *
    * @param options - Optional parameters.
    * @returns The SAS URI consisting of the URI to the resource represented by this client, followed by the generated SAS token.
@@ -2878,7 +2878,7 @@ export class AppendBlobClient extends BlobClient {
   /**
    * The Append Block operation commits a new block of data to the end of an existing append blob
    * where the contents are read from a source url.
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/append-block-from-url
+   * @see https://docs.microsoft.com/rest/api/storageservices/append-block-from-url
    *
    * @param sourceURL -
    *                 The url to the blob that will be the source of the copy. A source blob in the same storage account can
@@ -2976,7 +2976,7 @@ export interface BlockBlobUploadOptions extends CommonOptions {
   encryptionScope?: string;
   /**
    * Access tier.
-   * More Details - https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-storage-tiers
+   * More Details - https://docs.microsoft.com/azure/storage/blobs/storage-blob-storage-tiers
    */
   tier?: BlockBlobTier | string;
   /**
@@ -3003,7 +3003,7 @@ export interface BlockBlobUploadOptions extends CommonOptions {
 export interface BlockBlobSyncUploadFromURLOptions extends CommonOptions {
   /**
    * Server timeout in seconds.
-   * For more information, @see https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations
+   * For more information, @see https://docs.microsoft.com/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations
    */
   timeoutInSeconds?: number;
   /**
@@ -3030,7 +3030,7 @@ export interface BlockBlobSyncUploadFromURLOptions extends CommonOptions {
   encryptionScope?: string;
   /**
    * Access tier.
-   * More Details - https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-storage-tiers
+   * More Details - https://docs.microsoft.com/azure/storage/blobs/storage-blob-storage-tiers
    */
   tier?: BlockBlobTier | string;
   /**
@@ -3347,7 +3347,7 @@ export interface BlockBlobCommitBlockListOptions extends CommonOptions {
   legalHold?: boolean;
   /**
    * Access tier.
-   * More Details - https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-storage-tiers
+   * More Details - https://docs.microsoft.com/azure/storage/blobs/storage-blob-storage-tiers
    */
   tier?: BlockBlobTier | string;
 
@@ -3422,7 +3422,7 @@ export interface BlockBlobUploadStreamOptions extends CommonOptions {
 
   /**
    * Access tier.
-   * More Details - https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-storage-tiers
+   * More Details - https://docs.microsoft.com/azure/storage/blobs/storage-blob-storage-tiers
    */
   tier?: BlockBlobTier | string;
 }
@@ -3492,7 +3492,7 @@ export interface BlockBlobParallelUploadOptions extends CommonOptions {
 
   /**
    * Access tier.
-   * More Details - https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-storage-tiers
+   * More Details - https://docs.microsoft.com/azure/storage/blobs/storage-blob-storage-tiers
    */
   tier?: BlockBlobTier | string;
 }
@@ -3943,7 +3943,7 @@ export class BlockBlobClient extends BlobClient {
    * The Stage Block From URL operation creates a new block to be committed as part
    * of a blob where the contents are read from a URL.
    * This API is available starting in version 2018-03-28.
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/put-block-from-url
+   * @see https://docs.microsoft.com/rest/api/storageservices/put-block-from-url
    *
    * @param blockId - A 64-byte value that is base64-encoded
    * @param sourceURL - Specifies the URL of the blob. The value
@@ -4491,7 +4491,7 @@ export interface PageBlobCreateOptions extends CommonOptions {
   legalHold?: boolean;
   /**
    * Access tier.
-   * More Details - https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-storage-tiers
+   * More Details - https://docs.microsoft.com/azure/storage/blobs/storage-blob-storage-tiers
    */
   tier?: PremiumPageBlobTier | string;
   /**
@@ -4547,7 +4547,7 @@ export interface PageBlobCreateIfNotExistsOptions extends CommonOptions {
   legalHold?: boolean;
   /**
    * Access tier.
-   * More Details - https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-storage-tiers
+   * More Details - https://docs.microsoft.com/azure/storage/blobs/storage-blob-storage-tiers
    */
   tier?: PremiumPageBlobTier | string;
 }
@@ -5086,7 +5086,7 @@ export class PageBlobClient extends BlobClient {
   /**
    * The Upload Pages operation writes a range of pages to a page blob where the
    * contents are read from a URL.
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/put-page-from-url
+   * @see https://docs.microsoft.com/rest/api/storageservices/put-page-from-url
    *
    * @param sourceURL - Specify a URL to the copy source, Shared Access Signature(SAS) maybe needed for authentication
    * @param sourceOffset - The source offset to copy from. Pass 0 to copy from the beginning of source page blob
@@ -5354,7 +5354,7 @@ export class PageBlobClient extends BlobClient {
 
   /**
    * Sets a page blob's sequence number.
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/set-blob-properties
+   * @see https://docs.microsoft.com/rest/api/storageservices/set-blob-properties
    *
    * @param sequenceNumberAction - Indicates how the service should modify the blob's sequence number.
    * @param sequenceNumber - Required if sequenceNumberAction is max or update
@@ -5396,7 +5396,7 @@ export class PageBlobClient extends BlobClient {
    * copied snapshot are transferred to the destination.
    * The copied snapshots are complete copies of the original snapshot and can be read or copied from as usual.
    * @see https://docs.microsoft.com/rest/api/storageservices/incremental-copy-blob
-   * @see https://docs.microsoft.com/en-us/azure/virtual-machines/windows/incremental-snapshots
+   * @see https://docs.microsoft.com/azure/virtual-machines/windows/incremental-snapshots
    *
    * @param copySource - Specifies the name of the source page blob snapshot. For example,
    *                            https://myaccount.blob.core.windows.net/mycontainer/myblob?snapshot=<DateTime>

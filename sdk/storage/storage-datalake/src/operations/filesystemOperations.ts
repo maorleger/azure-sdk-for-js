@@ -112,7 +112,7 @@ export class FilesystemOperations {
   /**
    * Set properties for the filesystem.  This operation supports conditional HTTP requests.  For more
    * information, see [Specifying Conditional Headers for Blob Service
-   * Operations](https://docs.microsoft.com/en-us/rest/api/storageservices/specifying-conditional-headers-for-blob-service-operations).
+   * Operations](https://docs.microsoft.com/rest/api/storageservices/specifying-conditional-headers-for-blob-service-operations).
    * @summary Set Filesystem Properties
    * @param filesystem - The filesystem identifier.  The value must start and end with a letter or
    * number and must contain only letters, numbers, and the dash (-) character.  Consecutive dashes
@@ -220,7 +220,7 @@ export class FilesystemOperations {
    * directories within the filesystem, will fail with status code 404 (Not Found) while the
    * filesystem is being deleted. This operation supports conditional HTTP requests.  For more
    * information, see [Specifying Conditional Headers for Blob Service
-   * Operations](https://docs.microsoft.com/en-us/rest/api/storageservices/specifying-conditional-headers-for-blob-service-operations).
+   * Operations](https://docs.microsoft.com/rest/api/storageservices/specifying-conditional-headers-for-blob-service-operations).
    * @summary Delete Filesystem
    * @param filesystem - The filesystem identifier.  The value must start and end with a letter or
    * number and must contain only letters, numbers, and the dash (-) character.  Consecutive dashes

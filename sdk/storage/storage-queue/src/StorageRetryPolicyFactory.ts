@@ -26,7 +26,7 @@ export interface StorageRetryOptions {
    * Optional. Indicates the maximum time in ms allowed for any single try of an HTTP request.
    * A value of zero or undefined means that you accept our default timeout, 30s or 30 * 1000ms.
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/setting-timeouts-for-queue-service-operations
+   * @see https://docs.microsoft.com/rest/api/storageservices/setting-timeouts-for-queue-service-operations
    */
   readonly tryTimeoutInMs?: number;
 
@@ -49,7 +49,7 @@ export interface StorageRetryOptions {
    *
    * NOTE: Before setting this field, make sure you understand the issues around
    * reading stale and potentially-inconsistent data at
-   * {@link https://docs.microsoft.com/en-us/azure/storage/common/storage-designing-ha-apps-with-ragrs}
+   * {@link https://docs.microsoft.com/azure/storage/common/storage-designing-ha-apps-with-ragrs}
    */
   readonly secondaryHost?: string;
 }

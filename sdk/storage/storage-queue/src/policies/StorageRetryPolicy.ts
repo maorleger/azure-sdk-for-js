@@ -53,7 +53,7 @@ const DEFAULT_RETRY_OPTIONS: StorageRetryOptions = {
   retryDelayInMs: 4 * 1000,
   retryPolicyType: StorageRetryPolicyType.EXPONENTIAL,
   secondaryHost: "",
-  tryTimeoutInMs: 30 * 1000, // https://docs.microsoft.com/en-us/rest/api/storageservices/setting-timeouts-for-queue-service-operations
+  tryTimeoutInMs: 30 * 1000, // https://docs.microsoft.com/rest/api/storageservices/setting-timeouts-for-queue-service-operations
 };
 
 const RETRY_ABORT_ERROR = new AbortError("The operation was aborted.");

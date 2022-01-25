@@ -1045,19 +1045,19 @@ export interface NewsSearchOptionalParams extends msRest.RequestOptionsBase {
    * A comma-delimited list of one or more languages to use for user interface strings. The list is
    * in decreasing order of preference. For additional information, including expected format, see
    * [RFC2616](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html). This header and the
-   * [setLang](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#setlang)
+   * [setLang](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#setlang)
    * query parameter are mutually exclusive; do not specify both. If you set this header, you must
    * also specify the
-   * [cc](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#cc)
+   * [cc](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#cc)
    * query parameter. To determine the market to return results for, Bing uses the first supported
    * language it finds from the list and combines it with the cc parameter value. If the list does
    * not include a supported language, Bing finds the closest language and market that supports the
    * request or it uses an aggregated or default market for the results. To determine the market
    * that Bing used, see the BingAPIs-Market header. Use this header and the cc query parameter
    * only if you specify multiple languages. Otherwise, use the
-   * [mkt](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#mkt)
+   * [mkt](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#mkt)
    * and
-   * [setLang](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#setlang)
+   * [setLang](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#setlang)
    * query parameters. A user interface string is a string that's used as a label in a user
    * interface. There are few user interface strings in the JSON response objects. Any links to
    * Bing.com properties in the response objects apply the specified language.
@@ -1183,21 +1183,21 @@ export interface NewsSearchOptionalParams extends msRest.RequestOptionsBase {
    * country where Bing delivers results. The market must be in the form <language code>-<country
    * code>. For example, en-US. The string is case insensitive. For a list of possible market
    * values, see [Market
-   * Codes](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#market-codes).
+   * Codes](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#market-codes).
    * NOTE: If known, you are encouraged to always specify the market. Specifying the market helps
    * Bing route the request and return an appropriate and optimal response. If you specify a market
    * that is not listed in [Market
-   * Codes](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#market-codes),
+   * Codes](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#market-codes),
    * Bing uses a best fit market code based on an internal mapping that is subject to change. This
    * parameter and the
-   * [cc](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#cc)
+   * [cc](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#cc)
    * query parameter are mutually exclusive—do not specify both.
    */
   market?: string;
   /**
    * The zero-based offset that indicates the number of news to skip before returning news. The
    * default is 0. The offset should be less than
-   * ([totalEstimatedMatches](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#news-totalmatches)
+   * ([totalEstimatedMatches](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#news-totalmatches)
    * - count). Use this parameter along with the count parameter to page results. For example, if
    * your user interface displays 20 news per page, set count to 20 and offset to 0 to get the
    * first page of results. For each subsequent page, increment offset by 20 (for example, 0, 20,
@@ -1232,7 +1232,7 @@ export interface NewsSearchOptionalParams extends msRest.RequestOptionsBase {
    * (English). Although optional, you should always specify the language. Typically, you set
    * setLang to the same language specified by mkt unless the user wants the user interface strings
    * displayed in a different language. This parameter and the
-   * [Accept-Language](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#acceptlanguage)
+   * [Accept-Language](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#acceptlanguage)
    * header are mutually exclusive; do not specify both. A user interface string is a string that's
    * used as a label in a user interface. There are few user interface strings in the JSON response
    * objects. Also, any links to Bing.com properties in the response objects apply the specified
@@ -1250,7 +1250,7 @@ export interface NewsSearchOptionalParams extends msRest.RequestOptionsBase {
    * A Boolean value that determines whether display strings contain decoration markers such as hit
    * highlighting characters. If true, the strings may include markers. The default is false. To
    * specify whether to use Unicode characters or HTML tags as the markers, see the
-   * [textFormat](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#textformat)
+   * [textFormat](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#textformat)
    * query parameter. For information about hit highlighting, see [Hit
    * Highlighting](https://docs.microsoft.com/azure/cognitive-services/bing-news-search/hit-highlighting).
    */
@@ -1276,19 +1276,19 @@ export interface NewsCategoryOptionalParams extends msRest.RequestOptionsBase {
    * A comma-delimited list of one or more languages to use for user interface strings. The list is
    * in decreasing order of preference. For additional information, including expected format, see
    * [RFC2616](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html). This header and the
-   * [setLang](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#setlang)
+   * [setLang](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#setlang)
    * query parameter are mutually exclusive; do not specify both. If you set this header, you must
    * also specify the
-   * [cc](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#cc)
+   * [cc](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#cc)
    * query parameter. To determine the market to return results for, Bing uses the first supported
    * language it finds from the list and combines it with the cc parameter value. If the list does
    * not include a supported language, Bing finds the closest language and market that supports the
    * request or it uses an aggregated or default market for the results. To determine the market
    * that Bing used, see the BingAPIs-Market header. Use this header and the cc query parameter
    * only if you specify multiple languages. Otherwise, use the
-   * [mkt](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#mkt)
+   * [mkt](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#mkt)
    * and
-   * [setLang](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#setlang)
+   * [setLang](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#setlang)
    * query parameters. A user interface string is a string that's used as a label in a user
    * interface. There are few user interface strings in the JSON response objects. Any links to
    * Bing.com properties in the response objects apply the specified language.
@@ -1393,13 +1393,13 @@ export interface NewsCategoryOptionalParams extends msRest.RequestOptionsBase {
   /**
    * The category of articles to return. For example, Sports articles or Entertainment articles.
    * For a list of possible categories, see [News Categories by
-   * Market](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#categories-by-market).
+   * Market](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#categories-by-market).
    * Use this parameter only with News Category API. If you do not specify this parameter, the
    * response includes both: Headline articles typically published in the last 24 hours from any
    * category and articles from each parent category (up to four articles). If the article is a
    * headline, the article's headline field is set to true. By default, the response includes up to
    * 12 headline articles. To specify the number of headline articles to return, set the
-   * [headlineCount](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#headlineCount)
+   * [headlineCount](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#headlineCount)
    * query parameter.
    */
   category?: string;
@@ -1411,14 +1411,14 @@ export interface NewsCategoryOptionalParams extends msRest.RequestOptionsBase {
    * and offset to 0 to get the first page of results. For each subsequent page, increment offset
    * by 20 (for example, 0, 20, 40). It is possible for multiple pages to include some overlap in
    * results. If you do not specify the
-   * [category](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#category)
+   * [category](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#category)
    * parameter, Bing ignores this parameter.
    */
   count?: number;
   /**
    * The number of headline articles to return in the response. The default is 12. Specify this
    * parameter only if you do not specify the
-   * [category](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#category)
+   * [category](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#category)
    * parameter.
    */
   headlineCount?: number;
@@ -1428,27 +1428,27 @@ export interface NewsCategoryOptionalParams extends msRest.RequestOptionsBase {
    * country where Bing delivers results. The market must be in the form <language code>-<country
    * code>. For example, en-US. The string is case insensitive. For a list of possible market
    * values, see [Market
-   * Codes](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#market-codes).
+   * Codes](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#market-codes).
    * NOTE: If known, you are encouraged to always specify the market. Specifying the market helps
    * Bing route the request and return an appropriate and optimal response. If you specify a market
    * that is not listed in [Market
-   * Codes](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#market-codes),
+   * Codes](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#market-codes),
    * Bing uses a best fit market code based on an internal mapping that is subject to change. This
    * parameter and the
-   * [cc](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#cc)
+   * [cc](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#cc)
    * query parameter are mutually exclusive—do not specify both.
    */
   market?: string;
   /**
    * The zero-based offset that indicates the number of news to skip before returning news. The
    * default is 0. The offset should be less than
-   * ([totalEstimatedMatches](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#news-totalmatches)
+   * ([totalEstimatedMatches](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#news-totalmatches)
    * - count). Use this parameter along with the count parameter to page results. For example, if
    * your user interface displays 20 news per page, set count to 20 and offset to 0 to get the
    * first page of results. For each subsequent page, increment offset by 20 (for example, 0, 20,
    * 40). It is possible for multiple pages to include some overlap in results. If you do not
    * specify the
-   * [category](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#category)
+   * [category](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#category)
    * parameter, Bing ignores this parameter.
    */
   offset?: number;
@@ -1480,7 +1480,7 @@ export interface NewsCategoryOptionalParams extends msRest.RequestOptionsBase {
    * (English). Although optional, you should always specify the language. Typically, you set
    * setLang to the same language specified by mkt unless the user wants the user interface strings
    * displayed in a different language. This parameter and the
-   * [Accept-Language](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#acceptlanguage)
+   * [Accept-Language](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#acceptlanguage)
    * header are mutually exclusive; do not specify both. A user interface string is a string that's
    * used as a label in a user interface. There are few user interface strings in the JSON response
    * objects. Also, any links to Bing.com properties in the response objects apply the specified
@@ -1491,7 +1491,7 @@ export interface NewsCategoryOptionalParams extends msRest.RequestOptionsBase {
    * A Boolean value that determines whether display strings contain decoration markers such as hit
    * highlighting characters. If true, the strings may include markers. The default is false. To
    * specify whether to use Unicode characters or HTML tags as the markers, see the
-   * [textFormat](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#textformat)
+   * [textFormat](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#textformat)
    * query parameter. For information about hit highlighting, see [Hit
    * Highlighting](https://docs.microsoft.com/azure/cognitive-services/bing-news-search/hit-highlighting).
    */
@@ -1517,19 +1517,19 @@ export interface NewsTrendingOptionalParams extends msRest.RequestOptionsBase {
    * A comma-delimited list of one or more languages to use for user interface strings. The list is
    * in decreasing order of preference. For additional information, including expected format, see
    * [RFC2616](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html). This header and the
-   * [setLang](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#setlang)
+   * [setLang](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#setlang)
    * query parameter are mutually exclusive; do not specify both. If you set this header, you must
    * also specify the
-   * [cc](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#cc)
+   * [cc](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#cc)
    * query parameter. To determine the market to return results for, Bing uses the first supported
    * language it finds from the list and combines it with the cc parameter value. If the list does
    * not include a supported language, Bing finds the closest language and market that supports the
    * request or it uses an aggregated or default market for the results. To determine the market
    * that Bing used, see the BingAPIs-Market header. Use this header and the cc query parameter
    * only if you specify multiple languages. Otherwise, use the
-   * [mkt](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#mkt)
+   * [mkt](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#mkt)
    * and
-   * [setLang](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#setlang)
+   * [setLang](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#setlang)
    * query parameters. A user interface string is a string that's used as a label in a user
    * interface. There are few user interface strings in the JSON response objects. Any links to
    * Bing.com properties in the response objects apply the specified language.
@@ -1647,21 +1647,21 @@ export interface NewsTrendingOptionalParams extends msRest.RequestOptionsBase {
    * country where Bing delivers results. The market must be in the form <language code>-<country
    * code>. For example, en-US. The string is case insensitive. For a list of possible market
    * values, see [Market
-   * Codes](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#market-codes).
+   * Codes](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#market-codes).
    * NOTE: If known, you are encouraged to always specify the market. Specifying the market helps
    * Bing route the request and return an appropriate and optimal response. If you specify a market
    * that is not listed in [Market
-   * Codes](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#market-codes),
+   * Codes](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#market-codes),
    * Bing uses a best fit market code based on an internal mapping that is subject to change. This
    * parameter and the
-   * [cc](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#cc)
+   * [cc](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#cc)
    * query parameter are mutually exclusive—do not specify both.
    */
   market?: string;
   /**
    * The zero-based offset that indicates the number of news to skip before returning news. The
    * default is 0. The offset should be less than
-   * ([totalEstimatedMatches](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#news-totalmatches)
+   * ([totalEstimatedMatches](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#news-totalmatches)
    * - count). Use this parameter along with the count parameter to page results. For example, if
    * your user interface displays 20 news per page, set count to 20 and offset to 0 to get the
    * first page of results. For each subsequent page, increment offset by 20 (for example, 0, 20,
@@ -1686,7 +1686,7 @@ export interface NewsTrendingOptionalParams extends msRest.RequestOptionsBase {
    * (English). Although optional, you should always specify the language. Typically, you set
    * setLang to the same language specified by mkt unless the user wants the user interface strings
    * displayed in a different language. This parameter and the
-   * [Accept-Language](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#acceptlanguage)
+   * [Accept-Language](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#acceptlanguage)
    * header are mutually exclusive; do not specify both. A user interface string is a string that's
    * used as a label in a user interface. There are few user interface strings in the JSON response
    * objects. Also, any links to Bing.com properties in the response objects apply the specified
@@ -1712,7 +1712,7 @@ export interface NewsTrendingOptionalParams extends msRest.RequestOptionsBase {
    * A Boolean value that determines whether display strings contain decoration markers such as hit
    * highlighting characters. If true, the strings may include markers. The default is false. To
    * specify whether to use Unicode characters or HTML tags as the markers, see the
-   * [textFormat](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-news-api-v7-reference#textformat)
+   * [textFormat](https://docs.microsoft.com/rest/api/cognitiveservices/bing-news-api-v7-reference#textformat)
    * query parameter. For information about hit highlighting, see [Hit
    * Highlighting](https://docs.microsoft.com/azure/cognitive-services/bing-news-search/hit-highlighting).
    */

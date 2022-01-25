@@ -3702,7 +3702,7 @@ export interface ScheduledQueryRulesDeleteOptionalParams
 /** Optional parameters. */
 export interface ScheduledQueryRulesListBySubscriptionOptionalParams
   extends coreClient.OperationOptions {
-  /** The filter to apply on the operation. For more information please see https://msdn.microsoft.com/en-us/library/azure/dn931934.aspx */
+  /** The filter to apply on the operation. For more information please see https://msdn.microsoft.com/library/azure/dn931934.aspx */
   filter?: string;
 }
 
@@ -3712,7 +3712,7 @@ export type ScheduledQueryRulesListBySubscriptionResponse = LogSearchRuleResourc
 /** Optional parameters. */
 export interface ScheduledQueryRulesListByResourceGroupOptionalParams
   extends coreClient.OperationOptions {
-  /** The filter to apply on the operation. For more information please see https://msdn.microsoft.com/en-us/library/azure/dn931934.aspx */
+  /** The filter to apply on the operation. For more information please see https://msdn.microsoft.com/library/azure/dn931934.aspx */
   filter?: string;
 }
 

@@ -2317,9 +2317,9 @@ export interface ImageInfo {
   /**
    * An image insights token. To get the insights token, call one of the Image Search APIs (for
    * example, /images/search). In the search results, the
-   * [Image](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-images-api-v7-reference#image)
+   * [Image](https://docs.microsoft.com/rest/api/cognitiveservices/bing-images-api-v7-reference#image)
    * object's
-   * [imageInsightsToken](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-images-api-v7-reference#image-imageinsightstoken)
+   * [imageInsightsToken](https://docs.microsoft.com/rest/api/cognitiveservices/bing-images-api-v7-reference#image-imageinsightstoken)
    * field contains the token. The imageInsightsToken and url fields mutually exclusive; do not
    * specify both. Do not specify an insights token if the request includes the image form data.
    */
@@ -2397,19 +2397,19 @@ export interface ImagesVisualSearchOptionalParams extends msRest.RequestOptionsB
    * A comma-delimited list of one or more languages to use for user interface strings. The list is
    * in decreasing order of preference. For additional information, including expected format, see
    * [RFC2616](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html). This header and the
-   * [setLang](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-visual-search-api-v7-reference#setlang)
+   * [setLang](https://docs.microsoft.com/rest/api/cognitiveservices/bing-visual-search-api-v7-reference#setlang)
    * query parameter are mutually exclusive; do not specify both. If you set this header, you must
    * also specify the
-   * [cc](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-visual-search-api-v7-reference#cc)
+   * [cc](https://docs.microsoft.com/rest/api/cognitiveservices/bing-visual-search-api-v7-reference#cc)
    * query parameter. To determine the market to return results for, Bing uses the first supported
    * language it finds from the list and combines it with the cc parameter value. If the list does
    * not include a supported language, Bing finds the closest language and market that supports the
    * request or it uses an aggregated or default market for the results. To determine the market
    * that Bing used, see the BingAPIs-Market header. Use this header and the cc query parameter
    * only if you specify multiple languages. Otherwise, use the
-   * [mkt](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-visual-search-api-v7-reference#mkt)
+   * [mkt](https://docs.microsoft.com/rest/api/cognitiveservices/bing-visual-search-api-v7-reference#mkt)
    * and
-   * [setLang](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-visual-search-api-v7-reference#setlang)
+   * [setLang](https://docs.microsoft.com/rest/api/cognitiveservices/bing-visual-search-api-v7-reference#setlang)
    * query parameters. A user interface string is a string that's used as a label in a user
    * interface. There are few user interface strings in the JSON response objects. Any links to
    * Bing.com properties in the response objects apply the specified language.
@@ -2418,7 +2418,7 @@ export interface ImagesVisualSearchOptionalParams extends msRest.RequestOptionsB
   /**
    * Must be set to multipart/form-data and include a boundary parameter (for example,
    * multipart/form-data; boundary=<boundary string>). For more details, see [Content form types](
-   * https://docs.microsoft.com/en-us/azure/cognitive-services/bing-visual-search/overview#content-form-types).
+   * https://docs.microsoft.com/azure/cognitive-services/bing-visual-search/overview#content-form-types).
    */
   contentType?: string;
   /**
@@ -2510,11 +2510,11 @@ export interface ImagesVisualSearchOptionalParams extends msRest.RequestOptionsB
    * country where Bing delivers results. The market must be in the form <language code>-<country
    * code>. For example, en-US. The string is case insensitive. For a list of possible market
    * values, see [Market
-   * Codes](https://docs.microsoft.com/en-us/azure/cognitive-services/bing-visual-search/supported-countries-markets).
+   * Codes](https://docs.microsoft.com/azure/cognitive-services/bing-visual-search/supported-countries-markets).
    * NOTE: If known, you are encouraged to always specify the market. Specifying the market helps
    * Bing route the request and return an appropriate and optimal response. If you specify a market
    * that is not listed in [Market
-   * Codes](https://docs.microsoft.com/en-us/azure/cognitive-services/bing-visual-search/supported-countries-markets),
+   * Codes](https://docs.microsoft.com/azure/cognitive-services/bing-visual-search/supported-countries-markets),
    * Bing uses a best fit market code based on an internal mapping that is subject to change.
    */
   market?: string;

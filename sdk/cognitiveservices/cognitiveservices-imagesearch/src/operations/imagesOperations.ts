@@ -36,7 +36,7 @@ export class ImagesOperations {
    * Advanced Operators](http://msdn.microsoft.com/library/ff795620.aspx). For example, to limit
    * images to a specific domain, use the [site:](http://msdn.microsoft.com/library/ff795613.aspx)
    * operator. To help improve relevance of an insights query (see
-   * [insightsToken](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-images-api-v7-reference#insightstoken)),
+   * [insightsToken](https://docs.microsoft.com/rest/api/cognitiveservices/bing-images-api-v7-reference#insightstoken)),
    * you should always include the user's query term. Use this parameter only with the Image Search
    * API.Do not specify this parameter when calling the Trending Images API.
    * @param [options] The optional parameters
@@ -48,7 +48,7 @@ export class ImagesOperations {
    * Advanced Operators](http://msdn.microsoft.com/library/ff795620.aspx). For example, to limit
    * images to a specific domain, use the [site:](http://msdn.microsoft.com/library/ff795613.aspx)
    * operator. To help improve relevance of an insights query (see
-   * [insightsToken](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-images-api-v7-reference#insightstoken)),
+   * [insightsToken](https://docs.microsoft.com/rest/api/cognitiveservices/bing-images-api-v7-reference#insightstoken)),
    * you should always include the user's query term. Use this parameter only with the Image Search
    * API.Do not specify this parameter when calling the Trending Images API.
    * @param callback The callback
@@ -59,7 +59,7 @@ export class ImagesOperations {
    * Advanced Operators](http://msdn.microsoft.com/library/ff795620.aspx). For example, to limit
    * images to a specific domain, use the [site:](http://msdn.microsoft.com/library/ff795613.aspx)
    * operator. To help improve relevance of an insights query (see
-   * [insightsToken](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-images-api-v7-reference#insightstoken)),
+   * [insightsToken](https://docs.microsoft.com/rest/api/cognitiveservices/bing-images-api-v7-reference#insightstoken)),
    * you should always include the user's query term. Use this parameter only with the Image Search
    * API.Do not specify this parameter when calling the Trending Images API.
    * @param options The optional parameters
@@ -87,7 +87,7 @@ export class ImagesOperations {
    * Advanced Operators](http://msdn.microsoft.com/library/ff795620.aspx). For example, to limit
    * images to a specific domain, use the [site:](http://msdn.microsoft.com/library/ff795613.aspx)
    * operator. To help improve relevance of an insights query (see
-   * [insightsToken](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-images-api-v7-reference#insightstoken)),
+   * [insightsToken](https://docs.microsoft.com/rest/api/cognitiveservices/bing-images-api-v7-reference#insightstoken)),
    * you should always include the user's query term. Use this parameter only with the Image Search
    * API.Do not specify this parameter when calling the Trending Images API.
    * @param [options] The optional parameters
@@ -99,7 +99,7 @@ export class ImagesOperations {
    * Advanced Operators](http://msdn.microsoft.com/library/ff795620.aspx). For example, to limit
    * images to a specific domain, use the [site:](http://msdn.microsoft.com/library/ff795613.aspx)
    * operator. To help improve relevance of an insights query (see
-   * [insightsToken](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-images-api-v7-reference#insightstoken)),
+   * [insightsToken](https://docs.microsoft.com/rest/api/cognitiveservices/bing-images-api-v7-reference#insightstoken)),
    * you should always include the user's query term. Use this parameter only with the Image Search
    * API.Do not specify this parameter when calling the Trending Images API.
    * @param callback The callback
@@ -110,7 +110,7 @@ export class ImagesOperations {
    * Advanced Operators](http://msdn.microsoft.com/library/ff795620.aspx). For example, to limit
    * images to a specific domain, use the [site:](http://msdn.microsoft.com/library/ff795613.aspx)
    * operator. To help improve relevance of an insights query (see
-   * [insightsToken](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-images-api-v7-reference#insightstoken)),
+   * [insightsToken](https://docs.microsoft.com/rest/api/cognitiveservices/bing-images-api-v7-reference#insightstoken)),
    * you should always include the user's query term. Use this parameter only with the Image Search
    * API.Do not specify this parameter when calling the Trending Images API.
    * @param options The optional parameters
@@ -132,7 +132,7 @@ export class ImagesOperations {
    * that are trending based on search requests made by others. The images are broken out into
    * different categories. For example, Popular People Searches. For a list of markets that support
    * trending images, see [Trending
-   * Images](https://docs.microsoft.com/en-us/azure/cognitive-services/bing-image-search/trending-images).
+   * Images](https://docs.microsoft.com/azure/cognitive-services/bing-image-search/trending-images).
    * @param [options] The optional parameters
    * @returns Promise<Models.ImagesTrendingResponse>
    */

@@ -223,10 +223,7 @@ export type TriggerUnion =
   | MultiplePipelineTriggerUnion
   | TumblingWindowTrigger
   | ChainingTrigger;
-export type SecretBaseUnion =
-  | SecretBase
-  | SecureString
-  | AzureKeyVaultSecretReference;
+export type SecretBaseUnion = SecretBase | SecureString | AzureKeyVaultSecretReference;
 export type DatasetLocationUnion =
   | DatasetLocation
   | AzureBlobStorageLocation
@@ -2607,12 +2604,7 @@ export interface DatasetSchemaDataElement {
 /** The format definition of a storage. */
 export interface DatasetStorageFormat {
   /** Polymorphic discriminator, which specifies the different types this object can be */
-  type:
-    | "TextFormat"
-    | "JsonFormat"
-    | "AvroFormat"
-    | "OrcFormat"
-    | "ParquetFormat";
+  type: "TextFormat" | "JsonFormat" | "AvroFormat" | "OrcFormat" | "ParquetFormat";
   /** Describes unknown properties. The value of an unknown property can be of "any" type. */
   [property: string]: any;
   /** Serializer. Type: string (or Expression with resultType string). */
@@ -2719,11 +2711,7 @@ export interface DistcpSettings {
 /** Format read settings. */
 export interface FormatReadSettings {
   /** Polymorphic discriminator, which specifies the different types this object can be */
-  type:
-    | "DelimitedTextReadSettings"
-    | "JsonReadSettings"
-    | "XmlReadSettings"
-    | "BinaryReadSettings";
+  type: "DelimitedTextReadSettings" | "JsonReadSettings" | "XmlReadSettings" | "BinaryReadSettings";
   /** Describes unknown properties. The value of an unknown property can be of "any" type. */
   [property: string]: any;
 }
@@ -3372,7 +3360,7 @@ export interface TriggerReference {
 export interface IntegrationRuntimeComputeProperties {
   /** Describes unknown properties. The value of an unknown property can be of "any" type. */
   [property: string]: any;
-  /** The location for managed integration runtime. The supported regions could be found on https://docs.microsoft.com/en-us/azure/data-factory/data-factory-data-movement-activities */
+  /** The location for managed integration runtime. The supported regions could be found on https://docs.microsoft.com/azure/data-factory/data-factory-data-movement-activities */
   location?: string;
   /** The node size requirement to managed integration runtime. */
   nodeSize?: string;
@@ -3440,7 +3428,7 @@ export interface IntegrationRuntimeSsisCatalogInfo {
   catalogAdminUserName?: string;
   /** The password of the administrator user account of the catalog database. */
   catalogAdminPassword?: SecureString;
-  /** The pricing tier for the catalog database. The valid values could be found in https://azure.microsoft.com/en-us/pricing/details/sql-database/ */
+  /** The pricing tier for the catalog database. The valid values could be found in https://azure.microsoft.com/pricing/details/sql-database/ */
   catalogPricingTier?: IntegrationRuntimeSsisCatalogPricingTier;
 }
 
@@ -6331,7 +6319,7 @@ export type HDInsightOnDemandLinkedService = LinkedService & {
   dataNodeSize?: any;
   /** Specifies the size of the Zoo Keeper node for the HDInsight cluster. */
   zookeeperNodeSize?: any;
-  /** Custom script actions to run on HDI ondemand cluster once it's up. Please refer to https://docs.microsoft.com/en-us/azure/hdinsight/hdinsight-hadoop-customize-cluster-linux?toc=%2Fen-us%2Fazure%2Fhdinsight%2Fr-server%2FTOC.json&bc=%2Fen-us%2Fazure%2Fbread%2Ftoc.json#understanding-script-actions. */
+  /** Custom script actions to run on HDI ondemand cluster once it's up. Please refer to https://docs.microsoft.com/azure/hdinsight/hdinsight-hadoop-customize-cluster-linux?toc=%2Fen-us%2Fazure%2Fhdinsight%2Fr-server%2FTOC.json&bc=%2Fen-us%2Fazure%2Fbread%2Ftoc.json#understanding-script-actions. */
   scriptActions?: ScriptAction[];
   /** The ARM resource ID for the vNet to which the cluster should be joined after creation. Type: string (or Expression with resultType string). */
   virtualNetworkId?: any;
@@ -8348,9 +8336,7 @@ export type TabularTranslator = CopyTranslator & {
 /** Trigger referenced dependency. */
 export type TriggerDependencyReference = DependencyReference & {
   /** Polymorphic discriminator, which specifies the different types this object can be */
-  type:
-    | "TriggerDependencyReference"
-    | "TumblingWindowTriggerDependencyReference";
+  type: "TriggerDependencyReference" | "TumblingWindowTriggerDependencyReference";
   /** Referenced trigger. */
   referenceTrigger: TriggerReference;
 };
@@ -9840,7 +9826,7 @@ export interface DataFlowDebugSessionExecuteCommandHeaders {
 export enum KnownRequestStatus {
   Running = "Running",
   Completed = "Completed",
-  Failed = "Failed"
+  Failed = "Failed",
 }
 
 /**
@@ -9858,7 +9844,7 @@ export type RequestStatus = string;
 export enum KnownResourceStatus {
   Creating = "Creating",
   Created = "Created",
-  Failed = "Failed"
+  Failed = "Failed",
 }
 
 /**
@@ -9880,7 +9866,7 @@ export enum KnownNodeSize {
   Large = "Large",
   XLarge = "XLarge",
   XXLarge = "XXLarge",
-  XXXLarge = "XXXLarge"
+  XXXLarge = "XXXLarge",
 }
 
 /**
@@ -9901,7 +9887,7 @@ export type NodeSize = string;
 /** Known values of {@link NodeSizeFamily} that the service accepts. */
 export enum KnownNodeSizeFamily {
   None = "None",
-  MemoryOptimized = "MemoryOptimized"
+  MemoryOptimized = "MemoryOptimized",
 }
 
 /**
@@ -9917,7 +9903,7 @@ export type NodeSizeFamily = string;
 /** Known values of {@link IntegrationRuntimeType} that the service accepts. */
 export enum KnownIntegrationRuntimeType {
   Managed = "Managed",
-  SelfHosted = "SelfHosted"
+  SelfHosted = "SelfHosted",
 }
 
 /**
@@ -9932,7 +9918,7 @@ export type IntegrationRuntimeType = string;
 
 /** Known values of {@link Type} that the service accepts. */
 export enum KnownType {
-  LinkedServiceReference = "LinkedServiceReference"
+  LinkedServiceReference = "LinkedServiceReference",
 }
 
 /**
@@ -9952,7 +9938,7 @@ export enum KnownParameterType {
   Float = "Float",
   Bool = "Bool",
   Array = "Array",
-  SecureString = "SecureString"
+  SecureString = "SecureString",
 }
 
 /**
@@ -9972,7 +9958,7 @@ export type ParameterType = string;
 
 /** Known values of {@link IntegrationRuntimeReferenceType} that the service accepts. */
 export enum KnownIntegrationRuntimeReferenceType {
-  IntegrationRuntimeReference = "IntegrationRuntimeReference"
+  IntegrationRuntimeReference = "IntegrationRuntimeReference",
 }
 
 /**
@@ -9988,7 +9974,7 @@ export type IntegrationRuntimeReferenceType = string;
 export enum KnownDataFlowDebugCommandType {
   ExecutePreviewQuery = "executePreviewQuery",
   ExecuteStatisticsQuery = "executeStatisticsQuery",
-  ExecuteExpressionQuery = "executeExpressionQuery"
+  ExecuteExpressionQuery = "executeExpressionQuery",
 }
 
 /**
@@ -10004,7 +9990,7 @@ export type DataFlowDebugCommandType = string;
 
 /** Known values of {@link BigDataPoolReferenceType} that the service accepts. */
 export enum KnownBigDataPoolReferenceType {
-  BigDataPoolReference = "BigDataPoolReference"
+  BigDataPoolReference = "BigDataPoolReference",
 }
 
 /**
@@ -10021,7 +10007,7 @@ export enum KnownCellOutputType {
   ExecuteResult = "execute_result",
   DisplayData = "display_data",
   Stream = "stream",
-  Error = "error"
+  Error = "error",
 }
 
 /**
@@ -10041,7 +10027,7 @@ export enum KnownDependencyCondition {
   Succeeded = "Succeeded",
   Failed = "Failed",
   Skipped = "Skipped",
-  Completed = "Completed"
+  Completed = "Completed",
 }
 
 /**
@@ -10061,7 +10047,7 @@ export enum KnownVariableType {
   String = "String",
   Bool = "Bool",
   Boolean = "Boolean",
-  Array = "Array"
+  Array = "Array",
 }
 
 /**
@@ -10089,7 +10075,7 @@ export enum KnownRunQueryFilterOperand {
   TriggerName = "TriggerName",
   TriggerRunTimestamp = "TriggerRunTimestamp",
   RunGroupId = "RunGroupId",
-  LatestOnly = "LatestOnly"
+  LatestOnly = "LatestOnly",
 }
 
 /**
@@ -10117,7 +10103,7 @@ export enum KnownRunQueryFilterOperator {
   Equals = "Equals",
   NotEquals = "NotEquals",
   In = "In",
-  NotIn = "NotIn"
+  NotIn = "NotIn",
 }
 
 /**
@@ -10142,7 +10128,7 @@ export enum KnownRunQueryOrderByField {
   ActivityRunStart = "ActivityRunStart",
   ActivityRunEnd = "ActivityRunEnd",
   TriggerName = "TriggerName",
-  TriggerRunTimestamp = "TriggerRunTimestamp"
+  TriggerRunTimestamp = "TriggerRunTimestamp",
 }
 
 /**
@@ -10165,7 +10151,7 @@ export type RunQueryOrderByField = string;
 /** Known values of {@link RunQueryOrder} that the service accepts. */
 export enum KnownRunQueryOrder {
   ASC = "ASC",
-  Desc = "DESC"
+  Desc = "DESC",
 }
 
 /**
@@ -10181,7 +10167,7 @@ export type RunQueryOrder = string;
 /** Known values of {@link SparkJobType} that the service accepts. */
 export enum KnownSparkJobType {
   SparkBatch = "SparkBatch",
-  SparkSession = "SparkSession"
+  SparkSession = "SparkSession",
 }
 
 /**
@@ -10199,7 +10185,7 @@ export enum KnownSparkBatchJobResultType {
   Uncertain = "Uncertain",
   Succeeded = "Succeeded",
   Failed = "Failed",
-  Cancelled = "Cancelled"
+  Cancelled = "Cancelled",
 }
 
 /**
@@ -10218,7 +10204,7 @@ export type SparkBatchJobResultType = string;
 export enum KnownSchedulerCurrentState {
   Queued = "Queued",
   Scheduled = "Scheduled",
-  Ended = "Ended"
+  Ended = "Ended",
 }
 
 /**
@@ -10240,7 +10226,7 @@ export enum KnownPluginCurrentState {
   Submission = "Submission",
   Monitoring = "Monitoring",
   Cleanup = "Cleanup",
-  Ended = "Ended"
+  Ended = "Ended",
 }
 
 /**
@@ -10263,7 +10249,7 @@ export enum KnownSparkErrorSource {
   System = "System",
   User = "User",
   Unknown = "Unknown",
-  Dependency = "Dependency"
+  Dependency = "Dependency",
 }
 
 /**
@@ -10290,7 +10276,7 @@ export enum KnownLivyStates {
   Killed = "killed",
   Success = "success",
   Running = "running",
-  Recovering = "recovering"
+  Recovering = "recovering",
 }
 
 /**
@@ -10317,7 +10303,7 @@ export enum KnownCreateMode {
   Default = "Default",
   PointInTimeRestore = "PointInTimeRestore",
   Recovery = "Recovery",
-  Restore = "Restore"
+  Restore = "Restore",
 }
 
 /**
@@ -10334,7 +10320,7 @@ export type CreateMode = string;
 
 /** Known values of {@link SqlScriptType} that the service accepts. */
 export enum KnownSqlScriptType {
-  SqlQuery = "SqlQuery"
+  SqlQuery = "SqlQuery",
 }
 
 /**
@@ -10349,7 +10335,7 @@ export type SqlScriptType = string;
 /** Known values of {@link SqlConnectionType} that the service accepts. */
 export enum KnownSqlConnectionType {
   SqlOnDemand = "SqlOnDemand",
-  SqlPool = "SqlPool"
+  SqlPool = "SqlPool",
 }
 
 /**
@@ -10366,7 +10352,7 @@ export type SqlConnectionType = string;
 export enum KnownTriggerRuntimeState {
   Started = "Started",
   Stopped = "Stopped",
-  Disabled = "Disabled"
+  Disabled = "Disabled",
 }
 
 /**
@@ -10386,7 +10372,7 @@ export enum KnownEventSubscriptionStatus {
   Provisioning = "Provisioning",
   Deprovisioning = "Deprovisioning",
   Disabled = "Disabled",
-  Unknown = "Unknown"
+  Unknown = "Unknown",
 }
 
 /**
@@ -10406,7 +10392,7 @@ export type EventSubscriptionStatus = string;
 export enum KnownTriggerRunStatus {
   Succeeded = "Succeeded",
   Failed = "Failed",
-  Inprogress = "Inprogress"
+  Inprogress = "Inprogress",
 }
 
 /**
@@ -10422,7 +10408,7 @@ export type TriggerRunStatus = string;
 
 /** Known values of {@link ExpressionType} that the service accepts. */
 export enum KnownExpressionType {
-  Expression = "Expression"
+  Expression = "Expression",
 }
 
 /**
@@ -10436,7 +10422,7 @@ export type ExpressionType = string;
 
 /** Known values of {@link PipelineReferenceType} that the service accepts. */
 export enum KnownPipelineReferenceType {
-  PipelineReference = "PipelineReference"
+  PipelineReference = "PipelineReference",
 }
 
 /**
@@ -10450,7 +10436,7 @@ export type PipelineReferenceType = string;
 
 /** Known values of {@link DatasetReferenceType} that the service accepts. */
 export enum KnownDatasetReferenceType {
-  DatasetReference = "DatasetReference"
+  DatasetReference = "DatasetReference",
 }
 
 /**
@@ -10464,7 +10450,7 @@ export type DatasetReferenceType = string;
 
 /** Known values of {@link DataFlowReferenceType} that the service accepts. */
 export enum KnownDataFlowReferenceType {
-  DataFlowReference = "DataFlowReference"
+  DataFlowReference = "DataFlowReference",
 }
 
 /**
@@ -10478,7 +10464,7 @@ export type DataFlowReferenceType = string;
 
 /** Known values of {@link NotebookReferenceType} that the service accepts. */
 export enum KnownNotebookReferenceType {
-  NotebookReference = "NotebookReference"
+  NotebookReference = "NotebookReference",
 }
 
 /**
@@ -10492,7 +10478,7 @@ export type NotebookReferenceType = string;
 
 /** Known values of {@link SparkJobReferenceType} that the service accepts. */
 export enum KnownSparkJobReferenceType {
-  SparkJobDefinitionReference = "SparkJobDefinitionReference"
+  SparkJobDefinitionReference = "SparkJobDefinitionReference",
 }
 
 /**
@@ -10506,7 +10492,7 @@ export type SparkJobReferenceType = string;
 
 /** Known values of {@link SqlPoolReferenceType} that the service accepts. */
 export enum KnownSqlPoolReferenceType {
-  SqlPoolReference = "SqlPoolReference"
+  SqlPoolReference = "SqlPoolReference",
 }
 
 /**
@@ -10521,7 +10507,7 @@ export type SqlPoolReferenceType = string;
 /** Known values of {@link SybaseAuthenticationType} that the service accepts. */
 export enum KnownSybaseAuthenticationType {
   Basic = "Basic",
-  Windows = "Windows"
+  Windows = "Windows",
 }
 
 /**
@@ -10536,7 +10522,7 @@ export type SybaseAuthenticationType = string;
 
 /** Known values of {@link Db2AuthenticationType} that the service accepts. */
 export enum KnownDb2AuthenticationType {
-  Basic = "Basic"
+  Basic = "Basic",
 }
 
 /**
@@ -10551,7 +10537,7 @@ export type Db2AuthenticationType = string;
 /** Known values of {@link TeradataAuthenticationType} that the service accepts. */
 export enum KnownTeradataAuthenticationType {
   Basic = "Basic",
-  Windows = "Windows"
+  Windows = "Windows",
 }
 
 /**
@@ -10570,7 +10556,7 @@ export enum KnownODataAuthenticationType {
   Anonymous = "Anonymous",
   Windows = "Windows",
   AadServicePrincipal = "AadServicePrincipal",
-  ManagedServiceIdentity = "ManagedServiceIdentity"
+  ManagedServiceIdentity = "ManagedServiceIdentity",
 }
 
 /**
@@ -10589,7 +10575,7 @@ export type ODataAuthenticationType = string;
 /** Known values of {@link ODataAadServicePrincipalCredentialType} that the service accepts. */
 export enum KnownODataAadServicePrincipalCredentialType {
   ServicePrincipalKey = "ServicePrincipalKey",
-  ServicePrincipalCert = "ServicePrincipalCert"
+  ServicePrincipalCert = "ServicePrincipalCert",
 }
 
 /**
@@ -10606,7 +10592,7 @@ export type ODataAadServicePrincipalCredentialType = string;
 export enum KnownWebAuthenticationType {
   Basic = "Basic",
   Anonymous = "Anonymous",
-  ClientCertificate = "ClientCertificate"
+  ClientCertificate = "ClientCertificate",
 }
 
 /**
@@ -10623,7 +10609,7 @@ export type WebAuthenticationType = string;
 /** Known values of {@link MongoDbAuthenticationType} that the service accepts. */
 export enum KnownMongoDbAuthenticationType {
   Basic = "Basic",
-  Anonymous = "Anonymous"
+  Anonymous = "Anonymous",
 }
 
 /**
@@ -10641,7 +10627,7 @@ export enum KnownRestServiceAuthenticationType {
   Anonymous = "Anonymous",
   Basic = "Basic",
   AadServicePrincipal = "AadServicePrincipal",
-  ManagedServiceIdentity = "ManagedServiceIdentity"
+  ManagedServiceIdentity = "ManagedServiceIdentity",
 }
 
 /**
@@ -10662,7 +10648,7 @@ export enum KnownHttpAuthenticationType {
   Anonymous = "Anonymous",
   Digest = "Digest",
   Windows = "Windows",
-  ClientCertificate = "ClientCertificate"
+  ClientCertificate = "ClientCertificate",
 }
 
 /**
@@ -10681,7 +10667,7 @@ export type HttpAuthenticationType = string;
 /** Known values of {@link FtpAuthenticationType} that the service accepts. */
 export enum KnownFtpAuthenticationType {
   Basic = "Basic",
-  Anonymous = "Anonymous"
+  Anonymous = "Anonymous",
 }
 
 /**
@@ -10697,7 +10683,7 @@ export type FtpAuthenticationType = string;
 /** Known values of {@link SftpAuthenticationType} that the service accepts. */
 export enum KnownSftpAuthenticationType {
   Basic = "Basic",
-  SshPublicKey = "SshPublicKey"
+  SshPublicKey = "SshPublicKey",
 }
 
 /**
@@ -10713,7 +10699,7 @@ export type SftpAuthenticationType = string;
 /** Known values of {@link SapHanaAuthenticationType} that the service accepts. */
 export enum KnownSapHanaAuthenticationType {
   Basic = "Basic",
-  Windows = "Windows"
+  Windows = "Windows",
 }
 
 /**
@@ -10729,7 +10715,7 @@ export type SapHanaAuthenticationType = string;
 /** Known values of {@link GoogleBigQueryAuthenticationType} that the service accepts. */
 export enum KnownGoogleBigQueryAuthenticationType {
   ServiceAuthentication = "ServiceAuthentication",
-  UserAuthentication = "UserAuthentication"
+  UserAuthentication = "UserAuthentication",
 }
 
 /**
@@ -10745,7 +10731,7 @@ export type GoogleBigQueryAuthenticationType = string;
 /** Known values of {@link HBaseAuthenticationType} that the service accepts. */
 export enum KnownHBaseAuthenticationType {
   Anonymous = "Anonymous",
-  Basic = "Basic"
+  Basic = "Basic",
 }
 
 /**
@@ -10762,7 +10748,7 @@ export type HBaseAuthenticationType = string;
 export enum KnownHiveServerType {
   HiveServer1 = "HiveServer1",
   HiveServer2 = "HiveServer2",
-  HiveThriftServer = "HiveThriftServer"
+  HiveThriftServer = "HiveThriftServer",
 }
 
 /**
@@ -10780,7 +10766,7 @@ export type HiveServerType = string;
 export enum KnownHiveThriftTransportProtocol {
   Binary = "Binary",
   Sasl = "SASL",
-  Http = "HTTP "
+  Http = "HTTP ",
 }
 
 /**
@@ -10799,7 +10785,7 @@ export enum KnownHiveAuthenticationType {
   Anonymous = "Anonymous",
   Username = "Username",
   UsernameAndPassword = "UsernameAndPassword",
-  WindowsAzureHDInsightService = "WindowsAzureHDInsightService"
+  WindowsAzureHDInsightService = "WindowsAzureHDInsightService",
 }
 
 /**
@@ -10818,7 +10804,7 @@ export type HiveAuthenticationType = string;
 export enum KnownImpalaAuthenticationType {
   Anonymous = "Anonymous",
   SaslUsername = "SASLUsername",
-  UsernameAndPassword = "UsernameAndPassword"
+  UsernameAndPassword = "UsernameAndPassword",
 }
 
 /**
@@ -10836,7 +10822,7 @@ export type ImpalaAuthenticationType = string;
 export enum KnownPhoenixAuthenticationType {
   Anonymous = "Anonymous",
   UsernameAndPassword = "UsernameAndPassword",
-  WindowsAzureHDInsightService = "WindowsAzureHDInsightService"
+  WindowsAzureHDInsightService = "WindowsAzureHDInsightService",
 }
 
 /**
@@ -10853,7 +10839,7 @@ export type PhoenixAuthenticationType = string;
 /** Known values of {@link PrestoAuthenticationType} that the service accepts. */
 export enum KnownPrestoAuthenticationType {
   Anonymous = "Anonymous",
-  Ldap = "LDAP"
+  Ldap = "LDAP",
 }
 
 /**
@@ -10869,7 +10855,7 @@ export type PrestoAuthenticationType = string;
 /** Known values of {@link ServiceNowAuthenticationType} that the service accepts. */
 export enum KnownServiceNowAuthenticationType {
   Basic = "Basic",
-  OAuth2 = "OAuth2"
+  OAuth2 = "OAuth2",
 }
 
 /**
@@ -10886,7 +10872,7 @@ export type ServiceNowAuthenticationType = string;
 export enum KnownSparkServerType {
   SharkServer = "SharkServer",
   SharkServer2 = "SharkServer2",
-  SparkThriftServer = "SparkThriftServer"
+  SparkThriftServer = "SparkThriftServer",
 }
 
 /**
@@ -10904,7 +10890,7 @@ export type SparkServerType = string;
 export enum KnownSparkThriftTransportProtocol {
   Binary = "Binary",
   Sasl = "SASL",
-  Http = "HTTP "
+  Http = "HTTP ",
 }
 
 /**
@@ -10923,7 +10909,7 @@ export enum KnownSparkAuthenticationType {
   Anonymous = "Anonymous",
   Username = "Username",
   UsernameAndPassword = "UsernameAndPassword",
-  WindowsAzureHDInsightService = "WindowsAzureHDInsightService"
+  WindowsAzureHDInsightService = "WindowsAzureHDInsightService",
 }
 
 /**
@@ -10941,7 +10927,7 @@ export type SparkAuthenticationType = string;
 /** Known values of {@link GoogleAdWordsAuthenticationType} that the service accepts. */
 export enum KnownGoogleAdWordsAuthenticationType {
   ServiceAuthentication = "ServiceAuthentication",
-  UserAuthentication = "UserAuthentication"
+  UserAuthentication = "UserAuthentication",
 }
 
 /**
@@ -10957,7 +10943,7 @@ export type GoogleAdWordsAuthenticationType = string;
 /** Known values of {@link SalesforceSourceReadBehavior} that the service accepts. */
 export enum KnownSalesforceSourceReadBehavior {
   Query = "Query",
-  QueryAll = "QueryAll"
+  QueryAll = "QueryAll",
 }
 
 /**
@@ -10974,7 +10960,7 @@ export type SalesforceSourceReadBehavior = string;
 export enum KnownSapHanaPartitionOption {
   None = "None",
   PhysicalPartitionsOfTable = "PhysicalPartitionsOfTable",
-  SapHanaDynamicRange = "SapHanaDynamicRange"
+  SapHanaDynamicRange = "SapHanaDynamicRange",
 }
 
 /**
@@ -10995,7 +10981,7 @@ export enum KnownSapTablePartitionOption {
   PartitionOnCalendarYear = "PartitionOnCalendarYear",
   PartitionOnCalendarMonth = "PartitionOnCalendarMonth",
   PartitionOnCalendarDate = "PartitionOnCalendarDate",
-  PartitionOnTime = "PartitionOnTime"
+  PartitionOnTime = "PartitionOnTime",
 }
 
 /**
@@ -11020,7 +11006,7 @@ export enum KnownStoredProcedureParameterType {
   Decimal = "Decimal",
   Guid = "Guid",
   Boolean = "Boolean",
-  Date = "Date"
+  Date = "Date",
 }
 
 /**
@@ -11042,7 +11028,7 @@ export type StoredProcedureParameterType = string;
 export enum KnownOraclePartitionOption {
   None = "None",
   PhysicalPartitionsOfTable = "PhysicalPartitionsOfTable",
-  DynamicRange = "DynamicRange"
+  DynamicRange = "DynamicRange",
 }
 
 /**
@@ -11060,7 +11046,7 @@ export type OraclePartitionOption = string;
 export enum KnownTeradataPartitionOption {
   None = "None",
   Hash = "Hash",
-  DynamicRange = "DynamicRange"
+  DynamicRange = "DynamicRange",
 }
 
 /**
@@ -11085,7 +11071,7 @@ export enum KnownCassandraSourceReadConsistencyLevels {
   Three = "THREE",
   LocalONE = "LOCAL_ONE",
   Serial = "SERIAL",
-  LocalSerial = "LOCAL_SERIAL"
+  LocalSerial = "LOCAL_SERIAL",
 }
 
 /**
@@ -11110,7 +11096,7 @@ export type CassandraSourceReadConsistencyLevels = string;
 export enum KnownNetezzaPartitionOption {
   None = "None",
   DataSlice = "DataSlice",
-  DynamicRange = "DynamicRange"
+  DynamicRange = "DynamicRange",
 }
 
 /**
@@ -11129,7 +11115,7 @@ export enum KnownNotebookParameterType {
   String = "string",
   Int = "int",
   Float = "float",
-  Bool = "bool"
+  Bool = "bool",
 }
 
 /**
@@ -11147,7 +11133,7 @@ export type NotebookParameterType = string;
 /** Known values of {@link SapCloudForCustomerSinkWriteBehavior} that the service accepts. */
 export enum KnownSapCloudForCustomerSinkWriteBehavior {
   Insert = "Insert",
-  Update = "Update"
+  Update = "Update",
 }
 
 /**
@@ -11163,7 +11149,7 @@ export type SapCloudForCustomerSinkWriteBehavior = string;
 /** Known values of {@link PolybaseSettingsRejectType} that the service accepts. */
 export enum KnownPolybaseSettingsRejectType {
   Value = "value",
-  Percentage = "percentage"
+  Percentage = "percentage",
 }
 
 /**
@@ -11179,7 +11165,7 @@ export type PolybaseSettingsRejectType = string;
 /** Known values of {@link AzureSearchIndexWriteBehaviorType} that the service accepts. */
 export enum KnownAzureSearchIndexWriteBehaviorType {
   Merge = "Merge",
-  Upload = "Upload"
+  Upload = "Upload",
 }
 
 /**
@@ -11194,7 +11180,7 @@ export type AzureSearchIndexWriteBehaviorType = string;
 
 /** Known values of {@link DynamicsSinkWriteBehavior} that the service accepts. */
 export enum KnownDynamicsSinkWriteBehavior {
-  Upsert = "Upsert"
+  Upsert = "Upsert",
 }
 
 /**
@@ -11209,7 +11195,7 @@ export type DynamicsSinkWriteBehavior = string;
 /** Known values of {@link SalesforceSinkWriteBehavior} that the service accepts. */
 export enum KnownSalesforceSinkWriteBehavior {
   Insert = "Insert",
-  Upsert = "Upsert"
+  Upsert = "Upsert",
 }
 
 /**
@@ -11226,7 +11212,7 @@ export type SalesforceSinkWriteBehavior = string;
 export enum KnownHDInsightActivityDebugInfoOption {
   None = "None",
   Always = "Always",
-  Failure = "Failure"
+  Failure = "Failure",
 }
 
 /**
@@ -11245,7 +11231,7 @@ export enum KnownSsisPackageLocationType {
   Ssisdb = "SSISDB",
   File = "File",
   InlinePackage = "InlinePackage",
-  PackageStore = "PackageStore"
+  PackageStore = "PackageStore",
 }
 
 /**
@@ -11262,7 +11248,7 @@ export type SsisPackageLocationType = string;
 
 /** Known values of {@link SsisLogLocationType} that the service accepts. */
 export enum KnownSsisLogLocationType {
-  File = "File"
+  File = "File",
 }
 
 /**
@@ -11279,7 +11265,7 @@ export enum KnownWebActivityMethod {
   GET = "GET",
   Post = "POST",
   PUT = "PUT",
-  Delete = "DELETE"
+  Delete = "DELETE",
 }
 
 /**
@@ -11302,7 +11288,7 @@ export enum KnownAzureFunctionActivityMethod {
   Delete = "DELETE",
   Options = "OPTIONS",
   Head = "HEAD",
-  Trace = "TRACE"
+  Trace = "TRACE",
 }
 
 /**
@@ -11322,7 +11308,7 @@ export type AzureFunctionActivityMethod = string;
 
 /** Known values of {@link WebHookActivityMethod} that the service accepts. */
 export enum KnownWebHookActivityMethod {
-  Post = "POST"
+  Post = "POST",
 }
 
 /**
@@ -11338,7 +11324,7 @@ export type WebHookActivityMethod = string;
 export enum KnownDataFlowComputeType {
   General = "General",
   MemoryOptimized = "MemoryOptimized",
-  ComputeOptimized = "ComputeOptimized"
+  ComputeOptimized = "ComputeOptimized",
 }
 
 /**
@@ -11360,7 +11346,7 @@ export enum KnownRecurrenceFrequency {
   Day = "Day",
   Week = "Week",
   Month = "Month",
-  Year = "Year"
+  Year = "Year",
 }
 
 /**
@@ -11381,7 +11367,7 @@ export type RecurrenceFrequency = string;
 /** Known values of {@link BlobEventType} that the service accepts. */
 export enum KnownBlobEventType {
   MicrosoftStorageBlobCreated = "Microsoft.Storage.BlobCreated",
-  MicrosoftStorageBlobDeleted = "Microsoft.Storage.BlobDeleted"
+  MicrosoftStorageBlobDeleted = "Microsoft.Storage.BlobDeleted",
 }
 
 /**
@@ -11398,7 +11384,7 @@ export type BlobEventType = string;
 export enum KnownTumblingWindowFrequency {
   Minute = "Minute",
   Hour = "Hour",
-  Month = "Month"
+  Month = "Month",
 }
 
 /**
@@ -11414,7 +11400,7 @@ export type TumblingWindowFrequency = string;
 
 /** Known values of {@link TriggerReferenceType} that the service accepts. */
 export enum KnownTriggerReferenceType {
-  TriggerReference = "TriggerReference"
+  TriggerReference = "TriggerReference",
 }
 
 /**
@@ -11437,7 +11423,7 @@ export enum KnownIntegrationRuntimeState {
   Online = "Online",
   Limited = "Limited",
   Offline = "Offline",
-  AccessDenied = "AccessDenied"
+  AccessDenied = "AccessDenied",
 }
 
 /**
@@ -11463,7 +11449,7 @@ export enum KnownIntegrationRuntimeSsisCatalogPricingTier {
   Basic = "Basic",
   Standard = "Standard",
   Premium = "Premium",
-  PremiumRS = "PremiumRS"
+  PremiumRS = "PremiumRS",
 }
 
 /**
@@ -11481,7 +11467,7 @@ export type IntegrationRuntimeSsisCatalogPricingTier = string;
 /** Known values of {@link IntegrationRuntimeLicenseType} that the service accepts. */
 export enum KnownIntegrationRuntimeLicenseType {
   BasePrice = "BasePrice",
-  LicenseIncluded = "LicenseIncluded"
+  LicenseIncluded = "LicenseIncluded",
 }
 
 /**
@@ -11497,7 +11483,7 @@ export type IntegrationRuntimeLicenseType = string;
 /** Known values of {@link IntegrationRuntimeEntityReferenceType} that the service accepts. */
 export enum KnownIntegrationRuntimeEntityReferenceType {
   IntegrationRuntimeReference = "IntegrationRuntimeReference",
-  LinkedServiceReference = "LinkedServiceReference"
+  LinkedServiceReference = "LinkedServiceReference",
 }
 
 /**
@@ -11513,7 +11499,7 @@ export type IntegrationRuntimeEntityReferenceType = string;
 /** Known values of {@link IntegrationRuntimeEdition} that the service accepts. */
 export enum KnownIntegrationRuntimeEdition {
   Standard = "Standard",
-  Enterprise = "Enterprise"
+  Enterprise = "Enterprise",
 }
 
 /**
@@ -11529,7 +11515,7 @@ export type IntegrationRuntimeEdition = string;
 /** Known values of {@link JsonFormatFilePattern} that the service accepts. */
 export enum KnownJsonFormatFilePattern {
   SetOfObjects = "setOfObjects",
-  ArrayOfObjects = "arrayOfObjects"
+  ArrayOfObjects = "arrayOfObjects",
 }
 
 /**
@@ -11545,7 +11531,7 @@ export type JsonFormatFilePattern = string;
 /** Known values of {@link DatasetCompressionLevel} that the service accepts. */
 export enum KnownDatasetCompressionLevel {
   Optimal = "Optimal",
-  Fastest = "Fastest"
+  Fastest = "Fastest",
 }
 
 /**
@@ -11564,7 +11550,7 @@ export enum KnownAvroCompressionCodec {
   Deflate = "deflate",
   Snappy = "snappy",
   Xz = "xz",
-  Bzip2 = "bzip2"
+  Bzip2 = "bzip2",
 }
 
 /**
@@ -11585,7 +11571,7 @@ export enum KnownParquetCompressionCodecEnum {
   None = "none",
   Gzip = "gzip",
   Snappy = "snappy",
-  Lzo = "lzo"
+  Lzo = "lzo",
 }
 
 /**
@@ -11611,7 +11597,7 @@ export enum KnownCompressionCodec {
   Snappy = "snappy",
   Lz4 = "lz4",
   Tar = "tar",
-  TarGZip = "tarGZip"
+  TarGZip = "tarGZip",
 }
 
 /**
@@ -11637,7 +11623,7 @@ export enum KnownOrcCompressionCodec {
   None = "none",
   Zlib = "zlib",
   Snappy = "snappy",
-  Lzo = "lzo"
+  Lzo = "lzo",
 }
 
 /**
@@ -11655,7 +11641,7 @@ export type OrcCompressionCodec = string;
 /** Known values of {@link DynamicsDeploymentType} that the service accepts. */
 export enum KnownDynamicsDeploymentType {
   Online = "Online",
-  OnPremisesWithIfd = "OnPremisesWithIfd"
+  OnPremisesWithIfd = "OnPremisesWithIfd",
 }
 
 /**
@@ -11672,7 +11658,7 @@ export type DynamicsDeploymentType = string;
 export enum KnownDynamicsAuthenticationType {
   Office365 = "Office365",
   Ifd = "Ifd",
-  AADServicePrincipal = "AADServicePrincipal"
+  AADServicePrincipal = "AADServicePrincipal",
 }
 
 /**
@@ -11689,7 +11675,7 @@ export type DynamicsAuthenticationType = string;
 /** Known values of {@link DynamicsServicePrincipalCredentialType} that the service accepts. */
 export enum KnownDynamicsServicePrincipalCredentialType {
   ServicePrincipalKey = "ServicePrincipalKey",
-  ServicePrincipalCert = "ServicePrincipalCert"
+  ServicePrincipalCert = "ServicePrincipalCert",
 }
 
 /**
@@ -11706,7 +11692,7 @@ export type DynamicsServicePrincipalCredentialType = string;
 export enum KnownHdiNodeTypes {
   Headnode = "Headnode",
   Workernode = "Workernode",
-  Zookeeper = "Zookeeper"
+  Zookeeper = "Zookeeper",
 }
 
 /**
@@ -11723,7 +11709,7 @@ export type HdiNodeTypes = string;
 /** Known values of {@link JsonWriteFilePattern} that the service accepts. */
 export enum KnownJsonWriteFilePattern {
   SetOfObjects = "setOfObjects",
-  ArrayOfObjects = "arrayOfObjects"
+  ArrayOfObjects = "arrayOfObjects",
 }
 
 /**
@@ -11740,7 +11726,7 @@ export type JsonWriteFilePattern = string;
 export enum KnownAmazonRdsForOraclePartitionOption {
   None = "None",
   PhysicalPartitionsOfTable = "PhysicalPartitionsOfTable",
-  DynamicRange = "DynamicRange"
+  DynamicRange = "DynamicRange",
 }
 
 /**
@@ -11758,7 +11744,7 @@ export type AmazonRdsForOraclePartitionOption = string;
 export enum KnownCopyBehaviorType {
   PreserveHierarchy = "PreserveHierarchy",
   FlattenHierarchy = "FlattenHierarchy",
-  MergeFiles = "MergeFiles"
+  MergeFiles = "MergeFiles",
 }
 
 /**
@@ -11776,7 +11762,7 @@ export type CopyBehaviorType = string;
 export enum KnownSqlPartitionOption {
   None = "None",
   PhysicalPartitionsOfTable = "PhysicalPartitionsOfTable",
-  DynamicRange = "DynamicRange"
+  DynamicRange = "DynamicRange",
 }
 
 /**
@@ -11802,22 +11788,19 @@ export type DayOfWeek =
   | "Saturday";
 
 /** Optional parameters. */
-export interface KqlScriptsGetAllOptionalParams
-  extends coreClient.OperationOptions {}
+export interface KqlScriptsGetAllOptionalParams extends coreClient.OperationOptions {}
 
 /** Contains response data for the getAll operation. */
 export type KqlScriptsGetAllResponse = KqlScriptsResourceCollectionResponse;
 
 /** Optional parameters. */
-export interface KqlScriptsGetAllNextOptionalParams
-  extends coreClient.OperationOptions {}
+export interface KqlScriptsGetAllNextOptionalParams extends coreClient.OperationOptions {}
 
 /** Contains response data for the getAllNext operation. */
 export type KqlScriptsGetAllNextResponse = KqlScriptsResourceCollectionResponse;
 
 /** Optional parameters. */
-export interface KqlScriptCreateOrUpdateOptionalParams
-  extends coreClient.OperationOptions {
+export interface KqlScriptCreateOrUpdateOptionalParams extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -11828,15 +11811,13 @@ export interface KqlScriptCreateOrUpdateOptionalParams
 export type KqlScriptCreateOrUpdateResponse = KqlScriptResource;
 
 /** Optional parameters. */
-export interface KqlScriptGetByNameOptionalParams
-  extends coreClient.OperationOptions {}
+export interface KqlScriptGetByNameOptionalParams extends coreClient.OperationOptions {}
 
 /** Contains response data for the getByName operation. */
 export type KqlScriptGetByNameResponse = KqlScriptResource;
 
 /** Optional parameters. */
-export interface KqlScriptDeleteByNameOptionalParams
-  extends coreClient.OperationOptions {
+export interface KqlScriptDeleteByNameOptionalParams extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -11844,8 +11825,7 @@ export interface KqlScriptDeleteByNameOptionalParams
 }
 
 /** Optional parameters. */
-export interface KqlScriptRenameOptionalParams
-  extends coreClient.OperationOptions {
+export interface KqlScriptRenameOptionalParams extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -11853,36 +11833,33 @@ export interface KqlScriptRenameOptionalParams
 }
 
 /** Optional parameters. */
-export interface MetastoreRegisterOptionalParams
-  extends coreClient.OperationOptions {}
+export interface MetastoreRegisterOptionalParams extends coreClient.OperationOptions {}
 
 /** Contains response data for the register operation. */
 export type MetastoreRegisterResponse = MetastoreRegistrationResponse;
 
 /** Optional parameters. */
-export interface MetastoreGetDatabaseOperationsOptionalParams
-  extends coreClient.OperationOptions {}
+export interface MetastoreGetDatabaseOperationsOptionalParams extends coreClient.OperationOptions {}
 
 /** Contains response data for the getDatabaseOperations operation. */
 export type MetastoreGetDatabaseOperationsResponse = MetastoreRequestSuccessResponse;
 
 /** Optional parameters. */
-export interface MetastoreUpdateOptionalParams
-  extends coreClient.OperationOptions {}
+export interface MetastoreUpdateOptionalParams extends coreClient.OperationOptions {}
 
 /** Contains response data for the update operation. */
 export type MetastoreUpdateResponse = MetastoreUpdationResponse;
 
 /** Optional parameters. */
-export interface MetastoreDeleteOptionalParams
-  extends coreClient.OperationOptions {}
+export interface MetastoreDeleteOptionalParams extends coreClient.OperationOptions {}
 
 /** Optional parameters. */
 export interface SparkConfigurationGetSparkConfigurationsByWorkspaceOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the getSparkConfigurationsByWorkspace operation. */
-export type SparkConfigurationGetSparkConfigurationsByWorkspaceResponse = SparkConfigurationListResponse;
+export type SparkConfigurationGetSparkConfigurationsByWorkspaceResponse =
+  SparkConfigurationListResponse;
 
 /** Optional parameters. */
 export interface SparkConfigurationCreateOrUpdateSparkConfigurationOptionalParams
@@ -11931,25 +11908,23 @@ export interface SparkConfigurationGetSparkConfigurationsByWorkspaceNextOptional
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the getSparkConfigurationsByWorkspaceNext operation. */
-export type SparkConfigurationGetSparkConfigurationsByWorkspaceNextResponse = SparkConfigurationListResponse;
+export type SparkConfigurationGetSparkConfigurationsByWorkspaceNextResponse =
+  SparkConfigurationListResponse;
 
 /** Optional parameters. */
-export interface BigDataPoolsListOptionalParams
-  extends coreClient.OperationOptions {}
+export interface BigDataPoolsListOptionalParams extends coreClient.OperationOptions {}
 
 /** Contains response data for the list operation. */
 export type BigDataPoolsListResponse = BigDataPoolResourceInfoListResult;
 
 /** Optional parameters. */
-export interface BigDataPoolsGetOptionalParams
-  extends coreClient.OperationOptions {}
+export interface BigDataPoolsGetOptionalParams extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
 export type BigDataPoolsGetResponse = BigDataPoolResourceInfo;
 
 /** Optional parameters. */
-export interface DataFlowCreateOrUpdateDataFlowOptionalParams
-  extends coreClient.OperationOptions {
+export interface DataFlowCreateOrUpdateDataFlowOptionalParams extends coreClient.OperationOptions {
   /** ETag of the data flow entity. Should only be specified for update, for which it should match existing entity or can be * for unconditional update. */
   ifMatch?: string;
   /** Delay to wait until next poll, in milliseconds. */
@@ -11962,8 +11937,7 @@ export interface DataFlowCreateOrUpdateDataFlowOptionalParams
 export type DataFlowCreateOrUpdateDataFlowResponse = DataFlowResource;
 
 /** Optional parameters. */
-export interface DataFlowGetDataFlowOptionalParams
-  extends coreClient.OperationOptions {
+export interface DataFlowGetDataFlowOptionalParams extends coreClient.OperationOptions {
   /** ETag of the data flow entity. Should only be specified for get. If the ETag matches the existing entity tag, or if * was provided, then no content will be returned. */
   ifNoneMatch?: string;
 }
@@ -11972,8 +11946,7 @@ export interface DataFlowGetDataFlowOptionalParams
 export type DataFlowGetDataFlowResponse = DataFlowResource;
 
 /** Optional parameters. */
-export interface DataFlowDeleteDataFlowOptionalParams
-  extends coreClient.OperationOptions {
+export interface DataFlowDeleteDataFlowOptionalParams extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -11981,8 +11954,7 @@ export interface DataFlowDeleteDataFlowOptionalParams
 }
 
 /** Optional parameters. */
-export interface DataFlowRenameDataFlowOptionalParams
-  extends coreClient.OperationOptions {
+export interface DataFlowRenameDataFlowOptionalParams extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -12013,14 +11985,16 @@ export interface DataFlowDebugSessionCreateDataFlowDebugSessionOptionalParams
 }
 
 /** Contains response data for the createDataFlowDebugSession operation. */
-export type DataFlowDebugSessionCreateDataFlowDebugSessionResponse = CreateDataFlowDebugSessionResponse;
+export type DataFlowDebugSessionCreateDataFlowDebugSessionResponse =
+  CreateDataFlowDebugSessionResponse;
 
 /** Optional parameters. */
 export interface DataFlowDebugSessionQueryDataFlowDebugSessionsByWorkspaceOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the queryDataFlowDebugSessionsByWorkspace operation. */
-export type DataFlowDebugSessionQueryDataFlowDebugSessionsByWorkspaceResponse = QueryDataFlowDebugSessionsResponse;
+export type DataFlowDebugSessionQueryDataFlowDebugSessionsByWorkspaceResponse =
+  QueryDataFlowDebugSessionsResponse;
 
 /** Optional parameters. */
 export interface DataFlowDebugSessionAddDataFlowOptionalParams
@@ -12050,18 +12024,17 @@ export interface DataFlowDebugSessionQueryDataFlowDebugSessionsByWorkspaceNextOp
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the queryDataFlowDebugSessionsByWorkspaceNext operation. */
-export type DataFlowDebugSessionQueryDataFlowDebugSessionsByWorkspaceNextResponse = QueryDataFlowDebugSessionsResponse;
+export type DataFlowDebugSessionQueryDataFlowDebugSessionsByWorkspaceNextResponse =
+  QueryDataFlowDebugSessionsResponse;
 
 /** Optional parameters. */
-export interface DatasetGetDatasetsByWorkspaceOptionalParams
-  extends coreClient.OperationOptions {}
+export interface DatasetGetDatasetsByWorkspaceOptionalParams extends coreClient.OperationOptions {}
 
 /** Contains response data for the getDatasetsByWorkspace operation. */
 export type DatasetGetDatasetsByWorkspaceResponse = DatasetListResponse;
 
 /** Optional parameters. */
-export interface DatasetCreateOrUpdateDatasetOptionalParams
-  extends coreClient.OperationOptions {
+export interface DatasetCreateOrUpdateDatasetOptionalParams extends coreClient.OperationOptions {
   /** ETag of the dataset entity.  Should only be specified for update, for which it should match existing entity or can be * for unconditional update. */
   ifMatch?: string;
   /** Delay to wait until next poll, in milliseconds. */
@@ -12074,8 +12047,7 @@ export interface DatasetCreateOrUpdateDatasetOptionalParams
 export type DatasetCreateOrUpdateDatasetResponse = DatasetResource;
 
 /** Optional parameters. */
-export interface DatasetGetDatasetOptionalParams
-  extends coreClient.OperationOptions {
+export interface DatasetGetDatasetOptionalParams extends coreClient.OperationOptions {
   /** ETag of the dataset entity. Should only be specified for get. If the ETag matches the existing entity tag, or if * was provided, then no content will be returned. */
   ifNoneMatch?: string;
 }
@@ -12084,8 +12056,7 @@ export interface DatasetGetDatasetOptionalParams
 export type DatasetGetDatasetResponse = DatasetResource;
 
 /** Optional parameters. */
-export interface DatasetDeleteDatasetOptionalParams
-  extends coreClient.OperationOptions {
+export interface DatasetDeleteDatasetOptionalParams extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -12093,8 +12064,7 @@ export interface DatasetDeleteDatasetOptionalParams
 }
 
 /** Optional parameters. */
-export interface DatasetRenameDatasetOptionalParams
-  extends coreClient.OperationOptions {
+export interface DatasetRenameDatasetOptionalParams extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -12119,29 +12089,25 @@ export interface WorkspaceGitRepoManagementGetGitHubAccessTokenOptionalParams
 export type WorkspaceGitRepoManagementGetGitHubAccessTokenResponse = GitHubAccessTokenResponse;
 
 /** Optional parameters. */
-export interface IntegrationRuntimesListOptionalParams
-  extends coreClient.OperationOptions {}
+export interface IntegrationRuntimesListOptionalParams extends coreClient.OperationOptions {}
 
 /** Contains response data for the list operation. */
 export type IntegrationRuntimesListResponse = IntegrationRuntimeListResponse;
 
 /** Optional parameters. */
-export interface IntegrationRuntimesGetOptionalParams
-  extends coreClient.OperationOptions {}
+export interface IntegrationRuntimesGetOptionalParams extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
 export type IntegrationRuntimesGetResponse = IntegrationRuntimeResource;
 
 /** Optional parameters. */
-export interface LibraryListOptionalParams
-  extends coreClient.OperationOptions {}
+export interface LibraryListOptionalParams extends coreClient.OperationOptions {}
 
 /** Contains response data for the list operation. */
 export type LibraryListOperationResponse = LibraryListResponse;
 
 /** Optional parameters. */
-export interface LibraryFlushOptionalParams
-  extends coreClient.OperationOptions {
+export interface LibraryFlushOptionalParams extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -12149,15 +12115,13 @@ export interface LibraryFlushOptionalParams
 }
 
 /** Optional parameters. */
-export interface LibraryGetOperationResultOptionalParams
-  extends coreClient.OperationOptions {}
+export interface LibraryGetOperationResultOptionalParams extends coreClient.OperationOptions {}
 
 /** Contains response data for the getOperationResult operation. */
 export type LibraryGetOperationResultResponse = LibraryResource;
 
 /** Optional parameters. */
-export interface LibraryDeleteOptionalParams
-  extends coreClient.OperationOptions {
+export interface LibraryDeleteOptionalParams extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -12171,8 +12135,7 @@ export interface LibraryGetOptionalParams extends coreClient.OperationOptions {}
 export type LibraryGetResponse = LibraryResource;
 
 /** Optional parameters. */
-export interface LibraryCreateOptionalParams
-  extends coreClient.OperationOptions {
+export interface LibraryCreateOptionalParams extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -12180,15 +12143,13 @@ export interface LibraryCreateOptionalParams
 }
 
 /** Optional parameters. */
-export interface LibraryAppendOptionalParams
-  extends coreClient.OperationOptions {
+export interface LibraryAppendOptionalParams extends coreClient.OperationOptions {
   /** Set this header to a byte offset at which the block is expected to be appended. The request succeeds only if the current offset matches this value. Otherwise, the request fails with the AppendPositionConditionNotMet error (HTTP status code 412 – Precondition Failed) */
   blobConditionAppendPosition?: number;
 }
 
 /** Optional parameters. */
-export interface LibraryListNextOptionalParams
-  extends coreClient.OperationOptions {}
+export interface LibraryListNextOptionalParams extends coreClient.OperationOptions {}
 
 /** Contains response data for the listNext operation. */
 export type LibraryListNextResponse = LibraryListResponse;
@@ -12215,8 +12176,7 @@ export interface LinkedServiceCreateOrUpdateLinkedServiceOptionalParams
 export type LinkedServiceCreateOrUpdateLinkedServiceResponse = LinkedServiceResource;
 
 /** Optional parameters. */
-export interface LinkedServiceGetLinkedServiceOptionalParams
-  extends coreClient.OperationOptions {
+export interface LinkedServiceGetLinkedServiceOptionalParams extends coreClient.OperationOptions {
   /** ETag of the linked service entity. Should only be specified for get. If the ETag matches the existing entity tag, or if * was provided, then no content will be returned. */
   ifNoneMatch?: string;
 }
@@ -12264,8 +12224,7 @@ export interface NotebookGetNotebookSummaryByWorkSpaceOptionalParams
 export type NotebookGetNotebookSummaryByWorkSpaceResponse = NotebookListResponse;
 
 /** Optional parameters. */
-export interface NotebookCreateOrUpdateNotebookOptionalParams
-  extends coreClient.OperationOptions {
+export interface NotebookCreateOrUpdateNotebookOptionalParams extends coreClient.OperationOptions {
   /** ETag of the Note book entity.  Should only be specified for update, for which it should match existing entity or can be * for unconditional update. */
   ifMatch?: string;
   /** Delay to wait until next poll, in milliseconds. */
@@ -12278,8 +12237,7 @@ export interface NotebookCreateOrUpdateNotebookOptionalParams
 export type NotebookCreateOrUpdateNotebookResponse = NotebookResource;
 
 /** Optional parameters. */
-export interface NotebookGetNotebookOptionalParams
-  extends coreClient.OperationOptions {
+export interface NotebookGetNotebookOptionalParams extends coreClient.OperationOptions {
   /** ETag of the Notebook entity. Should only be specified for get. If the ETag matches the existing entity tag, or if * was provided, then no content will be returned. */
   ifNoneMatch?: string;
 }
@@ -12288,8 +12246,7 @@ export interface NotebookGetNotebookOptionalParams
 export type NotebookGetNotebookResponse = NotebookResource;
 
 /** Optional parameters. */
-export interface NotebookDeleteNotebookOptionalParams
-  extends coreClient.OperationOptions {
+export interface NotebookDeleteNotebookOptionalParams extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -12297,8 +12254,7 @@ export interface NotebookDeleteNotebookOptionalParams
 }
 
 /** Optional parameters. */
-export interface NotebookRenameNotebookOptionalParams
-  extends coreClient.OperationOptions {
+export interface NotebookRenameNotebookOptionalParams extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -12320,8 +12276,7 @@ export interface NotebookGetNotebookSummaryByWorkSpaceNextOptionalParams
 export type NotebookGetNotebookSummaryByWorkSpaceNextResponse = NotebookListResponse;
 
 /** Optional parameters. */
-export interface NotebookOperationResultGetOptionalParams
-  extends coreClient.OperationOptions {}
+export interface NotebookOperationResultGetOptionalParams extends coreClient.OperationOptions {}
 
 /** Optional parameters. */
 export interface PipelineGetPipelinesByWorkspaceOptionalParams
@@ -12331,8 +12286,7 @@ export interface PipelineGetPipelinesByWorkspaceOptionalParams
 export type PipelineGetPipelinesByWorkspaceResponse = PipelineListResponse;
 
 /** Optional parameters. */
-export interface PipelineCreateOrUpdatePipelineOptionalParams
-  extends coreClient.OperationOptions {
+export interface PipelineCreateOrUpdatePipelineOptionalParams extends coreClient.OperationOptions {
   /** ETag of the pipeline entity.  Should only be specified for update, for which it should match existing entity or can be * for unconditional update. */
   ifMatch?: string;
   /** Delay to wait until next poll, in milliseconds. */
@@ -12345,8 +12299,7 @@ export interface PipelineCreateOrUpdatePipelineOptionalParams
 export type PipelineCreateOrUpdatePipelineResponse = PipelineResource;
 
 /** Optional parameters. */
-export interface PipelineGetPipelineOptionalParams
-  extends coreClient.OperationOptions {
+export interface PipelineGetPipelineOptionalParams extends coreClient.OperationOptions {
   /** ETag of the pipeline entity. Should only be specified for get. If the ETag matches the existing entity tag, or if * was provided, then no content will be returned. */
   ifNoneMatch?: string;
 }
@@ -12355,8 +12308,7 @@ export interface PipelineGetPipelineOptionalParams
 export type PipelineGetPipelineResponse = PipelineResource;
 
 /** Optional parameters. */
-export interface PipelineDeletePipelineOptionalParams
-  extends coreClient.OperationOptions {
+export interface PipelineDeletePipelineOptionalParams extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -12364,8 +12316,7 @@ export interface PipelineDeletePipelineOptionalParams
 }
 
 /** Optional parameters. */
-export interface PipelineRenamePipelineOptionalParams
-  extends coreClient.OperationOptions {
+export interface PipelineRenamePipelineOptionalParams extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -12373,8 +12324,7 @@ export interface PipelineRenamePipelineOptionalParams
 }
 
 /** Optional parameters. */
-export interface PipelineCreatePipelineRunOptionalParams
-  extends coreClient.OperationOptions {
+export interface PipelineCreatePipelineRunOptionalParams extends coreClient.OperationOptions {
   /** Parameters of the pipeline run. These parameters will be used only if the runId is not specified. */
   parameters?: { [propertyName: string]: any };
   /** The pipeline run identifier. If run ID is specified the parameters of the specified run will be used to create a new run. */
@@ -12403,22 +12353,19 @@ export interface PipelineRunQueryPipelineRunsByWorkspaceOptionalParams
 export type PipelineRunQueryPipelineRunsByWorkspaceResponse = PipelineRunsQueryResponse;
 
 /** Optional parameters. */
-export interface PipelineRunGetPipelineRunOptionalParams
-  extends coreClient.OperationOptions {}
+export interface PipelineRunGetPipelineRunOptionalParams extends coreClient.OperationOptions {}
 
 /** Contains response data for the getPipelineRun operation. */
 export type PipelineRunGetPipelineRunResponse = PipelineRun;
 
 /** Optional parameters. */
-export interface PipelineRunQueryActivityRunsOptionalParams
-  extends coreClient.OperationOptions {}
+export interface PipelineRunQueryActivityRunsOptionalParams extends coreClient.OperationOptions {}
 
 /** Contains response data for the queryActivityRuns operation. */
 export type PipelineRunQueryActivityRunsResponse = ActivityRunsQueryResponse;
 
 /** Optional parameters. */
-export interface PipelineRunCancelPipelineRunOptionalParams
-  extends coreClient.OperationOptions {
+export interface PipelineRunCancelPipelineRunOptionalParams extends coreClient.OperationOptions {
   /** If true, cancel all the Child pipelines that are triggered by the current pipeline. */
   isRecursive?: boolean;
 }
@@ -12428,7 +12375,8 @@ export interface SparkJobDefinitionGetSparkJobDefinitionsByWorkspaceOptionalPara
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the getSparkJobDefinitionsByWorkspace operation. */
-export type SparkJobDefinitionGetSparkJobDefinitionsByWorkspaceResponse = SparkJobDefinitionsListResponse;
+export type SparkJobDefinitionGetSparkJobDefinitionsByWorkspaceResponse =
+  SparkJobDefinitionsListResponse;
 
 /** Optional parameters. */
 export interface SparkJobDefinitionCreateOrUpdateSparkJobDefinitionOptionalParams
@@ -12501,18 +12449,17 @@ export interface SparkJobDefinitionGetSparkJobDefinitionsByWorkspaceNextOptional
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the getSparkJobDefinitionsByWorkspaceNext operation. */
-export type SparkJobDefinitionGetSparkJobDefinitionsByWorkspaceNextResponse = SparkJobDefinitionsListResponse;
+export type SparkJobDefinitionGetSparkJobDefinitionsByWorkspaceNextResponse =
+  SparkJobDefinitionsListResponse;
 
 /** Optional parameters. */
-export interface SqlPoolsListOptionalParams
-  extends coreClient.OperationOptions {}
+export interface SqlPoolsListOptionalParams extends coreClient.OperationOptions {}
 
 /** Contains response data for the list operation. */
 export type SqlPoolsListResponse = SqlPoolInfoListResult;
 
 /** Optional parameters. */
-export interface SqlPoolsGetOptionalParams
-  extends coreClient.OperationOptions {}
+export interface SqlPoolsGetOptionalParams extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
 export type SqlPoolsGetResponse = SqlPool;
@@ -12539,8 +12486,7 @@ export interface SqlScriptCreateOrUpdateSqlScriptOptionalParams
 export type SqlScriptCreateOrUpdateSqlScriptResponse = SqlScriptResource;
 
 /** Optional parameters. */
-export interface SqlScriptGetSqlScriptOptionalParams
-  extends coreClient.OperationOptions {
+export interface SqlScriptGetSqlScriptOptionalParams extends coreClient.OperationOptions {
   /** ETag of the sql compute entity. Should only be specified for get. If the ETag matches the existing entity tag, or if * was provided, then no content will be returned. */
   ifNoneMatch?: string;
 }
@@ -12549,8 +12495,7 @@ export interface SqlScriptGetSqlScriptOptionalParams
 export type SqlScriptGetSqlScriptResponse = SqlScriptResource;
 
 /** Optional parameters. */
-export interface SqlScriptDeleteSqlScriptOptionalParams
-  extends coreClient.OperationOptions {
+export interface SqlScriptDeleteSqlScriptOptionalParams extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -12558,8 +12503,7 @@ export interface SqlScriptDeleteSqlScriptOptionalParams
 }
 
 /** Optional parameters. */
-export interface SqlScriptRenameSqlScriptOptionalParams
-  extends coreClient.OperationOptions {
+export interface SqlScriptRenameSqlScriptOptionalParams extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -12574,15 +12518,13 @@ export interface SqlScriptGetSqlScriptsByWorkspaceNextOptionalParams
 export type SqlScriptGetSqlScriptsByWorkspaceNextResponse = SqlScriptsListResponse;
 
 /** Optional parameters. */
-export interface TriggerGetTriggersByWorkspaceOptionalParams
-  extends coreClient.OperationOptions {}
+export interface TriggerGetTriggersByWorkspaceOptionalParams extends coreClient.OperationOptions {}
 
 /** Contains response data for the getTriggersByWorkspace operation. */
 export type TriggerGetTriggersByWorkspaceResponse = TriggerListResponse;
 
 /** Optional parameters. */
-export interface TriggerCreateOrUpdateTriggerOptionalParams
-  extends coreClient.OperationOptions {
+export interface TriggerCreateOrUpdateTriggerOptionalParams extends coreClient.OperationOptions {
   /** ETag of the trigger entity.  Should only be specified for update, for which it should match existing entity or can be * for unconditional update. */
   ifMatch?: string;
   /** Delay to wait until next poll, in milliseconds. */
@@ -12595,8 +12537,7 @@ export interface TriggerCreateOrUpdateTriggerOptionalParams
 export type TriggerCreateOrUpdateTriggerResponse = TriggerResource;
 
 /** Optional parameters. */
-export interface TriggerGetTriggerOptionalParams
-  extends coreClient.OperationOptions {
+export interface TriggerGetTriggerOptionalParams extends coreClient.OperationOptions {
   /** ETag of the trigger entity. Should only be specified for get. If the ETag matches the existing entity tag, or if * was provided, then no content will be returned. */
   ifNoneMatch?: string;
 }
@@ -12605,8 +12546,7 @@ export interface TriggerGetTriggerOptionalParams
 export type TriggerGetTriggerResponse = TriggerResource;
 
 /** Optional parameters. */
-export interface TriggerDeleteTriggerOptionalParams
-  extends coreClient.OperationOptions {
+export interface TriggerDeleteTriggerOptionalParams extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -12614,8 +12554,7 @@ export interface TriggerDeleteTriggerOptionalParams
 }
 
 /** Optional parameters. */
-export interface TriggerSubscribeTriggerToEventsOptionalParams
-  extends coreClient.OperationOptions {
+export interface TriggerSubscribeTriggerToEventsOptionalParams extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -12645,8 +12584,7 @@ export interface TriggerUnsubscribeTriggerFromEventsOptionalParams
 export type TriggerUnsubscribeTriggerFromEventsResponse = TriggerSubscriptionOperationStatus;
 
 /** Optional parameters. */
-export interface TriggerStartTriggerOptionalParams
-  extends coreClient.OperationOptions {
+export interface TriggerStartTriggerOptionalParams extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -12654,8 +12592,7 @@ export interface TriggerStartTriggerOptionalParams
 }
 
 /** Optional parameters. */
-export interface TriggerStopTriggerOptionalParams
-  extends coreClient.OperationOptions {
+export interface TriggerStopTriggerOptionalParams extends coreClient.OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /** A serialized poller which can be used to resume an existing paused Long-Running-Operation. */
@@ -12670,8 +12607,7 @@ export interface TriggerGetTriggersByWorkspaceNextOptionalParams
 export type TriggerGetTriggersByWorkspaceNextResponse = TriggerListResponse;
 
 /** Optional parameters. */
-export interface TriggerRunRerunTriggerInstanceOptionalParams
-  extends coreClient.OperationOptions {}
+export interface TriggerRunRerunTriggerInstanceOptionalParams extends coreClient.OperationOptions {}
 
 /** Optional parameters. */
 export interface TriggerRunCancelTriggerInstanceOptionalParams
@@ -12685,15 +12621,13 @@ export interface TriggerRunQueryTriggerRunsByWorkspaceOptionalParams
 export type TriggerRunQueryTriggerRunsByWorkspaceResponse = TriggerRunsQueryResponse;
 
 /** Optional parameters. */
-export interface WorkspaceGetOptionalParams
-  extends coreClient.OperationOptions {}
+export interface WorkspaceGetOptionalParams extends coreClient.OperationOptions {}
 
 /** Contains response data for the get operation. */
 export type WorkspaceGetResponse = Workspace;
 
 /** Optional parameters. */
-export interface ArtifactsClientOptionalParams
-  extends coreClient.ServiceClientOptions {
+export interface ArtifactsClientOptionalParams extends coreClient.ServiceClientOptions {
   /** Overrides client endpoint. */
   endpoint?: string;
 }

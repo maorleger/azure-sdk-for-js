@@ -27,7 +27,7 @@ export interface StorageRetryOptions {
    * A value of zero or undefined means no default timeout on SDK client, Azure
    * Storage server's default timeout policy will be used.
    *
-   * @see https://docs.microsoft.com/en-us/rest/api/storageservices/setting-timeouts-for-blob-service-operations
+   * @see https://docs.microsoft.com/rest/api/storageservices/setting-timeouts-for-blob-service-operations
    */
   readonly tryTimeoutInMs?: number;
 
@@ -50,7 +50,7 @@ export interface StorageRetryOptions {
    *
    * NOTE: Before setting this field, make sure you understand the issues around
    * reading stale and potentially-inconsistent data at
-   * {@link https://docs.microsoft.com/en-us/azure/storage/common/storage-designing-ha-apps-with-ragrs}
+   * {@link https://docs.microsoft.com/azure/storage/common/storage-designing-ha-apps-with-ragrs}
    */
   readonly secondaryHost?: string;
 }

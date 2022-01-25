@@ -32,7 +32,7 @@ export class SubscriptionsImpl implements Subscriptions {
    * Retrieves the subscription's current quota information in a particular region.
    * @param location The region in which to retrieve the subscription's quota information. You can find
    *                 out which regions Azure Stream Analytics is supported in here:
-   *                 https://azure.microsoft.com/en-us/regions/
+   *                 https://azure.microsoft.com/regions/
    * @param options The options parameters.
    */
   listQuotas(

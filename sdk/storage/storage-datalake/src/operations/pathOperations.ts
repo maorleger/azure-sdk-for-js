@@ -98,7 +98,7 @@ export class PathOperations {
    * destination already exists and has a lease the lease is broken.  This operation supports
    * conditional HTTP requests.  For more information, see [Specifying Conditional Headers for Blob
    * Service
-   * Operations](https://docs.microsoft.com/en-us/rest/api/storageservices/specifying-conditional-headers-for-blob-service-operations).
+   * Operations](https://docs.microsoft.com/rest/api/storageservices/specifying-conditional-headers-for-blob-service-operations).
    * To fail if the destination already exists, use a conditional request with If-None-Match: "*".
    * @summary Create File | Create Directory | Rename File | Rename Directory
    * @param filesystem - The filesystem identifier.
@@ -151,7 +151,7 @@ export class PathOperations {
    * properties for a file or directory, or sets access control for a file or directory. Data can
    * only be appended to a file. This operation supports conditional HTTP requests. For more
    * information, see [Specifying Conditional Headers for Blob Service
-   * Operations](https://docs.microsoft.com/en-us/rest/api/storageservices/specifying-conditional-headers-for-blob-service-operations).
+   * Operations](https://docs.microsoft.com/rest/api/storageservices/specifying-conditional-headers-for-blob-service-operations).
    * @summary Append Data | Flush Data | Set Properties | Set Access Control
    * @param action - The action must be "append" to upload data to be appended to a file, "flush" to
    * flush previously uploaded data to a file, "setProperties" to set the properties of a file or
@@ -235,7 +235,7 @@ export class PathOperations {
    * Create and manage a lease to restrict write and delete access to the path. This operation
    * supports conditional HTTP requests.  For more information, see [Specifying Conditional Headers
    * for Blob Service
-   * Operations](https://docs.microsoft.com/en-us/rest/api/storageservices/specifying-conditional-headers-for-blob-service-operations).
+   * Operations](https://docs.microsoft.com/rest/api/storageservices/specifying-conditional-headers-for-blob-service-operations).
    * @summary Lease Path
    * @param xMsLeaseAction - There are five lease actions: "acquire", "break", "change", "renew", and
    * "release". Use "acquire" and specify the "x-ms-proposed-lease-id" and "x-ms-lease-duration" to
@@ -325,7 +325,7 @@ export class PathOperations {
    * Read the contents of a file.  For read operations, range requests are supported. This operation
    * supports conditional HTTP requests.  For more information, see [Specifying Conditional Headers
    * for Blob Service
-   * Operations](https://docs.microsoft.com/en-us/rest/api/storageservices/specifying-conditional-headers-for-blob-service-operations).
+   * Operations](https://docs.microsoft.com/rest/api/storageservices/specifying-conditional-headers-for-blob-service-operations).
    * @summary Read File
    * @param filesystem - The filesystem identifier.
    * @param path - The file or directory path.
@@ -377,7 +377,7 @@ export class PathOperations {
    * system defined properties for a path. Get Access Control List returns the access control list
    * for a path. This operation supports conditional HTTP requests.  For more information, see
    * [Specifying Conditional Headers for Blob Service
-   * Operations](https://docs.microsoft.com/en-us/rest/api/storageservices/specifying-conditional-headers-for-blob-service-operations).
+   * Operations](https://docs.microsoft.com/rest/api/storageservices/specifying-conditional-headers-for-blob-service-operations).
    * @summary Get Properties | Get Status | Get Access Control List
    * @param filesystem - The filesystem identifier.
    * @param path - The file or directory path.
@@ -427,7 +427,7 @@ export class PathOperations {
   /**
    * Delete the file or directory. This operation supports conditional HTTP requests.  For more
    * information, see [Specifying Conditional Headers for Blob Service
-   * Operations](https://docs.microsoft.com/en-us/rest/api/storageservices/specifying-conditional-headers-for-blob-service-operations).
+   * Operations](https://docs.microsoft.com/rest/api/storageservices/specifying-conditional-headers-for-blob-service-operations).
    * @summary Delete File | Delete Directory
    * @param filesystem - The filesystem identifier.
    * @param path - The file or directory path.

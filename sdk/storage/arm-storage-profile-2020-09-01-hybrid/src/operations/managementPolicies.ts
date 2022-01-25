@@ -75,7 +75,7 @@ export class ManagementPolicies {
    * account names must be between 3 and 24 characters in length and use numbers and lower-case
    * letters only.
    * @param policy The Storage Account ManagementPolicy, in JSON format. See more details in:
-   * https://docs.microsoft.com/en-us/azure/storage/common/storage-lifecycle-managment-concepts.
+   * https://docs.microsoft.com/azure/storage/common/storage-lifecycle-managment-concepts.
    * @param [options] The optional parameters
    * @returns Promise<Models.ManagementPoliciesCreateOrUpdateResponse>
    */
@@ -87,7 +87,7 @@ export class ManagementPolicies {
    * account names must be between 3 and 24 characters in length and use numbers and lower-case
    * letters only.
    * @param policy The Storage Account ManagementPolicy, in JSON format. See more details in:
-   * https://docs.microsoft.com/en-us/azure/storage/common/storage-lifecycle-managment-concepts.
+   * https://docs.microsoft.com/azure/storage/common/storage-lifecycle-managment-concepts.
    * @param callback The callback
    */
   createOrUpdate(resourceGroupName: string, accountName: string, policy: Models.ManagementPolicySchema, callback: msRest.ServiceCallback<Models.ManagementPolicy>): void;
@@ -98,7 +98,7 @@ export class ManagementPolicies {
    * account names must be between 3 and 24 characters in length and use numbers and lower-case
    * letters only.
    * @param policy The Storage Account ManagementPolicy, in JSON format. See more details in:
-   * https://docs.microsoft.com/en-us/azure/storage/common/storage-lifecycle-managment-concepts.
+   * https://docs.microsoft.com/azure/storage/common/storage-lifecycle-managment-concepts.
    * @param options The optional parameters
    * @param callback The callback
    */

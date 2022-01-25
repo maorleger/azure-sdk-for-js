@@ -1185,7 +1185,7 @@ export interface CorsSettings {
   allowedOrigins?: string[];
   /**
    * Gets or sets whether CORS requests with credentials are allowed. See
-   * https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#Requests_with_credentials
+   * https://developer.mozilla.org/docs/Web/HTTP/CORS#Requests_with_credentials
    * for more details.
    */
   supportCredentials?: boolean;
@@ -1232,7 +1232,7 @@ export interface IpSecurityRestriction {
   description?: string;
   /**
    * IP restriction rule headers.
-   * X-Forwarded-Host (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-Host#Examples).
+   * X-Forwarded-Host (https://developer.mozilla.org/docs/Web/HTTP/Headers/X-Forwarded-Host#Examples).
    * The matching logic is ..
    * - If the property is null or empty (default), all hosts(or lack of) are allowed.
    * - A value is compared using ordinal-ignore-case (excluding port number).
@@ -1240,7 +1240,7 @@ export interface IpSecurityRestriction {
    *  but not the root domain contoso.com or multi-level foo.bar.contoso.com
    * - Unicode host names are allowed but are converted to Punycode for matching.
    *
-   * X-Forwarded-For (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For#Examples).
+   * X-Forwarded-For (https://developer.mozilla.org/docs/Web/HTTP/Headers/X-Forwarded-For#Examples).
    * The matching logic is ..
    * - If the property is null or empty (default), any forwarded-for chains (or lack of) are allowed.
    * - If any address (excluding port number) in the chain (comma separated) matches the CIDR defined by the property.
@@ -7059,7 +7059,7 @@ export type SiteAuthSettings = ProxyOnlyResource & {
   /**
    * The OAuth 2.0 scopes that will be requested as part of Microsoft Account authentication.
    * This setting is optional. If not specified, "wl.basic" is used as the default scope.
-   * Microsoft Account Scopes and permissions documentation: https://msdn.microsoft.com/en-us/library/dn631845.aspx
+   * Microsoft Account Scopes and permissions documentation: https://msdn.microsoft.com/library/dn631845.aspx
    */
   microsoftAccountOAuthScopes?: string[];
   /**

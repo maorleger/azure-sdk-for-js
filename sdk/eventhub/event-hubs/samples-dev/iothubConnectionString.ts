@@ -9,7 +9,7 @@
  * The Event Hubs connection string is then used with the EventHubConsumerClient to receive events.
  *
  * More information about the built-in messaging endpoint can be found at:
- * https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-messages-read-builtin
+ * https://docs.microsoft.com/azure/iot-hub/iot-hub-devguide-messages-read-builtin
  */
 
 import * as crypto from "crypto";
@@ -32,7 +32,7 @@ function isAmqpError(err: any): err is AmqpError {
 
 const consumerGroup = process.env["CONSUMER_GROUP_NAME"] || "";
 
-// This code is modified from https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-security#security-tokens.
+// This code is modified from https://docs.microsoft.com/azure/iot-hub/iot-hub-devguide-security#security-tokens.
 function generateSasToken(
   resourceUri: string,
   signingKey: string,
@@ -80,7 +80,7 @@ async function convertIotHubToEventHubsConnectionString(connectionString: string
   }
 
   // Generate a token to authenticate to the service.
-  // The code for generateSasToken can be found at https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-security#security-tokens
+  // The code for generateSasToken can be found at https://docs.microsoft.com/azure/iot-hub/iot-hub-devguide-security#security-tokens
   const token = generateSasToken(
     `${HostName}/messages/events`,
     SharedAccessKey,

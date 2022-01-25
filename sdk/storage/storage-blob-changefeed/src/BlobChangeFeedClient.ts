@@ -69,7 +69,7 @@ function appendUserAgentPrefix(options?: StoragePipelineOptions): StoragePipelin
 
 /**
  * BlobChangeFeedClient.
- * @see https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-change-feed?tabs=azure-portal
+ * @see https://docs.microsoft.com/azure/storage/blobs/storage-blob-change-feed?tabs=azure-portal
  */
 export class BlobChangeFeedClient {
   /**

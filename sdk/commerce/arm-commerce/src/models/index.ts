@@ -118,7 +118,7 @@ export interface MeterInfo {
 
 /** Parameters that are used in the odata $filter query parameter for providing RateCard information. */
 export interface RateCardQueryParameters {
-  /** The Offer ID parameter consists of the 'MS-AZR-' prefix, plus the Offer ID number (e.g., MS-AZR-0026P). See https://azure.microsoft.com/en-us/support/legal/offer-details/ for more information on the list of available Offer IDs, country/region availability, and billing currency. */
+  /** The Offer ID parameter consists of the 'MS-AZR-' prefix, plus the Offer ID number (e.g., MS-AZR-0026P). See https://azure.microsoft.com/support/legal/offer-details/ for more information on the list of available Offer IDs, country/region availability, and billing currency. */
   offerDurableId: string;
   /** The currency in which the rates need to be provided. */
   currency: string;
