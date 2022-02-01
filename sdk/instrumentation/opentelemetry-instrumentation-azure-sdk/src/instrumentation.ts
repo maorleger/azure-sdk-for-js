@@ -42,6 +42,7 @@ class AzureSdkInstrumentation extends InstrumentationBase {
         "@azure/core-tracing",
         ["^1.0.0-preview.14", "^1.0.0"],
         (moduleExports) => {
+          console.log("in here");
           if (typeof moduleExports.useInstrumenter === "function") {
             moduleExports.useInstrumenter(new OpenTelemetryInstrumenter());
           }
