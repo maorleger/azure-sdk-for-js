@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 import * as msalBrowser from "@azure/msal-browser";
+
 import { AuthenticationRequiredError, CredentialUnavailableError } from "../../errors";
 import { MsalBaseUtilities, getAuthority, getKnownAuthorities } from "../utils";
 import { MsalFlow, MsalFlowOptions } from "../flows";
@@ -10,13 +11,14 @@ import {
   resolveAdditionallyAllowedTenantIds,
   resolveTenantId,
 } from "../../util/tenantIdUtils";
+
 import { AccessToken } from "@azure/core-auth";
 import { AuthenticationRecord } from "../types";
 import { BrowserLoginStyle } from "../../credentials/interactiveBrowserCredentialOptions";
 import { CredentialFlowGetTokenOptions } from "../credentials";
 import { DefaultTenantId } from "../../constants";
-import { MultiTenantTokenCredentialOptions } from "../../credentials/multiTenantTokenCredentialOptions";
 import { LogPolicyOptions } from "@azure/core-rest-pipeline";
+import { MultiTenantTokenCredentialOptions } from "../../credentials/multiTenantTokenCredentialOptions";
 
 /**
  * Union of the constructor parameters that all MSAL flow types take.
@@ -91,7 +93,7 @@ export abstract class MsalBrowser extends MsalBaseUtilities implements MsalBrows
   protected account: AuthenticationRecord | undefined;
   protected msalConfig: msalBrowser.Configuration;
   protected disableAutomaticAuthentication?: boolean;
-  protected app?: msalBrowser.PublicClientApplication;
+  protected app?: msalBrowser.IPublicClientApplication;
 
   constructor(options: MsalBrowserFlowOptions) {
     super(options);
