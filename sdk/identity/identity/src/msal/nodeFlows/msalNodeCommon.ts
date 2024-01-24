@@ -3,7 +3,7 @@
 
 import * as msalNode from "@azure/msal-node";
 
-import { AccessToken, GetTokenOptions } from "@azure/core-auth";
+import { AccessToken, GetTokenOptions, TokenCredential } from "@azure/core-auth";
 import { AppType, AuthenticationRecord, MsalResult } from "../types";
 import { CACHE_CAE_SUFFIX, CACHE_NON_CAE_SUFFIX, DeveloperSignOnClientId } from "../../constants";
 import { CredentialLogger, formatSuccess } from "../../util/logging";
@@ -120,6 +120,7 @@ export const msalNodeFlowNativeBrokerControl: NativeBrokerPluginControl = {
  * @internal
  */
 export abstract class MsalNode implements MsalFlow {
+  // app vs caeApp, why have so many different types
   private app: {
     public?: msalNode.PublicClientApplication;
     confidential?: msalNode.ConfidentialClientApplication;
@@ -373,6 +374,7 @@ export abstract class MsalNode implements MsalFlow {
    * Returns the existing account, attempts to load the account from MSAL.
    */
   async getActiveAccount(enableCae = false): Promise<AuthenticationRecord | undefined> {
+    // what's the difference betwen this.account and tokenCache
     if (this.account) {
       return this.account;
     }
@@ -530,4 +532,31 @@ To work with multiple accounts for the same Client ID and Tenant ID, please prov
       expiresOnTimestamp: result!.expiresOn!.getTime(),
     };
   }
+}
+
+class SomeClient {
+  getTokenSilent(): AccessToken | undefined;
+  getTokenByDeviceCode();
+  ...
+  ..
+  ...
+  ..
+  .
+
+}
+
+class SomeCredential implements TokenCredential {
+  constructor() {
+    this.client = createMsalClient()
+  }
+  getToken(scopes: string | string[], options?: GetTokenOptions | undefined): Promise<AccessToken | null> {
+    const silentToken = await this.client.gettokensielnt()
+    // will: provide helper try silent auth or else
+
+    await this.client.getToken(onForceRefresh: () => {
+      return this.client.getTokenByDeviceCode(scopes, options)
+    })
+  }
+
+
 }
