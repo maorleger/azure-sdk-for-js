@@ -3,7 +3,10 @@
 
 import { AccessToken, GetTokenOptions, TokenCredential } from "@azure/core-auth";
 
+import { AuthenticationRecord } from "../types";
 import { ClientSecretCredentialOptions } from "../../credentials/clientSecretCredentialOptions";
+import { ConfidentialClientApplication } from "@azure/msal-node";
+import { msalToPublic } from "../utils";
 
 export interface MsalWrapper {
   getToken<F extends (...args: any[]) => Promise<AccessToken | null>>(
@@ -14,17 +17,44 @@ export interface MsalWrapper {
   getTokenByDeviceCode(scopes: string[], options?: GetTokenOptions): Promise<AccessToken | null>;
 }
 
-export function createMsalWrapper(): MsalWrapper {
-  function getTokenByDeviceCode(
+export function createMsalWrapper(options: any = {}): MsalWrapper {
+  // State...
+  const clientId = options.clientId;
+  // let account: AuthenticationRecord | undefined;
+
+  // TODO: plumb configuration via params to this wrapper
+  // TODO: handle multiple app kinds
+  // // Ask and understand why and when we have multiple apps, _and_ whether a single instance can have multiple apps as a valid usecase
+  const app = new ConfidentialClientApplication({ auth: { clientId: "foo" } });
+  function getApp({ kind, enableCae }) {
+    return app;
+  }
+
+  async function getActiveAccount(enableCae: boolean) {
+    const cache = getApp({ kind: "confidential", enableCae }).getTokenCache();
+    const accountsByTenant = await cache?.getAllAccounts();
+    return msalToPublic(clientId, accountsByTenant[0]);
+  }
+
+  async function getTokenByDeviceCode(
     scopes: string[],
     options?: GetTokenOptions,
-  ): Promise<AccessToken | null> {}
+  ): Promise<AccessToken | null> {
+    const result = getApp({ kind: "confidential", enableCae: options?.enableCae });
+    const account = await getActiveAccount(false);
+  }
 
   function getToken<F extends (...args: any[]) => Promise<AccessToken | null>>(
     scopes: string[],
     onForceRefresh: F,
     options?: GetTokenOptions,
-  ): Promise<AccessToken | null> {}
+  ): Promise<AccessToken | null> {
+    // get active account
+    // create a silent request
+    // do the broker thing
+    // try to get the token
+    // if fails call onForceRefresh
+  }
 
   return {
     getToken,
