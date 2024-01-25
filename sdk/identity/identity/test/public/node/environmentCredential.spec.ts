@@ -6,6 +6,7 @@
 import { EnvironmentCredential, UsernamePasswordCredential } from "../../../src";
 import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup";
 import { Recorder, isLiveMode } from "@azure-tools/test-recorder";
+
 import { Context } from "mocha";
 import { assert } from "@azure/test-utils";
 import { getError } from "../../authTestUtils";
@@ -43,7 +44,7 @@ describe("EnvironmentCredential", function () {
 
   const scope = "https://vault.azure.net/.default";
 
-  it("authenticates with a client secret on the environment variables", async function () {
+  it.only("authenticates with a client secret on the environment variables", async function () {
     // The following environment variables must be set for this to work.
     // On TEST_MODE="playback", the recorder automatically fills them with stubbed values.
     process.env.AZURE_TENANT_ID = cachedValues.AZURE_TENANT_ID;

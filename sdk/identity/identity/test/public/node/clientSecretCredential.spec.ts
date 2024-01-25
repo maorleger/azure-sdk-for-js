@@ -5,15 +5,16 @@
 
 import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup";
 import { Recorder, delay, env, isRecordMode } from "@azure-tools/test-recorder";
+
 import { AbortController } from "@azure/abort-controller";
 import { ClientSecretCredential } from "../../../src";
-import { Context } from "mocha";
 import { assert } from "@azure/test-utils";
 
 describe("ClientSecretCredential", function () {
   let cleanup: MsalTestCleanup;
   let recorder: Recorder;
-  beforeEach(async function (this: Context) {
+  beforeEach(async function () {
+    console.log(arguments);
     const setup = await msalNodeTestSetup(this.currentTest);
     cleanup = setup.cleanup;
     recorder = setup.recorder;
@@ -93,7 +94,7 @@ describe("ClientSecretCredential", function () {
   });
 
   // TODO: Enable again once we're ready to release this feature.
-  it.skip("supports specifying the regional authority", async function (this: Context) {
+  it.skip("supports specifying the regional authority", async function () {
     // This test is extremely slow. Let's skip it for now.
     // I've tried Sinon's clock and it doesn't affect it.
     // We have internal tests that check that the parameters are properly sent to MSAL, which should be enough from the perspective of the SDK.

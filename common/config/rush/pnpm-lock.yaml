@@ -19111,7 +19111,7 @@ packages:
     dev: false
 
   file:projects/identity.tgz:
-    resolution: {integrity: sha512-sN5uDfgg0Hwbe5APCjAZ9KmySezDlALjMlIb9oWvEE8IJydkxirka8Y1SU0h4hle8ro8eIzqP1oiCGPV6lLF4w==, tarball: file:projects/identity.tgz}
+    resolution: {integrity: sha512-990JiszYRurGFyosrrGOlByN1ytTh7PKXFaN2p3q+bvI33mjfRKAAShOwshwtcY2I/Sp79TG6alROoMid11Srw==, tarball: file:projects/identity.tgz}
     name: '@rush-temp/identity'
     version: 0.0.0
     dependencies:
@@ -19158,13 +19158,25 @@ packages:
       tslib: 2.6.2
       typescript: 5.2.2
       util: 0.12.5
+      vitest: 1.2.1(@types/node@18.19.8)(@vitest/browser@1.2.1)
     transitivePeerDependencies:
+      - '@edge-runtime/vm'
       - '@swc/core'
       - '@swc/wasm'
+      - '@vitest/browser'
+      - '@vitest/ui'
       - bufferutil
       - debug
       - encoding
+      - happy-dom
+      - jsdom
+      - less
+      - lightningcss
+      - sass
+      - stylus
+      - sugarss
       - supports-color
+      - terser
       - utf-8-validate
     dev: false
 
@@ -19930,7 +19942,7 @@ packages:
     dev: false
 
   file:projects/monitor-opentelemetry.tgz:
-    resolution: {integrity: sha512-yw/Tt0+VmjmkJDX84v7nznrwMyA7NEJ4BVoLxmDnP3J9B6/GJfRRnjWv1sl6IiiupZrqQzZnXhFLnS7pagb3Eg==, tarball: file:projects/monitor-opentelemetry.tgz}
+    resolution: {integrity: sha512-90cLfp/kSBBNmOg2nYr4i2E3O4yeM3t3C6/mnpuVql6wCSp2il3sjnvCD591GsRX0J6gWm9xNjthFN4Uz2U83Q==, tarball: file:projects/monitor-opentelemetry.tgz}
     name: '@rush-temp/monitor-opentelemetry'
     version: 0.0.0
     dependencies:
@@ -19978,7 +19990,7 @@ packages:
     dev: false
 
   file:projects/monitor-query.tgz:
-    resolution: {integrity: sha512-3sUQt+V8suL5Fw5sx178t0ErHnh7W0nOdYWBR7y6LSJXnPPh5C0ZP29cMDFSZqtaO+oIhX5IwmCd1qPijyNVDg==, tarball: file:projects/monitor-query.tgz}
+    resolution: {integrity: sha512-GPAIFVc/AwP/VRMEPIQJCf2rM3ZuLCg2Z0bsuokPAiRa1CNj9CM3LJGJk+D1RvIVycKIJTjmVZzT14zJZ5keMw==, tarball: file:projects/monitor-query.tgz}
     name: '@rush-temp/monitor-query'
     version: 0.0.0
     dependencies:

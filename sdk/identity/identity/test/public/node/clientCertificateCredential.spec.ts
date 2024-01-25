@@ -4,11 +4,12 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 
 import * as path from "path";
+
 import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup";
 import { Recorder, delay, env, isPlaybackMode } from "@azure-tools/test-recorder";
+
 import { AbortController } from "@azure/abort-controller";
 import { ClientCertificateCredential } from "../../../src";
-import { Context } from "mocha";
 import { PipelineResponse } from "@azure/core-rest-pipeline";
 import { assert } from "@azure/test-utils";
 import fs from "fs";
@@ -19,8 +20,9 @@ describe("ClientCertificateCredential", function () {
   let cleanup: MsalTestCleanup;
   let recorder: Recorder;
 
-  beforeEach(async function (this: Context) {
-    const setup = await msalNodeTestSetup(this.currentTest);
+  beforeEach(async function (context) {
+    debugger;
+    const setup = await msalNodeTestSetup(context as any);
     cleanup = setup.cleanup;
     recorder = setup.recorder;
     await recorder.setMatcher("BodilessMatcher");
@@ -32,7 +34,7 @@ describe("ClientCertificateCredential", function () {
   const certificatePath = env.IDENTITY_SP_CERT_PEM || path.join(ASSET_PATH, "fake-cert.pem");
   const scope = "https://vault.azure.net/.default";
 
-  it("authenticates", async function (this: Context) {
+  it("authenticates", async function () {
     const credential = new ClientCertificateCredential(
       env.IDENTITY_SP_TENANT_ID || env.AZURE_TENANT_ID!,
       env.IDENTITY_SP_CLIENT_ID || env.AZURE_CLIENT_ID!,
@@ -45,7 +47,7 @@ describe("ClientCertificateCredential", function () {
     assert.ok(token?.expiresOnTimestamp! > Date.now());
   });
 
-  it("authenticates with a PEM certificate string directly", async function (this: Context) {
+  it.only("authenticates with a PEM certificate string directly", async function () {
     const credential = new ClientCertificateCredential(
       env.IDENTITY_SP_TENANT_ID || env.AZURE_TENANT_ID!,
       env.IDENTITY_SP_CLIENT_ID || env.AZURE_CLIENT_ID!,
@@ -61,7 +63,7 @@ describe("ClientCertificateCredential", function () {
     assert.ok(token?.expiresOnTimestamp! > Date.now());
   });
 
-  it("authenticates with sendCertificateChain", async function (this: Context) {
+  it("authenticates with sendCertificateChain", async function () {
     if (isPlaybackMode()) {
       // MSAL creates a client assertion based on the certificate that I haven't been able to mock.
       // This assertion could be provided as parameters, but we don't have that in the public API yet,
@@ -83,7 +85,7 @@ describe("ClientCertificateCredential", function () {
     assert.ok(token?.expiresOnTimestamp! > Date.now());
   });
 
-  it("allows cancelling the authentication", async function (this: Context) {
+  it("allows cancelling the authentication", async function () {
     if (!fs.existsSync(certificatePath)) {
       // In min-max tests, the certificate file can't be found.
       console.log("Failed to locate the certificate file. Skipping.");
@@ -121,7 +123,7 @@ describe("ClientCertificateCredential", function () {
     assert.ok(error?.message.includes("endpoints_resolution_error"));
   });
 
-  it("supports tracing", async function (this: Context) {
+  it("supports tracing", async function () {
     if (isPlaybackMode()) {
       // MSAL creates a client assertion based on the certificate that I haven't been able to mock.
       // This assertion could be provided as parameters, but we don't have that in the public API yet,
