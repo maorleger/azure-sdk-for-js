@@ -2,13 +2,13 @@
 // Licensed under the MIT license.
 
 import { AccessToken, GetTokenOptions, TokenCredential } from "@azure/core-auth";
+import { MsalWrapper, createMsalWrapper } from "../msal/nodeFlows/msalClient";
 import {
   processMultiTenantRequest,
   resolveAdditionallyAllowedTenantIds,
 } from "../util/tenantIdUtils";
+
 import { ClientSecretCredentialOptions } from "./clientSecretCredentialOptions";
-import { MsalClientSecret } from "../msal/nodeFlows/msalClientSecret";
-import { MsalFlow } from "../msal/flows";
 import { credentialLogger } from "../util/logging";
 import { ensureScopes } from "../util/scopeUtils";
 import { tracingClient } from "../util/tracing";
@@ -26,7 +26,7 @@ const logger = credentialLogger("ClientSecretCredential");
 export class ClientSecretCredential implements TokenCredential {
   private tenantId: string;
   private additionallyAllowedTenantIds: string[];
-  private msalFlow: MsalFlow;
+  private newMsalFlow: MsalWrapper;
 
   /**
    * Creates an instance of the ClientSecretCredential with the details
@@ -55,9 +55,16 @@ export class ClientSecretCredential implements TokenCredential {
       options?.additionallyAllowedTenants,
     );
 
-    this.msalFlow = new MsalClientSecret({
+    this.newMsalFlow = createMsalWrapper({
       ...options,
       logger,
+      msalConfig: {
+        auth: {
+          clientSecret,
+          clientId,
+          tenantId,
+        },
+      },
       clientId,
       tenantId,
       clientSecret,
@@ -86,7 +93,13 @@ export class ClientSecretCredential implements TokenCredential {
         );
 
         const arrayScopes = ensureScopes(scopes);
-        return this.msalFlow.getToken(arrayScopes, newOptions);
+        return this.newMsalFlow.getToken(
+          arrayScopes,
+          (scopes2, options2) => {
+            return this.newMsalFlow.getTokenByClientCredential(scopes2, options2);
+          },
+          newOptions,
+        );
       },
     );
   }
