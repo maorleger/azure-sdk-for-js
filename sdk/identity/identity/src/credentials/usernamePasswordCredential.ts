@@ -2,10 +2,12 @@
 // Licensed under the MIT license.
 
 import { AccessToken, GetTokenOptions, TokenCredential } from "@azure/core-auth";
+import { MsalWrapper, createMsalWrapper } from "../msal/nodeFlows/msalWrapper";
 import {
   processMultiTenantRequest,
   resolveAdditionallyAllowedTenantIds,
 } from "../util/tenantIdUtils";
+
 import { MsalFlow } from "../msal/flows";
 import { MsalUsernamePassword } from "../msal/nodeFlows/msalUsernamePassword";
 import { UsernamePasswordCredentialOptions } from "./usernamePasswordCredentialOptions";
@@ -25,6 +27,7 @@ export class UsernamePasswordCredential implements TokenCredential {
   private tenantId: string;
   private additionallyAllowedTenantIds: string[];
   private msalFlow: MsalFlow;
+  private msalWrapper: MsalWrapper;
 
   /**
    * Creates an instance of the UsernamePasswordCredential with the details
@@ -64,6 +67,16 @@ export class UsernamePasswordCredential implements TokenCredential {
       password,
       tokenCredentialOptions: options || {},
     });
+    this.msalWrapper = createMsalWrapper(
+      {
+        clientId,
+        tenantId,
+        authorityHost: options?.authorityHost,
+      },
+      {
+        tokenCredentialOptions: options || {}, // todo: what is this for?
+      },
+    );
   }
 
   /**
@@ -83,14 +96,27 @@ export class UsernamePasswordCredential implements TokenCredential {
       `${this.constructor.name}.getToken`,
       options,
       async (newOptions) => {
+        const arrayScopes = ensureScopes(scopes);
         newOptions.tenantId = processMultiTenantRequest(
           this.tenantId,
           newOptions,
           this.additionallyAllowedTenantIds,
           logger,
         );
-
-        const arrayScopes = ensureScopes(scopes);
+        try {
+          const token = await this.msalWrapper.getToken(
+            arrayScopes,
+            this.msalWrapper.getTokenByUsernamePassword,
+            options,
+          );
+          logger.info(`getToken: response: ${JSON.stringify(token)}`);
+          if (token) return token;
+          logger.info(`Successfully acquired token from new flow!.`);
+        } catch (e) {
+          logger.getToken.warning(`Failed to acquire token from new flow. ${e}`);
+          console.error(e);
+        }
+        logger.info(`getToken: attempting to acquire token from old flow.`);
         return this.msalFlow.getToken(arrayScopes, newOptions);
       },
     );

@@ -2,13 +2,15 @@
 // Licensed under the MIT license.
 
 import { AccessToken, GetTokenOptions, TokenCredential } from "@azure/core-auth";
-import { MsalWrapper, createMsalWrapper } from "../msal/nodeFlows/msalClient";
+import { MsalWrapper, createMsalWrapper } from "../msal/nodeFlows/msalWrapper";
 import {
   processMultiTenantRequest,
   resolveAdditionallyAllowedTenantIds,
 } from "../util/tenantIdUtils";
 
 import { ClientSecretCredentialOptions } from "./clientSecretCredentialOptions";
+import { MsalClientSecret } from "../msal/nodeFlows/msalClientSecret";
+import { MsalFlow } from "../msal/flows";
 import { credentialLogger } from "../util/logging";
 import { ensureScopes } from "../util/scopeUtils";
 import { tracingClient } from "../util/tracing";
@@ -27,6 +29,7 @@ export class ClientSecretCredential implements TokenCredential {
   private tenantId: string;
   private additionallyAllowedTenantIds: string[];
   private newMsalFlow: MsalWrapper;
+  msalFlow: MsalFlow;
 
   /**
    * Creates an instance of the ClientSecretCredential with the details
@@ -55,21 +58,26 @@ export class ClientSecretCredential implements TokenCredential {
       options?.additionallyAllowedTenants,
     );
 
-    this.newMsalFlow = createMsalWrapper({
+    this.msalFlow = new MsalClientSecret({
       ...options,
       logger,
-      msalConfig: {
-        auth: {
-          clientSecret,
-          clientId,
-          tenantId,
-        },
-      },
       clientId,
       tenantId,
       clientSecret,
       tokenCredentialOptions: options,
     });
+
+    this.newMsalFlow = createMsalWrapper(
+      {
+        clientId,
+        tenantId,
+        clientSecret,
+        authorityHost: options?.authorityHost,
+      },
+      {
+        tokenCredentialOptions: options || {},
+      },
+    );
   }
 
   /**
@@ -93,13 +101,20 @@ export class ClientSecretCredential implements TokenCredential {
         );
 
         const arrayScopes = ensureScopes(scopes);
-        return this.newMsalFlow.getToken(
-          arrayScopes,
-          (scopes2, options2) => {
-            return this.newMsalFlow.getTokenByClientCredential(scopes2, options2);
-          },
-          newOptions,
-        );
+        try {
+          console.log("trying to get token using the new flow");
+          return await this.newMsalFlow.getToken(
+            arrayScopes,
+            (scopes2, options2) => {
+              return this.newMsalFlow.getTokenByClientCredential(scopes2, options2);
+            },
+            newOptions,
+          );
+        } catch (e) {
+          console.log("unable to get token using the new flow, trying the old flow");
+          console.error(e);
+          return this.msalFlow.getToken(arrayScopes, newOptions);
+        }
       },
     );
   }
