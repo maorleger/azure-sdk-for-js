@@ -2,10 +2,10 @@
 // Licensed under the MIT license.
 
 import Sinon, { createSandbox } from "sinon";
+import { afterEach, assert, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { AzureCliCredential } from "../../../src/credentials/azureCliCredential";
 import { GetTokenOptions } from "@azure/core-auth";
-import { assert } from "@azure/test-utils";
 import child_process from "child_process";
 
 describe("AzureCliCredential (internal)", function () {
@@ -19,17 +19,29 @@ describe("AzureCliCredential (internal)", function () {
     sandbox = createSandbox();
     azArgs = [];
     azOptions = [];
-    sandbox
-      .stub(child_process, "execFile")
-      .callsFake((_file, args, options, callback): child_process.ChildProcess => {
-        azArgs.push(args as string[]);
-        azOptions.push(options as { cwd: string; shell: boolean });
-        if (callback) {
-          callback(null, stdout, stderr);
-        }
-        // Bypassing the type check. We don't use this return value in our code.
-        return {} as child_process.ChildProcess;
-      });
+    vi.mock("child_process");
+
+    vi.spyOn(child_process, "execFile").mockImplementation((_file, args, options, callback) => {
+      azArgs.push(args as string[]);
+      azOptions.push(options as { cwd: string; shell: boolean });
+      if (callback) {
+        callback(null, stdout, stderr);
+      }
+      // Bypassing the type check. We don't use this return value in our code.
+      return {} as child_process.ChildProcess;
+    });
+
+    // sandbox
+    //   .stub(child_process, "execFile")
+    //   .callsFake((_file, args, options, callback): child_process.ChildProcess => {
+    //     azArgs.push(args as string[]);
+    //     azOptions.push(options as { cwd: string; shell: boolean });
+    //     if (callback) {
+    //       callback(null, stdout, stderr);
+    //     }
+    //     // Bypassing the type check. We don't use this return value in our code.
+    //     return {} as child_process.ChildProcess;
+    //   });
   });
 
   afterEach(async function () {
@@ -262,12 +274,11 @@ az login --scope https://test.windows.net/.default`;
       tenantId === " " ? "whitespace" : tenantId === "\0" ? "null character" : `"${tenantId}"`;
     it(`rejects invalid tenant id of ${testCase} in getToken`, async function () {
       const credential = new AzureCliCredential();
-      await assert.isRejected(
+      await expect(
         credential.getToken("https://service/.default", {
           tenantId: tenantId,
         }),
-        tenantIdErrorMessage,
-      );
+      ).rejects.toThrow(tenantIdErrorMessage);
     });
 
     it(`rejects invalid tenant id of ${testCase} in constructor`, function () {
@@ -286,8 +297,7 @@ az login --scope https://test.windows.net/.default`;
           : `"${inputScope}"`;
     it(`rejects invalid scope of ${testCase}`, async function () {
       const credential = new AzureCliCredential();
-      await assert.isRejected(
-        credential.getToken(inputScope),
+      await expect(credential.getToken(inputScope)).rejects.toThrow(
         "Invalid scope was specified by the user or calling client",
       );
     });
@@ -372,8 +382,7 @@ az login --scope https://test.windows.net/.default`;
         }`;
       stderr = "";
       const credential = new AzureCliCredential();
-      await assert.isRejected(
-        credential.getToken("https://service/.default"),
+      await expect(credential.getToken("https://service.default")).rejects.toThrow(
         /Expected "expiresOn" to be a RFC3339 date string. Got: "not-a-date"$/,
       );
     });

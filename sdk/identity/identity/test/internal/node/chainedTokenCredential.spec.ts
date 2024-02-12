@@ -2,8 +2,9 @@
 // Licensed under the MIT license.
 
 import { AccessToken, ChainedTokenCredential, TokenCredential } from "../../../src";
+import { assert, describe, it } from "vitest";
+
 import Sinon from "sinon";
-import { assert } from "chai";
 import { logger as chainedTokenCredentialLogger } from "../../../src/credentials/chainedTokenCredential";
 
 class TestMockCredential implements TokenCredential {

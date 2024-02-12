@@ -2,11 +2,12 @@
 // Licensed under the MIT license.
 
 import { IdentityTestContextInterface, createResponse } from "../../httpRequestsCommon";
+import { afterEach, beforeEach, describe, it } from "vitest";
 
 import { AzureApplicationCredential } from "../../../src/credentials/azureApplicationCredential";
 import { IdentityTestContext } from "../../httpRequests";
 import { RestError } from "@azure/core-rest-pipeline";
-import { assert } from "chai";
+import { expect } from "chai";
 
 describe("AzureApplicationCredential testing Managed Identity (internal)", function () {
   let envCopy: string = "";
@@ -41,10 +42,7 @@ describe("AzureApplicationCredential testing Managed Identity (internal)", funct
         },
       ],
     });
-    assert.ok(
-      error!.message!.indexOf("No MSI credential available") > -1,
-      "Failed to match the expected error",
-    );
+    expect(error!.message).to.include("No MSI credential available");
   });
 
   it("an unexpected error bubbles all the way up", async function () {
@@ -60,7 +58,7 @@ describe("AzureApplicationCredential testing Managed Identity (internal)", funct
         { error: new RestError(errorMessage, { statusCode: 500 }) },
       ],
     });
-    assert.ok(error?.message.startsWith(errorMessage));
+    expect(error?.message).to.include(errorMessage);
   });
 
   it("returns expected error when the network was unreachable", async function () {
@@ -79,7 +77,7 @@ describe("AzureApplicationCredential testing Managed Identity (internal)", funct
         { error: netError },
       ],
     });
-    assert.ok(error!.message!.indexOf("Network unreachable.") > -1);
+    expect(error!.message!).to.include("Network unreachable.");
   });
 
   it("sends an authorization request correctly in an App Service environment", async () => {
@@ -102,22 +100,15 @@ describe("AzureApplicationCredential testing Managed Identity (internal)", funct
     const authRequest = authDetails.requests[0];
     const query = new URLSearchParams(authRequest.url.split("?")[1]);
 
-    assert.equal(authRequest.method, "GET");
-    assert.equal(query.get("clientid"), "client");
-    assert.equal(decodeURIComponent(query.get("resource")!), "https://service");
-    assert.ok(
+    expect(authRequest.method).to.equal("GET");
+    expect(query.get("clientid")).to.equal("client");
+    expect(decodeURIComponent(query.get("resource")!)).to.equal("https://service");
+    expect(
       authRequest.url.startsWith(process.env.MSI_ENDPOINT),
       "URL does not start with expected host and path",
     );
-    assert.equal(authRequest.headers.secret, process.env.MSI_SECRET);
-    assert.ok(
-      authRequest.url.indexOf(`api-version=2017-09-01`) > -1,
-      "URL does not have expected version",
-    );
-    if (authDetails.result?.token) {
-      assert.equal(authDetails.result.expiresOnTimestamp, 1560999478000);
-    } else {
-      assert.fail("No token was returned!");
-    }
+    expect(authRequest.headers.secret).to.equal(process.env.MSI_SECRET);
+    expect(query.get("api-version")).to.equal("2017-09-01");
+    expect(authDetails.result?.expiresOnTimestamp).to.equal(1560999478000);
   });
 });

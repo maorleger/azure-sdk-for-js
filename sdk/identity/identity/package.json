@@ -66,7 +66,8 @@
     "unit-test:browser": "dev-tool run test:browser",
     "unit-test:node": "dev-tool run test:node-ts-input -- --timeout 300000 --exclude 'test/**/browser/**/*.spec.ts' 'test/**/**/*.spec.ts'",
     "unit-test:node:no-timeouts": "dev-tool run test:node-ts-input -- --timeout Infinite --exclude 'test/**/browser/**/*.spec.ts' 'test/**/**/*.spec.ts'",
-    "unit-test": "npm run unit-test:node && npm run unit-test:browser"
+    "unit-test": "npm run unit-test:node && npm run unit-test:browser",
+    "vitest": "dev-tool run test:vitest"
   },
   "files": [
     "dist/",
@@ -160,6 +161,7 @@
     "ts-node": "^10.0.0",
     "typescript": "~5.3.3",
     "util": "^0.12.1",
-    "esm": "^3.2.18"
+    "esm": "^3.2.18",
+    "vitest": "^1.2.1"
   }
 }

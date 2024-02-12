@@ -3,15 +3,16 @@
 
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 
+import { afterEach, assert, describe, it } from "vitest";
 import {
   formatCommand,
   powerShellErrors,
   powerShellPublicErrorMessages,
 } from "../../../src/credentials/azurePowerShellCredential";
+
 import { AzurePowerShellCredential } from "../../../src";
 import { GetTokenOptions } from "@azure/core-auth";
 import Sinon from "sinon";
-import { assert } from "@azure/test-utils";
 import { commandStack } from "../../../src/credentials/azurePowerShellCredential";
 import { processUtils } from "../../../src/util/processUtils";
 

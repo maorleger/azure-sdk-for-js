@@ -2,9 +2,10 @@
 // Licensed under the MIT license.
 
 import Sinon, { createSandbox } from "sinon";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+
 import { AzureDeveloperCliCredential } from "../../../src/credentials/azureDeveloperCliCredential";
 import { GetTokenOptions } from "@azure/core-auth";
-import { assert } from "@azure/test-utils";
 import child_process from "child_process";
 
 describe("AzureDeveloperCliCredential (internal)", function () {
@@ -40,17 +41,13 @@ describe("AzureDeveloperCliCredential (internal)", function () {
     stderr = "";
     const credential = new AzureDeveloperCliCredential();
     const actualToken = await credential.getToken("https://service/.default");
-    assert.equal(actualToken!.token, "token");
-    assert.deepEqual(azdArgs, [
+    expect(actualToken!.token).toEqual("token");
+    expect(azdArgs).toEqual([
       ["auth", "token", "--output", "json", "--scope", "https://service/.default"],
     ]);
     // Used a working directory, and a shell
-    assert.deepEqual(
-      {
-        cwd: [process.env.SystemRoot, "/bin"].includes(azdOptions[0].cwd),
-      },
-      { cwd: true },
-    );
+
+    expect(azdOptions[0].cwd).to.be.oneOf([process.env.SystemRoot, "/bin"]);
   });
 
   it("authenticates with tenantId on getToken", async function () {
@@ -60,8 +57,8 @@ describe("AzureDeveloperCliCredential (internal)", function () {
     const actualToken = await credential.getToken("https://service/.default", {
       tenantId: "TENANT-ID",
     } as GetTokenOptions);
-    assert.equal(actualToken!.token, "token");
-    assert.deepEqual(azdArgs, [
+    expect(actualToken!.token).toEqual("token");
+    expect(azdArgs).toEqual([
       [
         "auth",
         "token",
@@ -73,13 +70,8 @@ describe("AzureDeveloperCliCredential (internal)", function () {
         "TENANT-ID",
       ],
     ]);
-    // Used a working directory, and a shell
-    assert.deepEqual(
-      {
-        cwd: [process.env.SystemRoot, "/bin"].includes(azdOptions[0].cwd),
-      },
-      { cwd: true },
-    );
+
+    expect(azdOptions[0].cwd).to.be.oneOf([process.env.SystemRoot, "/bin"]);
   });
 
   it("get access token with custom tenantId without error", async function () {
@@ -89,8 +81,8 @@ describe("AzureDeveloperCliCredential (internal)", function () {
       tenantId: "tenantId",
     });
     const actualToken = await credential.getToken("https://service/.default");
-    assert.equal(actualToken!.token, "token");
-    assert.deepEqual(azdArgs, [
+    expect(actualToken!.token).toEqual("token");
+    expect(azdArgs).toEqual([
       [
         "auth",
         "token",
@@ -102,43 +94,23 @@ describe("AzureDeveloperCliCredential (internal)", function () {
         "tenantId",
       ],
     ]);
-    // Used a working directory, and a shell
-    assert.deepEqual(
-      {
-        cwd: [process.env.SystemRoot, "/bin"].includes(azdOptions[0].cwd),
-      },
-      { cwd: true },
-    );
+
+    expect(azdOptions[0].cwd).to.be.oneOf([process.env.SystemRoot, "/bin"]);
   });
 
   it("get access token when azure cli not installed", async () => {
     if (process.platform === "linux" || process.platform === "darwin") {
       stdout = "";
       stderr = "azd: command not found";
-      const credential = new AzureDeveloperCliCredential();
-
-      try {
-        await credential.getToken("https://service/.default");
-      } catch (error: any) {
-        assert.equal(
-          error.message,
-          "Azure Developer CLI couldn't be found. To mitigate this issue, see the troubleshooting guidelines at https://aka.ms/azsdk/js/identity/azdevclicredential/troubleshoot.",
-        );
-      }
     } else {
       stdout = "";
       stderr = "'azd' is not recognized";
-      const credential = new AzureDeveloperCliCredential();
-
-      try {
-        await credential.getToken("https://service/.default");
-      } catch (error: any) {
-        assert.equal(
-          error.message,
-          "Azure Developer CLI couldn't be found. To mitigate this issue, see the troubleshooting guidelines at https://aka.ms/azsdk/js/identity/azdevclicredential/troubleshoot.",
-        );
-      }
     }
+    const credential = new AzureDeveloperCliCredential();
+
+    await expect(credential.getToken("https://service/.default")).rejects.toThrow(
+      "Azure Developer CLI couldn't be found. To mitigate this issue, see the troubleshooting guidelines at https://aka.ms/azsdk/js/identity/azdevclicredential/troubleshoot.",
+    );
   });
 
   it("get access token when azure cli not login in", async () => {
@@ -146,22 +118,14 @@ describe("AzureDeveloperCliCredential (internal)", function () {
     stderr =
       "Please run 'azd auth login' from a command prompt to authenticate before using this credential. For more information, see the troubleshooting guidelines at https://aka.ms/azsdk/js/identity/azdevclicredential/troubleshoot.";
     const credential = new AzureDeveloperCliCredential();
-    try {
-      await credential.getToken("https://service/.default");
-    } catch (error: any) {
-      assert.equal(error.message, stderr);
-    }
+    await expect(credential.getToken("https://service/.default")).rejects.toThrow(stderr);
   });
 
   it("get access token when having other access token error", async () => {
     stdout = "";
     stderr = "mock other access token error";
     const credential = new AzureDeveloperCliCredential();
-    try {
-      await credential.getToken("https://service/.default");
-    } catch (error: any) {
-      assert.equal(error.message, "mock other access token error");
-    }
+    await expect(credential.getToken("https://service/.default")).rejects.toThrow(stderr);
   });
 
   for (const tenantId of [
@@ -183,17 +147,15 @@ describe("AzureDeveloperCliCredential (internal)", function () {
       tenantId === " " ? "whitespace" : tenantId === "\0" ? "null character" : `"${tenantId}"`;
     it(`rejects invalid tenant id of ${testCase} in getToken`, async function () {
       const credential = new AzureDeveloperCliCredential();
-      await assert.isRejected(
-        credential.getToken("https://service/.default", {
-          tenantId: tenantId,
-        }),
+      await expect(
+        credential.getToken("https://service/.default", { tenantId: tenantId }),
+      ).rejects.toThrow(tenantIdErrorMessage);
+    });
+
+    it(`rejects invalid tenant id of ${testCase} in constructor`, function () {
+      expect(() => new AzureDeveloperCliCredential({ tenantId: tenantId })).toThrow(
         tenantIdErrorMessage,
       );
-    });
-    it(`rejects invalid tenant id of ${testCase} in constructor`, function () {
-      assert.throws(() => {
-        new AzureDeveloperCliCredential({ tenantId: tenantId });
-      }, tenantIdErrorMessage);
     });
   }
 
@@ -206,8 +168,7 @@ describe("AzureDeveloperCliCredential (internal)", function () {
           : `"${inputScope}"`;
     it(`rejects invalid scope of ${testCase}`, async function () {
       const credential = new AzureDeveloperCliCredential();
-      await assert.isRejected(
-        credential.getToken(inputScope),
+      expect(credential.getToken(inputScope)).rejects.toThrow(
         "Invalid scope was specified by the user or calling client",
       );
     });

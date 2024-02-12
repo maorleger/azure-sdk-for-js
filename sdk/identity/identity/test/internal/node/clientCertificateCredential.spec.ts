@@ -7,14 +7,13 @@ import * as path from "path";
 
 import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup";
 import { Recorder, delay, env, isPlaybackMode } from "@azure-tools/test-recorder";
+import { afterEach, assert, beforeEach, describe, it } from "vitest";
 
 import { AbortController } from "@azure/abort-controller";
 import { ClientCertificateCredential } from "../../../src";
 import { ConfidentialClientApplication } from "@azure/msal-node";
-import { Context } from "mocha";
 import { MsalNode } from "../../../src/msal/nodeFlows/msalNodeCommon";
 import Sinon from "sinon";
-import { assert } from "chai";
 import { parseCertificate } from "../../../src/msal/nodeFlows/msalClientCertificate";
 
 const ASSET_PATH = "assets";
@@ -113,7 +112,7 @@ describe("ClientCertificateCredential (internal)", function () {
     );
   });
 
-  it("throws when given a file that doesn't contain a PEM-formatted certificate", async function (this: Context) {
+  it("throws when given a file that doesn't contain a PEM-formatted certificate", async function () {
     const fullPath = path.resolve(__dirname, "../src/index.ts");
     const credential = new ClientCertificateCredential("tenant", "client", {
       certificatePath: fullPath,
@@ -130,7 +129,7 @@ describe("ClientCertificateCredential (internal)", function () {
     assert.deepEqual(error?.message, `ENOENT: no such file or directory, open '${fullPath}'`);
   });
 
-  it("throws when given a certificate that isn't PEM-formatted", async function (this: Context) {
+  it("throws when given a certificate that isn't PEM-formatted", async function () {
     const credential = new ClientCertificateCredential("tenant", "client", {
       certificate: "not-pem-formatted",
     });
@@ -153,7 +152,7 @@ describe("ClientCertificateCredential (internal)", function () {
   // This is not the way to test persistence with acquireTokenByClientCredential,
   // since acquireTokenByClientCredential caches at the method level, and not with the same cache used for acquireTokenSilent.
   // I'm leaving this here so I can remember about this in the future.
-  it.skip("Authenticates silently after the initial request", async function (this: Context) {
+  it.skip("Authenticates silently after the initial request", async function () {
     if (isPlaybackMode()) {
       // MSAL creates a client assertion based on the certificate that I haven't been able to mock.
       // This assertion could be provided as parameters, but we don't have that in the public API yet,

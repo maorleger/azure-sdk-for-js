@@ -1,7 +1,8 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { assert } from "chai";
+import { assert, describe, it } from "vitest";
+
 import { getAuthority } from "../../src/msal/utils";
 import { processMultiTenantRequest } from "../../src/util/tenantIdUtils";
 
