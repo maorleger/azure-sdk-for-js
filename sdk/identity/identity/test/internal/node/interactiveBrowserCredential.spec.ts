@@ -4,16 +4,16 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-namespace */
 
-import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup";
-import { Recorder, env } from "@azure-tools/test-recorder";
-import { Context } from "mocha";
 import {
   InteractiveBrowserCredential,
   InteractiveBrowserCredentialNodeOptions,
 } from "../../../src";
+import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup";
+import { Recorder, env } from "@azure-tools/test-recorder";
+import { TestContext, afterEach, beforeEach, describe, expect, it } from "vitest";
 
+import { BrowserConfigurationAuthError } from "@azure/msal-browser";
 import Sinon from "sinon";
-import { assert } from "chai";
 import http from "http";
 import { interactiveBrowserMockable } from "../../../src/msal/nodeFlows/msalOpenBrowser";
 
@@ -31,8 +31,8 @@ describe("InteractiveBrowserCredential (internal)", function () {
   let listen: http.Server | undefined;
   let recorder: Recorder;
 
-  beforeEach(async function (this: Context) {
-    const setup = await msalNodeTestSetup(this.currentTest);
+  beforeEach(async function (ctx: TestContext) {
+    const setup = await msalNodeTestSetup(ctx);
     sandbox = setup.sandbox;
     cleanup = setup.cleanup;
     recorder = setup.recorder;
@@ -48,7 +48,7 @@ describe("InteractiveBrowserCredential (internal)", function () {
 
   // TODO: re-enable this when we resolve the esm incompatibility issues
   // https://github.com/Azure/azure-sdk-for-js/issues/28373
-  it.skip("Throws an expected error if no browser is available", async function (this: Context) {
+  it("Throws an expected error if no browser is available", async function () {
     // The SinonStub type does not include this second parameter to throws().
     const testErrorMessage = "No browsers available on this test.";
     (sandbox.stub(interactiveBrowserMockable, "open") as any).throws(
@@ -64,13 +64,8 @@ describe("InteractiveBrowserCredential (internal)", function () {
       } as InteractiveBrowserCredentialNodeOptions),
     );
 
-    let error: Error | undefined;
-    try {
-      await credential.getToken(scope);
-    } catch (e: any) {
-      error = e;
-    }
-    assert.equal(error?.name, "BrowserConfigurationAuthError");
-    assert.equal(error?.message, "No browsers available on this test.");
+    await expect(credential.getToken(scope)).rejects.toThrowError(
+      new BrowserConfigurationAuthError("No browsers available on this test."),
+    );
   });
 });

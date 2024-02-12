@@ -5,13 +5,13 @@
 
 import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup";
 import { Recorder, env, isLiveMode } from "@azure-tools/test-recorder";
-import { Context } from "mocha";
+import { TestContext, afterEach, beforeEach, describe, expect, it } from "vitest";
+
 import { DeviceCodeCredential } from "../../../src";
 import { GetTokenOptions } from "@azure/core-auth";
 import { MsalNode } from "../../../src/msal/nodeFlows/msalNodeCommon";
 import { PublicClientApplication } from "@azure/msal-node";
 import Sinon from "sinon";
-import { assert } from "chai";
 
 describe("DeviceCodeCredential (internal)", function () {
   let cleanup: MsalTestCleanup;
@@ -19,8 +19,8 @@ describe("DeviceCodeCredential (internal)", function () {
   let doGetTokenSpy: Sinon.SinonSpy;
   let recorder: Recorder;
 
-  beforeEach(async function (this: Context) {
-    const setup = await msalNodeTestSetup(this.currentTest);
+  beforeEach(async function (ctx: TestContext) {
+    const setup = await msalNodeTestSetup(ctx);
     cleanup = setup.cleanup;
     recorder = setup.recorder;
 
@@ -32,17 +32,15 @@ describe("DeviceCodeCredential (internal)", function () {
       "acquireTokenByDeviceCode",
     );
   });
+
   afterEach(async function () {
     await cleanup();
   });
 
   const scope = "https://vault.azure.net/.default";
 
-  it("Authenticates silently after the initial request", async function (this: Context) {
-    // These tests should not run live because this credential requires user interaction.
-    if (isLiveMode()) {
-      this.skip();
-    }
+  // These tests should not run live because this credential requires user interaction.
+  it.skipIf(isLiveMode())("Authenticates silently after the initial request", async function () {
     const credential = new DeviceCodeCredential(
       recorder.configureClientOptions({
         tenantId: env.AZURE_TENANT_ID,
@@ -51,27 +49,16 @@ describe("DeviceCodeCredential (internal)", function () {
     );
 
     await credential.getToken(scope);
-    assert.equal(getTokenSilentSpy.callCount, 1, "getTokenSilentSpy.callCount should have been 1");
-    assert.equal(doGetTokenSpy.callCount, 1, "doGetTokenSpy.callCount should have been 1");
+    expect(getTokenSilentSpy.callCount).toEqual(1);
+    expect(doGetTokenSpy.callCount).toEqual(1);
 
     await credential.getToken(scope);
-    assert.equal(
-      getTokenSilentSpy.callCount,
-      2,
-      "getTokenSilentSpy.callCount should have been 2 (2nd time)",
-    );
-    assert.equal(
-      doGetTokenSpy.callCount,
-      1,
-      "doGetTokenSpy.callCount should have been 1 (2nd time)",
-    );
+    expect(getTokenSilentSpy.callCount).toEqual(2);
+    expect(doGetTokenSpy.callCount).toEqual(1);
   });
 
-  it("Authenticates with tenantId on getToken", async function (this: Context) {
-    // These tests should not run live because this credential requires user interaction.
-    if (isLiveMode()) {
-      this.skip();
-    }
+  // These tests should not run live because this credential requires user interaction.
+  it.skipIf(isLiveMode())("Authenticates with tenantId on getToken", async function () {
     const credential = new DeviceCodeCredential(
       recorder.configureClientOptions({
         tenantId: env.AZURE_TENANT_ID,
@@ -80,7 +67,7 @@ describe("DeviceCodeCredential (internal)", function () {
     );
 
     await credential.getToken(scope, { tenantId: env.AZURE_TENANT_ID } as GetTokenOptions);
-    assert.equal(getTokenSilentSpy.callCount, 1, "getTokenSilentSpy.callCount should have been 1");
-    assert.equal(doGetTokenSpy.callCount, 1, "doGetTokenSpy.callCount should have been 1");
+    expect(getTokenSilentSpy.callCount).toEqual(1);
+    expect(doGetTokenSpy.callCount).toEqual(1);
   });
 });

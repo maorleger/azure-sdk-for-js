@@ -74,7 +74,7 @@ describe("ClientSecretCredential (internal)", function () {
     });
   });
 
-  it.skipIf(isLiveMode())("Authenticates with tenantId on getToken", async function (ctx) {
+  it.skipIf(isLiveMode())("Authenticates with tenantId on getToken", async function () {
     const credential = new ClientSecretCredential(
       env.AZURE_TENANT_ID!,
       env.AZURE_CLIENT_ID!,

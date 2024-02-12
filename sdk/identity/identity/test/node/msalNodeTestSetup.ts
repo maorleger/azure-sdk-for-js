@@ -9,7 +9,7 @@ import {
   PublicClientApplication,
 } from "@azure/msal-node";
 import Sinon, { createSandbox } from "sinon";
-import { Suite, TaskContext, Test } from "vitest";
+import { Suite, TaskContext, TestContext } from "vitest";
 
 import { PlaybackTenantId } from "../msalTestUtils";
 import { Recorder } from "@azure-tools/test-recorder";
@@ -20,8 +20,8 @@ export type MsalTestCleanup = () => Promise<void>;
 
 function isTestContext(
   testContextOrStubbedToken: unknown,
-): testContextOrStubbedToken is TaskContext {
-  const testContext = testContextOrStubbedToken as TaskContext;
+): testContextOrStubbedToken is TestContext {
+  const testContext = testContextOrStubbedToken as TestContext;
   return testContext !== undefined && testContext !== null && "task" in testContext;
 }
 
@@ -46,7 +46,7 @@ export interface MsalTestSetupResponse {
 }
 
 export async function msalNodeTestSetup(
-  testContext?: TaskContext,
+  testContext?: TestContext,
   playbackClientId?: string,
 ): Promise<{
   cleanup: MsalTestCleanup;
@@ -60,7 +60,7 @@ export async function msalNodeTestSetup(stubbedToken: AuthenticationResult): Pro
 }>;
 
 export async function msalNodeTestSetup(
-  testContextOrStubbedToken?: TaskContext | AuthenticationResult,
+  testContextOrStubbedToken?: TestContext | AuthenticationResult,
   playbackClientId = "azure_client_id",
 ): Promise<MsalTestSetupResponse> {
   const playbackValues = {
