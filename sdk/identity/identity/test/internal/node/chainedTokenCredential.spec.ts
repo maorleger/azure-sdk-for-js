@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 import { AccessToken, ChainedTokenCredential, TokenCredential } from "../../../src";
-import { assert, describe, it } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import Sinon from "sinon";
 import { logger as chainedTokenCredentialLogger } from "../../../src/credentials/chainedTokenCredential";
@@ -25,14 +25,12 @@ describe("ChainedTokenCredential", function () {
     const getTokenInfoSpy = Sinon.spy(chainedTokenCredentialLogger.getToken, "info");
 
     const accessToken = await chainedTokenCredential.getToken("<scope>");
-    assert.notStrictEqual(accessToken, null);
+    expect(accessToken).to.not.equal(null);
 
-    assert.equal(
-      infoSpy.getCalls()[0].args.join(" "),
+    expect(infoSpy.getCalls()[0].args.join(" ")).to.equal(
       "ChainedTokenCredential => getToken() => Result for TestMockCredential: SUCCESS. Scopes: <scope>.",
     );
-    assert.equal(
-      getTokenInfoSpy.getCalls()[0].args[0],
+    expect(getTokenInfoSpy.getCalls()[0].args[0]).to.equal(
       "Result for TestMockCredential: SUCCESS. Scopes: <scope>.",
     );
 
@@ -55,14 +53,12 @@ describe("ChainedTokenCredential", function () {
     const getTokenInfoSpy = Sinon.spy(chainedTokenCredentialLogger.getToken, "info");
 
     const accessToken = await chainedTokenCredential.getToken("<scope>");
-    assert.notStrictEqual(accessToken, null);
+    expect(accessToken).to.not.equal(null);
 
-    assert.equal(
-      infoSpy.getCalls()[0].args.join(" "),
+    expect(infoSpy.getCalls()[0].args.join(" ")).to.equal(
       "ChainedTokenCredential => getToken() => Result for Object: SUCCESS. Scopes: <scope>.",
     );
-    assert.equal(
-      getTokenInfoSpy.getCalls()[0].args[0],
+    expect(getTokenInfoSpy.getCalls()[0].args[0]).to.equal(
       "Result for Object: SUCCESS. Scopes: <scope>.",
     );
 
