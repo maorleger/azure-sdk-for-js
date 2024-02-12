@@ -24,8 +24,8 @@ describe("ClientCertificateCredential (internal)", function () {
   let doGetTokenSpy: Sinon.SinonSpy;
   let recorder: Recorder;
 
-  beforeEach(async function (this: Context) {
-    const setup = await msalNodeTestSetup(this.currentTest);
+  beforeEach(async function (ctx) {
+    const setup = await msalNodeTestSetup(ctx);
     cleanup = setup.cleanup;
     recorder = setup.recorder;
 
@@ -152,30 +152,30 @@ describe("ClientCertificateCredential (internal)", function () {
   // This is not the way to test persistence with acquireTokenByClientCredential,
   // since acquireTokenByClientCredential caches at the method level, and not with the same cache used for acquireTokenSilent.
   // I'm leaving this here so I can remember about this in the future.
-  it.skip("Authenticates silently after the initial request", async function () {
-    if (isPlaybackMode()) {
-      // MSAL creates a client assertion based on the certificate that I haven't been able to mock.
-      // This assertion could be provided as parameters, but we don't have that in the public API yet,
-      // and I'm trying to avoid having to generate one ourselves.
-      this.skip();
-    }
+  it.skipIf(isPlaybackMode())(
+    "Authenticates silently after the initial request",
+    async function () {
+      const credential = new ClientCertificateCredential(
+        env.AZURE_TENANT_ID!,
+        env.AZURE_CLIENT_ID!,
+        {
+          certificatePath,
+        },
+      );
 
-    const credential = new ClientCertificateCredential(env.AZURE_TENANT_ID!, env.AZURE_CLIENT_ID!, {
-      certificatePath,
-    });
+      await credential.getToken(scope);
+      assert.equal(getTokenSilentSpy.callCount, 1);
+      assert.equal(doGetTokenSpy.callCount, 1);
 
-    await credential.getToken(scope);
-    assert.equal(getTokenSilentSpy.callCount, 1);
-    assert.equal(doGetTokenSpy.callCount, 1);
+      await credential.getToken(scope);
+      assert.equal(getTokenSilentSpy.callCount, 2);
 
-    await credential.getToken(scope);
-    assert.equal(getTokenSilentSpy.callCount, 2);
-
-    // Even though we're providing the same default in memory persistence cache that we use for DeviceCodeCredential,
-    // The Client Credential flow does not return the account information from the authentication service,
-    // so each time getToken gets called, we will have to acquire a new token through the service.
-    assert.equal(doGetTokenSpy.callCount, 2);
-  });
+      // Even though we're providing the same default in memory persistence cache that we use for DeviceCodeCredential,
+      // The Client Credential flow does not return the account information from the authentication service,
+      // so each time getToken gets called, we will have to acquire a new token through the service.
+      assert.equal(doGetTokenSpy.callCount, 2);
+    },
+  );
 
   // TODO: Enable again once we're ready to release this feature.
   it.skip("supports specifying the regional authority", async function () {

@@ -67,7 +67,7 @@
     "unit-test:node": "dev-tool run test:node-ts-input -- --timeout 300000 --exclude 'test/**/browser/**/*.spec.ts' 'test/**/**/*.spec.ts'",
     "unit-test:node:no-timeouts": "dev-tool run test:node-ts-input -- --timeout Infinite --exclude 'test/**/browser/**/*.spec.ts' 'test/**/**/*.spec.ts'",
     "unit-test": "npm run unit-test:node && npm run unit-test:browser",
-    "vitest": "dev-tool run test:vitest"
+    "vitest": "dev-tool run test:vitest -- "
   },
   "files": [
     "dist/",

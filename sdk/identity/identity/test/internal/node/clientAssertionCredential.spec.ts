@@ -6,11 +6,10 @@
 import * as path from "path";
 
 import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup";
-import { afterEach, assert, beforeEach, describe, it } from "vitest";
+import { TaskContext, afterEach, assert, beforeEach, describe, it } from "vitest";
 
 import { ClientAssertionCredential } from "../../../src";
 import { ConfidentialClientApplication } from "@azure/msal-node";
-import { Context } from "mocha";
 import { MsalNode } from "../../../src/msal/nodeFlows/msalNodeCommon";
 import Sinon from "sinon";
 import { createJWTTokenFromCertificate } from "../../public/node/utils/utils";
@@ -21,19 +20,21 @@ describe("ClientAssertionCredential (internal)", function () {
   let getTokenSilentSpy: Sinon.SinonSpy;
   let doGetTokenSpy: Sinon.SinonSpy;
 
-  beforeEach(async function (this: Context) {
-    const setup = await msalNodeTestSetup(this.currentTest);
+  beforeEach(async function (ctx: TaskContext) {
+    // TODO: this is a workaround to avoid the test from failing
+    // Update recorder to accept testContextLike
+    const setup = await msalNodeTestSetup(ctx);
     cleanup = setup.cleanup;
 
     getTokenSilentSpy = setup.sandbox.spy(MsalNode.prototype, "getTokenSilent");
-    doGetTokenSpy = Sinon.spy(
+    doGetTokenSpy = setup.sandbox.spy(
       ConfidentialClientApplication.prototype,
       "acquireTokenByClientCredential",
     );
   });
+
   afterEach(async function () {
     await cleanup();
-    Sinon.restore();
   });
 
   it("Should throw if the parameteres are not correctly specified", async function () {

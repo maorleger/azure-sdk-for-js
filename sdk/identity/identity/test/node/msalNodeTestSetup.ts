@@ -9,12 +9,35 @@ import {
   PublicClientApplication,
 } from "@azure/msal-node";
 import Sinon, { createSandbox } from "sinon";
+import { Suite, TaskContext, Test } from "vitest";
 
 import { PlaybackTenantId } from "../msalTestUtils";
 import { Recorder } from "@azure-tools/test-recorder";
-import { Test } from "mocha";
 
 export type MsalTestCleanup = () => Promise<void>;
+
+// TODO: promote this to test-recorder so everyone can benefit
+
+function isTestContext(
+  testContextOrStubbedToken: unknown,
+): testContextOrStubbedToken is TaskContext {
+  const testContext = testContextOrStubbedToken as TaskContext;
+  return testContext !== undefined && testContext !== null && "task" in testContext;
+}
+
+function recordingName(testContext: TaskContext | undefined) {
+  if (!testContext) {
+    throw new Error("unexpected undefined");
+  }
+  const results = [];
+  let current: Suite | undefined = testContext.task.suite;
+  while (current && current.name.length > 0) {
+    results.unshift(current.name);
+    current = current.suite;
+  }
+  console.log(results);
+  return results.join(" ");
+}
 
 export interface MsalTestSetupResponse {
   cleanup: MsalTestCleanup;
@@ -23,7 +46,7 @@ export interface MsalTestSetupResponse {
 }
 
 export async function msalNodeTestSetup(
-  testContext?: Test,
+  testContext?: TaskContext,
   playbackClientId?: string,
 ): Promise<{
   cleanup: MsalTestCleanup;
@@ -37,7 +60,7 @@ export async function msalNodeTestSetup(stubbedToken: AuthenticationResult): Pro
 }>;
 
 export async function msalNodeTestSetup(
-  testContextOrStubbedToken?: Test | AuthenticationResult,
+  testContextOrStubbedToken?: TaskContext | AuthenticationResult,
   playbackClientId = "azure_client_id",
 ): Promise<MsalTestSetupResponse> {
   const playbackValues = {
@@ -49,10 +72,13 @@ export async function msalNodeTestSetup(
   const stub = sandbox.stub(util, "randomUUID");
   stub.returns(playbackValues.correlationId);
 
-  if (testContextOrStubbedToken instanceof Test || testContextOrStubbedToken === undefined) {
-    const testContext = testContextOrStubbedToken;
-
-    const recorder = new Recorder(testContext);
+  if (isTestContext(testContextOrStubbedToken) || testContextOrStubbedToken === undefined) {
+    const recorder = new Recorder({
+      parent: {
+        fullTitle: () => recordingName(testContextOrStubbedToken),
+      },
+      title: testContextOrStubbedToken?.task.name,
+    } as any);
     recorder.setMatcher("CustomDefaultMatcher", {
       excludedHeaders: ["X-AnchorMailbox", "Content-Length", "User-Agent"],
     });
