@@ -12,6 +12,7 @@ import {
   getAuthority,
   getKnownAuthorities,
   getMSALLogLevel,
+  handleMsalError,
   publicToMsal,
 } from "../utils";
 
@@ -31,6 +32,12 @@ const msalLogger = credentialLogger("MsalClient");
  * This client is used to interact with Microsoft's identity platform.
  */
 export interface MsalClient {
+  getTokenByAzureManagedAssertion(
+    scopes: string[],
+    clientAssertion: () => Promise<string>,
+    azureObjectId: string,
+    options?: GetTokenByAzureManagedAssertionOptions,
+  ): Promise<AccessToken>;
   /**
    * Retrieves an access token by using a client secret.
    *
@@ -254,7 +261,37 @@ To work with multiple accounts for the same Client ID and Tenant ID, please prov
     };
   }
 
+  async function getTokenByAzureManagedAssertion(
+    scopes: string[],
+    clientAssertionFn: () => Promise<string>,
+    azureObjectId: string,
+    options?: GetTokenByAzureManagedAssertionOptions,
+  ): Promise<AccessToken> {
+    msalLogger.getToken.info(`Attempting to acquire token using Azure Managed Identity`);
+    // validate clientAssertion, or anything that is needed for _this_ flow
+    const clientAssertion = await clientAssertionFn();
+    const msalApp = await getConfidentialApp(options);
+
+    try {
+      const accessToken = await msalApp.acquireTokenByAzureManagedAssertion({
+        scopes,
+        claims: options?.claims,
+        clientAssertion,
+        azureObjectId,
+      } as any);
+      ensureValidMsalToken(scopes, accessToken, options);
+      return {
+        token: accessToken.accessToken,
+        expiresOnTimestamp: accessToken.expiresOn.getTime(),
+      };
+    } catch (e: any) {
+      throw handleMsalError(scopes, e, options);
+    }
+  }
+
   return {
+    getTokenByAzureManagedAssertion,
+
     async getTokenByClientSecret(scopes, clientSecret, options = {}) {
       msalLogger.getToken.info(`Attempting to acquire token using client secret`);
 

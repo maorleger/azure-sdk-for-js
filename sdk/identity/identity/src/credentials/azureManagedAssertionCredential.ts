@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 import { AccessToken, GetTokenOptions, TokenCredential } from "@azure/core-auth";
+import { MsalClient, createMsalClient } from "../msal/nodeFlows/msalClient";
 
 import { MsalNode } from "../msal/nodeFlows/msalNodeCommon";
 import { MultiTenantTokenCredentialOptions } from "./multiTenantTokenCredentialOptions";
@@ -12,7 +13,7 @@ const logger = credentialLogger("ClientAssertionCredential");
 export class AzureManagedAssertionCredential implements TokenCredential {
   private clientAssertion: () => Promise<string>;
   private azureObjectId: string;
-  private msalFlow: MsalNode;
+  private msalClient: MsalClient;
 
   constructor(
     tenantId: string,
@@ -25,19 +26,16 @@ export class AzureManagedAssertionCredential implements TokenCredential {
     this.azureObjectId = azureObjectId;
 
     // Following existing pattern
-    this.msalFlow = new MsalAzureManagedAssertion({
-      ...options,
-      logger,
-      clientId,
-      tenantId,
-      tokenCredentialOptions: options,
-      clientAssertion,
-      azureObjectId,
-    });
+    this.msalClient = createMsalClient(clientId, tenantId, options);
   }
 
   getToken(scopes: string | string[], options?: GetTokenOptions): Promise<AccessToken | null> {
     const arrayScopes = Array.isArray(scopes) ? scopes : [scopes];
-    return this.msalFlow.getToken(arrayScopes, options);
+    return this.msalClient.getTokenByAzureManagedAssertion(
+      arrayScopes,
+      this.clientAssertion,
+      this.azureObjectId,
+      options,
+    );
   }
 }
