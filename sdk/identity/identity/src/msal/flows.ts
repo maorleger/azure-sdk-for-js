@@ -20,6 +20,8 @@ export interface MsalFlowOptions {
   disableInstanceDiscovery?: boolean;
   getAssertion?: () => Promise<string>;
   enableMsaPassthrough?: boolean;
+  azureObjectId?: string;
+  clientAssertion?: () => Promise<string>;
 }
 
 /**

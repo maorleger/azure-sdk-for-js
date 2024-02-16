@@ -153,6 +153,7 @@ export abstract class MsalNode implements MsalFlow {
   private cachedClaims: string | undefined;
 
   protected getAssertion: (() => Promise<string>) | undefined;
+  clientAssertion: (() => Promise<string>) | undefined;
   constructor(options: MsalNodeOptions) {
     this.logger = options.logger;
     this.msalConfig = this.defaultNodeMsalConfig(options);
@@ -163,6 +164,9 @@ export abstract class MsalNode implements MsalFlow {
     this.clientId = this.msalConfig.auth.clientId;
     if (options?.getAssertion) {
       this.getAssertion = options.getAssertion;
+    }
+    if (options?.clientAssertion) {
+      this.clientAssertion = options.clientAssertion;
     }
     this.enableBroker = options?.brokerOptions?.enabled;
     this.enableMsaPassthrough = options?.brokerOptions?.legacyEnableMsaPassthrough;
@@ -326,6 +330,9 @@ export abstract class MsalNode implements MsalFlow {
 
     if (this.getAssertion) {
       this.msalConfig.auth.clientAssertion = await this.getAssertion();
+    }
+    if (this.clientAssertion) {
+      this.msalConfig.auth.clientAssertion = await this.clientAssertion();
     }
     // The confidential client requires either a secret, assertion or certificate.
     if (
