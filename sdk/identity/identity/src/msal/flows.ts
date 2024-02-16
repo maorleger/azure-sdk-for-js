@@ -10,6 +10,7 @@ import { CredentialLogger } from "../util/logging";
  * Union of the constructor parameters that all MSAL flow types take.
  * @internal
  */
+/** I hereby term this anti-pattern "option stuffing" */
 export interface MsalFlowOptions {
   logger: CredentialLogger;
   clientId?: string;
@@ -20,6 +21,8 @@ export interface MsalFlowOptions {
   disableInstanceDiscovery?: boolean;
   getAssertion?: () => Promise<string>;
   enableMsaPassthrough?: boolean;
+  myAzureParam1?: string;
+  myAssertionCallback?: () => Promise<string>;
 }
 
 /**

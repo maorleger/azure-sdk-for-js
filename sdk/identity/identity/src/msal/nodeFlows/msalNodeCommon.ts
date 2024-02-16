@@ -168,6 +168,8 @@ export abstract class MsalNode implements MsalFlow {
     this.enableMsaPassthrough = options?.brokerOptions?.legacyEnableMsaPassthrough;
     this.parentWindowHandle = options.brokerOptions?.parentWindowHandle;
 
+    this.myAzureParam1 = options.myAzureParam1;
+    this.myAssertionCallback = options.myAssertionCallback;
     // If persistence has been configured
     if (persistenceProvider !== undefined && options.tokenCachePersistenceOptions?.enabled) {
       const nonCaeOptions = {

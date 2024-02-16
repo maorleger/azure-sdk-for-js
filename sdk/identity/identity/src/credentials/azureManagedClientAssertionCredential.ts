@@ -26,7 +26,7 @@ export class AzureManagedClientAssertionCredential implements TokenCredential {
     this.tenantId = tenantId;
     this.clientId = clientId;
 
-    this.msalFlow = new MsalManagedIdentity({
+    this.msalFlow = new MsalAzureManagedClientAssertion({
       clientId: this.clientId,
       tenantId: this.tenantId,
       tokenCredentialOptions: options,
