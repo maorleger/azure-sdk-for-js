@@ -44,6 +44,12 @@ export interface MsalClient {
     clientSecret: string,
     options?: GetTokenOptions,
   ): Promise<AccessToken>;
+  getTokenByAzureManagedClientAssertion(
+    scopes: string[],
+    myAzureParam1: string, // required params are passed in as pos arguments
+    myAssertion: string, // things like async callbacks can be resolved in the credential
+    options: AzureManagedClientAssertionOptions, // options can differ based on the flow
+  ): Promise<AccessToken>;
 }
 
 /**
@@ -254,6 +260,30 @@ To work with multiple accounts for the same Client ID and Tenant ID, please prov
     };
   }
 
+  async function getTokenByAzureManagedClientAssertion(
+    scopes: string[],
+    myAzureParam1: string,
+    myAssertion: string,
+    options: AzureManagedClientAssertionOptions,
+  ): Promise<AccessToken> {
+    // clear this is confidential client app
+    const msalApp = await getConfidentialApp(options);
+
+    // can skip silent auth if the credential does not support it
+    const result = await msalApp.acquireTokenByClientCredential({
+      scopes,
+      authority: state.msalConfig.auth.authority,
+      claims: options?.claims,
+    });
+    ensureValidMsalToken(scopes, result ?? undefined, options);
+    msalLogger.getToken.info(formatSuccess(scopes));
+
+    return {
+      token: result.accessToken,
+      expiresOnTimestamp: result.expiresOn.getTime(),
+    };
+  }
+
   return {
     async getTokenByClientSecret(scopes, clientSecret, options = {}) {
       msalLogger.getToken.info(`Attempting to acquire token using client secret`);
@@ -271,5 +301,6 @@ To work with multiple accounts for the same Client ID and Tenant ID, please prov
         }),
       );
     },
+    getTokenByAzureManagedClientAssertion,
   };
 }

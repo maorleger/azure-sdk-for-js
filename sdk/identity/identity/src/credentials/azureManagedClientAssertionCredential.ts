@@ -2,13 +2,14 @@
 // Licensed under the MIT license.
 
 import { AccessToken, GetTokenOptions, TokenCredential } from "@azure/core-auth";
+import { MsalClient, createMsalClient } from "../msal/nodeFlows/msalClient";
 
 import { MsalFlow } from "../msal/flows";
 
 export class AzureManagedClientAssertionCredential implements TokenCredential {
-  private tenantId: string;
-  private clientId: string;
-  private msalFlow: MsalFlow;
+  private msalClient: MsalClient;
+  myAzureParam1: string;
+  myAssertionCallback: () => Promise<string>;
 
   constructor(
     clientId: string,
@@ -23,26 +24,27 @@ export class AzureManagedClientAssertionCredential implements TokenCredential {
       );
     }
 
-    this.tenantId = tenantId;
-    this.clientId = clientId;
+    this.myAzureParam1 = myAzureParam1;
+    this.myAssertionCallback = myAssertionCallback;
 
-    this.msalFlow = new MsalAzureManagedClientAssertion({
-      clientId: this.clientId,
-      tenantId: this.tenantId,
-      tokenCredentialOptions: options,
-      myAzureParam1,
-      myAssertionCallback,
-      ...options,
-    });
+    this.msalClient = createMsalClient(clientId, tenantId, options);
   }
 
-  getToken(
+  async getToken(
     scopes: string | string[],
     options?: GetTokenOptions | undefined,
   ): Promise<AccessToken | null> {
     if (typeof scopes === "string") {
       scopes = [scopes];
     }
-    return this.msalFlow.getToken(scopes, options);
+    // resolve the callback here
+    const assertion = await this.myAssertionCallback();
+    return this.msalClient.getTokenByAzureManagedClientAssertion(
+      scopes,
+      // required params are required
+      this.myAzureParam1,
+      assertion,
+      options,
+    );
   }
 }
