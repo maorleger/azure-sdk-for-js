@@ -13,6 +13,7 @@ param (
 #   return
 # }
 
+Write-Host "test-resources-post DeploymentOutputs: $deploymentOutputs"
 $ErrorActionPreference = 'Stop'
 $PSNativeCommandUseErrorActionPreference = $true
 
@@ -25,7 +26,7 @@ az login --service-principal -u $DeploymentOutputs['IDENTITY_CLIENT_ID'] -p $Dep
 az account set --subscription $DeploymentOutputs['IDENTITY_SUBSCRIPTION_ID']
 
 Write-Host "Sleeping for a bit to ensure container registry is ready."
-Start-Sleep -s 60
+Start-Sleep -s 30
 
 az acr login -n $DeploymentOutputs['IDENTITY_ACR_NAME']
 $loginServer = az acr show -n $DeploymentOutputs['IDENTITY_ACR_NAME'] --query loginServer -o tsv
@@ -33,8 +34,8 @@ $loginServer = az acr show -n $DeploymentOutputs['IDENTITY_ACR_NAME'] --query lo
 
 # Azure Functions app deployment
 
-Compress-Archive -Path "$workingFolder/AzureFunctions/RunTest/*"  -DestinationPath "$workingFolder/AzureFunctions/app.zip" -Force
-az functionapp deployment source config-zip -g $DeploymentOutputs['IDENTITY_RESOURCE_GROUP'] -n $DeploymentOutputs['IDENTITY_FUNCTION_NAME'] --src "$workingFolder/AzureFunctions/app.zip"
+# Compress-Archive -Path "$workingFolder/AzureFunctions/RunTest/*"  -DestinationPath "$workingFolder/AzureFunctions/app.zip" -Force
+# az functionapp deployment source config-zip -g $DeploymentOutputs['IDENTITY_RESOURCE_GROUP'] -n $DeploymentOutputs['IDENTITY_FUNCTION_NAME'] --src "$workingFolder/AzureFunctions/app.zip"
 # $image = "$loginServer/identity-functions-test-image"
 # docker build --no-cache -t $image "$workingFolder/AzureFunctions"
 # docker push $image
@@ -43,72 +44,74 @@ az functionapp deployment source config-zip -g $DeploymentOutputs['IDENTITY_RESO
 
 # Azure Web Apps app deployment
 Compress-Archive -Path "$workingFolder/AzureWebApps/*" -DestinationPath "$workingFolder/AzureWebApps/app.zip" -Force
-az webapp deploy --resource-group $DeploymentOutputs['IDENTITY_RESOURCE_GROUP'] --name $DeploymentOutputs['IDENTITY_WEBAPP_NAME'] --src-path "$workingFolder/AzureWebApps/app.zip" --async true
+az webapp deploy --resource-group $DeploymentOutputs['IDENTITY_RESOURCE_GROUP'] --name $DeploymentOutputs['IDENTITY_WEBAPP_NAME'] --src-path "$workingFolder/AzureWebApps/app.zip"  --verbose
 Remove-Item -Force "$workingFolder/AzureWebApps/app.zip"
 
+Write-Host "Deployed webapp"
+
 # Azure Kubernetes Service deployment
-$image = "$loginServer/identity-aks-test-image"
-docker build --no-cache -t $image "$workingFolder/AzureKubernetes"
-docker push $image
+# $image = "$loginServer/identity-aks-test-image"
+# docker build --no-cache -t $image "$workingFolder/AzureKubernetes"
+# docker push $image
 
 # Attach the ACR to the AKS cluster
-Write-Host "Attaching ACR to AKS cluster"
-az aks update -n $DeploymentOutputs['IDENTITY_AKS_CLUSTER_NAME'] -g $DeploymentOutputs['IDENTITY_RESOURCE_GROUP'] --attach-acr $DeploymentOutputs['IDENTITY_ACR_NAME']
+# Write-Host "Attaching ACR to AKS cluster"
+# az aks update -n $DeploymentOutputs['IDENTITY_AKS_CLUSTER_NAME'] -g $DeploymentOutputs['IDENTITY_RESOURCE_GROUP'] --attach-acr $DeploymentOutputs['IDENTITY_ACR_NAME']
 
-$MIClientId = $DeploymentOutputs['IDENTITY_USER_DEFINED_IDENTITY_CLIENT_ID']
-$MIName = $DeploymentOutputs['IDENTITY_USER_DEFINED_IDENTITY_NAME']
-$SaAccountName = 'workload-identity-sa'
-$PodName = $DeploymentOutputs['IDENTITY_AKS_POD_NAME']
-$storageName = $DeploymentOutputs['IDENTITY_STORAGE_NAME_2']
+# $MIClientId = $DeploymentOutputs['IDENTITY_USER_DEFINED_IDENTITY_CLIENT_ID']
+# $MIName = $DeploymentOutputs['IDENTITY_USER_DEFINED_IDENTITY_NAME']
+# $SaAccountName = 'workload-identity-sa'
+# $PodName = $DeploymentOutputs['IDENTITY_AKS_POD_NAME']
+# $storageName = $DeploymentOutputs['IDENTITY_STORAGE_NAME_2']
 
 # Get the aks cluster credentials
-Write-Host "Getting AKS credentials"
-az aks get-credentials --resource-group $DeploymentOutputs['IDENTITY_RESOURCE_GROUP'] --name $DeploymentOutputs['IDENTITY_AKS_CLUSTER_NAME']
+# Write-Host "Getting AKS credentials"
+# az aks get-credentials --resource-group $DeploymentOutputs['IDENTITY_RESOURCE_GROUP'] --name $DeploymentOutputs['IDENTITY_AKS_CLUSTER_NAME']
 
-#Get the aks cluster OIDC issuer
-Write-Host "Getting AKS OIDC issuer"
-$AKS_OIDC_ISSUER = az aks show -n $DeploymentOutputs['IDENTITY_AKS_CLUSTER_NAME'] -g $DeploymentOutputs['IDENTITY_RESOURCE_GROUP'] --query "oidcIssuerProfile.issuerUrl" -otsv
+# #Get the aks cluster OIDC issuer
+# Write-Host "Getting AKS OIDC issuer"
+# $AKS_OIDC_ISSUER = az aks show -n $DeploymentOutputs['IDENTITY_AKS_CLUSTER_NAME'] -g $DeploymentOutputs['IDENTITY_RESOURCE_GROUP'] --query "oidcIssuerProfile.issuerUrl" -otsv
 
-# Create the federated identity
-Write-Host "Creating federated identity"
-az identity federated-credential create --name $MIName --identity-name $MIName --resource-group $DeploymentOutputs['IDENTITY_RESOURCE_GROUP'] --issuer $AKS_OIDC_ISSUER --subject system:serviceaccount:default:workload-identity-sa
+# # Create the federated identity
+# Write-Host "Creating federated identity"
+# az identity federated-credential create --name $MIName --identity-name $MIName --resource-group $DeploymentOutputs['IDENTITY_RESOURCE_GROUP'] --issuer $AKS_OIDC_ISSUER --subject system:serviceaccount:default:workload-identity-sa
 
-# Build the kubernetes deployment yaml
-$kubeConfig = @"
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  annotations:
-    azure.workload.identity/client-id: $MIClientId
-  name: $SaAccountName
-  namespace: default
----
-apiVersion: v1
-kind: Pod
-metadata:
-  name: $PodName
-  namespace: default
-  labels:
-    azure.workload.identity/use: "true"
-spec:
-  serviceAccountName: $SaAccountName
-  containers:
-  - name: $PodName
-    image: $image
-    env:
-    - name: IDENTITY_STORAGE_NAME
-      value: "$StorageName"
-    ports:
-    - containerPort: 80
-  nodeSelector:
-    kubernetes.io/os: linux
-"@
+# # Build the kubernetes deployment yaml
+# $kubeConfig = @"
+# apiVersion: v1
+# kind: ServiceAccount
+# metadata:
+#   annotations:
+#     azure.workload.identity/client-id: $MIClientId
+#   name: $SaAccountName
+#   namespace: default
+# ---
+# apiVersion: v1
+# kind: Pod
+# metadata:
+#   name: $PodName
+#   namespace: default
+#   labels:
+#     azure.workload.identity/use: "true"
+# spec:
+#   serviceAccountName: $SaAccountName
+#   containers:
+#   - name: $PodName
+#     image: $image
+#     env:
+#     - name: IDENTITY_STORAGE_NAME
+#       value: "$StorageName"
+#     ports:
+#     - containerPort: 80
+#   nodeSelector:
+#     kubernetes.io/os: linux
+# "@
 
-Set-Content -Path "$workingFolder/kubeconfig.yaml" -Value $kubeConfig
-Write-Host "Created kubeconfig.yaml with contents:"
-Write-Host $kubeConfig
+# Set-Content -Path "$workingFolder/kubeconfig.yaml" -Value $kubeConfig
+# Write-Host "Created kubeconfig.yaml with contents:"
+# Write-Host $kubeConfig
 
-# Apply the config
-kubectl apply -f "$workingFolder/kubeconfig.yaml" --overwrite=true
-Write-Host "Applied kubeconfig.yaml"
+# # Apply the config
+# kubectl apply -f "$workingFolder/kubeconfig.yaml" --overwrite=true
+# Write-Host "Applied kubeconfig.yaml"
 az logout
