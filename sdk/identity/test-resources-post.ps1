@@ -21,7 +21,6 @@ $webappRoot = "$PSScriptRoot/identity/integration" | Resolve-Path
 $workingFolder = $webappRoot;
 
 Write-Host "Working directory: $workingFolder"
-
 az login --service-principal -u $DeploymentOutputs['IDENTITY_CLIENT_ID'] -p $DeploymentOutputs['IDENTITY_CLIENT_SECRET'] --tenant $DeploymentOutputs['IDENTITY_TENANT_ID']
 az account set --subscription $DeploymentOutputs['IDENTITY_SUBSCRIPTION_ID']
 
@@ -43,9 +42,12 @@ az account set --subscription $DeploymentOutputs['IDENTITY_SUBSCRIPTION_ID']
 # az functionapp config container set -g $DeploymentOutputs['IDENTITY_RESOURCE_GROUP'] -n $DeploymentOutputs['IDENTITY_FUNCTION_NAME'] -i $image -r $loginServer -p $(az acr credential show -n $DeploymentOutputs['IDENTITY_ACR_NAME'] --query "passwords[0].value" -o tsv) -u $(az acr credential show -n $DeploymentOutputs['IDENTITY_ACR_NAME'] --query username -o tsv)
 
 # Azure Web Apps app deployment
-Compress-Archive -Path "$workingFolder/AzureWebApps/*" -DestinationPath "$workingFolder/AzureWebApps/app.zip" -Force
-az webapp deploy --resource-group $DeploymentOutputs['IDENTITY_RESOURCE_GROUP'] --name $DeploymentOutputs['IDENTITY_WEBAPP_NAME'] --src-path "$workingFolder/AzureWebApps/app.zip"  --async
-Remove-Item -Force "$workingFolder/AzureWebApps/app.zip"
+# Compress-Archive -Path "$workingFolder/AzureWebApps/*" -DestinationPath "$workingFolder/AzureWebApps/app.zip" -Force
+
+Push-Location "$webappRoot/AzureWebApps"
+az webapp up --resource-group $DeploymentOutputs['IDENTITY_RESOURCE_GROUP'] --name $DeploymentOutputs['IDENTITY_WEBAPP_NAME'] --runtime NODE:18-lts
+Pop-Location
+# Remove-Item -Force "$workingFolder/AzureWebApps/app.zip"
 
 Write-Host "Deployed webapp"
 

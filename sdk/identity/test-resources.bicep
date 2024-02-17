@@ -152,7 +152,7 @@ resource web 'Microsoft.Web/sites@2022-09-01' = {
     keyVaultReferenceIdentity: 'SystemAssigned'
     siteConfig: {
       alwaysOn: true
-      linuxFxVersion: 'NODE|18'
+      linuxFxVersion: 'NODE|18-lts'
       http20Enabled: true
       minTlsVersion: '1.2'
       appSettings: [
@@ -171,10 +171,6 @@ resource web 'Microsoft.Web/sites@2022-09-01' = {
         {
           name: 'IDENTITY_USER_DEFINED_IDENTITY_CLIENT_ID'
           value: userAssignedIdentity.properties.clientId
-        }
-        {
-          name: 'SCM_DO_BUILD_DURING_DEPLOYMENT'
-          value: 'false'
         }
         {
           name: 'WEBSITE_RUN_FROM_PACKAGE'
