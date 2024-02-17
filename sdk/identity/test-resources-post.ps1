@@ -25,11 +25,11 @@ Write-Host "Working directory: $workingFolder"
 az login --service-principal -u $DeploymentOutputs['IDENTITY_CLIENT_ID'] -p $DeploymentOutputs['IDENTITY_CLIENT_SECRET'] --tenant $DeploymentOutputs['IDENTITY_TENANT_ID']
 az account set --subscription $DeploymentOutputs['IDENTITY_SUBSCRIPTION_ID']
 
-Write-Host "Sleeping for a bit to ensure container registry is ready."
-Start-Sleep -s 30
+# Write-Host "Sleeping for a bit to ensure container registry is ready."
+# Start-Sleep -s 30
 
-az acr login -n $DeploymentOutputs['IDENTITY_ACR_NAME']
-$loginServer = az acr show -n $DeploymentOutputs['IDENTITY_ACR_NAME'] --query loginServer -o tsv
+# az acr login -n $DeploymentOutputs['IDENTITY_ACR_NAME']
+# $loginServer = az acr show -n $DeploymentOutputs['IDENTITY_ACR_NAME'] --query loginServer -o tsv
 
 
 # Azure Functions app deployment
@@ -44,7 +44,7 @@ $loginServer = az acr show -n $DeploymentOutputs['IDENTITY_ACR_NAME'] --query lo
 
 # Azure Web Apps app deployment
 Compress-Archive -Path "$workingFolder/AzureWebApps/*" -DestinationPath "$workingFolder/AzureWebApps/app.zip" -Force
-az webapp deploy --resource-group $DeploymentOutputs['IDENTITY_RESOURCE_GROUP'] --name $DeploymentOutputs['IDENTITY_WEBAPP_NAME'] --src-path "$workingFolder/AzureWebApps/app.zip"  --verbose
+az webapp deploy --resource-group $DeploymentOutputs['IDENTITY_RESOURCE_GROUP'] --name $DeploymentOutputs['IDENTITY_WEBAPP_NAME'] --src-path "$workingFolder/AzureWebApps/app.zip"  --async
 Remove-Item -Force "$workingFolder/AzureWebApps/app.zip"
 
 Write-Host "Deployed webapp"

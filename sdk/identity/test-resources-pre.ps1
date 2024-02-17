@@ -22,20 +22,21 @@ param (
     [ValidatePattern('^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$')]
     [string] $SubscriptionId,
 
-    [Parameter(ParameterSetName = 'Provisioner', Mandatory = $true)]
+    [Parameter(ParameterSetName = 'Provisioner')]
     [ValidateNotNullOrEmpty()]
-    [string] $TenantId
+    [string] $TenantId = '72f988bf-86f1-41af-91ab-2d7cd011db47'
 )
 
 Import-Module -Name $PSScriptRoot/../../eng/common/scripts/X509Certificate2 -Verbose
 
+Remove-Item -Path $PSScriptRoot/sshKey && Remove-Item -Path $PSScriptRoot/sshKey.pub
 ssh-keygen -t rsa -b 4096 -f $PSScriptRoot/sshKey -N '' -C ''
 $sshKey = Get-Content $PSScriptRoot/sshKey.pub
 
 $templateFileParameters['sshPubKey'] = $sshKey
 
 Write-Host "Sleeping for a bit to ensure service principal is ready."
-Start-Sleep -s 45
+Start-Sleep -s 10
 
 az login --service-principal -u $TestApplicationId -p $TestApplicationSecret --tenant $TenantId
 az account set --subscription $SubscriptionId

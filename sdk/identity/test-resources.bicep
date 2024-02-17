@@ -55,15 +55,15 @@ resource blobRoleFunc 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   }
 }
 
-resource blobRoleCluster 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  scope: storageAccount
-  name: guid(resourceGroup().id, blobContributor, 'kubernetes')
-  properties: {
-    principalId: kubernetesCluster.identity.principalId
-    roleDefinitionId: blobContributor
-    principalType: 'ServicePrincipal'
-  }
-}
+// resource blobRoleCluster 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+//   scope: storageAccount
+//   name: guid(resourceGroup().id, blobContributor, 'kubernetes')
+//   properties: {
+//     principalId: kubernetesCluster.identity.principalId
+//     roleDefinitionId: blobContributor
+//     principalType: 'ServicePrincipal'
+//   }
+// }
 
 resource blobRole2 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   scope: storageAccount2
@@ -123,9 +123,9 @@ resource farm 'Microsoft.Web/serverfarms@2021-03-01' = {
   name: '${baseName}_farm'
   location: location
   sku: {
-    name: 'B1'
+    name: 'B3'
     tier: 'Basic'
-    size: 'B1'
+    size: 'B3'
     family: 'B'
     capacity: 1
   }
@@ -151,6 +151,7 @@ resource web 'Microsoft.Web/sites@2022-09-01' = {
     httpsOnly: true
     keyVaultReferenceIdentity: 'SystemAssigned'
     siteConfig: {
+      alwaysOn: true
       linuxFxVersion: 'NODE|18'
       http20Enabled: true
       minTlsVersion: '1.2'
@@ -173,6 +174,10 @@ resource web 'Microsoft.Web/sites@2022-09-01' = {
         }
         {
           name: 'SCM_DO_BUILD_DURING_DEPLOYMENT'
+          value: 'false'
+        }
+        {
+          name: 'WEBSITE_RUN_FROM_PACKAGE'
           value: 'true'
         }
       ]
@@ -266,52 +271,6 @@ resource acrResource 'Microsoft.ContainerRegistry/registries@2023-01-01-preview'
   }
 }
 
-resource kubernetesCluster 'Microsoft.ContainerService/managedClusters@2023-06-01' = {
-  name: baseName
-  location: location
-  identity: {
-    type: 'SystemAssigned'
-  }
-  properties: {
-    kubernetesVersion: kubernetesVersion
-    enableRBAC: true
-    dnsPrefix: 'identitytest'
-    agentPoolProfiles: [
-      {
-        name: 'agentpool'
-        count: 1
-        vmSize: 'Standard_D2s_v3'
-        osDiskSizeGB: 128
-        osDiskType: 'Managed'
-        kubeletDiskType: 'OS'
-        type: 'VirtualMachineScaleSets'
-        enableAutoScaling: false
-        orchestratorVersion: kubernetesVersion
-        mode: 'System'
-        osType: 'Linux'
-        osSKU: 'Ubuntu'
-      }
-    ]
-    linuxProfile: {
-      adminUsername: adminUserName
-      ssh: {
-        publicKeys: [
-          {
-            keyData: sshPubKey
-          }
-        ]
-      }
-    }
-    oidcIssuerProfile: {
-      enabled: true
-    }
-    securityProfile: {
-      workloadIdentity: {
-        enabled: true
-      }
-    }
-  }
-}
 
 output IDENTITY_WEBAPP_NAME string = web.name
 output IDENTITY_USER_DEFINED_IDENTITY string = userAssignedIdentity.id
@@ -320,7 +279,7 @@ output IDENTITY_USER_DEFINED_IDENTITY_NAME string = userAssignedIdentity.name
 output IDENTITY_STORAGE_NAME_1 string = storageAccount.name
 output IDENTITY_STORAGE_NAME_2 string = storageAccount2.name
 output IDENTITY_FUNCTION_NAME string = azureFunction.name
-output IDENTITY_AKS_CLUSTER_NAME string = kubernetesCluster.name
+// output IDENTITY_AKS_CLUSTER_NAME string = kubernetesCluster.name
 output IDENTITY_AKS_POD_NAME string = 'javascript-test-app'
 output IDENTITY_ACR_NAME string = acrResource.name
 output IDENTITY_ACR_LOGIN_SERVER string = acrResource.properties.loginServer

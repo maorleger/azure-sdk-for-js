@@ -4,9 +4,7 @@
 const express = require("express");
 const { ManagedIdentityCredential } = require("@azure/identity");
 const { BlobServiceClient } = require("@azure/storage-blob");
-const dotenv = require("dotenv");
-// Initialize the environment
-dotenv.config();
+
 const app = express();
 
 app.get("/", (req, res) => {
@@ -14,7 +12,9 @@ app.get("/", (req, res) => {
 });
 
 app.get("/hello", (req, res) => {
-  res.send("Hello!");
+  const credential = new ManagedIdentityCredential();
+  console.log(credential);
+  res.send(JSON.stringify(credential));
 });
 
 const port = process.env.PORT || 8080;
