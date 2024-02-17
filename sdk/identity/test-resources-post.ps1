@@ -45,7 +45,7 @@ az account set --subscription $DeploymentOutputs['IDENTITY_SUBSCRIPTION_ID']
 # Compress-Archive -Path "$workingFolder/AzureWebApps/*" -DestinationPath "$workingFolder/AzureWebApps/app.zip" -Force
 
 Push-Location "$webappRoot/AzureWebApps"
-az webapp up --resource-group $DeploymentOutputs['IDENTITY_RESOURCE_GROUP'] --name $DeploymentOutputs['IDENTITY_WEBAPP_NAME'] --runtime NODE:18-lts
+az webapp up --resource-group $DeploymentOutputs['IDENTITY_RESOURCE_GROUP'] --name $DeploymentOutputs['IDENTITY_WEBAPP_NAME'] --plan $DeploymentOutputs['IDENTITY_WEBAPP_PLAN'] --runtime NODE:18-lts
 Pop-Location
 # Remove-Item -Force "$workingFolder/AzureWebApps/app.zip"
 

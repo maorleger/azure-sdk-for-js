@@ -269,6 +269,7 @@ resource acrResource 'Microsoft.ContainerRegistry/registries@2023-01-01-preview'
 
 
 output IDENTITY_WEBAPP_NAME string = web.name
+output IDENTITY_WEBAPP_PLAN string = farm.name
 output IDENTITY_USER_DEFINED_IDENTITY string = userAssignedIdentity.id
 output IDENTITY_USER_DEFINED_IDENTITY_CLIENT_ID string = userAssignedIdentity.properties.clientId
 output IDENTITY_USER_DEFINED_IDENTITY_NAME string = userAssignedIdentity.name
