@@ -9,12 +9,13 @@ ARG NODE_VERSION=20
 # public OSS users should simply leave this argument blank or ignore its presence entirely
 ARG REGISTRY=""
 
-FROM ${REGISTRY}node:${NODE_VERSION}-alpine as repo
-RUN apk --no-cache add git
-RUN git clone https://github.com/azure/azure-sdk-for-js --single-branch --branch main --depth 1 /azure-sdk-for-js
 
-WORKDIR /azure-sdk-for-js/sdk/identity/identity/test/integration/AzureKubernetes
+FROM ${REGISTRY}node:${NODE_VERSION}-alpine as repo
+WORKDIR /app
+
+COPY . .
+
 RUN npm install
 RUN npm install -g typescript
 RUN tsc -p .
-CMD ["node", "index"]
+CMD [ "node", "dist/index.js" ]
