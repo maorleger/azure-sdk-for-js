@@ -54,6 +54,7 @@ export interface ManagedIdentityCredentialResourceIdOptions extends TokenCredent
   resourceId: string;
 }
 
+export { ManagedIdentityCredential } from "./managedIdentityCredential";
 /**
  * Attempts authentication using a managed identity available at the deployment environment.
  * This authentication type works in Azure VMs, App Service instances, Azure Functions applications,
@@ -62,7 +63,7 @@ export interface ManagedIdentityCredentialResourceIdOptions extends TokenCredent
  * More information about configuring managed identities can be found here:
  * https://learn.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview
  */
-export class ManagedIdentityCredential implements TokenCredential {
+class ManagedIdentityCredential implements TokenCredential {
   private identityClient: IdentityClient;
   private clientId: string | undefined;
   private resourceId: string | undefined;

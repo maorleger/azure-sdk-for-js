@@ -9,6 +9,7 @@ import { AzureLogger } from '@azure/logger';
 import { CommonClientOptions } from '@azure/core-client';
 import { GetTokenOptions } from '@azure/core-auth';
 import { LogPolicyOptions } from '@azure/core-rest-pipeline';
+import { ManagedIdentityApplication } from '@azure/msal-node';
 import { TokenCredential } from '@azure/core-auth';
 
 export { AccessToken }
@@ -329,12 +330,16 @@ export interface InteractiveCredentialOptions extends MultiTenantTokenCredential
 // @public
 export const logger: AzureLogger;
 
-// @public
+// @public (undocumented)
 export class ManagedIdentityCredential implements TokenCredential {
     constructor(clientId: string, options?: TokenCredentialOptions);
-    constructor(options?: ManagedIdentityCredentialClientIdOptions);
-    constructor(options?: ManagedIdentityCredentialResourceIdOptions);
+    // Warning: (ae-forgotten-export) The symbol "ManagedIdentityCredentialClientIdOptions_2" needs to be exported by the entry point index.d.ts
+    constructor(options?: ManagedIdentityCredentialClientIdOptions_2);
+    // Warning: (ae-forgotten-export) The symbol "ManagedIdentityCredentialResourceIdOptions_2" needs to be exported by the entry point index.d.ts
+    constructor(options?: ManagedIdentityCredentialResourceIdOptions_2);
     getToken(scopes: string | string[], options?: GetTokenOptions): Promise<AccessToken>;
+    // (undocumented)
+    managedIdentityApp: ManagedIdentityApplication;
 }
 
 // @public
