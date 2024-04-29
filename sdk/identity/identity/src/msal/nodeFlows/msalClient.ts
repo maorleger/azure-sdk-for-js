@@ -23,6 +23,7 @@ import { MsalNodeOptions } from "./msalNodeCommon";
 import { calculateRegionalAuthority } from "../../regionalAuthority";
 import { getLogLevel } from "@azure/logger";
 import { resolveTenantId } from "../../util/tenantIdUtils";
+import { mapScopesToResource } from "../../credentials/managedIdentityCredential/utils";
 
 /**
  * The logger for all MsalClient instances.
@@ -72,6 +73,12 @@ export interface MsalClient {
   getTokenByClientSecret(
     scopes: string[],
     clientSecret: string,
+    options?: GetTokenOptions,
+  ): Promise<AccessToken>;
+
+  getTokenByManagedIdentity(
+    scopes: string[],
+    userAssignedClientId?: string,
     options?: GetTokenOptions,
   ): Promise<AccessToken>;
 }
@@ -377,9 +384,52 @@ To work with multiple accounts for the same Client ID and Tenant ID, please prov
     );
   }
 
+  async function getTokenByManagedIdentity(
+    scopes: string[],
+    userAssignedClientId?: string,
+    options: GetTokenOptions = {},
+  ): Promise<AccessToken> {
+    msalLogger.getToken.info(`Attempting to acquire token using managed identity`);
+
+    const managedIdentityApp = new msal.ManagedIdentityApplication({
+      system: {
+        networkClient: new IdentityClient({
+          allowInsecureConnection: true,
+        }),
+      },
+      managedIdentityIdParams: {
+        userAssignedClientId,
+      },
+    });
+
+    msalLogger.getToken.info(`scopes: ${scopes}`);
+
+    // TODO: use mapScopesToResource helper
+    // TODO: allowInsecureConnection settings
+    const resource = mapScopesToResource(scopes);
+    if (!resource) {
+      throw new Error("Could not map scopes to resource");
+    }
+
+    const request: msal.ManagedIdentityRequestParams = {
+      resource,
+    };
+
+    const response = await managedIdentityApp.acquireToken(request);
+    console.log({ response });
+
+    ensureValidMsalToken(scopes, response, options);
+
+    return {
+      token: response.accessToken,
+      expiresOnTimestamp: response.expiresOn.getTime(),
+    };
+  }
+
   return {
     getTokenByClientSecret,
     getTokenByClientAssertion,
     getTokenByClientCertificate,
+    getTokenByManagedIdentity,
   };
 }

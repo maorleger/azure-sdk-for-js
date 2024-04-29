@@ -159,6 +159,7 @@ export function handleMsalError(
   error: Error,
   getTokenOptions?: GetTokenOptions,
 ): Error {
+  console.log("handleMsalError", error);
   if (
     error.name === "AuthError" ||
     error.name === "ClientAuthError" ||
