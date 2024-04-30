@@ -125,7 +125,10 @@ export class ManagedIdentityCredential implements TokenCredential {
     if (_options?.retryOptions?.maxRetries !== undefined) {
       this.msiRetryConfig.maxRetries = _options.retryOptions.maxRetries;
     }
-    this.identityClient = new IdentityClient(_options);
+    this.identityClient = new IdentityClient({
+      ..._options,
+      userAgentOptions: { userAgentPrefix: "sdk-managed-identity" },
+    });
     this.isAvailableIdentityClient = new IdentityClient({
       ..._options,
       retryOptions: {
