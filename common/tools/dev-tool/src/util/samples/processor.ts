@@ -1,16 +1,22 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import fs from "fs-extra";
-import path from "node:path";
-import ts from "typescript";
+import { AZSDK_META_TAG_PREFIX, AzSdkMetaTags, ModuleInfo, VALID_AZSDK_META_TAGS } from "./info";
+import {
+  createSourceTransform,
+  createToCommonJsTransform,
+  isDependency,
+  isRelativePath,
+} from "./transforms";
+
 import { convert } from "./convert";
-import { createPrinter } from "../printer";
 import { createAccumulator } from "../typescript/accumulator";
 import { createDiagnosticEmitter } from "../typescript/diagnostic";
-import { AzSdkMetaTags, AZSDK_META_TAG_PREFIX, ModuleInfo, VALID_AZSDK_META_TAGS } from "./info";
+import { createPrinter } from "../printer";
+import fs from "fs-extra";
+import path from "node:path";
 import { testSyntax } from "./syntax";
-import { createToCommonJsTransform, isDependency, isRelativePath } from "./transforms";
+import ts from "typescript";
 
 const log = createPrinter("samples:processor");
 
@@ -116,8 +122,15 @@ export async function processSources(
     const jsModuleText = await convert(sourceText, {
       fileName: source,
       transformers: {
-        before: [sourceProcessor],
+        before: [createSourceTransform(requireInScope), sourceProcessor],
         after: [createToCommonJsTransform(requireInScope)],
+      },
+    });
+
+    const tsModuleText = await convert(sourceText, {
+      fileName: source,
+      transformers: {
+        before: [createSourceTransform(requireInScope)],
       },
     });
 
@@ -134,7 +147,7 @@ export async function processSources(
     return {
       filePath: source,
       relativeSourcePath,
-      text: sourceText,
+      text: tsModuleText,
       jsModuleText,
       summary,
       importedModules: accumulator.importedModules.filter(isDependency),

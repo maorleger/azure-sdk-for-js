@@ -1,10 +1,66 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+import nodeBuiltins from "builtin-modules";
 import ts from "typescript";
 
-import nodeBuiltins from "builtin-modules";
+export const createSourceTransform: (
+  getPackage: (moduleSpecifier: string) => unknown,
+) => ts.TransformerFactory<ts.SourceFile> = (_) => (context) => (sourceFile) => {
+  const visitor: ts.Visitor = (node) => {
+    if (ts.isImportDeclaration(node)) {
+      if (node.moduleSpecifier.getText() === '"@azure-tools/test-credential"') {
+        return ts.factory.createImportDeclaration(
+          node.modifiers,
+          ts.factory.createImportClause(
+            false,
+            undefined,
+            ts.factory.createNamedImports([
+              ts.factory.createImportSpecifier(
+                false,
+                undefined,
+                ts.factory.createIdentifier("DefaultAzureCredential"),
+              ),
+            ]),
+          ),
 
+          ts.factory.createStringLiteral("@azure/identity"),
+          node.attributes,
+        );
+      }
+    }
+
+    // Change usage in the function
+    if (ts.isVariableDeclaration(node)) {
+      if (
+        node.initializer &&
+        ts.isCallExpression(node.initializer) &&
+        ts.isIdentifier(node.initializer.expression) &&
+        node.initializer.expression.text === "createTestCredential"
+      ) {
+        return ts.factory.updateVariableDeclaration(
+          node,
+          node.name,
+          node.exclamationToken,
+          node.type,
+          ts.factory.createNewExpression(
+            ts.factory.createIdentifier("DefaultAzureCredential"),
+            undefined,
+            [],
+          ),
+        );
+      }
+    }
+
+    return ts.visitEachChild(node, visitor, context);
+  };
+
+  const visited = ts.visitNode(sourceFile, visitor);
+  if (!visited) {
+    throw new Error("Expect valid visited node");
+  }
+  return visited as ts.SourceFile;
+};
 /**
  * A TypeScript API transformer that replaces imports with CommonJS `require` calls.
  *

@@ -1,17 +1,6 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import fs from "fs-extra";
-import path from "node:path";
-import { copy, dir, file, FileTreeFactory, lazy, safeClean, temp } from "../fileTree";
-import { findMatchingFiles } from "../findMatchingFiles";
-import { createPrinter } from "../printer";
-import { ProjectInfo, resolveRoot } from "../resolveProject";
-import {
-  getSampleConfiguration,
-  MIN_SUPPORTED_NODE_VERSION,
-  SampleConfiguration,
-} from "./configuration";
 import {
   AZSDK_META_TAG_PREFIX,
   DEFAULT_TYPESCRIPT_CONFIG,
@@ -19,9 +8,21 @@ import {
   OutputKind,
   SampleGenerationInfo,
 } from "./info";
-import { processSources } from "./processor";
+import { FileTreeFactory, copy, dir, file, lazy, safeClean, temp } from "../fileTree";
+import {
+  MIN_SUPPORTED_NODE_VERSION,
+  SampleConfiguration,
+  getSampleConfiguration,
+} from "./configuration";
+import { ProjectInfo, resolveRoot } from "../resolveProject";
+
+import { createPrinter } from "../printer";
 import devToolPackageJson from "../../../package.json";
+import { findMatchingFiles } from "../findMatchingFiles";
+import fs from "fs-extra";
 import instantiateSampleReadme from "../../templates/sampleReadme.md";
+import path from "node:path";
+import { processSources } from "./processor";
 import { resolveModule } from "./transforms";
 
 const log = createPrinter("generator");
@@ -126,6 +127,7 @@ export async function makeSampleGenerationInfo(
     // If we are a beta package, use "next", otherwise we will use "latest"
     [projectInfo.name]: projectInfo.version.includes("beta") ? "next" : "latest",
     // We use this universally
+    "@azure/identity": "latest",
     dotenv: "latest",
   };
 
@@ -357,8 +359,8 @@ export async function makeSamplesFactory(
               copy("sample.env", path.join(projectInfo.path, "sample.env")),
               // We copy the samples sources in to the `src` folder on the typescript side
               dir("src", [
-                ...info.moduleInfos.map(({ relativeSourcePath, filePath }) =>
-                  file(relativeSourcePath, () => postProcess(fs.readFileSync(filePath))),
+                ...info.moduleInfos.map(({ relativeSourcePath, text }) =>
+                  file(relativeSourcePath, () => postProcess(text)),
                 ),
                 ...dtsFiles.map(([relative, absolute]) =>
                   file(relative, fs.readFileSync(absolute)),
