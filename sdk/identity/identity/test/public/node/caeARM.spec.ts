@@ -8,8 +8,8 @@ import {
   DeviceCodeCredential,
   TokenCredential,
   UsernamePasswordCredential,
-} from "../../../src";
-import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup";
+} from "../../../src/index.js";
+import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup.js";
 import { Recorder, delay, env } from "@azure-tools/test-recorder";
 import {
   bearerTokenAuthenticationPolicy,
@@ -17,11 +17,10 @@ import {
   createEmptyPipeline,
   createPipelineRequest,
 } from "@azure/core-rest-pipeline";
-import { Context } from "mocha";
-import { DeveloperSignOnClientId } from "../../../src/constants";
-import { IdentityClient } from "../../../src/client/identityClient";
-import { assert } from "chai";
+import { DeveloperSignOnClientId } from "../../../src/constants.js";
+import { IdentityClient } from "../../../src/client/identityClient.js";
 import { authorizeRequestOnClaimChallenge } from "@azure/core-client";
+import { describe, it, assert, expect, vi, beforeEach, afterEach } from "vitest";
 
 /**
  * Sequence of events needed to test the CAE challenges on the Graph endpoint.
@@ -139,8 +138,8 @@ describe.skip("CAE", function () {
   let cleanup: MsalTestCleanup;
   let recorder: Recorder;
 
-  beforeEach(async function (this: Context) {
-    const setup = await msalNodeTestSetup(this.currentTest);
+  beforeEach(async function (ctx) {
+    const setup = await msalNodeTestSetup(ctx);
     cleanup = setup.cleanup;
     recorder = setup.recorder;
   });
@@ -148,7 +147,7 @@ describe.skip("CAE", function () {
     await cleanup();
   });
 
-  it("DeviceCodeCredential", async function (this: Context) {
+  it("DeviceCodeCredential", async function (ctx) {
     const [firstAccessToken, finalAccessToken] = await challengeFlow(
       new DeviceCodeCredential(recorder.configureClientOptions({ tenantId: env.AZURE_TENANT_ID })),
       recorder,
@@ -157,7 +156,7 @@ describe.skip("CAE", function () {
     assert.notDeepEqual(firstAccessToken, finalAccessToken);
   });
 
-  it("UsernamePasswordCredential", async function (this: Context) {
+  it("UsernamePasswordCredential", async function (ctx) {
     // Important: Recording this test may only work in certain tenants.
 
     const [firstAccessToken, finalAccessToken] = await challengeFlow(

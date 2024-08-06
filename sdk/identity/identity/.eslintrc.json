@@ -3,6 +3,7 @@
   "extends": ["plugin:@azure/azure-sdk/azure-sdk-base"],
   "ignorePatterns": ["test/manual*"],
   "rules": {
-    "@azure/azure-sdk/ts-naming-options": "warn"
+    "@azure/azure-sdk/ts-naming-options": "warn",
+    "@typescript-eslint/ban-ts-comment": "off" // until we sort out the MSAL problems
   }
 }

@@ -4,23 +4,21 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 
 import { AzureLogger, setLogLevel } from "@azure/logger";
-import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup";
+import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup.js";
 import { Recorder, delay, env, isLiveMode, isPlaybackMode } from "@azure-tools/test-recorder";
 
-import { ClientSecretCredential } from "../../../src";
+import { ClientSecretCredential } from "../../../src/index.js";
 import { ConfidentialClientApplication } from "@azure/msal-node";
-import { Context } from "mocha";
 import { GetTokenOptions } from "@azure/core-auth";
-import Sinon from "sinon";
-import { assert } from "chai";
+import { describe, it, assert, expect, vi, beforeEach, afterEach } from "vitest";
 
 describe("ClientSecretCredential (internal)", function () {
   let cleanup: MsalTestCleanup;
   let doGetTokenSpy: Sinon.SinonSpy;
   let recorder: Recorder;
 
-  beforeEach(async function (this: Context) {
-    const setup = await msalNodeTestSetup(this.currentTest);
+  beforeEach(async function (ctx) {
+    const setup = await msalNodeTestSetup(ctx);
     cleanup = setup.cleanup;
     recorder = setup.recorder;
 
@@ -67,10 +65,10 @@ describe("ClientSecretCredential (internal)", function () {
     });
   });
 
-  it("Authenticates with tenantId on getToken", async function (this: Context) {
+  it("Authenticates with tenantId on getToken", async function (ctx) {
     // The live environment isn't ready for this test
     if (isLiveMode()) {
-      this.skip();
+      ctx.task.skip();
     }
     const credential = new ClientSecretCredential(
       env.AZURE_TENANT_ID!,
@@ -111,10 +109,10 @@ describe("ClientSecretCredential (internal)", function () {
     assert.equal(doGetTokenSpy.getCall(0).args[0].azureRegion, "AUTO_DISCOVER");
   });
 
-  it("authenticates (with allowLoggingAccountIdentifiers set to true)", async function (this: Context) {
+  it("authenticates (with allowLoggingAccountIdentifiers set to true)", async function (ctx) {
     if (isLiveMode() || isPlaybackMode()) {
       // The recorder clears the access tokens.
-      this.skip();
+      ctx.task.skip();
     }
     const credential = new ClientSecretCredential(
       env.AZURE_TENANT_ID!,

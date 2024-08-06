@@ -2,17 +2,18 @@
 // Licensed under the MIT license.
 
 import { AccessToken, TokenCredential } from "@azure/core-auth";
-import { credentialLogger, formatError } from "../util/logging";
+import { credentialLogger, formatError } from "../util/logging.js";
 
 const BrowserNotSupportedError = new Error(
-  "ClientAssertionCredential is not supported in the browser.",
+  "ClientCertificateCredential is not supported in the browser.",
 );
-const logger = credentialLogger("ClientAssertionCredential");
+const logger = credentialLogger("ClientCertificateCredential");
 
 /**
- * Authenticates a service principal with a JWT assertion.
+ * Enables authentication to Microsoft Entra ID using a PEM-encoded
+ * certificate that is assigned to an App Registration.
  */
-export class ClientAssertionCredential implements TokenCredential {
+export class ClientCertificateCredential implements TokenCredential {
   /**
    * Only available in Node.js
    */

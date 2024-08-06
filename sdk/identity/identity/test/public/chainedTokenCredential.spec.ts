@@ -8,9 +8,9 @@ import {
   ChainedTokenCredential,
   CredentialUnavailableError,
   TokenCredential,
-} from "../../src";
-import { assert } from "chai";
-import { getError } from "../authTestUtils";
+} from "../../src/index.js";
+import { getError } from "../authTestUtils.js";
+import { describe, it, assert } from "vitest";
 
 function mockCredential(returnPromise: Promise<AccessToken | null>): TokenCredential {
   return {

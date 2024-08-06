@@ -2,16 +2,18 @@
 // Licensed under the MIT license.
 
 import { AccessToken, TokenCredential } from "@azure/core-auth";
-import { credentialLogger, formatError } from "../util/logging";
+import { credentialLogger, formatError } from "../util/logging.js";
 
-const BrowserNotSupportedError = new Error("AzureCliCredential is not supported in the browser.");
-const logger = credentialLogger("AzureCliCredential");
+const BrowserNotSupportedError = new Error(
+  "AzureDeveloperCliCredential is not supported in the browser.",
+);
+const logger = credentialLogger("AzureDeveloperCliCredential");
 
 /**
  * This credential will use the currently logged-in user login information
- * via the Azure CLI ('az') commandline tool.
+ * via the Azure Developer CLI ('azd') commandline tool.
  */
-export class AzureCliCredential implements TokenCredential {
+export class AzureDeveloperCliCredential implements TokenCredential {
   /**
    * Only available in Node.js
    */

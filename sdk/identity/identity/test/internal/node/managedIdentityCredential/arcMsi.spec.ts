@@ -4,13 +4,10 @@
 import {
   platformToFilePath,
   validateKeyFile,
-} from "../../../../src/credentials/managedIdentityCredential/arcMsi";
-
-import { Context } from "mocha";
-import Sinon from "sinon";
-import { assert } from "chai";
+} from "../../../../src/credentials/managedIdentityCredential/arcMsi.js";
 import fs from "node:fs";
 import path from "node:path";
+import { describe, it, assert, expect, vi, beforeEach, afterEach } from "vitest";
 
 describe("arcMsi", function () {
   afterEach(function () {
@@ -23,14 +20,14 @@ describe("arcMsi", function () {
     beforeEach(function () {
       if (process.platform !== "win32" && process.platform !== "linux") {
         // Not supported on this platform
-        this.skip();
+        ctx.task.skip();
       }
       expectedDirectory = platformToFilePath();
     });
 
-    it("succeeds if the file is valid", function (this: Context) {
+    it("succeeds if the file is valid", function (ctx) {
       const filePath = path.join(expectedDirectory, "file.key");
-      Sinon.stub(fs, "statSync").returns({ size: 4096 } as any);
+      vi.spyOn(fs, "statSync").returns({ size: 4096 } as any);
       assert.doesNotThrow(() => validateKeyFile(filePath));
     });
 
@@ -41,8 +38,8 @@ describe("arcMsi", function () {
 
     describe("on Windows", function () {
       it("throws when the file is not in the expected path", function () {
-        Sinon.stub(process, "platform").value("win32");
-        Sinon.stub(process, "env").get(() => {
+        vi.spyOn(process, "platform").value("win32");
+        vi.spyOn(process, "env").get(() => {
           return {
             PROGRAMDATA: "C:\\ProgramData",
           };
@@ -51,8 +48,8 @@ describe("arcMsi", function () {
       });
 
       it("throws if ProgramData is undefined", function () {
-        Sinon.stub(process, "platform").value("win32");
-        Sinon.stub(process, "env").get(() => {
+        vi.spyOn(process, "platform").value("win32");
+        vi.spyOn(process, "env").get(() => {
           return {
             PROGRAMDATA: undefined,
           };
@@ -66,7 +63,7 @@ describe("arcMsi", function () {
 
     describe("on Linux", function () {
       it("throws when the file is not in the expected path", function () {
-        Sinon.stub(process, "platform").value("linux");
+        vi.spyOn(process, "platform").value("linux");
         assert.throws(() => validateKeyFile("/home/user/file.key"), /unexpected file path/);
       });
     });
@@ -78,7 +75,7 @@ describe("arcMsi", function () {
 
     it("throws if the file size is invalid", function () {
       const filePath = path.join(expectedDirectory, "file.key");
-      Sinon.stub(fs, "statSync").returns({ size: 4097 } as any);
+      vi.spyOn(fs, "statSync").returns({ size: 4097 } as any);
       assert.throws(() => validateKeyFile(filePath), /larger than expected/);
     });
   });

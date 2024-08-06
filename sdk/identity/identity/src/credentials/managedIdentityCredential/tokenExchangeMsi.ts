@@ -2,10 +2,10 @@
 // Licensed under the MIT license.
 
 import { AccessToken, GetTokenOptions } from "@azure/core-auth";
-import { MSI, MSIConfiguration } from "./models";
-import { WorkloadIdentityCredential } from "../workloadIdentityCredential";
-import { credentialLogger } from "../../util/logging";
-import { WorkloadIdentityCredentialOptions } from "../workloadIdentityCredentialOptions";
+import { MSI, MSIConfiguration } from "./models.js";
+import { WorkloadIdentityCredential } from "../workloadIdentityCredential.js";
+import { credentialLogger } from "../../util/logging.js";
+import { WorkloadIdentityCredentialOptions } from "../workloadIdentityCredentialOptions.js";
 
 const msiName = "ManagedIdentityCredential - Token Exchange";
 const logger = credentialLogger(msiName);

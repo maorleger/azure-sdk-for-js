@@ -2,10 +2,9 @@
 // Licensed under the MIT license.
 
 import { AccessToken, GetTokenOptions, TokenCredential } from "@azure/core-auth";
-import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup";
-import { Context } from "mocha";
-import { assert } from "@azure-tools/test-utils";
-import { getError } from "../../authTestUtils";
+import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup.js";
+import { getError } from "../../authTestUtils.js";
+import { describe, it, assert } from "vitest";
 
 // TODO: Use the real one once we decide to re-enable this on the public API.
 class AzureApplicationCredential implements TokenCredential {
@@ -20,8 +19,8 @@ describe.skip("AzureApplicationCredential", function () {
   const environmentVariableNames = ["AZURE_TENANT_ID", "AZURE_CLIENT_ID", "AZURE_CLIENT_SECRET"];
   const cachedValues: Record<string, string | undefined> = {};
 
-  beforeEach(async function (this: Context) {
-    const setup = await msalNodeTestSetup(this.currentTest);
+  beforeEach(async function (ctx) {
+    const setup = await msalNodeTestSetup(ctx);
     cleanup = setup.cleanup;
     environmentVariableNames.forEach((name) => {
       cachedValues[name] = process.env[name];

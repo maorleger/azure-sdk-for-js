@@ -1,6 +1,6 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
-import { BrokerOptions } from "../msal/nodeFlows/brokerOptions";
+import { BrokerOptions } from "../msal/nodeFlows/brokerOptions.js";
 
 /**
  * Configuration options for InteractiveBrowserCredential

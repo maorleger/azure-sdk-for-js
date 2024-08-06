@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import * as msalClient from "../../../src/msal/nodeFlows/msalClient";
+import * as msalClient from "../../../src/msal/nodeFlows/msalClient.js";
 
 import {
   AuthenticationResult,
@@ -9,19 +9,17 @@ import {
   ConfidentialClientApplication,
   PublicClientApplication,
 } from "@azure/msal-node";
-import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup";
+import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup.js";
 import { Recorder, env, isLiveMode } from "@azure-tools/test-recorder";
 
 import { AbortError } from "@azure/abort-controller";
-import { AuthenticationRequiredError } from "../../../src/errors";
-import { Context } from "mocha";
-import { DeveloperSignOnClientId } from "../../../src/constants";
-import { IdentityClient } from "../../../src/client/identityClient";
-import { assert } from "@azure-tools/test-utils";
-import { credentialLogger } from "../../../src/util/logging";
-import { getUsernamePasswordStaticResources } from "../../msalTestUtils";
-import { msalPlugins } from "../../../src/msal/nodeFlows/msalPlugins";
-import sinon from "sinon";
+import { AuthenticationRequiredError } from "../../../src/errors.js";
+import { DeveloperSignOnClientId } from "../../../src/constants.js";
+import { IdentityClient } from "../../../src/client/identityClient.js";
+import { credentialLogger } from "../../../src/util/logging.js";
+import { getUsernamePasswordStaticResources } from "../../msalTestUtils.js";
+import { msalPlugins } from "../../../src/msal/nodeFlows/msalPlugins.js";
+import { describe, it, assert, expect, vi, beforeEach, afterEach } from "vitest";
 
 describe("MsalClient", function () {
   describe("recorded tests", function () {
@@ -33,13 +31,13 @@ describe("MsalClient", function () {
     });
 
     beforeEach(async function () {
-      ({ cleanup, recorder } = await msalNodeTestSetup(this.currentTest));
+      ({ cleanup, recorder } = await msalNodeTestSetup(ctx));
     });
 
     it("supports getTokenByClientSecret", async function () {
       if (isLiveMode()) {
         // https://github.com/Azure/azure-sdk-for-js/issues/29929
-        this.skip();
+        ctx.task.skip();
       }
       const scopes = ["https://vault.azure.net/.default"];
       const clientSecret = env.IDENTITY_SP_CLIENT_SECRET || env.AZURE_CLIENT_SECRET!;
@@ -56,10 +54,10 @@ describe("MsalClient", function () {
       assert.isNotNaN(accessToken.expiresOnTimestamp);
     });
 
-    it("supports getTokenByDeviceCode", async function (this: Context) {
+    it("supports getTokenByDeviceCode", async function (ctx) {
       if (isLiveMode()) {
         // Skip in CI live tests since this credential requires user interaction.
-        this.skip();
+        ctx.task.skip();
       }
       const scopes = ["https://vault.azure.net/.default"];
       const clientId = DeveloperSignOnClientId;
@@ -167,15 +165,15 @@ describe("MsalClient", function () {
 
       it("uses the CAE cache", async function () {
         const cachePluginCae = {
-          afterCacheAccess: sinon.stub(),
-          beforeCacheAccess: sinon.stub(),
+          afterCacheAccess: vi.spyOn(),
+          beforeCacheAccess: vi.spyOn(),
         };
         const cachePlugin = {
-          afterCacheAccess: sinon.stub(),
-          beforeCacheAccess: sinon.stub(),
+          afterCacheAccess: vi.spyOn(),
+          beforeCacheAccess: vi.spyOn(),
         };
 
-        sinon.stub(msalPlugins, "generatePluginConfiguration").returns({
+        vi.spyOn(msalPlugins, "generatePluginConfiguration").returns({
           broker: {
             isEnabled: false,
             enableMsaPassthrough: false,
@@ -211,15 +209,15 @@ describe("MsalClient", function () {
       const enableCae = false;
       it("initializes the default cache", async function () {
         const cachePluginCae = {
-          afterCacheAccess: sinon.stub(),
-          beforeCacheAccess: sinon.stub(),
+          afterCacheAccess: vi.spyOn(),
+          beforeCacheAccess: vi.spyOn(),
         };
         const cachePlugin = {
-          afterCacheAccess: sinon.stub(),
-          beforeCacheAccess: sinon.stub(),
+          afterCacheAccess: vi.spyOn(),
+          beforeCacheAccess: vi.spyOn(),
         };
 
-        sinon.stub(msalPlugins, "generatePluginConfiguration").returns({
+        vi.spyOn(msalPlugins, "generatePluginConfiguration").returns({
           broker: {
             isEnabled: false,
             enableMsaPassthrough: false,
@@ -276,7 +274,7 @@ describe("MsalClient", function () {
       it("uses a confidentialClientApplication", async function () {
         const client = msalClient.createMsalClient(clientId, tenantId);
 
-        const publicClientStub = sinon.stub(
+        const publicClientStub = vi.spyOn(
           PublicClientApplication.prototype,
           "acquireTokenByCode",
         );
@@ -298,7 +296,7 @@ describe("MsalClient", function () {
         const publicClientStub = sinon
           .stub(PublicClientApplication.prototype, "acquireTokenByCode")
           .resolves(fakeTokenResponse as AuthenticationResult);
-        const confidentialClientStub = sinon.stub(
+        const confidentialClientStub = vi.spyOn(
           ConfidentialClientApplication.prototype,
           "acquireTokenByCode",
         );
@@ -455,7 +453,7 @@ describe("MsalClient", function () {
       });
     });
 
-    it("supports cancellation", async function (this: Context) {
+    it("supports cancellation", async function (ctx) {
       const client = msalClient.createMsalClient(clientId, tenantId);
 
       const scopes = ["https://vault.azure.net/.default"];
@@ -473,7 +471,7 @@ describe("MsalClient", function () {
       await assert.isRejected(request, AbortError);
     });
 
-    it("supports cross-tenant federation", async function (this: Context) {
+    it("supports cross-tenant federation", async function (ctx) {
       const tenantIdOne = "tenantOne";
       const tenantIdTwo = "tenantTwo";
       const authorityHost = "https://custom.authority.com";

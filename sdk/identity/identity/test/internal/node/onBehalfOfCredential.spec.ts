@@ -1,12 +1,12 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import * as path from "path";
-import { IdentityTestContext, prepareMSALResponses } from "../../httpRequests";
-import { IdentityTestContextInterface, createResponse } from "../../httpRequestsCommon";
-import { OnBehalfOfCredential } from "../../../src";
-import { assert } from "chai";
+import * as path from "node:path";
+import { IdentityTestContext, prepareMSALResponses } from "../../httpRequests.js";
+import { IdentityTestContextInterface, createResponse } from "../../httpRequestsCommon.js";
+import { OnBehalfOfCredential } from "../../../src/index.js";
 import { isNode } from "@azure/core-util";
+import { describe, it, assert } from "vitest";
 
 describe("OnBehalfOfCredential", function () {
   let testContext: IdentityTestContextInterface;

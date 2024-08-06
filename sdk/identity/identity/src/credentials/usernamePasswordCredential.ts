@@ -5,12 +5,12 @@ import { AccessToken, GetTokenOptions, TokenCredential } from "@azure/core-auth"
 import {
   processMultiTenantRequest,
   resolveAdditionallyAllowedTenantIds,
-} from "../util/tenantIdUtils";
-import { UsernamePasswordCredentialOptions } from "./usernamePasswordCredentialOptions";
-import { credentialLogger } from "../util/logging";
-import { ensureScopes } from "../util/scopeUtils";
-import { tracingClient } from "../util/tracing";
-import { MsalClient, createMsalClient } from "../msal/nodeFlows/msalClient";
+} from "../util/tenantIdUtils.js";
+import { UsernamePasswordCredentialOptions } from "./usernamePasswordCredentialOptions.js";
+import { credentialLogger } from "../util/logging.js";
+import { ensureScopes } from "../util/scopeUtils.js";
+import { tracingClient } from "../util/tracing.js";
+import { MsalClient, createMsalClient } from "../msal/nodeFlows/msalClient.js";
 
 const logger = credentialLogger("UsernamePasswordCredential");
 

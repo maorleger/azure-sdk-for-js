@@ -1,17 +1,17 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import https from "https";
+import https from "node:https";
 import {
   PipelineRequestOptions,
   createHttpHeaders,
   createPipelineRequest,
 } from "@azure/core-rest-pipeline";
 import { GetTokenOptions } from "@azure/core-auth";
-import { credentialLogger } from "../../util/logging";
-import { MSI, MSIConfiguration, MSIToken } from "./models";
-import { mapScopesToResource } from "./utils";
-import { azureFabricVersion } from "./constants";
+import { credentialLogger } from "../../util/logging.js";
+import { MSI, MSIConfiguration, MSIToken } from "./models.js";
+import { mapScopesToResource } from "./utils.js";
+import { azureFabricVersion } from "./constants.js";
 
 // This MSI can be easily tested by deploying a container to Azure Service Fabric with the Dockerfile:
 //

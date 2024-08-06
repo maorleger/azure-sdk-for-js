@@ -7,11 +7,10 @@ import {
   msalNodeFlowCacheControl,
   msalNodeFlowNativeBrokerControl,
   msalPlugins,
-} from "../../../src/msal/nodeFlows/msalPlugins";
+} from "../../../src/msal/nodeFlows/msalPlugins.js";
 
-import { MsalClientOptions } from "../../../src/msal/nodeFlows/msalClient";
-import Sinon from "sinon";
-import { assert } from "@azure-tools/test-utils";
+import { MsalClientOptions } from "../../../src/msal/nodeFlows/msalClient.js";
+import { describe, it, assert, expect, vi, beforeEach, afterEach } from "vitest";
 
 describe("#generatePluginConfiguration", function () {
   let options: MsalClientOptions;
@@ -50,8 +49,8 @@ describe("#generatePluginConfiguration", function () {
       options.tokenCachePersistenceOptions = { enabled: true };
 
       const cachePlugin = {
-        afterCacheAccess: Sinon.stub(),
-        beforeCacheAccess: Sinon.stub(),
+        afterCacheAccess: vi.spyOn(),
+        beforeCacheAccess: vi.spyOn(),
       };
       const pluginProvider: () => Promise<ICachePlugin> = () => Promise.resolve(cachePlugin);
       msalNodeFlowCacheControl.setPersistence(pluginProvider);
@@ -65,8 +64,8 @@ describe("#generatePluginConfiguration", function () {
       options.tokenCachePersistenceOptions = { enabled: true };
 
       const cachePluginCae = {
-        afterCacheAccess: Sinon.stub(),
-        beforeCacheAccess: Sinon.stub(),
+        afterCacheAccess: vi.spyOn(),
+        beforeCacheAccess: vi.spyOn(),
       };
       const pluginProvider: () => Promise<ICachePlugin> = () => Promise.resolve(cachePluginCae);
       msalNodeFlowCacheControl.setPersistence(pluginProvider);

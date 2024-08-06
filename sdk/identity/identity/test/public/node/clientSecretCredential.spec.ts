@@ -3,18 +3,17 @@
 
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 
-import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup";
+import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup.js";
 import { Recorder, delay, env, isRecordMode } from "@azure-tools/test-recorder";
 
-import { ClientSecretCredential } from "../../../src";
-import { Context } from "mocha";
-import { assert } from "@azure-tools/test-utils";
+import { ClientSecretCredential } from "../../../src/index.js";
+import { describe, it, assert, expect, vi, beforeEach, afterEach } from "vitest";
 
 describe("ClientSecretCredential", function () {
   let cleanup: MsalTestCleanup;
   let recorder: Recorder;
-  beforeEach(async function (this: Context) {
-    const setup = await msalNodeTestSetup(this.currentTest);
+  beforeEach(async function (ctx) {
+    const setup = await msalNodeTestSetup(ctx);
     cleanup = setup.cleanup;
     recorder = setup.recorder;
   });
@@ -95,12 +94,12 @@ describe("ClientSecretCredential", function () {
   });
 
   // TODO: Enable again once we're ready to release this feature.
-  it.skip("supports specifying the regional authority", async function (this: Context) {
+  it.skip("supports specifying the regional authority", async function (ctx) {
     // This test is extremely slow. Let's skip it for now.
     // I've tried Sinon's clock and it doesn't affect it.
     // We have internal tests that check that the parameters are properly sent to MSAL, which should be enough from the perspective of the SDK.
     if (!isRecordMode()) {
-      this.skip();
+      ctx.task.skip();
     }
 
     const credential = new ClientSecretCredential(

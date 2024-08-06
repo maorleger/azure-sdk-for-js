@@ -1,9 +1,9 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { AuthorityValidationOptions } from "./authorityValidationOptions";
-import { CredentialPersistenceOptions } from "./credentialPersistenceOptions";
-import { MultiTenantTokenCredentialOptions } from "./multiTenantTokenCredentialOptions";
+import { AuthorityValidationOptions } from "./authorityValidationOptions.js";
+import { CredentialPersistenceOptions } from "./credentialPersistenceOptions.js";
+import { MultiTenantTokenCredentialOptions } from "./multiTenantTokenCredentialOptions.js";
 
 /**
  * Optional parameters for the {@link AzurePipelinesCredential} class.

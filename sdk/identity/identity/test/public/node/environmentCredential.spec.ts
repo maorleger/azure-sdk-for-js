@@ -3,13 +3,11 @@
 
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 
-import { EnvironmentCredential, UsernamePasswordCredential } from "../../../src";
-import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup";
+import { EnvironmentCredential, UsernamePasswordCredential } from "../../../src/index.js";
+import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup.js";
 import { Recorder, isLiveMode } from "@azure-tools/test-recorder";
-import { Context } from "mocha";
-import { assert } from "@azure-tools/test-utils";
-import { getError } from "../../authTestUtils";
-import sinon from "sinon";
+import { getError } from "../../authTestUtils.js";
+import { describe, it, assert, expect, vi, beforeEach, afterEach } from "vitest";
 
 describe("EnvironmentCredential", function () {
   let cleanup: MsalTestCleanup;
@@ -25,8 +23,8 @@ describe("EnvironmentCredential", function () {
   ];
   const cachedValues: Record<string, string | undefined> = {};
 
-  beforeEach(async function (this: Context) {
-    const setup = await msalNodeTestSetup(this.currentTest);
+  beforeEach(async function (ctx) {
+    const setup = await msalNodeTestSetup(ctx);
     recorder = setup.recorder;
     cleanup = setup.cleanup;
     environmentVariableNames.forEach((name) => {
@@ -57,10 +55,10 @@ describe("EnvironmentCredential", function () {
     assert.ok(token?.expiresOnTimestamp! > Date.now());
   });
 
-  it("authenticates with a client certificate on the environment variables", async function (this: Context) {
+  it("authenticates with a client certificate on the environment variables", async function (ctx) {
     if (isLiveMode()) {
       // Live test run not supported on CI at the moment. Locally should work though.
-      this.skip();
+      ctx.task.skip();
     }
     // The following environment variables must be set for this to work.
     // On TEST_MODE="playback", the recorder automatically fills them with stubbed values.
@@ -75,10 +73,10 @@ describe("EnvironmentCredential", function () {
     assert.ok(token?.expiresOnTimestamp! > Date.now());
   });
 
-  it("authenticates with a client certificate and password on the environment variables", async function (this: Context) {
+  it("authenticates with a client certificate and password on the environment variables", async function (ctx) {
     if (isLiveMode()) {
       // Live test run not supported on CI at the moment. Locally should work though.
-      this.skip();
+      ctx.task.skip();
     }
     // The following environment variables must be set for this to work.
     // On TEST_MODE="playback", the recorder automatically fills them with stubbed values.
@@ -137,10 +135,10 @@ describe("EnvironmentCredential", function () {
     );
   });
 
-  it("supports tracing with environment client certificate", async function (this: Context) {
+  it("supports tracing with environment client certificate", async function (ctx) {
     if (isLiveMode()) {
       // Live test run not supported on CI at the moment. Locally should work though.
-      this.skip();
+      ctx.task.skip();
     }
     await assert.supportsTracing(
       async (tracingOptions) => {

@@ -1,9 +1,9 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { AzurePipelinesCredential } from "../../../src";
+import { AzurePipelinesCredential } from "../../../src/index.js";
 import { isLiveMode } from "@azure-tools/test-recorder";
-import { assert } from "@azure-tools/test-utils";
+import { describe, it, assert, expect, vi, beforeEach, afterEach } from "vitest";
 
 describe("AzurePipelinesCredential", function () {
   const scope = "https://vault.azure.net/.default";
@@ -11,7 +11,7 @@ describe("AzurePipelinesCredential", function () {
 
   it("authenticates with a valid service connection", async function () {
     if (!isLiveMode() || !process.env.AZURE_SERVICE_CONNECTION_ID) {
-      this.skip();
+      ctx.task.skip();
     }
     // this serviceConnection corresponds to the Azure SDK Test Resources - LiveTestSecrets service
     const existingServiceConnectionId = process.env.AZURE_SERVICE_CONNECTION_ID!;
@@ -32,7 +32,7 @@ describe("AzurePipelinesCredential", function () {
 
   it("fails with with invalid service connection", async function () {
     if (!isLiveMode()) {
-      this.skip();
+      ctx.task.skip();
     }
     // clientId for above service connection
     const clientId = process.env.AZURE_SERVICE_CONNECTION_CLIENT_ID!;
@@ -54,7 +54,7 @@ describe("AzurePipelinesCredential", function () {
 
   it("fails with with invalid client id", async function () {
     if (!isLiveMode()) {
-      this.skip();
+      ctx.task.skip();
     }
     const existingServiceConnectionId = process.env.AZURE_SERVICE_CONNECTION_ID!;
     const systemAccessToken = process.env.SYSTEM_ACCESSTOKEN!;
@@ -75,7 +75,7 @@ describe("AzurePipelinesCredential", function () {
 
   it("fails with with invalid system access token", async function () {
     if (!isLiveMode()) {
-      this.skip();
+      ctx.task.skip();
     }
     const clientId = process.env.AZURE_SERVICE_CONNECTION_CLIENT_ID!;
     const existingServiceConnectionId = process.env.AZURE_SERVICE_CONNECTION_ID!;

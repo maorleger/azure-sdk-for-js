@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { MSI, MSIConfiguration, MSIToken } from "./models";
+import { MSI, MSIConfiguration, MSIToken } from "./models.js";
 import {
   PipelineRequestOptions,
   PipelineResponse,
@@ -9,13 +9,13 @@ import {
   createPipelineRequest,
 } from "@azure/core-rest-pipeline";
 import { delay, isError } from "@azure/core-util";
-import { imdsApiVersion, imdsEndpointPath, imdsHost } from "./constants";
+import { imdsApiVersion, imdsEndpointPath, imdsHost } from "./constants.js";
 
-import { AuthenticationError } from "../../errors";
+import { AuthenticationError } from "../../errors.js";
 import { GetTokenOptions } from "@azure/core-auth";
-import { credentialLogger } from "../../util/logging";
-import { mapScopesToResource } from "./utils";
-import { tracingClient } from "../../util/tracing";
+import { credentialLogger } from "../../util/logging.js";
+import { mapScopesToResource } from "./utils.js";
+import { tracingClient } from "../../util/tracing.js";
 
 const msiName = "ManagedIdentityCredential - IMDS";
 const logger = credentialLogger(msiName);

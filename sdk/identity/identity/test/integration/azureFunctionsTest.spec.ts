@@ -3,14 +3,13 @@
 
 import { ServiceClient } from "@azure/core-client";
 import { createPipelineRequest } from "@azure/core-rest-pipeline";
-import { assert } from "chai";
-import { Context } from "mocha";
 import { isLiveMode } from "@azure-tools/test-recorder";
+import { describe, it, assert, expect, vi, beforeEach, afterEach } from "vitest";
 
 describe("AzureFunctions Integration test", function () {
-  it("test the Azure Functions endpoint where the sync MI credential is used.", async function (this: Context) {
+  it("test the Azure Functions endpoint where the sync MI credential is used.", async function (ctx) {
     if (!isLiveMode()) {
-      this.skip();
+      ctx.task.skip();
     }
     const baseUri = baseUrl();
     const client = new ServiceClient({ baseUri: baseUri });

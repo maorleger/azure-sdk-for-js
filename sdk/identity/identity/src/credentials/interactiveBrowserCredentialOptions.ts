@@ -1,10 +1,10 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { BrowserCustomizationOptions } from "./browserCustomizationOptions";
-import { BrokerAuthOptions } from "./brokerAuthOptions";
-import { CredentialPersistenceOptions } from "./credentialPersistenceOptions";
-import { InteractiveCredentialOptions } from "./interactiveCredentialOptions";
+import { BrowserCustomizationOptions } from "./browserCustomizationOptions.js";
+import { BrokerAuthOptions } from "./brokerAuthOptions.js";
+import { CredentialPersistenceOptions } from "./credentialPersistenceOptions.js";
+import { InteractiveCredentialOptions } from "./interactiveCredentialOptions.js";
 
 /**
  * (Browser-only feature)

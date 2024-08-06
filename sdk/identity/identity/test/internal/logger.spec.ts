@@ -1,15 +1,15 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { AccessToken, GetTokenOptions, TokenCredential } from "../../src";
+import { AccessToken, GetTokenOptions, TokenCredential } from "../../src/index.js";
 import {
   CredentialLogger,
   credentialLogger,
   credentialLoggerInstance,
   formatError,
   formatSuccess,
-} from "../../src/util/logging";
-import { assert } from "chai";
+} from "../../src/util/logging.js";
+import { describe, it, assert } from "vitest";
 
 describe("Identity logging utilities", function () {
   describe("credentialLoggerInstance", function () {

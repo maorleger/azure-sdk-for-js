@@ -1,20 +1,20 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { MSI, MSIConfiguration, MSIToken } from "./models";
+import { MSI, MSIConfiguration, MSIToken } from "./models.js";
 import {
   PipelineRequestOptions,
   createHttpHeaders,
   createPipelineRequest,
 } from "@azure/core-rest-pipeline";
 
-import { AuthenticationError } from "../../errors";
+import { AuthenticationError } from "../../errors.js";
 import { GetTokenOptions } from "@azure/core-auth";
-import { IdentityClient } from "../../client/identityClient";
-import { azureArcAPIVersion } from "./constants";
-import { credentialLogger } from "../../util/logging";
+import { IdentityClient } from "../../client/identityClient.js";
+import { azureArcAPIVersion } from "./constants.js";
+import { credentialLogger } from "../../util/logging.js";
 import fs from "node:fs";
-import { mapScopesToResource } from "./utils";
+import { mapScopesToResource } from "./utils.js";
 
 const msiName = "ManagedIdentityCredential - Azure Arc MSI";
 const logger = credentialLogger(msiName);

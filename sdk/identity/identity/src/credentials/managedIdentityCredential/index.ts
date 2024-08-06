@@ -3,9 +3,9 @@
 
 import { AccessToken, GetTokenOptions, TokenCredential } from "@azure/core-auth";
 
-import { LegacyMsiProvider } from "./legacyMsiProvider";
-import { TokenCredentialOptions } from "../../tokenCredentialOptions";
-import { MsalMsiProvider } from "./msalMsiProvider";
+import { LegacyMsiProvider } from "./legacyMsiProvider.js";
+import { TokenCredentialOptions } from "../../tokenCredentialOptions.js";
+import { MsalMsiProvider } from "./msalMsiProvider.js";
 
 /**
  * Options to send on the {@link ManagedIdentityCredential} constructor.

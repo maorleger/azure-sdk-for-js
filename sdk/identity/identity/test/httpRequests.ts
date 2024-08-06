@@ -1,22 +1,21 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import http from "http";
-import https from "https";
-import { AccessToken, GetTokenOptions, TokenCredential } from "../src";
+import http from "node:http";
+import https from "node:https";
+import { AccessToken, GetTokenOptions, TokenCredential } from "../src/index.js";
 import { AzureLogLevel, AzureLogger, getLogLevel, setLogLevel } from "@azure/logger";
-import { ClientRequest, IncomingHttpHeaders, IncomingMessage } from "http";
+import { ClientRequest, IncomingHttpHeaders, IncomingMessage } from "node:http";
 import {
   IdentityTestContextInterface,
   RawTestResponse,
   TestResponse,
   createResponse,
-} from "./httpRequestsCommon";
-import Sinon, * as sinon from "sinon";
-import { PassThrough } from "stream";
+} from "./httpRequestsCommon.js";
+import { PassThrough } from "node:stream";
 import { RestError } from "@azure/core-rest-pipeline";
-import { getError } from "./authTestUtils";
-import { openIdConfigurationResponse } from "./msalTestUtils";
+import { getError } from "./authTestUtils.js";
+import { openIdConfigurationResponse } from "./msalTestUtils.js";
 
 /**
  * Helps write responses that extend the PassThrough class.

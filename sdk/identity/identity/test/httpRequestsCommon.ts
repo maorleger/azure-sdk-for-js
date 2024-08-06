@@ -1,8 +1,6 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
-
-import * as sinon from "sinon";
-import { AccessToken, GetTokenOptions, TokenCredential } from "../src";
+import { AccessToken, GetTokenOptions, TokenCredential } from "../src/index.js";
 import { AzureLogLevel, AzureLogger } from "@azure/logger";
 import { RawHttpHeaders, RestError } from "@azure/core-rest-pipeline";
 

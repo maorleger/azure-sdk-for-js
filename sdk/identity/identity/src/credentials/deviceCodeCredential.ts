@@ -6,18 +6,18 @@ import {
   processMultiTenantRequest,
   resolveAdditionallyAllowedTenantIds,
   resolveTenantId,
-} from "../util/tenantIdUtils";
+} from "../util/tenantIdUtils.js";
 import {
   DeviceCodeCredentialOptions,
   DeviceCodeInfo,
   DeviceCodePromptCallback,
-} from "./deviceCodeCredentialOptions";
-import { AuthenticationRecord } from "../msal/types";
-import { credentialLogger } from "../util/logging";
-import { ensureScopes } from "../util/scopeUtils";
-import { tracingClient } from "../util/tracing";
-import { MsalClient, createMsalClient } from "../msal/nodeFlows/msalClient";
-import { DeveloperSignOnClientId } from "../constants";
+} from "./deviceCodeCredentialOptions.js";
+import { AuthenticationRecord } from "../msal/types.js";
+import { credentialLogger } from "../util/logging.js";
+import { ensureScopes } from "../util/scopeUtils.js";
+import { tracingClient } from "../util/tracing.js";
+import { MsalClient, createMsalClient } from "../msal/nodeFlows/msalClient.js";
+import { DeveloperSignOnClientId } from "../constants.js";
 
 const logger = credentialLogger("DeviceCodeCredential");
 

@@ -1,27 +1,24 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import * as arcMsi from "../../../src/credentials/managedIdentityCredential/arcMsi";
+import * as arcMsi from "../../../src/credentials/managedIdentityCredential/arcMsi.js";
 
 import { AzureLogger, setLogLevel } from "@azure/logger";
-import { IdentityTestContextInterface, createResponse } from "../../httpRequestsCommon";
+import { IdentityTestContextInterface, createResponse } from "../../httpRequestsCommon.js";
 import {
   imdsApiVersion,
   imdsEndpointPath,
   imdsHost,
-} from "../../../src/credentials/managedIdentityCredential/constants";
-
-import { Context } from "mocha";
+} from "../../../src/credentials/managedIdentityCredential/constants.js";
 import { GetTokenOptions } from "@azure/core-auth";
-import { IdentityTestContext } from "../../httpRequests";
-import { LegacyMsiProvider } from "../../../src/credentials/managedIdentityCredential/legacyMsiProvider";
+import { IdentityTestContext } from "../../httpRequests.js";
+import { LegacyMsiProvider } from "../../../src/credentials/managedIdentityCredential/legacyMsiProvider.js";
 import { RestError } from "@azure/core-rest-pipeline";
-import Sinon from "sinon";
-import { assert } from "chai";
 import fs from "node:fs";
-import { imdsMsi } from "../../../src/credentials/managedIdentityCredential/imdsMsi";
-import { join } from "path";
-import { logger } from "../../../src/credentials/managedIdentityCredential/cloudShellMsi";
+import { imdsMsi } from "../../../src/credentials/managedIdentityCredential/imdsMsi.js";
+import { join } from "node:path";
+import { logger } from "../../../src/credentials/managedIdentityCredential/cloudShellMsi.js";
+import { describe, it, assert, expect, vi, beforeEach, afterEach } from "vitest";
 
 describe("ManagedIdentityCredential", function () {
   let testContext: IdentityTestContextInterface;
@@ -734,7 +731,7 @@ describe("ManagedIdentityCredential", function () {
     assert.equal(authDetails.result!.token, "token");
   });
 
-  it("authorization request fails with client id passed in an Cloud Shell environment", async function (this: Context) {
+  it("authorization request fails with client id passed in an Cloud Shell environment", async function (ctx) {
     // Trigger Cloud Shell behavior by setting environment variables
     process.env.MSI_ENDPOINT = "https://endpoint";
     const msiGetTokenSpy = Sinon.spy(LegacyMsiProvider.prototype, "getToken");
@@ -766,7 +763,7 @@ describe("ManagedIdentityCredential", function () {
     beforeEach(function () {
       if (process.platform !== "win32" && process.platform !== "linux") {
         // not supported on this platform
-        this.skip();
+        ctx.task.skip();
       }
       expectedDirectory = arcMsi.platformToFilePath();
 
@@ -774,8 +771,8 @@ describe("ManagedIdentityCredential", function () {
       process.env.IMDS_ENDPOINT = "http://endpoint";
       process.env.IDENTITY_ENDPOINT = "http://endpoint";
       // Stub out a valid key file
-      Sinon.stub(fs, "statSync").returns({ size: 400 } as any);
-      Sinon.stub(fs.promises, "readFile").resolves(keyContents);
+      vi.spyOn(fs, "statSync").returns({ size: 400 } as any);
+      vi.spyOn(fs.promises, "readFile").resolves(keyContents);
     });
 
     afterEach(function () {

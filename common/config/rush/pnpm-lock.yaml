@@ -4044,6 +4044,36 @@ packages:
       - utf-8-validate
     dev: false
 
+  /@vitest/browser@2.0.5(playwright@1.46.0)(typescript@5.5.4)(vitest@2.0.5):
+    resolution: {integrity: sha512-VbOYtu/6R3d7ASZREcrJmRY/sQuRFO9wMVsEDqfYbWiJRh2fDNi8CL1Csn7Ux31pOcPmmM5QvzFCMpiojvVh8g==}
+    peerDependencies:
+      playwright: '*'
+      safaridriver: '*'
+      vitest: 2.0.5
+      webdriverio: '*'
+    peerDependenciesMeta:
+      playwright:
+        optional: true
+      safaridriver:
+        optional: true
+      webdriverio:
+        optional: true
+    dependencies:
+      '@testing-library/dom': 10.4.0
+      '@testing-library/user-event': 14.5.2(@testing-library/dom@10.4.0)
+      '@vitest/utils': 2.0.5
+      magic-string: 0.30.11
+      msw: 2.3.5(typescript@5.5.4)
+      playwright: 1.46.0
+      sirv: 2.0.4
+      vitest: 2.0.5(@types/node@18.19.43)(@vitest/browser@2.0.5)
+      ws: 8.18.0
+    transitivePeerDependencies:
+      - bufferutil
+      - typescript
+      - utf-8-validate
+    dev: false
+
   /@vitest/coverage-istanbul@1.6.0(vitest@1.6.0):
     resolution: {integrity: sha512-h/BwpXehkkS0qsNCS00QxiupAqVkNi0WT19BR0dQvlge5oHghoSVLx63fABYFoKxVb7Ue7+k6V2KokmQ1zdMpg==}
     peerDependencies:
@@ -9256,12 +9286,28 @@ packages:
     hasBin: true
     dev: false
 
+  /playwright-core@1.46.0:
+    resolution: {integrity: sha512-9Y/d5UIwuJk8t3+lhmMSAJyNP1BUC/DqP3cQJDQQL/oWqAiuPTLgy7Q5dzglmTLwcBRdetzgNM/gni7ckfTr6A==}
+    engines: {node: '>=18'}
+    hasBin: true
+    dev: false
+
   /playwright@1.45.3:
     resolution: {integrity: sha512-QhVaS+lpluxCaioejDZ95l4Y4jSFCsBvl2UZkpeXlzxmqS+aABr5c82YmfMHrL6x27nvrvykJAFpkzT2eWdJww==}
     engines: {node: '>=18'}
     hasBin: true
     dependencies:
       playwright-core: 1.45.3
+    optionalDependencies:
+      fsevents: 2.3.2
+    dev: false
+
+  /playwright@1.46.0:
+    resolution: {integrity: sha512-XYJ5WvfefWONh1uPAUAi0H2xXV5S3vrtcnXe6uAOgdGi3aSpqOSXX08IAjXW34xitfuOJsvXU5anXZxPSEQiJw==}
+    engines: {node: '>=18'}
+    hasBin: true
+    dependencies:
+      playwright-core: 1.46.0
     optionalDependencies:
       fsevents: 2.3.2
     dev: false
@@ -12126,7 +12172,7 @@ packages:
     dev: false
 
   file:projects/ai-form-recognizer.tgz:
-    resolution: {integrity: sha512-mWDpZN/NuWhSf61aK5q7J0bkXHvSZXn4AYMq7FU0w1ovQA48dWvS4PzkZpt+ZFXmNMYBmSZJEbFcTBJQGeJLOA==, tarball: file:projects/ai-form-recognizer.tgz}
+    resolution: {integrity: sha512-uUPHW/g4qfJv9xoilcgVHKr1QNvf/rW/ARCXsd1axpRlATZSs+dDu0mS7/MH0yZZjd6a00C/caY+P6B6Ac2s/A==, tarball: file:projects/ai-form-recognizer.tgz}
     name: '@rush-temp/ai-form-recognizer'
     version: 0.0.0
     dependencies:
@@ -12384,7 +12430,7 @@ packages:
     dev: false
 
   file:projects/ai-text-analytics.tgz:
-    resolution: {integrity: sha512-KhEaRw6EXf2LMmw6rbuaep9/G4kKWATXsA5czScbTOkJ3bQKOACslWN3zynn+puHpuyIeANMVovQaNH8oRd1xg==, tarball: file:projects/ai-text-analytics.tgz}
+    resolution: {integrity: sha512-pktlY1MIP1+oLYzxroYsIAe/W9oxBZ0XziTtxGTWI1AXowXMsF0wtPGp5g+m7SXEtd3p1kGQjF+ZnZSbLUUwYw==, tarball: file:projects/ai-text-analytics.tgz}
     name: '@rush-temp/ai-text-analytics'
     version: 0.0.0
     dependencies:
@@ -22111,7 +22157,7 @@ packages:
     dev: false
 
   file:projects/identity.tgz:
-    resolution: {integrity: sha512-1Idr5tRIogSilKIpe6w5K6mskMB1ec2SSf2CzRW0Rlg4a9YHELjWHYr1Mpp9Y+asz3HfaWzsc/b5DF8dQCM7TQ==, tarball: file:projects/identity.tgz}
+    resolution: {integrity: sha512-BPGmT8/tS+BTd+EmXdKFWBmqKhC1OMs7zAP83vmYfVjjr4bX2XP9dD2Ci0KMkp1DTi7zAL2zqSO/kpnIguLlmQ==, tarball: file:projects/identity.tgz}
     name: '@rush-temp/identity'
     version: 0.0.0
     dependencies:
@@ -22129,6 +22175,8 @@ packages:
       '@types/sinon': 17.0.3
       '@types/stoppable': 1.1.3
       '@types/uuid': 8.3.4
+      '@vitest/browser': 2.0.5(playwright@1.46.0)(typescript@5.5.4)(vitest@2.0.5)
+      '@vitest/coverage-istanbul': 2.0.5(vitest@2.0.5)
       chai: 4.3.10
       cross-env: 7.0.3
       dotenv: 16.4.5
@@ -22149,21 +22197,33 @@ packages:
       ms: 2.1.3
       nyc: 17.0.0
       open: 8.4.2
+      playwright: 1.46.0
       puppeteer: 22.15.0(typescript@5.5.4)
       rimraf: 5.0.10
       sinon: 17.0.1
       stoppable: 1.1.0
       ts-node: 10.9.2(@types/node@18.19.43)(typescript@5.5.4)
+      tshy: 3.0.2
       tslib: 2.6.3
       typescript: 5.5.4
       util: 0.12.5
+      vitest: 2.0.5(@types/node@18.19.43)(@vitest/browser@2.0.5)
     transitivePeerDependencies:
-      - '@swc/core'
-      - '@swc/wasm'
+      - '@edge-runtime/vm'
+      - '@vitest/ui'
       - bufferutil
-      - debug
+      - happy-dom
+      - jsdom
+      - less
+      - lightningcss
+      - safaridriver
+      - sass
+      - stylus
+      - sugarss
       - supports-color
+      - terser
       - utf-8-validate
+      - webdriverio
     dev: false
 
   file:projects/iot-device-update.tgz:
@@ -22258,7 +22318,7 @@ packages:
     dev: false
 
   file:projects/keyvault-admin.tgz:
-    resolution: {integrity: sha512-KAKxTBVa7+qfXy8br0vdhBg4lqnY+tD5zcNqJJigHlbv+4MI7SNzy9YE/DyxDJqOh+tfPTlvGE0/iXyHQvRiQg==, tarball: file:projects/keyvault-admin.tgz}
+    resolution: {integrity: sha512-H+PatDF3wnToQYZXIAYOSAngUbf1Vw8HC/u0C7Ck2CsPC73rhukCLi5K9WCoYN0np19waST2qriDM5uTMv+jzg==, tarball: file:projects/keyvault-admin.tgz}
     name: '@rush-temp/keyvault-admin'
     version: 0.0.0
     dependencies:
@@ -22992,7 +23052,7 @@ packages:
     dev: false
 
   file:projects/monitor-query.tgz:
-    resolution: {integrity: sha512-vRRhoDDl9G/JIP7BOJlh+fKfjhQovoKNJ5nsgpu1ikOVYiTpEvOKsQ/FxMC+Bx8kD6TwuhAr/8CLpSLa7tDXSw==, tarball: file:projects/monitor-query.tgz}
+    resolution: {integrity: sha512-K0oIAXSqWEec33diTPRBZU+N7V2ZIf+US37Z2Dj6HGlCH1BW2UgVNiCtzIiSjfn1rO8H/KRUJya0sjQaZDbVAQ==, tarball: file:projects/monitor-query.tgz}
     name: '@rush-temp/monitor-query'
     version: 0.0.0
     dependencies:
@@ -25020,7 +25080,7 @@ packages:
     dev: false
 
   file:projects/web-pubsub-client.tgz:
-    resolution: {integrity: sha512-gew2iNf4DCi1CpeyojCqC7Qzv13YAEgvAPYH2SbxdUegFD5SMqOZ8lEm+cNeiCtTkaUZ7tWw1XS0i9VsBAxx0g==, tarball: file:projects/web-pubsub-client.tgz}
+    resolution: {integrity: sha512-nMDyFSx1FVegibPTV+hYP3a+p/WEykpYRJg981Z/JoOP9HuD343ZR3HC5ywMdwD7HHfAhKDTBeR0FlWo9Qo3Pw==, tarball: file:projects/web-pubsub-client.tgz}
     name: '@rush-temp/web-pubsub-client'
     version: 0.0.0
     dependencies:

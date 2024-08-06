@@ -2,21 +2,22 @@
 // Licensed under the MIT license.
 
 import { AccessToken, GetTokenOptions } from "@azure/core-auth";
-import { AuthenticationRequiredError, CredentialUnavailableError } from "../../errors";
-import { MsalToken, ValidMsalToken } from "../../msal/types";
-import { credentialLogger, formatError, formatSuccess } from "../../util/logging";
-import { defaultLoggerCallback, getMSALLogLevel } from "../../msal/utils";
+import { AuthenticationRequiredError, CredentialUnavailableError } from "../../errors.js";
+import { MsalToken, ValidMsalToken } from "../../msal/types.js";
+import { credentialLogger, formatError, formatSuccess } from "../../util/logging.js";
+import { defaultLoggerCallback, getMSALLogLevel } from "../../msal/utils.js";
 
-import { IdentityClient } from "../../client/identityClient";
-import { MSIConfiguration } from "./models";
+import { IdentityClient } from "../../client/identityClient.js";
+import { MSIConfiguration } from "./models.js";
+// @ts-ignore the types are incorrect in this package
 import { ManagedIdentityApplication } from "@azure/msal-node";
-import { TokenCredentialOptions } from "../../tokenCredentialOptions";
+import { TokenCredentialOptions } from "../../tokenCredentialOptions.js";
 import { getLogLevel } from "@azure/logger";
-import { imdsMsi } from "./imdsMsi";
-import { imdsRetryPolicy } from "./imdsRetryPolicy";
-import { mapScopesToResource } from "./utils";
-import { tokenExchangeMsi } from "./tokenExchangeMsi";
-import { tracingClient } from "../../util/tracing";
+import { imdsMsi } from "./imdsMsi.js";
+import { imdsRetryPolicy } from "./imdsRetryPolicy.js";
+import { mapScopesToResource } from "./utils.js";
+import { tokenExchangeMsi } from "./tokenExchangeMsi.js";
+import { tracingClient } from "../../util/tracing.js";
 
 const logger = credentialLogger("ManagedIdentityCredential(MSAL)");
 

@@ -9,15 +9,13 @@ import {
   ManagedIdentityCredential,
   WorkloadIdentityCredential,
   WorkloadIdentityCredentialOptions,
-} from "../../../src";
-import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup";
+} from "../../../src/index.js";
+import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup.js";
 
 import { AuthenticationResult } from "@azure/msal-node";
-import { Context } from "mocha";
-import { assert } from "@azure-tools/test-utils";
 import { env } from "@azure-tools/test-recorder";
-import path from "path";
-import sinon from "sinon";
+import path from "node:path";
+import { describe, it, assert, expect, vi, beforeEach, afterEach } from "vitest";
 
 describe("WorkloadIdentityCredential", function () {
   let cleanup: MsalTestCleanup;
@@ -45,7 +43,7 @@ describe("WorkloadIdentityCredential", function () {
     correlationId: "correlationId",
   };
 
-  beforeEach(async function (this: Context) {
+  beforeEach(async function (ctx) {
     const setup = await msalNodeTestSetup(stubbedToken);
     cleanup = setup.cleanup;
   });
@@ -54,7 +52,7 @@ describe("WorkloadIdentityCredential", function () {
     await cleanup();
   });
 
-  it("authenticates with WorkloadIdentity Credential", async function (this: Context) {
+  it("authenticates with WorkloadIdentity Credential", async function (ctx) {
     const credential = new WorkloadIdentityCredential({
       tenantId,
       clientId,
@@ -69,7 +67,7 @@ describe("WorkloadIdentityCredential", function () {
     });
   });
 
-  it("authenticates with ManagedIdentity Credential", async function (this: Context) {
+  it("authenticates with ManagedIdentity Credential", async function (ctx) {
     process.env.AZURE_FEDERATED_TOKEN_FILE = tokenFilePath;
     const credential = new ManagedIdentityCredential("dummy-clientId");
     const token = await credential.getToken(scope);
@@ -77,7 +75,7 @@ describe("WorkloadIdentityCredential", function () {
     assert.ok(token?.expiresOnTimestamp! > Date.now());
   });
 
-  it("authenticates with DefaultAzure Credential", async function (this: Context) {
+  it("authenticates with DefaultAzure Credential", async function (ctx) {
     const credential = new DefaultAzureCredential();
     const sandbox = sinon.createSandbox();
     try {
@@ -99,7 +97,7 @@ describe("WorkloadIdentityCredential", function () {
       sandbox.restore();
     }
   });
-  it("authenticates with DefaultAzure Credential and client ID", async function (this: Context) {
+  it("authenticates with DefaultAzure Credential and client ID", async function (ctx) {
     const credential = new DefaultAzureCredential({
       managedIdentityClientId: "managedIdentityClientId",
       workloadIdentityClientId: "workloadIdentityClientId",

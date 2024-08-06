@@ -3,7 +3,7 @@
 
 import { PipelinePolicy, retryPolicy } from "@azure/core-rest-pipeline";
 
-import { MSIConfiguration } from "./models";
+import { MSIConfiguration } from "./models.js";
 import { getRandomIntegerInclusive } from "@azure/core-util";
 
 // Matches the default retry configuration in expontentialRetryStrategy.ts

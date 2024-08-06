@@ -1,14 +1,12 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
-
-import Sinon from "sinon";
-import { assert } from "@azure-tools/test-utils";
 import { AuthError, AuthenticationResult, ManagedIdentityApplication } from "@azure/msal-node";
-import { MsalMsiProvider } from "../../../../src/credentials/managedIdentityCredential/msalMsiProvider";
-import { tokenExchangeMsi } from "../../../../src/credentials/managedIdentityCredential/tokenExchangeMsi";
-import { imdsMsi } from "../../../../src/credentials/managedIdentityCredential/imdsMsi";
+import { MsalMsiProvider } from "../../../../src/credentials/managedIdentityCredential/msalMsiProvider.js";
+import { tokenExchangeMsi } from "../../../../src/credentials/managedIdentityCredential/tokenExchangeMsi.js";
+import { imdsMsi } from "../../../../src/credentials/managedIdentityCredential/imdsMsi.js";
 import { RestError } from "@azure/core-rest-pipeline";
-import { AuthenticationRequiredError, CredentialUnavailableError } from "../../../../src/errors";
+import { AuthenticationRequiredError, CredentialUnavailableError } from "../../../../src/errors.js";
+import { describe, it, assert, expect, vi, beforeEach, afterEach } from "vitest";
 
 describe("ManagedIdentityCredential (MSAL)", function () {
   let acquireTokenStub: Sinon.SinonStub;
@@ -20,8 +18,8 @@ describe("ManagedIdentityCredential (MSAL)", function () {
   };
 
   beforeEach(function () {
-    acquireTokenStub = Sinon.stub(ManagedIdentityApplication.prototype, "acquireToken");
-    imdsIsAvailableStub = Sinon.stub(imdsMsi, "isAvailable").resolves(true); // Skip pinging the IMDS endpoint in tests
+    acquireTokenStub = vi.spyOn(ManagedIdentityApplication.prototype, "acquireToken");
+    imdsIsAvailableStub = vi.spyOn(imdsMsi, "isAvailable").resolves(true); // Skip pinging the IMDS endpoint in tests
   });
 
   afterEach(function () {
@@ -68,8 +66,8 @@ describe("ManagedIdentityCredential (MSAL)", function () {
             token: "test_token",
             expiresOnTimestamp: new Date().getTime(),
           };
-          Sinon.stub(tokenExchangeMsi, "isAvailable").resolves(true);
-          Sinon.stub(tokenExchangeMsi, "getToken").resolves(validToken);
+          vi.spyOn(tokenExchangeMsi, "isAvailable").resolves(true);
+          vi.spyOn(tokenExchangeMsi, "getToken").resolves(validToken);
 
           const provider = new MsalMsiProvider();
           const token = await provider.getToken("scope");
@@ -80,7 +78,7 @@ describe("ManagedIdentityCredential (MSAL)", function () {
 
       describe("when using IMDS", function () {
         it("probes the IMDS endpoint", async function () {
-          Sinon.stub(ManagedIdentityApplication.prototype, "getManagedIdentitySource").returns(
+          vi.spyOn(ManagedIdentityApplication.prototype, "getManagedIdentitySource").returns(
             "DefaultToImds",
           );
           acquireTokenStub.resolves(validAuthenticationResult as AuthenticationResult);

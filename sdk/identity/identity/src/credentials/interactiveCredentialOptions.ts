@@ -1,9 +1,9 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { AuthenticationRecord } from "../msal/types";
-import { AuthorityValidationOptions } from "./authorityValidationOptions";
-import { MultiTenantTokenCredentialOptions } from "./multiTenantTokenCredentialOptions";
+import { AuthenticationRecord } from "../msal/types.js";
+import { AuthorityValidationOptions } from "./authorityValidationOptions.js";
+import { MultiTenantTokenCredentialOptions } from "./multiTenantTokenCredentialOptions.js";
 
 /**
  * Common constructor options for the Identity credentials that requires user interaction.

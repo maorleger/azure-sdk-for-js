@@ -1,15 +1,13 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
-
-import { assert } from "chai";
-import { Context } from "mocha";
 import { isLiveMode } from "@azure-tools/test-recorder";
-import { ManagedIdentityCredential } from "../../src";
+import { ManagedIdentityCredential } from "../../src/index.js";
+import { describe, it, assert, expect, vi, beforeEach, afterEach } from "vitest";
 
 describe("AzureVM UserAssigned Integration test", function () {
-  it("test the Azure VM IMDS endpoint where the MI credential is used.", async function (this: Context) {
+  it("test the Azure VM IMDS endpoint where the MI credential is used.", async function (ctx) {
     if (!isLiveMode()) {
-      this.skip();
+      ctx.task.skip();
     }
     const userAssignedVM = process.env.IDENTITY_VM_USER_ASSIGNED_MI_CLIENT_ID;
     if (!userAssignedVM) {

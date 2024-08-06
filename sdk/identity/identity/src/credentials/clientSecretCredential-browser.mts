@@ -3,15 +3,15 @@
 
 import { AccessToken, GetTokenOptions, TokenCredential } from "@azure/core-auth";
 import { createHttpHeaders, createPipelineRequest } from "@azure/core-rest-pipeline";
-import { credentialLogger, formatError, formatSuccess } from "../util/logging";
+import { credentialLogger, formatError, formatSuccess } from "../util/logging.js";
 import {
   processMultiTenantRequest,
   resolveAdditionallyAllowedTenantIds,
-} from "../util/tenantIdUtils";
-import { ClientSecretCredentialOptions } from "./clientSecretCredentialOptions";
-import { IdentityClient } from "../client/identityClient";
-import { getIdentityTokenEndpointSuffix } from "../util/identityTokenEndpoint";
-import { tracingClient } from "../util/tracing";
+} from "../util/tenantIdUtils.js";
+import { ClientSecretCredentialOptions } from "./clientSecretCredentialOptions.js";
+import { IdentityClient } from "../client/identityClient.js";
+import { getIdentityTokenEndpointSuffix } from "../util/identityTokenEndpoint.js";
+import { tracingClient } from "../util/tracing.js";
 
 const logger = credentialLogger("ClientSecretCredential");
 

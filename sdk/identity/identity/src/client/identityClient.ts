@@ -1,27 +1,29 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import type { INetworkModule, NetworkRequestOptions, NetworkResponse } from "@azure/msal-node";
 import { AccessToken, GetTokenOptions } from "@azure/core-auth";
-import { ServiceClient } from "@azure/core-client";
-import { isNode } from "@azure/core-util";
+import { AuthenticationError, AuthenticationErrorName } from "../errors.js";
+import { DefaultAuthorityHost, SDK_VERSION } from "../constants.js";
+// @ts-ignore the types are incorrect in this package
+import type { INetworkModule, NetworkRequestOptions, NetworkResponse } from "@azure/msal-node";
 import {
   PipelineRequest,
   PipelineResponse,
   createHttpHeaders,
   createPipelineRequest,
 } from "@azure/core-rest-pipeline";
-import { AbortSignalLike } from "@azure/abort-controller";
-import { AuthenticationError, AuthenticationErrorName } from "../errors";
-import { getIdentityTokenEndpointSuffix } from "../util/identityTokenEndpoint";
-import { DefaultAuthorityHost, SDK_VERSION } from "../constants";
-import { tracingClient } from "../util/tracing";
-import { logger } from "../util/logging";
-import { TokenCredentialOptions } from "../tokenCredentialOptions";
 import {
   TokenResponseParsedBody,
   parseExpirationTimestamp,
-} from "../credentials/managedIdentityCredential/utils";
+} from "../credentials/managedIdentityCredential/utils.js";
+
+import { AbortSignalLike } from "@azure/abort-controller";
+import { ServiceClient } from "@azure/core-client";
+import { TokenCredentialOptions } from "../tokenCredentialOptions.js";
+import { getIdentityTokenEndpointSuffix } from "../util/identityTokenEndpoint.js";
+import { isNode } from "@azure/core-util";
+import { logger } from "../util/logging.js";
+import { tracingClient } from "../util/tracing.js";
 
 const noCorrelationId = "noCorrelationId";
 

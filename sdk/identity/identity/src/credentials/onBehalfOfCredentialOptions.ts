@@ -1,9 +1,9 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { AuthorityValidationOptions } from "./authorityValidationOptions";
-import { CredentialPersistenceOptions } from "./credentialPersistenceOptions";
-import { MultiTenantTokenCredentialOptions } from "./multiTenantTokenCredentialOptions";
+import { AuthorityValidationOptions } from "./authorityValidationOptions.js";
+import { CredentialPersistenceOptions } from "./credentialPersistenceOptions.js";
+import { MultiTenantTokenCredentialOptions } from "./multiTenantTokenCredentialOptions.js";
 
 /**
  * Defines the parameters to authenticate the {@link OnBehalfOfCredential} with a secret.

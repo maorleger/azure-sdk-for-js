@@ -1,9 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
-
-import Sinon from "sinon";
-import { assert } from "@azure-tools/test-utils";
-import { getSendCertificateChain } from "../../../src/credentials/environmentCredential";
+import { getSendCertificateChain } from "../../../src/credentials/environmentCredential.js";
+import { describe, it, assert, expect, vi, beforeEach, afterEach } from "vitest";
 
 describe("EnvironmentCredential (internal)", function () {
   afterEach(function () {
@@ -12,7 +10,7 @@ describe("EnvironmentCredential (internal)", function () {
 
   describe("#getSendCertificateChain", () => {
     it("should parse 'true' correctly", async () => {
-      Sinon.stub(process, "env").value({
+      vi.spyOn(process, "env").value({
         AZURE_CLIENT_SEND_CERTIFICATE_CHAIN: "true",
       });
 
@@ -21,7 +19,7 @@ describe("EnvironmentCredential (internal)", function () {
     });
 
     it("should parse '1' correctly", async () => {
-      Sinon.stub(process, "env").value({
+      vi.spyOn(process, "env").value({
         AZURE_CLIENT_SEND_CERTIFICATE_CHAIN: "1",
       });
 
@@ -30,7 +28,7 @@ describe("EnvironmentCredential (internal)", function () {
     });
 
     it("is case insensitive", async () => {
-      Sinon.stub(process, "env").value({
+      vi.spyOn(process, "env").value({
         AZURE_CLIENT_SEND_CERTIFICATE_CHAIN: "TrUe",
       });
 
@@ -39,14 +37,14 @@ describe("EnvironmentCredential (internal)", function () {
     });
 
     it("should parse undefined correctly", async () => {
-      Sinon.stub(process, "env").value({});
+      vi.spyOn(process, "env").value({});
 
       const sendCertificateChain = getSendCertificateChain();
       assert.isFalse(sendCertificateChain);
     });
 
     it("should default other values to false", async () => {
-      Sinon.stub(process, "env").value({
+      vi.spyOn(process, "env").value({
         AZURE_CLIENT_SEND_CERTIFICATE_CHAIN: "foobar",
       });
 

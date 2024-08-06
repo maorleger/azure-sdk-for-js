@@ -3,24 +3,22 @@
 
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 
-import * as path from "path";
+import * as path from "node:path";
 
-import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup";
+import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup.js";
 
-import { ClientAssertionCredential } from "../../../src";
+import { ClientAssertionCredential } from "../../../src/index.js";
 import { ConfidentialClientApplication } from "@azure/msal-node";
-import { Context } from "mocha";
-import type Sinon from "sinon";
-import { assert } from "chai";
-import { createJWTTokenFromCertificate } from "../../public/node/utils/utils";
+import { createJWTTokenFromCertificate } from "../../public/node/utils/utils.js";
 import { env } from "@azure-tools/test-recorder";
+import { describe, it, assert, expect, vi, beforeEach, afterEach } from "vitest";
 
 describe("ClientAssertionCredential (internal)", function () {
   let cleanup: MsalTestCleanup;
   let doGetTokenSpy: Sinon.SinonSpy;
 
-  beforeEach(async function (this: Context) {
-    const setup = await msalNodeTestSetup(this.currentTest);
+  beforeEach(async function (ctx) {
+    const setup = await msalNodeTestSetup(ctx);
     cleanup = setup.cleanup;
 
     doGetTokenSpy = setup.sandbox.spy(

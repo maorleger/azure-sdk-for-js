@@ -1,12 +1,10 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
-
-import * as sinon from "sinon";
 import { AccessToken, GetTokenOptions, TokenCredential } from "@azure/core-auth";
 import { AzureLogLevel, AzureLogger, getLogLevel, setLogLevel } from "@azure/logger";
-import { IdentityTestContextInterface, RawTestResponse, TestResponse } from "./httpRequestsCommon";
+import { IdentityTestContextInterface, RawTestResponse, TestResponse } from "./httpRequestsCommon.js";
 import { RestError } from "@azure/core-rest-pipeline";
-import { getError } from "./authTestUtils";
+import { getError } from "./authTestUtils.js";
 
 /**
  * Helps specify a different number of responses for Node and for the browser.

@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { TokenCredentialOptions } from "../tokenCredentialOptions";
+import { TokenCredentialOptions } from "../tokenCredentialOptions.js";
 
 /**
  * Options for multi-tenant applications which allows for additionally allowed tenants.

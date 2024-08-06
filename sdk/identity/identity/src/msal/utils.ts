@@ -1,16 +1,16 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { AuthenticationRecord, MsalAccountInfo, MsalToken, ValidMsalToken } from "./types";
-import { AuthenticationRequiredError, CredentialUnavailableError } from "../errors";
-import { CredentialLogger, credentialLogger, formatError } from "../util/logging";
-import { DefaultAuthorityHost, DefaultTenantId } from "../constants";
+import { AuthenticationRecord, MsalAccountInfo, MsalToken, ValidMsalToken } from "./types.js";
+import { AuthenticationRequiredError, CredentialUnavailableError } from "../errors.js";
+import { CredentialLogger, credentialLogger, formatError } from "../util/logging.js";
+import { DefaultAuthorityHost, DefaultTenantId } from "../constants.js";
 import { randomUUID as coreRandomUUID, isNode } from "@azure/core-util";
 
 import { AbortError } from "@azure/abort-controller";
 import { AzureLogLevel } from "@azure/logger";
 import { GetTokenOptions } from "@azure/core-auth";
-import { msalCommon } from "./msal";
+import { msalCommon } from "./msal.js";
 
 export interface ILoggerCallback {
   (level: msalCommon.LogLevel, message: string, containsPii: boolean): void;

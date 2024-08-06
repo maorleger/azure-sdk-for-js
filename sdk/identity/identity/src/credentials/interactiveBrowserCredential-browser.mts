@@ -5,19 +5,19 @@ import { AccessToken, GetTokenOptions, TokenCredential } from "@azure/core-auth"
 import {
   InteractiveBrowserCredentialInBrowserOptions,
   InteractiveBrowserCredentialNodeOptions,
-} from "./interactiveBrowserCredentialOptions";
-import { credentialLogger, formatError } from "../util/logging";
+} from "./interactiveBrowserCredentialOptions.js";
+import { credentialLogger, formatError } from "../util/logging.js";
 import {
   processMultiTenantRequest,
   resolveAdditionallyAllowedTenantIds,
-} from "../util/tenantIdUtils";
+} from "../util/tenantIdUtils.js";
 
-import { AuthenticationRecord } from "../msal/types";
-import { MSALAuthCode } from "../msal/browserFlows/msalAuthCode";
-import { MsalBrowserFlowOptions } from "../msal/browserFlows/msalBrowserCommon";
-import { MsalFlow } from "../msal/browserFlows/flows";
-import { ensureScopes } from "../util/scopeUtils";
-import { tracingClient } from "../util/tracing";
+import { AuthenticationRecord } from "../msal/types.js";
+import { MSALAuthCode } from "../msal/browserFlows/msalAuthCode.js";
+import { MsalBrowserFlowOptions } from "../msal/browserFlows/msalBrowserCommon.js";
+import { MsalFlow } from "../msal/browserFlows/flows.js";
+import { ensureScopes } from "../util/scopeUtils.js";
+import { tracingClient } from "../util/tracing.js";
 
 const logger = credentialLogger("InteractiveBrowserCredential");
 

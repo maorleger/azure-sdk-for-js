@@ -8,13 +8,12 @@ import {
   parseJsonToken,
   powerShellErrors,
   powerShellPublicErrorMessages,
-} from "../../../src/credentials/azurePowerShellCredential";
-import { AzurePowerShellCredential } from "../../../src";
+} from "../../../src/credentials/azurePowerShellCredential.js";
+import { AzurePowerShellCredential } from "../../../src/index.js";
 import { GetTokenOptions } from "@azure/core-auth";
-import Sinon from "sinon";
-import { assert } from "@azure-tools/test-utils";
-import { commandStack } from "../../../src/credentials/azurePowerShellCredential";
-import { processUtils } from "../../../src/util/processUtils";
+import { commandStack } from "../../../src/credentials/azurePowerShellCredential.js";
+import { processUtils } from "../../../src/util/processUtils.js";
+import { describe, it, assert, expect, vi, beforeEach, afterEach } from "vitest";
 
 function resetCommandStack(): void {
   commandStack[0] = formatCommand("pwsh");

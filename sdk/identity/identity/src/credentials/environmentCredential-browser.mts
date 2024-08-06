@@ -2,18 +2,18 @@
 // Licensed under the MIT license.
 
 import { AccessToken, TokenCredential } from "@azure/core-auth";
-import { credentialLogger, formatError } from "../util/logging";
+import { credentialLogger, formatError } from "../util/logging.js";
 
 const BrowserNotSupportedError = new Error(
-  "AzureDeveloperCliCredential is not supported in the browser.",
+  "EnvironmentCredential is not supported in the browser.",
 );
-const logger = credentialLogger("AzureDeveloperCliCredential");
+const logger = credentialLogger("EnvironmentCredential");
 
 /**
- * This credential will use the currently logged-in user login information
- * via the Azure Developer CLI ('azd') commandline tool.
+ * Enables authentication to Microsoft Entra ID using client secret
+ * details configured in environment variables
  */
-export class AzureDeveloperCliCredential implements TokenCredential {
+export class EnvironmentCredential implements TokenCredential {
   /**
    * Only available in Node.js
    */

@@ -1,12 +1,9 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
-
-import Sinon, { createSandbox } from "sinon";
-
-import { AzureCliCredential } from "../../../src/credentials/azureCliCredential";
+import { AzureCliCredential } from "../../../src/credentials/azureCliCredential.js";
 import { GetTokenOptions } from "@azure/core-auth";
-import { assert } from "@azure-tools/test-utils";
 import child_process from "child_process";
+import { describe, it, assert, expect, vi, beforeEach, afterEach } from "vitest";
 
 describe("AzureCliCredential (internal)", function () {
   let sandbox: Sinon.SinonSandbox | undefined;

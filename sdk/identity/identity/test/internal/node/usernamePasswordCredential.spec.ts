@@ -4,14 +4,12 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 
 import { AzureLogger, setLogLevel } from "@azure/logger";
-import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup";
+import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup.js";
 import { Recorder, isPlaybackMode } from "@azure-tools/test-recorder";
-import { Context } from "mocha";
 import { PublicClientApplication } from "@azure/msal-node";
-import Sinon from "sinon";
-import { UsernamePasswordCredential } from "../../../src";
-import { assert } from "chai";
-import { getUsernamePasswordStaticResources } from "../../msalTestUtils";
+import { UsernamePasswordCredential } from "../../../src/index.js";
+import { getUsernamePasswordStaticResources } from "../../msalTestUtils.js";
+import { describe, it, assert, expect, vi, beforeEach, afterEach } from "vitest";
 
 describe("UsernamePasswordCredential (internal)", function () {
   let cleanup: MsalTestCleanup;
@@ -19,8 +17,8 @@ describe("UsernamePasswordCredential (internal)", function () {
   let doGetTokenSpy: Sinon.SinonSpy;
   let recorder: Recorder;
 
-  beforeEach(async function (this: Context) {
-    const setup = await msalNodeTestSetup(this.currentTest);
+  beforeEach(async function (ctx) {
+    const setup = await msalNodeTestSetup(ctx);
     cleanup = setup.cleanup;
     recorder = setup.recorder;
 
@@ -102,7 +100,7 @@ describe("UsernamePasswordCredential (internal)", function () {
     });
   });
 
-  it("Authenticates silently after the initial request", async function (this: Context) {
+  it("Authenticates silently after the initial request", async function (ctx) {
     const { clientId, password, tenantId, username } = getUsernamePasswordStaticResources();
     const credential = new UsernamePasswordCredential(
       tenantId,
@@ -128,7 +126,7 @@ describe("UsernamePasswordCredential (internal)", function () {
     );
   });
 
-  it("Authenticates with tenantId on getToken", async function (this: Context) {
+  it("Authenticates with tenantId on getToken", async function (ctx) {
     const { clientId, password, tenantId, username } = getUsernamePasswordStaticResources();
     const credential = new UsernamePasswordCredential(
       tenantId,
@@ -142,11 +140,11 @@ describe("UsernamePasswordCredential (internal)", function () {
     assert.equal(doGetTokenSpy.callCount, 1);
   });
 
-  it("authenticates (with allowLoggingAccountIdentifiers set to true)", async function (this: Context) {
+  it("authenticates (with allowLoggingAccountIdentifiers set to true)", async function (ctx) {
     const { clientId, password, tenantId, username } = getUsernamePasswordStaticResources();
     if (isPlaybackMode()) {
       // The recorder clears the access tokens.
-      this.skip();
+      ctx.task.skip();
     }
     const credential = new UsernamePasswordCredential(tenantId, clientId, username, password, {
       loggingOptions: { allowLoggingAccountIdentifiers: true },

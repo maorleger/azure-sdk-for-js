@@ -2,29 +2,30 @@
 // Licensed under the MIT license.
 
 import { AccessToken, GetTokenOptions } from "@azure/core-auth";
+// @ts-ignore the types are incorrect in this package
 import { AppTokenProviderParameters, ConfidentialClientApplication } from "@azure/msal-node";
 import {
   AuthenticationError,
   AuthenticationRequiredError,
   CredentialUnavailableError,
-} from "../../errors";
-import { MSI, MSIConfiguration, MSIToken } from "./models";
-import { MsalResult, MsalToken, ValidMsalToken } from "../../msal/types";
-import { cloudShellMsi } from "./cloudShellMsi";
-import { credentialLogger, formatError, formatSuccess } from "../../util/logging";
+} from "../../errors.js";
+import { MSI, MSIConfiguration, MSIToken } from "./models.js";
+import { MsalResult, MsalToken, ValidMsalToken } from "../../msal/types.js";
+import { credentialLogger, formatError, formatSuccess } from "../../util/logging.js";
 
-import { DeveloperSignOnClientId } from "../../constants";
-import { IdentityClient } from "../../client/identityClient";
-import { TokenCredentialOptions } from "../../tokenCredentialOptions";
-import { appServiceMsi2017 } from "./appServiceMsi2017";
-import { appServiceMsi2019 } from "./appServiceMsi2019";
-import { arcMsi } from "./arcMsi";
-import { fabricMsi } from "./fabricMsi";
+import { DeveloperSignOnClientId } from "../../constants.js";
+import { IdentityClient } from "../../client/identityClient.js";
+import { TokenCredentialOptions } from "../../tokenCredentialOptions.js";
+import { appServiceMsi2017 } from "./appServiceMsi2017.js";
+import { appServiceMsi2019 } from "./appServiceMsi2019.js";
+import { arcMsi } from "./arcMsi.js";
+import { cloudShellMsi } from "./cloudShellMsi.js";
+import { fabricMsi } from "./fabricMsi.js";
 import { getLogLevel } from "@azure/logger";
-import { getMSALLogLevel } from "../../msal/utils";
-import { imdsMsi } from "./imdsMsi";
-import { tokenExchangeMsi } from "./tokenExchangeMsi";
-import { tracingClient } from "../../util/tracing";
+import { getMSALLogLevel } from "../../msal/utils.js";
+import { imdsMsi } from "./imdsMsi.js";
+import { tokenExchangeMsi } from "./tokenExchangeMsi.js";
+import { tracingClient } from "../../util/tracing.js";
 
 const logger = credentialLogger("ManagedIdentityCredential");
 

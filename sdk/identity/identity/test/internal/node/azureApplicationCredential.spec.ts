@@ -1,14 +1,14 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { IdentityTestContextInterface, createResponse } from "../../httpRequestsCommon";
+import { IdentityTestContextInterface, createResponse } from "../../httpRequestsCommon.js";
 
-import { AzureApplicationCredential } from "../../../src/credentials/azureApplicationCredential";
-import { IdentityTestContext } from "../../httpRequests";
+import { AzureApplicationCredential } from "../../../src/credentials/azureApplicationCredential.js";
+import { IdentityTestContext } from "../../httpRequests.js";
 import { RestError } from "@azure/core-rest-pipeline";
-import { assert } from "chai";
-import * as dac from "../../../src/credentials/defaultAzureCredential";
-import { LegacyMsiProvider } from "../../../src/credentials/managedIdentityCredential/legacyMsiProvider";
+import * as dac from "../../../src/credentials/defaultAzureCredential.js";
+import { LegacyMsiProvider } from "../../../src/credentials/managedIdentityCredential/legacyMsiProvider.js";
+import { describe, it, assert } from "vitest";
 
 describe("AzureApplicationCredential testing Managed Identity (internal)", function () {
   let envCopy: string = "";

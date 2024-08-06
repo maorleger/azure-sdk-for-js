@@ -6,12 +6,8 @@ import {
   ConfidentialClientApplication,
   PublicClientApplication,
 } from "@azure/msal-node";
-import Sinon, { createSandbox } from "sinon";
-
-import { PlaybackTenantId } from "../msalTestUtils";
+import { PlaybackTenantId } from "../msalTestUtils.js";
 import { Recorder } from "@azure-tools/test-recorder";
-import { Test } from "mocha";
-
 export type MsalTestCleanup = () => Promise<void>;
 
 export interface MsalTestSetupResponse {

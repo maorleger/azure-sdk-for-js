@@ -6,8 +6,8 @@ import {
   createHttpHeaders,
   createPipelineRequest,
 } from "@azure/core-rest-pipeline";
-import { handleOidcResponse } from "../../../src/credentials/azurePipelinesCredential";
-import { assert } from "@azure-tools/test-utils";
+import { handleOidcResponse } from "../../../src/credentials/azurePipelinesCredential.js";
+import { describe, it, assert } from "vitest";
 
 describe("AzurePipelinesCredential (internal)", function () {
   let response: PipelineResponse;

@@ -1,9 +1,9 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { ALL_TENANTS, DeveloperSignOnClientId } from "../constants";
-import { CredentialLogger, formatError } from "./logging";
-export { processMultiTenantRequest } from "./processMultiTenantRequest";
+import { ALL_TENANTS, DeveloperSignOnClientId } from "../constants.js";
+import { CredentialLogger, formatError } from "./logging.js";
+export { processMultiTenantRequest } from "./processMultiTenantRequest.js";
 
 /**
  * @internal

@@ -2,17 +2,16 @@
 // Licensed under the MIT license.
 
 import { AccessToken, TokenCredential } from "@azure/core-auth";
-import { credentialLogger, formatError } from "../util/logging";
+import { credentialLogger, formatError } from "../util/logging.js";
 
-const BrowserNotSupportedError = new Error(
-  "AzurePowerShellCredential is not supported in the browser.",
-);
-const logger = credentialLogger("AzurePowerShellCredential");
+const BrowserNotSupportedError = new Error("AzureCliCredential is not supported in the browser.");
+const logger = credentialLogger("AzureCliCredential");
 
 /**
- * This credential will use the currently-logged-in user's login information via the Azure Power Shell command line tool.
+ * This credential will use the currently logged-in user login information
+ * via the Azure CLI ('az') commandline tool.
  */
-export class AzurePowerShellCredential implements TokenCredential {
+export class AzureCliCredential implements TokenCredential {
   /**
    * Only available in Node.js
    */

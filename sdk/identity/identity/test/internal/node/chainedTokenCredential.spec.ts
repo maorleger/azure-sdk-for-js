@@ -1,10 +1,9 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { AccessToken, ChainedTokenCredential, TokenCredential } from "../../../src";
-import Sinon from "sinon";
-import { assert } from "chai";
-import { logger as chainedTokenCredentialLogger } from "../../../src/credentials/chainedTokenCredential";
+import { AccessToken, ChainedTokenCredential, TokenCredential } from "../../../src/index.js";
+import { logger as chainedTokenCredentialLogger } from "../../../src/credentials/chainedTokenCredential.js";
+import { describe, it, assert, expect, vi, beforeEach, afterEach } from "vitest";
 
 class TestMockCredential implements TokenCredential {
   constructor(public returnPromise: Promise<AccessToken | null>) {}

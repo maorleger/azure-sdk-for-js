@@ -5,22 +5,22 @@ import {
   DefaultAzureCredentialClientIdOptions,
   DefaultAzureCredentialOptions,
   DefaultAzureCredentialResourceIdOptions,
-} from "./defaultAzureCredentialOptions";
+} from "./defaultAzureCredentialOptions.js";
 import {
   ManagedIdentityCredential,
   ManagedIdentityCredentialClientIdOptions,
   ManagedIdentityCredentialResourceIdOptions,
-} from "./managedIdentityCredential";
+} from "./managedIdentityCredential/index.js";
 
-import { AzureCliCredential } from "./azureCliCredential";
-import { AzureDeveloperCliCredential } from "./azureDeveloperCliCredential";
-import { AzurePowerShellCredential } from "./azurePowerShellCredential";
-import { ChainedTokenCredential } from "./chainedTokenCredential";
-import { EnvironmentCredential } from "./environmentCredential";
+import { AzureCliCredential } from "./azureCliCredential.js";
+import { AzureDeveloperCliCredential } from "./azureDeveloperCliCredential.js";
+import { AzurePowerShellCredential } from "./azurePowerShellCredential.js";
+import { ChainedTokenCredential } from "./chainedTokenCredential.js";
+import { EnvironmentCredential } from "./environmentCredential.js";
 import { TokenCredential } from "@azure/core-auth";
-import { WorkloadIdentityCredential } from "./workloadIdentityCredential";
-import { WorkloadIdentityCredentialOptions } from "./workloadIdentityCredentialOptions";
-import { credentialLogger } from "../util/logging";
+import { WorkloadIdentityCredential } from "./workloadIdentityCredential.js";
+import { WorkloadIdentityCredentialOptions } from "./workloadIdentityCredentialOptions.js";
+import { credentialLogger } from "../util/logging.js";
 
 const logger = credentialLogger("DefaultAzureCredential");
 

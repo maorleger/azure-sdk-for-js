@@ -7,19 +7,19 @@ import { AccessToken, GetTokenOptions, TokenCredential } from "@azure/core-auth"
 import {
   InteractiveBrowserCredentialInBrowserOptions,
   InteractiveBrowserCredentialNodeOptions,
-} from "./interactiveBrowserCredentialOptions";
+} from "./interactiveBrowserCredentialOptions.js";
 import {
   processMultiTenantRequest,
   resolveAdditionallyAllowedTenantIds,
   resolveTenantId,
-} from "../util/tenantIdUtils";
+} from "../util/tenantIdUtils.js";
 
-import { AuthenticationRecord } from "../msal/types";
-import { credentialLogger } from "../util/logging";
-import { ensureScopes } from "../util/scopeUtils";
-import { tracingClient } from "../util/tracing";
-import { MsalClient, MsalClientOptions, createMsalClient } from "../msal/nodeFlows/msalClient";
-import { DeveloperSignOnClientId } from "../constants";
+import { AuthenticationRecord } from "../msal/types.js";
+import { credentialLogger } from "../util/logging.js";
+import { ensureScopes } from "../util/scopeUtils.js";
+import { tracingClient } from "../util/tracing.js";
+import { MsalClient, MsalClientOptions, createMsalClient } from "../msal/nodeFlows/msalClient.js";
+import { DeveloperSignOnClientId } from "../constants.js";
 
 const logger = credentialLogger("InteractiveBrowserCredential");
 

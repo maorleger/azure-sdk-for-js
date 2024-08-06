@@ -5,15 +5,14 @@ import {
   IdentityClient,
   TokenResponse,
   getIdentityClientAuthorityHost,
-} from "../../src/client/identityClient";
-import { IdentityTestContext, prepareMSALResponses } from "../httpRequests";
-import { IdentityTestContextInterface, createResponse } from "../httpRequestsCommon";
-import { ClientSecretCredential } from "../../src";
-import { Context } from "mocha";
-import { PlaybackTenantId } from "../msalTestUtils";
-import { assert } from "chai";
-import { isExpectedError } from "../authTestUtils";
+} from "../../src/client/identityClient.js";
+import { IdentityTestContext, prepareMSALResponses } from "../httpRequests.js";
+import { IdentityTestContextInterface, createResponse } from "../httpRequestsCommon.js";
+import { ClientSecretCredential } from "../../src/index.js";
+import { PlaybackTenantId } from "../msalTestUtils.js";
+import { isExpectedError } from "../authTestUtils.js";
 import { isNode } from "@azure/core-util";
+import { describe, it, assert } from "vitest";
 
 describe("IdentityClient", function () {
   let testContext: IdentityTestContextInterface;
@@ -96,18 +95,18 @@ describe("IdentityClient", function () {
     );
   });
 
-  it("parses authority host environment variable as expected", function (this: Context) {
+  it("parses authority host environment variable as expected", function (ctx) {
     if (!isNode) {
-      return this.skip();
+      return ctx.task.skip();
     }
     process.env.AZURE_AUTHORITY_HOST = "http://totallyinsecure.lol";
     assert.equal(getIdentityClientAuthorityHost({}), process.env.AZURE_AUTHORITY_HOST);
     return;
   });
 
-  it("throws an exception when an Env AZURE_AUTHORITY_HOST using 'http' is provided", async function (this: Context) {
+  it("throws an exception when an Env AZURE_AUTHORITY_HOST using 'http' is provided", async function (ctx) {
     if (!isNode) {
-      return this.skip();
+      return ctx.task.skip();
     }
     process.env.AZURE_AUTHORITY_HOST = "http://totallyinsecure.lol";
     assert.throws(
@@ -149,16 +148,16 @@ describe("IdentityClient", function () {
     }
   });
 
-  it("parses authority host environment variable as expected", function (this: Context) {
+  it("parses authority host environment variable as expected", function (ctx) {
     if (!isNode) {
-      return this.skip();
+      return ctx.task.skip();
     }
     process.env.AZURE_AUTHORITY_HOST = "http://totallyinsecure.lol";
     assert.equal(getIdentityClientAuthorityHost({}), process.env.AZURE_AUTHORITY_HOST);
     return;
   });
 
-  it("returns null when the token refresh request returns an 'interaction_required' error", async function (this: Context) {
+  it("returns null when the token refresh request returns an 'interaction_required' error", async function (ctx) {
     const client = new IdentityClient({ authorityHost: "https://authority" });
     const response = createResponse(401, {
       error: "interaction_required",

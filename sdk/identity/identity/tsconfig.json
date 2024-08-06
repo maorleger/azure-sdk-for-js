@@ -2,13 +2,21 @@
   "extends": "../../../tsconfig",
   "compilerOptions": {
     "lib": ["DOM"],
-    "declarationDir": "./types",
-    "outDir": "./dist-esm",
     "resolveJsonModule": true,
     "paths": {
       "@azure/identity": ["./src/index"]
-    }
+    },
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "rootDir": ".",
+    "skipLibCheck": true // Until we sort out the MSAL problems
   },
-  "include": ["src/**/*", "test/**/*", "samples-dev/**/*.ts"],
+  "include": [
+    "./src/**/*.ts",
+    "./src/**/*.mts",
+    "./src/**/*.cts",
+    "./samples-dev/**/*.ts",
+    "./test/**/*.ts"
+  ],
   "exclude": ["test/manual*/**/*", "integration/**", "node_modules"]
 }

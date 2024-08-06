@@ -7,19 +7,19 @@ import {
   OnBehalfOfCredentialCertificateOptions,
   OnBehalfOfCredentialOptions,
   OnBehalfOfCredentialSecretOptions,
-} from "./onBehalfOfCredentialOptions";
+} from "./onBehalfOfCredentialOptions.js";
 import {
   processMultiTenantRequest,
   resolveAdditionallyAllowedTenantIds,
-} from "../util/tenantIdUtils";
-import { CredentialPersistenceOptions } from "./credentialPersistenceOptions";
-import { MultiTenantTokenCredentialOptions } from "./multiTenantTokenCredentialOptions";
-import { credentialLogger, formatError } from "../util/logging";
-import { ensureScopes } from "../util/scopeUtils";
-import { tracingClient } from "../util/tracing";
-import { MsalClient, createMsalClient } from "../msal/nodeFlows/msalClient";
-import { CertificateParts } from "../msal/types";
-import { ClientCertificatePEMCertificatePath } from "./clientCertificateCredential";
+} from "../util/tenantIdUtils.js";
+import { CredentialPersistenceOptions } from "./credentialPersistenceOptions.js";
+import { MultiTenantTokenCredentialOptions } from "./multiTenantTokenCredentialOptions.js";
+import { credentialLogger, formatError } from "../util/logging.js";
+import { ensureScopes } from "../util/scopeUtils.js";
+import { tracingClient } from "../util/tracing.js";
+import { MsalClient, createMsalClient } from "../msal/nodeFlows/msalClient.js";
+import { CertificateParts } from "../msal/types.js";
+import { ClientCertificatePEMCertificatePath } from "./clientCertificateCredential.js";
 import { readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 

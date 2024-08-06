@@ -8,9 +8,9 @@ import {
   createHttpHeaders,
 } from "@azure/core-rest-pipeline";
 
-import { MSIConfiguration } from "../../../../src/credentials/managedIdentityCredential/models";
-import { assert } from "@azure-tools/test-utils";
-import { imdsRetryPolicy } from "../../../../src/credentials/managedIdentityCredential/imdsRetryPolicy";
+import { MSIConfiguration } from "../../../../src/credentials/managedIdentityCredential/models.js";
+import { imdsRetryPolicy } from "../../../../src/credentials/managedIdentityCredential/imdsRetryPolicy.js";
+import { describe, it, assert } from "vitest";
 
 describe("imdsRetryPolicy", () => {
   const mockRetryConfig: MSIConfiguration["retryConfig"] = {

@@ -2,13 +2,13 @@
 // Licensed under the MIT license.
 
 import { AccessToken, GetTokenOptions, TokenCredential } from "@azure/core-auth";
-import { ClientAssertionCredential } from "./clientAssertionCredential";
-import { AuthenticationError, CredentialUnavailableError } from "../errors";
-import { credentialLogger } from "../util/logging";
-import { checkTenantId } from "../util/tenantIdUtils";
+import { ClientAssertionCredential } from "./clientAssertionCredential.js";
+import { AuthenticationError, CredentialUnavailableError } from "../errors.js";
+import { credentialLogger } from "../util/logging.js";
+import { checkTenantId } from "../util/tenantIdUtils.js";
 import { createHttpHeaders, createPipelineRequest } from "@azure/core-rest-pipeline";
-import { AzurePipelinesCredentialOptions } from "./azurePipelinesCredentialOptions";
-import { IdentityClient } from "../client/identityClient";
+import { AzurePipelinesCredentialOptions } from "./azurePipelinesCredentialOptions.js";
+import { IdentityClient } from "../client/identityClient.js";
 import { PipelineResponse } from "@azure/core-rest-pipeline";
 
 const credentialName = "AzurePipelinesCredential";

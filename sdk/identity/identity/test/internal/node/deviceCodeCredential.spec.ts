@@ -3,13 +3,11 @@
 
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 
-import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup";
+import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup.js";
 import { Recorder, env, isLiveMode } from "@azure-tools/test-recorder";
-import { Context } from "mocha";
-import { DeviceCodeCredential } from "../../../src";
+import { DeviceCodeCredential } from "../../../src/index.js";
 import { PublicClientApplication } from "@azure/msal-node";
-import Sinon from "sinon";
-import { assert } from "chai";
+import { describe, it, assert, expect, vi, beforeEach, afterEach } from "vitest";
 
 describe("DeviceCodeCredential (internal)", function () {
   let cleanup: MsalTestCleanup;
@@ -17,8 +15,8 @@ describe("DeviceCodeCredential (internal)", function () {
   let doGetTokenSpy: Sinon.SinonSpy;
   let recorder: Recorder;
 
-  beforeEach(async function (this: Context) {
-    const setup = await msalNodeTestSetup(this.currentTest);
+  beforeEach(async function (ctx) {
+    const setup = await msalNodeTestSetup(ctx);
     cleanup = setup.cleanup;
     recorder = setup.recorder;
 
@@ -37,10 +35,10 @@ describe("DeviceCodeCredential (internal)", function () {
 
   const scope = "https://vault.azure.net/.default";
 
-  it("Authenticates silently after the initial request", async function (this: Context) {
+  it("Authenticates silently after the initial request", async function (ctx) {
     // These tests should not run live because this credential requires user interaction.
     if (isLiveMode()) {
-      this.skip();
+      ctx.task.skip();
     }
     const credential = new DeviceCodeCredential(
       recorder.configureClientOptions({
@@ -65,10 +63,10 @@ describe("DeviceCodeCredential (internal)", function () {
     );
   });
 
-  it("Authenticates with tenantId on getToken", async function (this: Context) {
+  it("Authenticates with tenantId on getToken", async function (ctx) {
     // These tests should not run live because this credential requires user interaction.
     if (isLiveMode()) {
-      this.skip();
+      ctx.task.skip();
     }
     const credential = new DeviceCodeCredential(
       recorder.configureClientOptions({

@@ -1,12 +1,13 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+// @ts-ignore the types are incorrect in this package
 import * as msal from "@azure/msal-node";
 
 import { AccessToken, GetTokenOptions } from "@azure/core-auth";
-import { AuthenticationRecord, CertificateParts } from "../types";
-import { CredentialLogger, credentialLogger, formatSuccess } from "../../util/logging";
-import { PluginConfiguration, msalPlugins } from "./msalPlugins";
+import { AuthenticationRecord, CertificateParts } from "../types.js";
+import { CredentialLogger, credentialLogger, formatSuccess } from "../../util/logging.js";
+import { PluginConfiguration, msalPlugins } from "./msalPlugins.js";
 import {
   defaultLoggerCallback,
   ensureValidMsalToken,
@@ -16,18 +17,18 @@ import {
   handleMsalError,
   msalToPublic,
   publicToMsal,
-} from "../utils";
+} from "../utils.js";
 
-import { AuthenticationRequiredError } from "../../errors";
-import { BrokerOptions } from "./brokerOptions";
-import { DeviceCodePromptCallback } from "../../credentials/deviceCodeCredentialOptions";
-import { IdentityClient } from "../../client/identityClient";
-import { InteractiveBrowserCredentialNodeOptions } from "../../credentials/interactiveBrowserCredentialOptions";
-import { TokenCachePersistenceOptions } from "./tokenCachePersistenceOptions";
-import { calculateRegionalAuthority } from "../../regionalAuthority";
+import { AuthenticationRequiredError } from "../../errors.js";
+import { BrokerOptions } from "./brokerOptions.js";
+import { DeviceCodePromptCallback } from "../../credentials/deviceCodeCredentialOptions.js";
+import { IdentityClient } from "../../client/identityClient.js";
+import { InteractiveBrowserCredentialNodeOptions } from "../../credentials/interactiveBrowserCredentialOptions.js";
+import { TokenCachePersistenceOptions } from "./tokenCachePersistenceOptions.js";
+import { calculateRegionalAuthority } from "../../regionalAuthority.js";
 import { getLogLevel } from "@azure/logger";
 import open from "open";
-import { resolveTenantId } from "../../util/tenantIdUtils";
+import { resolveTenantId } from "../../util/tenantIdUtils.js";
 
 /**
  * The default logger used if no logger was passed in by the credential.
