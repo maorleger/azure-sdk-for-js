@@ -1,33 +1,38 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+import { afterEach, assert, beforeEach, describe, it, vi } from "vitest";
 import {
   platformToFilePath,
   validateKeyFile,
 } from "../../../../src/credentials/managedIdentityCredential/arcMsi.js";
+
 import fs from "node:fs";
 import path from "node:path";
-import { describe, it, assert, expect, vi, beforeEach, afterEach } from "vitest";
 
 describe("arcMsi", function () {
-  afterEach(function () {
-    Sinon.restore();
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.unstubAllEnvs();
+    vi.unstubAllGlobals();
   });
 
   describe("validateKeyFile", function () {
     let expectedDirectory: string;
 
-    beforeEach(function () {
+    beforeEach(function (ctx) {
       if (process.platform !== "win32" && process.platform !== "linux") {
         // Not supported on this platform
-        ctx.task.skip();
+        ctx.skip();
       }
       expectedDirectory = platformToFilePath();
     });
 
-    it("succeeds if the file is valid", function (ctx) {
+    it("succeeds if the file is valid", function () {
       const filePath = path.join(expectedDirectory, "file.key");
-      vi.spyOn(fs, "statSync").returns({ size: 4096 } as any);
+      const fileStats = new fs.Stats();
+      fileStats.size = 4096;
+      vi.spyOn(fs, "statSync").mockReturnValue(fileStats);
       assert.doesNotThrow(() => validateKeyFile(filePath));
     });
 
@@ -38,21 +43,19 @@ describe("arcMsi", function () {
 
     describe("on Windows", function () {
       it("throws when the file is not in the expected path", function () {
-        vi.spyOn(process, "platform").value("win32");
-        vi.spyOn(process, "env").get(() => {
-          return {
+        vi.stubGlobal("process", {
+          env: {
             PROGRAMDATA: "C:\\ProgramData",
-          };
+          },
+          platform: "win32",
         });
         assert.throws(() => validateKeyFile("C:\\Users\\user\\file.key"), /unexpected file path/);
       });
 
       it("throws if ProgramData is undefined", function () {
-        vi.spyOn(process, "platform").value("win32");
-        vi.spyOn(process, "env").get(() => {
-          return {
-            PROGRAMDATA: undefined,
-          };
+        vi.stubGlobal("process", {
+          env: {},
+          platform: "win32",
         });
         assert.throws(
           () => validateKeyFile("C:\\Users\\user\\file.key"),
@@ -63,7 +66,9 @@ describe("arcMsi", function () {
 
     describe("on Linux", function () {
       it("throws when the file is not in the expected path", function () {
-        vi.spyOn(process, "platform").value("linux");
+        vi.stubGlobal("process", {
+          platform: "linux",
+        });
         assert.throws(() => validateKeyFile("/home/user/file.key"), /unexpected file path/);
       });
     });
@@ -75,7 +80,9 @@ describe("arcMsi", function () {
 
     it("throws if the file size is invalid", function () {
       const filePath = path.join(expectedDirectory, "file.key");
-      vi.spyOn(fs, "statSync").returns({ size: 4097 } as any);
+      const fileStats = new fs.Stats();
+      fileStats.size = 4097;
+      vi.spyOn(fs, "statSync").mockReturnValue(fileStats);
       assert.throws(() => validateKeyFile(filePath), /larger than expected/);
     });
   });

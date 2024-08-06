@@ -7,10 +7,10 @@ import {
   SendRequest,
   createHttpHeaders,
 } from "@azure/core-rest-pipeline";
+import { assert, describe, expect, it } from "vitest";
 
 import { MSIConfiguration } from "../../../../src/credentials/managedIdentityCredential/models.js";
 import { imdsRetryPolicy } from "../../../../src/credentials/managedIdentityCredential/imdsRetryPolicy.js";
-import { describe, it, assert } from "vitest";
 
 describe("imdsRetryPolicy", () => {
   const mockRetryConfig: MSIConfiguration["retryConfig"] = {
@@ -84,7 +84,7 @@ describe("imdsRetryPolicy", () => {
       throw new RestError("Not found", { statusCode: 404, request, response });
     };
 
-    await assert.isRejected(policy.sendRequest(pipelineRequest, sendRequest), "Not found");
+    await expect(policy.sendRequest(pipelineRequest, sendRequest)).rejects.toThrow("Not found");
     assert.strictEqual(sendRequestCount, mockRetryConfig.maxRetries + 1); // Should retry the maximum number of times
   });
 });

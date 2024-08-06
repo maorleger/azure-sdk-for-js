@@ -1,7 +1,9 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
+
+import { afterEach, assert, describe, it } from "vitest";
+
 import { processMultiTenantRequest } from "../../../src/util/tenantIdUtils.js";
-import { describe, it, assert } from "vitest";
 
 describe("Identity utilities (Node.js only)", function () {
   describe("validateMultiTenantRequest (Node.js only)", function () {

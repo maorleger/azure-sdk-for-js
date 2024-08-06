@@ -1,16 +1,17 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 import { AuthError, AuthenticationResult, ManagedIdentityApplication } from "@azure/msal-node";
-import { MsalMsiProvider } from "../../../../src/credentials/managedIdentityCredential/msalMsiProvider.js";
-import { tokenExchangeMsi } from "../../../../src/credentials/managedIdentityCredential/tokenExchangeMsi.js";
-import { imdsMsi } from "../../../../src/credentials/managedIdentityCredential/imdsMsi.js";
-import { RestError } from "@azure/core-rest-pipeline";
 import { AuthenticationRequiredError, CredentialUnavailableError } from "../../../../src/errors.js";
-import { describe, it, assert, expect, vi, beforeEach, afterEach } from "vitest";
+import { MockInstance, afterEach, assert, beforeEach, describe, expect, it, vi } from "vitest";
+
+import { MsalMsiProvider } from "../../../../src/credentials/managedIdentityCredential/msalMsiProvider.js";
+import { RestError } from "@azure/core-rest-pipeline";
+import { imdsMsi } from "../../../../src/credentials/managedIdentityCredential/imdsMsi.js";
+import { tokenExchangeMsi } from "../../../../src/credentials/managedIdentityCredential/tokenExchangeMsi.js";
 
 describe("ManagedIdentityCredential (MSAL)", function () {
-  let acquireTokenStub: Sinon.SinonStub;
-  let imdsIsAvailableStub: Sinon.SinonStub;
+  let acquireTokenStub: MockInstance;
+  let imdsIsAvailableStub: MockInstance;
 
   const validAuthenticationResult: Partial<AuthenticationResult> = {
     accessToken: "test_token",
@@ -19,11 +20,11 @@ describe("ManagedIdentityCredential (MSAL)", function () {
 
   beforeEach(function () {
     acquireTokenStub = vi.spyOn(ManagedIdentityApplication.prototype, "acquireToken");
-    imdsIsAvailableStub = vi.spyOn(imdsMsi, "isAvailable").resolves(true); // Skip pinging the IMDS endpoint in tests
+    imdsIsAvailableStub = vi.spyOn(imdsMsi, "isAvailable").mockResolvedValue(true); // Skip pinging the IMDS endpoint in tests
   });
 
   afterEach(function () {
-    Sinon.restore();
+    vi.restoreAllMocks();
   });
 
   describe("constructor", function () {
@@ -50,7 +51,7 @@ describe("ManagedIdentityCredential (MSAL)", function () {
   describe("#getToken", function () {
     describe("when getToken is successful", function () {
       it("returns a token", async function () {
-        acquireTokenStub.resolves(validAuthenticationResult as AuthenticationResult);
+        acquireTokenStub.mockResolvedValue(validAuthenticationResult as AuthenticationResult);
         const provider = new MsalMsiProvider();
         const token = await provider.getToken("scope");
         assert.strictEqual(token.token, validAuthenticationResult.accessToken);
@@ -66,8 +67,8 @@ describe("ManagedIdentityCredential (MSAL)", function () {
             token: "test_token",
             expiresOnTimestamp: new Date().getTime(),
           };
-          vi.spyOn(tokenExchangeMsi, "isAvailable").resolves(true);
-          vi.spyOn(tokenExchangeMsi, "getToken").resolves(validToken);
+          vi.spyOn(tokenExchangeMsi, "isAvailable").mockResolvedValue(true);
+          vi.spyOn(tokenExchangeMsi, "getToken").mockResolvedValue(validToken);
 
           const provider = new MsalMsiProvider();
           const token = await provider.getToken("scope");
@@ -78,50 +79,51 @@ describe("ManagedIdentityCredential (MSAL)", function () {
 
       describe("when using IMDS", function () {
         it("probes the IMDS endpoint", async function () {
-          vi.spyOn(ManagedIdentityApplication.prototype, "getManagedIdentitySource").returns(
-            "DefaultToImds",
-          );
-          acquireTokenStub.resolves(validAuthenticationResult as AuthenticationResult);
+          vi.spyOn(
+            ManagedIdentityApplication.prototype,
+            "getManagedIdentitySource",
+          ).mockReturnValue("DefaultToImds");
+          acquireTokenStub.mockResolvedValue(validAuthenticationResult as AuthenticationResult);
 
           const provider = new MsalMsiProvider();
           await provider.getToken("scope");
-          assert.isTrue(imdsIsAvailableStub.calledOnce);
+          expect(imdsIsAvailableStub).toHaveBeenCalledOnce();
         });
       });
     });
 
     it("validates multiple scopes are not supported", async function () {
       const provider = new MsalMsiProvider();
-      await assert.isRejected(provider.getToken(["scope1", "scope2"]), /Multiple scopes/);
+      await expect(provider.getToken(["scope1", "scope2"])).rejects.toThrowError(/Multiple scopes/);
     });
 
     describe("error handling", function () {
       it("rethrows AuthenticationRequiredError", async function () {
-        acquireTokenStub.rejects(new AuthenticationRequiredError({ scopes: ["scope"] }));
+        acquireTokenStub.mockRejectedValue(new AuthenticationRequiredError({ scopes: ["scope"] }));
         const provider = new MsalMsiProvider();
-        await assert.isRejected(provider.getToken("scope"), AuthenticationRequiredError);
+        await expect(provider.getToken("scope")).rejects.toThrowError(AuthenticationRequiredError);
       });
 
       it("handles an unreachable network error", async function () {
-        acquireTokenStub.rejects(new AuthError("network_error"));
+        acquireTokenStub.mockRejectedValue(new AuthError("network_error"));
         const provider = new MsalMsiProvider();
-        await assert.isRejected(provider.getToken("scope"), CredentialUnavailableError);
+        await expect(provider.getToken("scope")).rejects.toThrowError(CredentialUnavailableError);
       });
 
       it("handles a 403 status code", async function () {
-        acquireTokenStub.rejects(
+        acquireTokenStub.mockRejectedValue(
           new RestError("A socket operation was attempted to an unreachable network", {
             statusCode: 403,
           }),
         );
         const provider = new MsalMsiProvider();
-        await assert.isRejected(provider.getToken("scope"), /Network unreachable/);
+        await expect(provider.getToken("scope")).rejects.toThrowError(/Network unreachable/);
       });
 
       it("handles unexpected errors", async function () {
-        acquireTokenStub.rejects(new Error("Some unexpected error"));
+        acquireTokenStub.mockRejectedValue(new Error("Some unexpected error"));
         const provider = new MsalMsiProvider();
-        await assert.isRejected(provider.getToken("scope"), /Authentication failed/);
+        await expect(provider.getToken("scope")).rejects.toThrowError(/Authentication failed/);
       });
     });
   });
