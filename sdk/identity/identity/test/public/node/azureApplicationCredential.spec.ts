@@ -4,7 +4,7 @@
 import { AccessToken, GetTokenOptions, TokenCredential } from "@azure/core-auth";
 import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup.js";
 import { getError } from "../../authTestUtils.js";
-import { describe, it, assert } from "vitest";
+import { describe, it, assert, beforeEach, afterEach } from "vitest";
 
 // TODO: Use the real one once we decide to re-enable this on the public API.
 class AzureApplicationCredential implements TokenCredential {
@@ -50,7 +50,7 @@ describe.skip("AzureApplicationCredential", function () {
     assert.ok(token?.expiresOnTimestamp > Date.now());
   });
 
-  it("supports tracing with environment client secret", async () => {
+  it.skip("supports tracing with environment client secret", async () => {
     await assert.supportsTracing(
       async (tracingOptions) => {
         // The following environment variables must be set for this to work.

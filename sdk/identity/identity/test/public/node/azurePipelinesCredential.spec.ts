@@ -9,31 +9,28 @@ describe("AzurePipelinesCredential", function () {
   const scope = "https://vault.azure.net/.default";
   const tenantId = process.env.AZURE_SERVICE_CONNECTION_TENANT_ID!;
 
-  it("authenticates with a valid service connection", async function () {
-    if (!isLiveMode() || !process.env.AZURE_SERVICE_CONNECTION_ID) {
-      ctx.task.skip();
-    }
-    // this serviceConnection corresponds to the Azure SDK Test Resources - LiveTestSecrets service
-    const existingServiceConnectionId = process.env.AZURE_SERVICE_CONNECTION_ID!;
-    // clientId for above service connection
-    const clientId = process.env.AZURE_SERVICE_CONNECTION_CLIENT_ID!;
-    const systemAccessToken = process.env.SYSTEM_ACCESSTOKEN!;
-    const credential = new AzurePipelinesCredential(
-      tenantId,
-      clientId,
-      existingServiceConnectionId,
-      systemAccessToken,
-    );
-    const token = await credential.getToken(scope);
-    assert.ok(token?.token);
-    assert.isDefined(token?.expiresOnTimestamp);
-    if (token?.expiresOnTimestamp) assert.ok(token?.expiresOnTimestamp > Date.now());
-  });
+  it.skipIf(!isLiveMode() || !process.env.AZURE_SERVICE_CONNECTION_ID)(
+    "authenticates with a valid service connection",
+    async function () {
+      // this serviceConnection corresponds to the Azure SDK Test Resources - LiveTestSecrets service
+      const existingServiceConnectionId = process.env.AZURE_SERVICE_CONNECTION_ID!;
+      // clientId for above service connection
+      const clientId = process.env.AZURE_SERVICE_CONNECTION_CLIENT_ID!;
+      const systemAccessToken = process.env.SYSTEM_ACCESSTOKEN!;
+      const credential = new AzurePipelinesCredential(
+        tenantId,
+        clientId,
+        existingServiceConnectionId,
+        systemAccessToken,
+      );
+      const token = await credential.getToken(scope);
+      assert.ok(token?.token);
+      assert.isDefined(token?.expiresOnTimestamp);
+      if (token?.expiresOnTimestamp) assert.ok(token?.expiresOnTimestamp > Date.now());
+    },
+  );
 
-  it("fails with with invalid service connection", async function () {
-    if (!isLiveMode()) {
-      ctx.task.skip();
-    }
+  it.skipIf(!isLiveMode())("fails with with invalid service connection", async function () {
     // clientId for above service connection
     const clientId = process.env.AZURE_SERVICE_CONNECTION_CLIENT_ID!;
     const systemAccessToken = process.env.SYSTEM_ACCESSTOKEN!;
@@ -52,10 +49,7 @@ describe("AzurePipelinesCredential", function () {
     );
   });
 
-  it("fails with with invalid client id", async function () {
-    if (!isLiveMode()) {
-      ctx.task.skip();
-    }
+  it.skipIf(!isLiveMode())("fails with with invalid client id", async function () {
     const existingServiceConnectionId = process.env.AZURE_SERVICE_CONNECTION_ID!;
     const systemAccessToken = process.env.SYSTEM_ACCESSTOKEN!;
     const credential = new AzurePipelinesCredential(
@@ -73,10 +67,7 @@ describe("AzurePipelinesCredential", function () {
     );
   });
 
-  it("fails with with invalid system access token", async function () {
-    if (!isLiveMode()) {
-      ctx.task.skip();
-    }
+  it.skipIf(!isLiveMode())("fails with with invalid system access token", async function () {
     const clientId = process.env.AZURE_SERVICE_CONNECTION_CLIENT_ID!;
     const existingServiceConnectionId = process.env.AZURE_SERVICE_CONNECTION_ID!;
     const credential = new AzurePipelinesCredential(

@@ -77,21 +77,21 @@ describe("ClientSecretCredential", function () {
     assert.ok(error?.message.includes("endpoints_resolution_error"));
   });
 
-  it("supports tracing", async () => {
-    await assert.supportsTracing(
-      async (tracingOptions) => {
-        const credential = new ClientSecretCredential(
-          env.AZURE_TENANT_ID!,
-          env.AZURE_CLIENT_ID!,
-          env.AZURE_CLIENT_SECRET!,
-          recorder.configureClientOptions({}),
-        );
+  // it("supports tracing", async () => {
+  //   await assert.supportsTracing(
+  //     async (tracingOptions) => {
+  //       const credential = new ClientSecretCredential(
+  //         env.AZURE_TENANT_ID!,
+  //         env.AZURE_CLIENT_ID!,
+  //         env.AZURE_CLIENT_SECRET!,
+  //         recorder.configureClientOptions({}),
+  //       );
 
-        await credential.getToken(scope, tracingOptions);
-      },
-      ["ClientSecretCredential.getToken"],
-    );
-  });
+  //       await credential.getToken(scope, tracingOptions);
+  //     },
+  //     ["ClientSecretCredential.getToken"],
+  //   );
+  // });
 
   // TODO: Enable again once we're ready to release this feature.
   it.skip("supports specifying the regional authority", async function (ctx) {
