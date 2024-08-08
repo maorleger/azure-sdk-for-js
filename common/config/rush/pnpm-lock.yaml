@@ -1583,6 +1583,28 @@ packages:
       undici: 5.28.4
     dev: false
 
+  /@azure/identity@3.4.2:
+    resolution: {integrity: sha512-0q5DL4uyR0EZ4RXQKD8MadGH6zTIcloUoS/RVbCpNpej4pwte0xpqYxk8K97Py2RiuUvI7F4GXpoT4046VfufA==}
+    engines: {node: '>=14.0.0'}
+    dependencies:
+      '@azure/abort-controller': 1.1.0
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-rest-pipeline': 1.16.3
+      '@azure/core-tracing': 1.1.2
+      '@azure/core-util': 1.9.2
+      '@azure/logger': 1.1.4
+      '@azure/msal-browser': 3.20.0
+      '@azure/msal-node': 2.12.0
+      events: 3.3.0
+      jws: 4.0.0
+      open: 8.4.2
+      stoppable: 1.1.0
+      tslib: 2.6.3
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /@azure/identity@4.4.1:
     resolution: {integrity: sha512-DwnG4cKFEM7S3T+9u05NstXU/HN0dk45kPOinUyNKsn5VWwpXd9sbPKEg6kgJzGbm1lMuhx9o31PVbCtM5sfBA==}
     engines: {node: '>=18.0.0'}
@@ -21309,13 +21331,13 @@ packages:
     dev: false
 
   file:projects/dev-tool.tgz:
-    resolution: {integrity: sha512-z9Gvg9Sjq9IevC8b6hbo2nxvosbLBw9y0MX0VOxQY/kI5+ivWEbf7uV3RmhtPfdhqmWPHnpDHUs4v68xMhi1YA==, tarball: file:projects/dev-tool.tgz}
+    resolution: {integrity: sha512-o3ke+5y4JNr1Dpo2j6BYVc971Xus8lUjnCD0vaCSIB6Qs149A1pTVCV6lOO+JWejJ2iAevW2KRoycV41zph1dA==, tarball: file:projects/dev-tool.tgz}
     name: '@rush-temp/dev-tool'
     version: 0.0.0
     dependencies:
       '@_ts/max': /typescript@5.5.4
       '@_ts/min': /typescript@4.2.4
-      '@azure/identity': 4.4.1
+      '@azure/identity': 3.4.2
       '@eslint/js': 9.2.0
       '@microsoft/api-extractor': 7.47.5(@types/node@18.19.43)
       '@rollup/plugin-commonjs': 25.0.8(rollup@4.20.0)

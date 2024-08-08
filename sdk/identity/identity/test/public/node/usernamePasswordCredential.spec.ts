@@ -7,7 +7,9 @@ import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup
 import { Recorder, delay } from "@azure-tools/test-recorder";
 import { UsernamePasswordCredential } from "../../../src/index.js";
 import { getUsernamePasswordStaticResources } from "../../msalTestUtils.js";
-import { describe, it, assert, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, assert, expect, vi, beforeEach, afterEach, vitest } from "vitest";
+import {} from "@azure-tools/test-utils";
+expect.extend(supportsTracing);
 
 describe("UsernamePasswordCredential", function () {
   let cleanup: MsalTestCleanup;
@@ -74,19 +76,16 @@ describe("UsernamePasswordCredential", function () {
   it("supports tracing", async function (ctx) {
     const { clientId, tenantId, username, password } = getUsernamePasswordStaticResources();
 
-    await assert.supportsTracing(
-      async (tracingOptions) => {
-        const credential = new UsernamePasswordCredential(
-          tenantId,
-          clientId,
-          username,
-          password,
-          recorder.configureClientOptions({}),
-        );
+    await expect(async (tracingOptions) => {
+      const credential = new UsernamePasswordCredential(
+        tenantId,
+        clientId,
+        username,
+        password,
+        recorder.configureClientOptions({}),
+      );
 
-        await credential.getToken(scope, tracingOptions);
-      },
-      ["UsernamePasswordCredential.getToken"],
-    );
+      await credential.getToken(scope, tracingOptions);
+    }).to.supportTracing(["UsernamePasswordCredential.getToken"]);
   });
 });

@@ -62,7 +62,11 @@ const makeTransformers = () => ({
         (node) => {
           // If the sample or test program is trying to import the host
           // package, we'll rewrite it on the fly to make the import work.
-          if (ts.isImportDeclaration(node) && node.moduleSpecifier.text === packageNameToPatch) {
+          if (
+            ts.isImportDeclaration(node) &&
+            node.moduleSpecifier.text === packageNameToPatch &&
+            node.moduleSpecifier.text !== "@azure/identity"
+          ) {
             // rewrite the import to use a relative path
             const oldName = node.moduleSpecifier.text;
             const base = sourceFile.path.includes("dist-esm") ? path.join(cwd, "dist-esm") : cwd;

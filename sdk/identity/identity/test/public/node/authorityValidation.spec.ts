@@ -9,11 +9,12 @@ import { describe, it, assert, expect, vi, beforeEach, afterEach } from "vitest"
 describe("AuthorityValidation", function () {
   let cleanup: MsalTestCleanup;
   let recorder: Recorder;
-  beforeEach(async function (ctx) {
+  beforeEach(async (ctx) => {
     const setup = await msalNodeTestSetup(ctx);
     cleanup = setup.cleanup;
     recorder = setup.recorder;
   });
+
   afterEach(async function () {
     await cleanup();
   });
