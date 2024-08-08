@@ -275,6 +275,7 @@ export function generateMsalConfiguration(
     msalClientOptions.authorityHost ?? process.env.AZURE_AUTHORITY_HOST,
   );
 
+  console.log(msalClientOptions.tokenCredentialOptions);
   const httpClient = new IdentityClient({
     ...msalClientOptions.tokenCredentialOptions,
     authorityHost: authority,

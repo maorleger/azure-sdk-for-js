@@ -16,10 +16,14 @@ const logger = credentialLogger(msiName);
 export const tokenExchangeMsi: MSI = {
   name: "tokenExchangeMsi",
   async isAvailable({ clientId }): Promise<boolean> {
-    const env = process.env;
+    console.log(
+      process.env.AZURE_CLIENT_ID || clientId,
+      process.env.AZURE_TENANT_ID,
+      process.env.AZURE_FEDERATED_TOKEN_FILE,
+    );
     const result = Boolean(
-      (clientId || env.AZURE_CLIENT_ID) &&
-        env.AZURE_TENANT_ID &&
+      (clientId || process.env.AZURE_CLIENT_ID) &&
+        process.env.AZURE_TENANT_ID &&
         process.env.AZURE_FEDERATED_TOKEN_FILE,
     );
     if (!result) {

@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 import { RegionalAuthority, calculateRegionalAuthority } from "../../../src/regionalAuthority.js";
-import { describe, it, assert } from "vitest";
+import { describe, it, assert, afterEach, beforeEach } from "vitest";
 
 describe("#calculateRegionalAuthority", function () {
   beforeEach(function () {

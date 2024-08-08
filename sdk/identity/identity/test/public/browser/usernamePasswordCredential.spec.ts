@@ -6,7 +6,7 @@ import { IdentityTestContext } from "../../httpRequests.js";
 import { UsernamePasswordCredential } from "../../../src/index.js";
 import { assertClientCredentials } from "../../authTestUtils.js";
 import { fakeTestPasswordPlaceholder } from "@azure-tools/test-utils";
-import { describe, it, assert } from "vitest";
+import { describe, it, assert, beforeEach, afterEach } from "vitest";
 
 describe("UsernamePasswordCredential", function () {
   let testContext: IdentityTestContextInterface;

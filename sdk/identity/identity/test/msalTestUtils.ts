@@ -3,6 +3,8 @@
 
 import { env } from "@azure-tools/test-recorder";
 import { DeveloperSignOnClientId } from "../src/constants.js";
+import { createHttpHeaders, HttpClient } from "@azure/core-rest-pipeline";
+import { vi } from "vitest";
 
 export const PlaybackTenantId = "12345678-1234-1234-1234-123456789012";
 
@@ -106,4 +108,28 @@ export function getUsernamePasswordStaticResources(): UsernamePasswordStaticReso
     username,
     password,
   };
+}
+
+export interface CreateMockedHttpClientOptions {
+  skipOpenIdConfiguration?: boolean;
+}
+
+export function createMockedHttpClient(options: CreateMockedHttpClientOptions = {}): HttpClient {
+  const client: HttpClient = {
+    sendRequest: vi.fn(),
+  };
+
+  // Seeds the mock with the OpenId configuration response that MSAL understands
+  if (!options.skipOpenIdConfiguration) {
+    vi.mocked(client.sendRequest).mockImplementationOnce(async (req) => {
+      return {
+        request: req,
+        status: 200,
+        headers: createHttpHeaders(),
+        bodyAsText: JSON.stringify(openIdConfigurationResponse),
+      };
+    });
+  }
+
+  return client;
 }

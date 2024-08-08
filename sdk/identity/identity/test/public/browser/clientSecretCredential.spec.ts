@@ -5,7 +5,7 @@ import { IdentityTestContextInterface, createResponse } from "../../httpRequests
 import { ClientSecretCredential } from "../../../src/index.js";
 import { IdentityTestContext } from "../../httpRequests.js";
 import { assertClientCredentials } from "../../authTestUtils.js";
-import { describe, it, assert } from "vitest";
+import { describe, it, afterEach, beforeEach } from "vitest";
 
 describe("ClientSecretCredential", function () {
   let testContext: IdentityTestContextInterface;

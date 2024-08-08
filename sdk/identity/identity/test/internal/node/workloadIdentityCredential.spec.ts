@@ -12,7 +12,7 @@ import {
 } from "../../../src/index.js";
 import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup.js";
 
-import { AuthenticationResult } from "@azure/msal-node";
+import { AuthenticationResult, ConfidentialClientApplication } from "@azure/msal-node";
 import { env } from "@azure-tools/test-recorder";
 import path from "node:path";
 import { describe, it, assert, expect, vi, beforeEach, afterEach } from "vitest";
@@ -44,12 +44,17 @@ describe("WorkloadIdentityCredential", function () {
   };
 
   beforeEach(async function (ctx) {
-    const setup = await msalNodeTestSetup(stubbedToken);
-    cleanup = setup.cleanup;
+    vi.spyOn(
+      ConfidentialClientApplication.prototype,
+      "acquireTokenByClientCredential",
+    ).mockImplementation(() => Promise.resolve(stubbedToken));
+    // const setup = await msalNodeTestSetup(stubbedToken);
+    // cleanup = setup.cleanup;
   });
 
   afterEach(async function () {
-    await cleanup();
+    vi.restoreAllMocks();
+    vi.unstubAllEnvs();
   });
 
   it("authenticates with WorkloadIdentity Credential", async function (ctx) {
@@ -68,7 +73,8 @@ describe("WorkloadIdentityCredential", function () {
   });
 
   it("authenticates with ManagedIdentity Credential", async function (ctx) {
-    process.env.AZURE_FEDERATED_TOKEN_FILE = tokenFilePath;
+    vi.stubEnv("AZURE_FEDERATED_TOKEN_FILE", tokenFilePath);
+    vi.stubEnv("AZURE_TENANT_ID", tenantId);
     const credential = new ManagedIdentityCredential("dummy-clientId");
     const token = await credential.getToken(scope);
     assert.ok(token?.token);
@@ -77,7 +83,6 @@ describe("WorkloadIdentityCredential", function () {
 
   it("authenticates with DefaultAzure Credential", async function (ctx) {
     const credential = new DefaultAzureCredential();
-    const sandbox = sinon.createSandbox();
     try {
       const { token, successfulCredential } = await credential["getTokenInternal"](scope);
       assert.isDefined(successfulCredential);
@@ -92,9 +97,7 @@ describe("WorkloadIdentityCredential", function () {
         },
       );
     } catch (e) {
-      console.log(e);
-    } finally {
-      sandbox.restore();
+      console.log(e); // sus and probably hiding a broken test
     }
   });
   it("authenticates with DefaultAzure Credential and client ID", async function (ctx) {
@@ -102,7 +105,6 @@ describe("WorkloadIdentityCredential", function () {
       managedIdentityClientId: "managedIdentityClientId",
       workloadIdentityClientId: "workloadIdentityClientId",
     });
-    const sandbox = sinon.createSandbox();
     try {
       const { token, successfulCredential } = await credential["getTokenInternal"](scope);
       assert.isDefined(successfulCredential);
@@ -117,9 +119,7 @@ describe("WorkloadIdentityCredential", function () {
         },
       );
     } catch (e) {
-      console.log(e);
-    } finally {
-      sandbox.restore();
+      console.log(e); // sus and probably hiding a broken test
     }
   });
 });
