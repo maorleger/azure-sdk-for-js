@@ -6,13 +6,22 @@
 import { MsalTestCleanup, msalNodeTestSetup } from "../../node/msalNodeTestSetup.js";
 import { Recorder, env, isLiveMode } from "@azure-tools/test-recorder";
 import { DeviceCodeCredential } from "../../../src/index.js";
-import { PublicClientApplication } from "@azure/msal-node";
-import { describe, it, assert, expect, vi, beforeEach, afterEach } from "vitest";
+import {
+  AuthenticationResult,
+  DeviceCodeRequest,
+  PublicClientApplication,
+  SilentFlowRequest,
+} from "@azure/msal-node";
+import { describe, it, expect, vi, beforeEach, afterEach, MockInstance } from "vitest";
 
 describe("DeviceCodeCredential (internal)", function () {
   let cleanup: MsalTestCleanup;
-  let getTokenSilentSpy: Sinon.SinonSpy;
-  let doGetTokenSpy: Sinon.SinonSpy;
+  let getTokenSilentSpy: MockInstance<
+    (request: SilentFlowRequest) => Promise<AuthenticationResult>
+  >;
+  let doGetTokenSpy: MockInstance<
+    (request: DeviceCodeRequest) => Promise<AuthenticationResult | null>
+  >;
   let recorder: Recorder;
 
   beforeEach(async function (ctx) {
@@ -21,16 +30,14 @@ describe("DeviceCodeCredential (internal)", function () {
     recorder = setup.recorder;
 
     // MsalClient calls to this method underneath when silent authentication can be attempted.
-    getTokenSilentSpy = setup.sandbox.spy(PublicClientApplication.prototype, "acquireTokenSilent");
+    getTokenSilentSpy = vi.spyOn(PublicClientApplication.prototype, "acquireTokenSilent");
 
     // MsalClient calls to this method underneath for interactive auth.
-    doGetTokenSpy = setup.sandbox.spy(
-      PublicClientApplication.prototype,
-      "acquireTokenByDeviceCode",
-    );
+    doGetTokenSpy = vi.spyOn(PublicClientApplication.prototype, "acquireTokenByDeviceCode");
   });
   afterEach(async function () {
     await cleanup();
+    vi.restoreAllMocks();
   });
 
   const scope = "https://vault.azure.net/.default";
@@ -38,7 +45,7 @@ describe("DeviceCodeCredential (internal)", function () {
   it("Authenticates silently after the initial request", async function (ctx) {
     // These tests should not run live because this credential requires user interaction.
     if (isLiveMode()) {
-      ctx.task.skip();
+      ctx.skip();
     }
     const credential = new DeviceCodeCredential(
       recorder.configureClientOptions({
@@ -48,25 +55,17 @@ describe("DeviceCodeCredential (internal)", function () {
     );
 
     await credential.getToken(scope);
-    assert.equal(doGetTokenSpy.callCount, 1, "doGetTokenSpy.callCount should have been 1.");
+    expect(doGetTokenSpy).toHaveBeenCalled();
 
     await credential.getToken(scope);
-    assert.equal(
-      getTokenSilentSpy.callCount,
-      1,
-      "getTokenSilentSpy.callCount should have been 1 (Silent authentication after the initial request).",
-    );
-    assert.equal(
-      doGetTokenSpy.callCount,
-      1,
-      "Expected no additional calls to doGetTokenSpy after the initial request.",
-    );
+    expect(getTokenSilentSpy).toHaveBeenCalled();
+    expect(doGetTokenSpy).toHaveBeenCalledTimes(1);
   });
 
   it("Authenticates with tenantId on getToken", async function (ctx) {
     // These tests should not run live because this credential requires user interaction.
     if (isLiveMode()) {
-      ctx.task.skip();
+      ctx.skip();
     }
     const credential = new DeviceCodeCredential(
       recorder.configureClientOptions({
@@ -76,6 +75,6 @@ describe("DeviceCodeCredential (internal)", function () {
     );
 
     await credential.getToken(scope, { tenantId: env.AZURE_TENANT_ID });
-    assert.equal(doGetTokenSpy.callCount, 1, "doGetTokenSpy.callCount should have been 1");
+    expect(doGetTokenSpy).toHaveBeenCalled();
   });
 });

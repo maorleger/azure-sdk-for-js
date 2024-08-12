@@ -10,7 +10,7 @@ import {
 } from "../../../src/msal/nodeFlows/msalPlugins.js";
 
 import { MsalClientOptions } from "../../../src/msal/nodeFlows/msalClient.js";
-import { describe, it, assert, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, assert, vi, beforeEach, afterEach } from "vitest";
 
 describe("#generatePluginConfiguration", function () {
   let options: MsalClientOptions;
@@ -49,8 +49,8 @@ describe("#generatePluginConfiguration", function () {
       options.tokenCachePersistenceOptions = { enabled: true };
 
       const cachePlugin = {
-        afterCacheAccess: vi.spyOn(),
-        beforeCacheAccess: vi.spyOn(),
+        afterCacheAccess: vi.fn(),
+        beforeCacheAccess: vi.fn(),
       };
       const pluginProvider: () => Promise<ICachePlugin> = () => Promise.resolve(cachePlugin);
       msalNodeFlowCacheControl.setPersistence(pluginProvider);
@@ -64,8 +64,8 @@ describe("#generatePluginConfiguration", function () {
       options.tokenCachePersistenceOptions = { enabled: true };
 
       const cachePluginCae = {
-        afterCacheAccess: vi.spyOn(),
-        beforeCacheAccess: vi.spyOn(),
+        afterCacheAccess: vi.fn(),
+        beforeCacheAccess: vi.fn(),
       };
       const pluginProvider: () => Promise<ICachePlugin> = () => Promise.resolve(cachePluginCae);
       msalNodeFlowCacheControl.setPersistence(pluginProvider);
