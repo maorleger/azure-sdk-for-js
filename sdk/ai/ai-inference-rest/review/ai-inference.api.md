@@ -4,22 +4,39 @@
 
 ```ts
 
-import { Client } from '@azure-rest/core-client';
 import { ClientOptions } from '@azure-rest/core-client';
-import { ErrorResponse } from '@azure-rest/core-client';
-import { HttpResponse } from '@azure-rest/core-client';
 import { KeyCredential } from '@azure/core-auth';
-import { RawHttpHeaders } from '@azure/core-rest-pipeline';
-import { RawHttpHeadersInput } from '@azure/core-rest-pipeline';
-import { RequestParameters } from '@azure-rest/core-client';
-import { StreamableMethod } from '@azure-rest/core-client';
+import { OperationOptions } from '@azure-rest/core-client';
+import { Pipeline } from '@azure/core-rest-pipeline';
 import { TokenCredential } from '@azure/core-auth';
 
 // @public
-export interface ChatChoiceOutput {
-    finish_reason: CompletionsFinishReasonOutput | null;
+export interface ChatChoice {
+    finishReason: CompletionsFinishReason | null;
     index: number;
-    message: ChatResponseMessageOutput;
+    message: ChatResponseMessage;
+}
+
+// @public
+export interface ChatCompletions {
+    choices: ChatChoice[];
+    created: Date;
+    id: string;
+    model: string;
+    usage: CompletionsUsage;
+}
+
+// @public (undocumented)
+export class ChatCompletionsClient {
+    constructor(endpoint: string, credential: KeyCredential | KeyCredential | TokenCredential, options?: ChatCompletionsClientOptionalParams);
+    complete(body: Record<string, any>, options?: CompleteOptionalParams): Promise<ChatCompletions>;
+    getModelInfo(options?: GetModelInfoOptionalParams): Promise<ModelInfo>;
+    readonly pipeline: Pipeline;
+}
+
+// @public
+export interface ChatCompletionsClientOptionalParams extends ClientOptions {
+    apiVersion?: string;
 }
 
 // @public
@@ -34,43 +51,26 @@ export interface ChatCompletionsNamedToolSelection {
 }
 
 // @public
-export interface ChatCompletionsOutput {
-    choices: Array<ChatChoiceOutput>;
-    created: number;
-    id: string;
-    model: string;
-    usage: CompletionsUsageOutput;
-}
-
-// @public
-export type ChatCompletionsResponseFormat = ChatCompletionsResponseFormatParent | ChatCompletionsResponseFormatText | ChatCompletionsResponseFormatJSON;
-
-// @public
-export interface ChatCompletionsResponseFormatJSON extends ChatCompletionsResponseFormatParent {
-    type: "json_object";
-}
-
-// @public
-export interface ChatCompletionsResponseFormatParent {
-    // (undocumented)
+export interface ChatCompletionsResponseFormat {
     type: string;
 }
 
 // @public
-export interface ChatCompletionsResponseFormatText extends ChatCompletionsResponseFormatParent {
+export interface ChatCompletionsResponseFormatJSON extends ChatCompletionsResponseFormat {
+    type: "json_object";
+}
+
+// @public
+export interface ChatCompletionsResponseFormatText extends ChatCompletionsResponseFormat {
     type: "text";
 }
 
 // @public
-export interface ChatCompletionsToolCall {
-    function: FunctionCall;
-    id: string;
-    type: "function";
-}
+export type ChatCompletionsResponseFormatUnion = ChatCompletionsResponseFormatText | ChatCompletionsResponseFormatJSON | ChatCompletionsResponseFormat;
 
 // @public
-export interface ChatCompletionsToolCallOutput {
-    function: FunctionCallOutput;
+export interface ChatCompletionsToolCall {
+    function: FunctionCall;
     id: string;
     type: "function";
 }
@@ -82,25 +82,24 @@ export interface ChatCompletionsToolDefinition {
 }
 
 // @public
-export type ChatCompletionsToolSelectionPreset = string;
+export type ChatCompletionsToolSelectionPreset = "auto" | "none" | "required";
 
 // @public
-export type ChatMessageContentItem = ChatMessageContentItemParent | ChatMessageTextContentItem | ChatMessageImageContentItem;
-
-// @public
-export interface ChatMessageContentItemParent {
-    // (undocumented)
+export interface ChatMessageContentItem {
     type: string;
 }
 
 // @public
-export interface ChatMessageImageContentItem extends ChatMessageContentItemParent {
-    image_url: ChatMessageImageUrl;
+export type ChatMessageContentItemUnion = ChatMessageTextContentItem | ChatMessageImageContentItem | ChatMessageContentItem;
+
+// @public
+export interface ChatMessageImageContentItem extends ChatMessageContentItem {
+    imageUrl: ChatMessageImageUrl;
     type: "image_url";
 }
 
 // @public
-export type ChatMessageImageDetailLevel = string;
+export type ChatMessageImageDetailLevel = "auto" | "low" | "high";
 
 // @public
 export interface ChatMessageImageUrl {
@@ -109,100 +108,72 @@ export interface ChatMessageImageUrl {
 }
 
 // @public
-export interface ChatMessageTextContentItem extends ChatMessageContentItemParent {
+export interface ChatMessageTextContentItem extends ChatMessageContentItem {
     text: string;
     type: "text";
 }
 
 // @public
-export interface ChatRequestAssistantMessage extends ChatRequestMessageParent {
+export interface ChatRequestAssistantMessage extends ChatRequestMessage {
     content?: string | null;
     role: "assistant";
-    tool_calls?: Array<ChatCompletionsToolCall>;
+    toolCalls?: ChatCompletionsToolCall[];
 }
 
 // @public
-export type ChatRequestMessage = ChatRequestMessageParent | ChatRequestSystemMessage | ChatRequestUserMessage | ChatRequestAssistantMessage | ChatRequestToolMessage;
-
-// @public
-export interface ChatRequestMessageParent {
-    // (undocumented)
+export interface ChatRequestMessage {
     role: ChatRole;
 }
 
 // @public
-export interface ChatRequestSystemMessage extends ChatRequestMessageParent {
+export type ChatRequestMessageUnion = ChatRequestSystemMessage | ChatRequestUserMessage | ChatRequestAssistantMessage | ChatRequestToolMessage | ChatRequestMessage;
+
+// @public
+export interface ChatRequestSystemMessage extends ChatRequestMessage {
     content: string;
     role: "system";
 }
 
 // @public
-export interface ChatRequestToolMessage extends ChatRequestMessageParent {
+export interface ChatRequestToolMessage extends ChatRequestMessage {
     content: string | null;
     role: "tool";
-    tool_call_id: string;
+    toolCallId: string;
 }
 
 // @public
-export interface ChatRequestUserMessage extends ChatRequestMessageParent {
-    content: string | Array<ChatMessageContentItem>;
+export interface ChatRequestUserMessage extends ChatRequestMessage {
+    content: string | ChatMessageContentItemUnion[];
     role: "user";
 }
 
 // @public
-export interface ChatResponseMessageOutput {
+export interface ChatResponseMessage {
     content: string | null;
-    role: ChatRoleOutput;
-    tool_calls?: Array<ChatCompletionsToolCallOutput>;
+    role: ChatRole;
+    toolCalls?: ChatCompletionsToolCall[];
 }
 
 // @public
-export type ChatRole = string;
+export type ChatRole = "system" | "user" | "assistant" | "tool";
 
 // @public
-export type ChatRoleOutput = string;
-
-// @public
-export type CompletionsFinishReasonOutput = string;
-
-// @public
-export interface CompletionsUsageOutput {
-    completion_tokens: number;
-    prompt_tokens: number;
-    total_tokens: number;
+export interface CompleteOptionalParams extends OperationOptions {
+    extraParams?: ExtraParameters;
 }
 
 // @public
-function createClient(endpointParam: string, credentials: TokenCredential | KeyCredential, { apiVersion, ...options }?: ModelClientOptions): ModelClient;
-export default createClient;
+export type CompletionsFinishReason = "stop" | "length" | "content_filter" | "tool_calls";
 
 // @public
-export type EmbeddingEncodingFormat = string;
-
-// @public
-export type EmbeddingInputType = string;
-
-// @public
-export interface EmbeddingItemOutput {
-    embedding: string | number[];
-    index: number;
+export interface CompletionsUsage {
+    completionTokens: number;
+    promptTokens: number;
+    totalTokens: number;
 }
 
 // @public
-export interface EmbeddingsResultOutput {
-    data: Array<EmbeddingItemOutput>;
-    model: string;
-    usage: EmbeddingsUsageOutput;
-}
-
-// @public
-export interface EmbeddingsUsageOutput {
-    prompt_tokens: number;
-    total_tokens: number;
-}
-
-// @public
-export type ExtraParameters = string;
+export type ExtraParameters = "error" | "drop" | "pass-through";
 
 // @public
 export interface FunctionCall {
@@ -211,264 +182,57 @@ export interface FunctionCall {
 }
 
 // @public
-export interface FunctionCallOutput {
-    arguments: string;
-    name: string;
-}
-
-// @public
 export interface FunctionDefinition {
     description?: string;
     name: string;
-    parameters?: unknown;
-}
-
-// @public (undocumented)
-export interface GetChatCompletions {
-    post(options?: GetChatCompletionsParameters): StreamableMethod<GetChatCompletions200Response | GetChatCompletionsDefaultResponse>;
+    parameters?: Record<string, any>;
 }
 
 // @public
-export interface GetChatCompletions200Response extends HttpResponse {
-    // (undocumented)
-    body: ChatCompletionsOutput;
-    // (undocumented)
-    status: "200";
-}
-
-// @public (undocumented)
-export interface GetChatCompletionsBodyParam {
-    // (undocumented)
-    body?: {
-        messages: Array<ChatRequestMessage>;
-        frequency_penalty?: number;
-        stream?: boolean;
-        presence_penalty?: number;
-        temperature?: number;
-        top_p?: number;
-        max_tokens?: number;
-        response_format?: ChatCompletionsResponseFormat;
-        stop?: string[];
-        tools?: Array<ChatCompletionsToolDefinition>;
-        tool_choice?: ChatCompletionsToolSelectionPreset | ChatCompletionsNamedToolSelection;
-        seed?: number;
-        model?: string;
-    };
-}
-
-// @public (undocumented)
-export interface GetChatCompletionsDefaultHeaders {
-    "x-ms-error-code"?: string;
-}
-
-// @public (undocumented)
-export interface GetChatCompletionsDefaultResponse extends HttpResponse {
-    // (undocumented)
-    body: ErrorResponse;
-    // (undocumented)
-    headers: RawHttpHeaders & GetChatCompletionsDefaultHeaders;
-    // (undocumented)
-    status: string;
-}
-
-// @public (undocumented)
-export interface GetChatCompletionsHeaderParam {
-    // (undocumented)
-    headers?: RawHttpHeadersInput & GetChatCompletionsHeaders;
-}
-
-// @public (undocumented)
-export interface GetChatCompletionsHeaders {
-    "extra-parameters"?: ExtraParameters;
-}
-
-// @public (undocumented)
-export type GetChatCompletionsParameters = GetChatCompletionsHeaderParam & GetChatCompletionsBodyParam & RequestParameters;
-
-// @public (undocumented)
-export interface GetEmbeddings {
-    post(options?: GetEmbeddingsParameters): StreamableMethod<GetEmbeddings200Response | GetEmbeddingsDefaultResponse>;
+export interface GetModelInfoOptionalParams extends OperationOptions {
 }
 
 // @public
-export interface GetEmbeddings200Response extends HttpResponse {
-    // (undocumented)
-    body: EmbeddingsResultOutput;
-    // (undocumented)
-    status: "200";
-}
-
-// @public (undocumented)
-export interface GetEmbeddingsBodyParam {
-    // (undocumented)
-    body?: {
-        input: string[];
-        dimensions?: number;
-        encoding_format?: EmbeddingEncodingFormat;
-        input_type?: EmbeddingInputType;
-        model?: string;
-    };
-}
-
-// @public (undocumented)
-export interface GetEmbeddingsDefaultHeaders {
-    "x-ms-error-code"?: string;
-}
-
-// @public (undocumented)
-export interface GetEmbeddingsDefaultResponse extends HttpResponse {
-    // (undocumented)
-    body: ErrorResponse;
-    // (undocumented)
-    headers: RawHttpHeaders & GetEmbeddingsDefaultHeaders;
-    // (undocumented)
-    status: string;
-}
-
-// @public (undocumented)
-export interface GetEmbeddingsHeaderParam {
-    // (undocumented)
-    headers?: RawHttpHeadersInput & GetEmbeddingsHeaders;
-}
-
-// @public (undocumented)
-export interface GetEmbeddingsHeaders {
-    "extra-parameters"?: ExtraParameters;
-}
-
-// @public (undocumented)
-export type GetEmbeddingsParameters = GetEmbeddingsHeaderParam & GetEmbeddingsBodyParam & RequestParameters;
-
-// @public (undocumented)
-export interface GetImageEmbeddings {
-    post(options?: GetImageEmbeddingsParameters): StreamableMethod<GetImageEmbeddings200Response | GetImageEmbeddingsDefaultResponse>;
+export interface ModelInfo {
+    modelName: string;
+    modelProviderName: string;
+    modelType: ModelType;
 }
 
 // @public
-export interface GetImageEmbeddings200Response extends HttpResponse {
-    // (undocumented)
-    body: EmbeddingsResultOutput;
-    // (undocumented)
-    status: "200";
-}
+export type ModelType = "embeddings" | "image_generation" | "text_generation" | "image_embeddings" | "audio_generation" | "chat";
 
-// @public (undocumented)
-export interface GetImageEmbeddingsBodyParam {
-    // (undocumented)
-    body?: {
-        input: Array<ImageEmbeddingInput>;
-        dimensions?: number;
-        encoding_format?: EmbeddingEncodingFormat;
-        input_type?: EmbeddingInputType;
-        model?: string;
-    };
-}
-
-// @public (undocumented)
-export interface GetImageEmbeddingsDefaultHeaders {
-    "x-ms-error-code"?: string;
-}
-
-// @public (undocumented)
-export interface GetImageEmbeddingsDefaultResponse extends HttpResponse {
-    // (undocumented)
-    body: ErrorResponse;
-    // (undocumented)
-    headers: RawHttpHeaders & GetImageEmbeddingsDefaultHeaders;
-    // (undocumented)
-    status: string;
-}
-
-// @public (undocumented)
-export interface GetImageEmbeddingsHeaderParam {
-    // (undocumented)
-    headers?: RawHttpHeadersInput & GetImageEmbeddingsHeaders;
-}
-
-// @public (undocumented)
-export interface GetImageEmbeddingsHeaders {
-    "extra-parameters"?: ExtraParameters;
-}
-
-// @public (undocumented)
-export type GetImageEmbeddingsParameters = GetImageEmbeddingsHeaderParam & GetImageEmbeddingsBodyParam & RequestParameters;
-
-// @public (undocumented)
-export interface GetModelInfo {
-    get(options?: GetModelInfoParameters): StreamableMethod<GetModelInfo200Response | GetModelInfoDefaultResponse>;
+// @public
+export interface StreamingChatChoiceUpdate {
+    delta: StreamingChatResponseMessageUpdate;
+    finishReason: CompletionsFinishReason | null;
+    index: number;
 }
 
 // @public
-export interface GetModelInfo200Response extends HttpResponse {
-    // (undocumented)
-    body: ModelInfoOutput;
-    // (undocumented)
-    status: "200";
-}
-
-// @public (undocumented)
-export interface GetModelInfoDefaultHeaders {
-    "x-ms-error-code"?: string;
-}
-
-// @public (undocumented)
-export interface GetModelInfoDefaultResponse extends HttpResponse {
-    // (undocumented)
-    body: ErrorResponse;
-    // (undocumented)
-    headers: RawHttpHeaders & GetModelInfoDefaultHeaders;
-    // (undocumented)
-    status: string;
-}
-
-// @public (undocumented)
-export type GetModelInfoParameters = RequestParameters;
-
-// @public
-export interface ImageEmbeddingInput {
-    image: string;
-    text?: string;
-}
-
-// @public (undocumented)
-export function isUnexpected(response: GetChatCompletions200Response | GetChatCompletionsDefaultResponse): response is GetChatCompletionsDefaultResponse;
-
-// @public (undocumented)
-export function isUnexpected(response: GetModelInfo200Response | GetModelInfoDefaultResponse): response is GetModelInfoDefaultResponse;
-
-// @public (undocumented)
-export function isUnexpected(response: GetEmbeddings200Response | GetEmbeddingsDefaultResponse): response is GetEmbeddingsDefaultResponse;
-
-// @public (undocumented)
-export function isUnexpected(response: GetImageEmbeddings200Response | GetImageEmbeddingsDefaultResponse): response is GetImageEmbeddingsDefaultResponse;
-
-// @public (undocumented)
-export type ModelClient = Client & {
-    path: Routes;
-};
-
-// @public
-export interface ModelClientOptions extends ClientOptions {
-    apiVersion?: string;
+export interface StreamingChatCompletionsUpdate {
+    choices: StreamingChatChoiceUpdate[];
+    created: Date;
+    id: string;
+    model: string;
+    usage: CompletionsUsage;
 }
 
 // @public
-export interface ModelInfoOutput {
-    model_name: string;
-    model_provider_name: string;
-    model_type: ModelTypeOutput;
+export interface StreamingChatResponseMessageUpdate {
+    content?: string;
+    role?: ChatRole;
+    toolCalls?: StreamingChatResponseToolCallUpdate[];
 }
 
 // @public
-export type ModelTypeOutput = string;
-
-// @public (undocumented)
-export interface Routes {
-    (path: "/chat/completions"): GetChatCompletions;
-    (path: "/info"): GetModelInfo;
-    (path: "/embeddings"): GetEmbeddings;
-    (path: "/images/embeddings"): GetImageEmbeddings;
+export interface StreamingChatResponseToolCallUpdate {
+    function: FunctionCall;
+    id: string;
 }
+
+// @public
+export type Versions = "2024-05-01-preview";
 
 // (No @packageDocumentation comment for this package)
 
