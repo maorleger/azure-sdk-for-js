@@ -15,7 +15,7 @@ import {
   complete,
   getModelInfo,
 } from "./api/index.js";
-import { tracingClient } from "./tracing.js";
+import { createTracingClient, TracingClient } from "@azure/core-tracing";
 
 export { ChatCompletionsClientOptionalParams } from "./api/chatCompletionsContext.js";
 
@@ -23,6 +23,8 @@ export class ChatCompletionsClient {
   private _client: ModelContext;
   /** The pipeline used by this client to make requests */
   public readonly pipeline: Pipeline;
+
+  private _tracingClient: TracingClient;
 
   constructor(
     endpoint: string,
@@ -38,6 +40,10 @@ export class ChatCompletionsClient {
       userAgentOptions: { userAgentPrefix },
     });
     this.pipeline = this._client.pipeline;
+    this._tracingClient =  createTracingClient({
+      namespace: "Microsoft.CognitiveServices",
+      packageName: "@azure-rest/ai-inference"
+    })
   }
 
   /**
@@ -50,7 +56,7 @@ export class ChatCompletionsClient {
     body: Record<string, any>,
     options: CompleteOptionalParams = { requestOptions: {} },
   ): Promise<ChatCompletions> {
-    return tracingClient.withSpan("ChatCompletionsClient.complete", options, async (options) => {
+    return this._tracingClient.withSpan("ChatCompletionsClient.complete", options, async (options) => {
       return complete(this._client, body, options);
     });
   }
@@ -62,7 +68,7 @@ export class ChatCompletionsClient {
   getModelInfo(
     options: GetModelInfoOptionalParams = { requestOptions: {} },
   ): Promise<ModelInfo> {
-    return tracingClient.withSpan("ChatCompletionsClient.getModelInfo", options, async (options) => {
+    return this._tracingClient.withSpan("ChatCompletionsClient.getModelInfo", options, async (options) => {
       return getModelInfo(this._client, options);
     })
   }
