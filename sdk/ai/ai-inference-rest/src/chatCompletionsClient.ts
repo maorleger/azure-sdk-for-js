@@ -15,6 +15,7 @@ import {
   complete,
   getModelInfo,
 } from "./api/index.js";
+import { tracingClient } from "./tracing.js";
 
 export { ChatCompletionsClientOptionalParams } from "./api/chatCompletionsContext.js";
 
@@ -49,7 +50,9 @@ export class ChatCompletionsClient {
     body: Record<string, any>,
     options: CompleteOptionalParams = { requestOptions: {} },
   ): Promise<ChatCompletions> {
-    return complete(this._client, body, options);
+    return tracingClient.withSpan("ChatCompletionsClient.complete", options, async (options) => {
+      return complete(this._client, body, options);
+    });
   }
 
   /**
@@ -59,6 +62,8 @@ export class ChatCompletionsClient {
   getModelInfo(
     options: GetModelInfoOptionalParams = { requestOptions: {} },
   ): Promise<ModelInfo> {
-    return getModelInfo(this._client, options);
+    return tracingClient.withSpan("ChatCompletionsClient.getModelInfo", options, async (options) => {
+      return getModelInfo(this._client, options);
+    })
   }
 }
