@@ -75,10 +75,10 @@
     "test:node": "echo skipped",
     "test:browser": "echo skipped",
     "unit-test": "npm run unit-test:node && npm run unit-test:browser",
-    "unit-test:node": "dev-tool run test:vitest --no-test-proxy",
+    "unit-test:node": "dev-tool run test:vitest",
     "unit-test:browser": "npm run clean && tshy && dev-tool run build-test && dev-tool run test:vitest --no-test-proxy --browser",
     "integration-test": "npm run integration-test:node && npm run integration-test:browser",
-    "integration-test:node": "dev-tool run test:node-ts-input -- --timeout 1200000 'test/*.ts'",
+    "integration-test:node": "dev-tool run test:vitest -- --test-timeout 1200000",
     "integration-test:browser": "echo skipped"
   },
   "sideEffects": false,
