@@ -5,6 +5,7 @@ import { leafCommand, makeCommandInfo } from "../../../framework/command";
 import { readFile, writeFile } from "node:fs/promises";
 import { resolveRoot } from "../../../util/resolveProject";
 import path from "node:path";
+import os from "node:os";
 import stripJsonComments from "strip-json-comments";
 
 export const commandInfo = makeCommandInfo(
@@ -15,6 +16,11 @@ export const commandInfo = makeCommandInfo(
       description: "output the report to a file",
       kind: "string",
       shortName: "o",
+    },
+    verbose: {
+      description: "output individual package information",
+      kind: "boolean",
+      shortName: "v",
     },
   },
 );
@@ -116,7 +122,11 @@ function setMigrationResult(
   results.totalProjects++;
 }
 
-function echoMigrationResult(category: string, result: MigrationResult): void {
+function echoMigrationResult(
+  category: string,
+  result: MigrationResult,
+  options: ReturnType<typeof makeCommandInfo>["options"] = {},
+): void {
   console.log(`Category: ${category}`);
   console.log(`Total projects: ${result.totalProjects}`);
   console.log(`Total CJS: ${result.totalCjs}`);
@@ -124,6 +134,22 @@ function echoMigrationResult(category: string, result: MigrationResult): void {
   console.log(`Total Mocha: ${result.totalMocha}`);
   console.log(`Total Vitest: ${result.totalVitest}`);
 
+  if (options.verbose) {
+    console.log(`CJS projects:`);
+    console.log(
+      Object.keys(result.cjs)
+        .map((v) => `\t${v}`)
+        .sort()
+        .join(os.EOL),
+    );
+    console.log(`ESM projects:`);
+    console.log(
+      Object.keys(result.esm)
+        .map((v) => `\t${v}`)
+        .sort()
+        .join(os.EOL),
+    );
+  }
   console.log(
     `Converted to ESM percentage: ${((result.totalEsm / result.totalProjects) * 100).toFixed(2)}%`,
   );
@@ -132,7 +158,7 @@ function echoMigrationResult(category: string, result: MigrationResult): void {
   );
 }
 
-export default leafCommand(commandInfo, async ({ output }) => {
+export default leafCommand(commandInfo, async (options) => {
   const root = await resolveRoot();
   const cwd = process.cwd();
 
@@ -173,20 +199,20 @@ export default leafCommand(commandInfo, async ({ output }) => {
     }
   }
 
-  if (output) {
-    const outputPath = path.resolve(cwd, output);
+  if (options.output) {
+    const outputPath = path.resolve(cwd, options.output);
     await writeFile(outputPath, JSON.stringify(results, null, 2));
   }
 
-  echoMigrationResult("core", results.core);
+  echoMigrationResult("core", results.core, options);
   console.log(`\n---------------------------------\n`);
-  echoMigrationResult("management", results.management);
+  echoMigrationResult("management", results.management, options);
   console.log(`\n---------------------------------\n`);
-  echoMigrationResult("client", results.client);
+  echoMigrationResult("client", results.client, options);
   console.log(`\n---------------------------------\n`);
-  echoMigrationResult("utility", results.utility);
+  echoMigrationResult("utility", results.utility, options);
   console.log(`\n---------------------------------\n`);
-  echoMigrationResult("test", results.test);
+  echoMigrationResult("test", results.test, options);
 
   return true;
 });
