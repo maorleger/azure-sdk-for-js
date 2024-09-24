@@ -4,11 +4,11 @@
 import Sinon from "sinon";
 import { assert } from "@azure-tools/test-utils";
 import { AuthError, AuthenticationResult, ManagedIdentityApplication } from "@azure/msal-node";
-import { MsalMsiProvider } from "../../../../src/credentials/managedIdentityCredential/msalMsiProvider";
 import { tokenExchangeMsi } from "../../../../src/credentials/managedIdentityCredential/tokenExchangeMsi";
 import { imdsMsi } from "../../../../src/credentials/managedIdentityCredential/imdsMsi";
 import { RestError } from "@azure/core-rest-pipeline";
 import { AuthenticationRequiredError, CredentialUnavailableError } from "../../../../src/errors";
+import { ManagedIdentityCredential } from "../../../../src/credentials/managedIdentityCredential";
 
 describe("ManagedIdentityCredential (MSAL)", function () {
   let acquireTokenStub: Sinon.SinonStub;
@@ -36,28 +36,28 @@ describe("ManagedIdentityCredential (MSAL)", function () {
       // by relying on the error handling of the constructor
       it("throws when both clientId and resourceId are provided", function () {
         assert.throws(
-          () => new MsalMsiProvider("id", { resourceId: "id" }),
+          () => new ManagedIdentityCredential("id", { resourceId: "id" } as any),
           /only one of 'clientId', 'resourceId', or 'objectId' can be provided/,
         );
       });
 
       it("throws when both clientId and resourceId are provided via options", function () {
         assert.throws(
-          () => new MsalMsiProvider({ clientId: "id", resourceId: "id" }),
+          () => new ManagedIdentityCredential({ clientId: "id", resourceId: "id" } as any),
           /only one of 'clientId', 'resourceId', or 'objectId' can be provided/,
         );
       });
 
       it("throws when both clientId and objectId are provided", function () {
         assert.throws(
-          () => new MsalMsiProvider("id", { objectId: "id" }),
+          () => new ManagedIdentityCredential("id", { objectId: "id" } as any),
           /only one of 'clientId', 'resourceId', or 'objectId' can be provided/,
         );
       });
 
       it("throws when both resourceId and objectId are provided via options", function () {
         assert.throws(
-          () => new MsalMsiProvider({ resourceId: "id", objectId: "id" }),
+          () => new ManagedIdentityCredential({ resourceId: "id", objectId: "id" } as any),
           /only one of 'clientId', 'resourceId', or 'objectId' can be provided/,
         );
       });
@@ -70,15 +70,15 @@ describe("ManagedIdentityCredential (MSAL)", function () {
         );
 
         assert.throws(
-          () => new MsalMsiProvider({ clientId: "id" }),
+          () => new ManagedIdentityCredential({ clientId: "id" }),
           /Specifying a user-assigned managed identity is not supported for CloudShell at runtime/,
         );
         assert.throws(
-          () => new MsalMsiProvider({ resourceId: "id" }),
+          () => new ManagedIdentityCredential({ resourceId: "id" }),
           /Specifying a user-assigned managed identity is not supported for CloudShell at runtime/,
         );
         assert.throws(
-          () => new MsalMsiProvider({ objectId: "id" }),
+          () => new ManagedIdentityCredential({ objectId: "id" }),
           /Specifying a user-assigned managed identity is not supported for CloudShell at runtime/,
         );
       });
@@ -89,7 +89,7 @@ describe("ManagedIdentityCredential (MSAL)", function () {
     describe("when getToken is successful", function () {
       it("returns a token", async function () {
         acquireTokenStub.resolves(validAuthenticationResult as AuthenticationResult);
-        const provider = new MsalMsiProvider();
+        const provider = new ManagedIdentityCredential();
         const token = await provider.getToken("scope");
         assert.strictEqual(token.token, validAuthenticationResult.accessToken);
         assert.strictEqual(
@@ -107,7 +107,7 @@ describe("ManagedIdentityCredential (MSAL)", function () {
           Sinon.stub(tokenExchangeMsi, "isAvailable").resolves(true);
           Sinon.stub(tokenExchangeMsi, "getToken").resolves(validToken);
 
-          const provider = new MsalMsiProvider();
+          const provider = new ManagedIdentityCredential();
           const token = await provider.getToken("scope");
           assert.strictEqual(token.token, validToken.token);
           assert.strictEqual(token.expiresOnTimestamp, validToken.expiresOnTimestamp);
@@ -121,7 +121,7 @@ describe("ManagedIdentityCredential (MSAL)", function () {
           );
           acquireTokenStub.resolves(validAuthenticationResult as AuthenticationResult);
 
-          const provider = new MsalMsiProvider();
+          const provider = new ManagedIdentityCredential();
           await provider.getToken("scope");
           assert.isTrue(imdsIsAvailableStub.calledOnce);
         });
@@ -129,20 +129,20 @@ describe("ManagedIdentityCredential (MSAL)", function () {
     });
 
     it("validates multiple scopes are not supported", async function () {
-      const provider = new MsalMsiProvider();
+      const provider = new ManagedIdentityCredential();
       await assert.isRejected(provider.getToken(["scope1", "scope2"]), /Multiple scopes/);
     });
 
     describe("error handling", function () {
       it("rethrows AuthenticationRequiredError", async function () {
         acquireTokenStub.rejects(new AuthenticationRequiredError({ scopes: ["scope"] }));
-        const provider = new MsalMsiProvider();
+        const provider = new ManagedIdentityCredential();
         await assert.isRejected(provider.getToken("scope"), AuthenticationRequiredError);
       });
 
       it("handles an unreachable network error", async function () {
         acquireTokenStub.rejects(new AuthError("network_error"));
-        const provider = new MsalMsiProvider();
+        const provider = new ManagedIdentityCredential();
         await assert.isRejected(provider.getToken("scope"), CredentialUnavailableError);
       });
 
@@ -152,13 +152,13 @@ describe("ManagedIdentityCredential (MSAL)", function () {
             statusCode: 403,
           }),
         );
-        const provider = new MsalMsiProvider();
+        const provider = new ManagedIdentityCredential();
         await assert.isRejected(provider.getToken("scope"), /Network unreachable/);
       });
 
       it("handles unexpected errors", async function () {
         acquireTokenStub.rejects(new Error("Some unexpected error"));
-        const provider = new MsalMsiProvider();
+        const provider = new ManagedIdentityCredential();
         await assert.isRejected(provider.getToken("scope"), /Authentication failed/);
       });
     });

@@ -7,8 +7,8 @@ import { AzureApplicationCredential } from "../../../src/credentials/azureApplic
 import { IdentityTestContext } from "../../httpRequests";
 import { RestError } from "@azure/core-rest-pipeline";
 import { assert } from "chai";
-import * as dac from "../../../src/credentials/defaultAzureCredential";
-import { LegacyMsiProvider } from "../../../src/credentials/managedIdentityCredential/legacyMsiProvider";
+import Sinon from "sinon";
+import { ManagedIdentityApplication } from "@azure/msal-node";
 
 describe("AzureApplicationCredential testing Managed Identity (internal)", function () {
   let envCopy: string = "";
@@ -21,11 +21,6 @@ describe("AzureApplicationCredential testing Managed Identity (internal)", funct
     delete process.env.AZURE_CLIENT_SECRET;
     delete process.env.AZURE_TENANT_ID;
     testContext = new IdentityTestContext({});
-    testContext.sandbox
-      .stub(dac, "createDefaultManagedIdentityCredential")
-      .callsFake(
-        (...args) => new LegacyMsiProvider({ ...args, clientId: process.env.AZURE_CLIENT_ID }),
-      );
   });
 
   afterEach(async () => {
@@ -90,11 +85,14 @@ describe("AzureApplicationCredential testing Managed Identity (internal)", funct
     assert.ok(error!.message!.indexOf("Network unreachable.") > -1);
   });
 
-  it("sends an authorization request correctly in an App Service environment", async () => {
+  it.only("sends an authorization request correctly in an App Service environment", async () => {
     // Trigger App Service behavior by setting environment variables
     process.env.AZURE_CLIENT_ID = "client";
     process.env.MSI_ENDPOINT = "https://endpoint";
     process.env.MSI_SECRET = "secret";
+    Sinon.stub(ManagedIdentityApplication.prototype, "getManagedIdentitySource").returns(
+      "AppService",
+    );
 
     const authDetails = await testContext.sendCredentialRequests({
       scopes: ["https://service/.default"],
