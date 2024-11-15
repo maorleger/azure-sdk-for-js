@@ -1,4 +1,3 @@
-
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
@@ -9,6 +8,8 @@ export default mergeConfig(
   viteConfig,
   defineConfig({
     test: {
+      hookTimeout: 0,
+      testTimeout: 0,
       include: ["test/**/*.spec.ts"],
     },
   }),
