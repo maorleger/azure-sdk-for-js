@@ -1,63 +1,94 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import type { KeyVaultAdminPollerOptions } from "../keyVaultAdminPoller.js";
-import { KeyVaultAdminPoller } from "../keyVaultAdminPoller.js";
-import type {
-  KeyVaultSelectiveKeyRestoreOperationState,
-  KeyVaultSelectiveKeyRestorePollOperationState,
-} from "./operation.js";
-import { KeyVaultSelectiveKeyRestorePollOperation } from "./operation.js";
-import type { KeyVaultSelectiveKeyRestoreResult } from "../../backupClientModels.js";
+import { KeyVaultSelectiveKeyRestoreResult } from "../../backupClientModels.js";
+import { KeyVaultAdminPollOperationState } from "../keyVaultAdminPoller.js";
 
-export interface KeyVaultSelectiveKeyRestorePollerOptions extends KeyVaultAdminPollerOptions {
-  keyName: string;
-  folderUri: string;
-  sasToken?: string;
-  folderName: string;
-}
+// import type { AbortSignalLike } from "@azure/abort-controller";
+// import type { CancelOnProgress } from "@azure/core-lro";
+// import type { KeyVaultSelectiveKeyRestoreResult } from "../../backupClientModels.js";
+// import type {
+//   KeyVaultAdminPollerOptions,
+//   KeyVaultAdminPollOperationState,
+// } from "../keyVaultAdminPoller.js";
+// import type { SimplePollerLike } from "../shim.js";
+// /**
+//  * An interface representing the publicly available properties of the state of a restore Key Vault's poll operation.
+//  */
+export interface KeyVaultSelectiveKeyRestoreOperationState
+  extends KeyVaultAdminPollOperationState<KeyVaultSelectiveKeyRestoreResult> {}
 
-/**
- * Class that creates a poller that waits until a key of a Key Vault backup ends up being restored.
- */
-export class KeyVaultSelectiveKeyRestorePoller extends KeyVaultAdminPoller<
-  KeyVaultSelectiveKeyRestoreOperationState,
-  KeyVaultSelectiveKeyRestoreResult
-> {
-  constructor(options: KeyVaultSelectiveKeyRestorePollerOptions) {
-    const {
-      client,
-      vaultUrl,
-      keyName,
-      folderUri,
-      sasToken,
-      folderName,
-      requestOptions,
-      intervalInMs = 2000,
-      resumeFrom,
-    } = options;
+// // /**
+// //  * An internal interface representing the state of a restore Key Vault's poll operation.
+// //  */
+// // export interface KeyVaultSelectiveKeyRestorePollOperationState
+// //   extends KeyVaultAdminPollOperationState<KeyVaultSelectiveKeyRestoreResult> {
+// //   /**
+// //    * The name of a Key Vault Key.
+// //    */
+// //   keyName: string;
+// //   /**
+// //    * The Folder name of the blob where the previous successful full backup was stored
+// //    */
+// //   folderName: string;
+// //   /**
+// //    * The URI of the blob storage account where the previous successful full backup was stored.
+// //    */
+// //   folderUri: string;
+// //   /**
+// //    * The SAS token.
+// //    */
+// //   sasToken?: string;
+// // }
 
-    let state: KeyVaultSelectiveKeyRestorePollOperationState | undefined;
+// // export interface KeyVaultSelectiveKeyRestorePollerOptions extends KeyVaultAdminPollerOptions {
+// //   keyName: string;
+// //   folderUri: string;
+// //   sasToken?: string;
+// //   folderName: string;
+// // }
 
-    if (resumeFrom) {
-      state = JSON.parse(resumeFrom).state;
-    }
-
-    const operation = new KeyVaultSelectiveKeyRestorePollOperation(
-      {
-        ...state,
-        keyName,
-        folderUri: folderUri,
-        sasToken,
-        folderName,
-      },
-      vaultUrl,
-      client,
-      requestOptions,
-    );
-
-    super(operation);
-
-    this.intervalInMs = intervalInMs;
-  }
-}
+// // export class KeyVaultSelectiveKeyRestorePoller
+// //   implements
+// //     SimplePollerLike<KeyVaultSelectiveKeyRestoreOperationState, KeyVaultSelectiveKeyRestoreResult>
+// // {
+// //   constructor(options: KeyVaultSelectiveKeyRestorePollerOptions) {
+// //     console.log(options);
+// //   }
+// //   isDone(): boolean {
+// //     throw new Error("Method not implemented.");
+// //   }
+// //   isStopped(): boolean {
+// //     throw new Error("Method not implemented.");
+// //   }
+// //   getOperationState(): KeyVaultSelectiveKeyRestoreOperationState {
+// //     throw new Error("Method not implemented.");
+// //   }
+// //   getResult(): KeyVaultSelectiveKeyRestoreResult | undefined {
+// //     throw new Error("Method not implemented.");
+// //   }
+// //   poll(options?: {
+// //     abortSignal?: AbortSignalLike;
+// //   }): Promise<KeyVaultSelectiveKeyRestoreOperationState> {
+// //     throw new Error("Method not implemented.");
+// //   }
+// //   pollUntilDone(pollOptions?: {
+// //     abortSignal?: AbortSignalLike;
+// //   }): Promise<KeyVaultSelectiveKeyRestoreResult> {
+// //     throw new Error("Method not implemented.");
+// //   }
+// //   onProgress(
+// //     callback: (state: KeyVaultSelectiveKeyRestoreOperationState) => void,
+// //   ): CancelOnProgress {
+// //     throw new Error("Method not implemented.");
+// //   }
+// //   submitted(): Promise<void> {
+// //     throw new Error("Method not implemented.");
+// //   }
+// //   toString(): string {
+// //     throw new Error("Method not implemented.");
+// //   }
+// //   stopPolling(): void {
+// //     throw new Error("Method not implemented.");
+// //   }
+// // }

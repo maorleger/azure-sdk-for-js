@@ -4,15 +4,17 @@
 
 ```ts
 
-import type { CommonClientOptions } from '@azure/core-client';
-import type { OperationOptions } from '@azure/core-client';
+import { AbortSignalLike } from '@azure/abort-controller';
+import { CancelOnProgress } from '@azure/core-lro';
+import type { ClientOptions } from '@azure-rest/core-client';
+import type { OperationOptions } from '@azure-rest/core-client';
+import { OperationState } from '@azure/core-lro';
+import { OperationStatus } from '@azure/core-lro';
 import type { PagedAsyncIterableIterator } from '@azure/core-paging';
-import type { PollerLike } from '@azure/core-lro';
-import type { PollOperationState } from '@azure/core-lro';
 import type { TokenCredential } from '@azure/core-auth';
 
 // @public
-export interface AccessControlClientOptions extends CommonClientOptions {
+export interface AccessControlClientOptions extends ClientOptions {
     disableChallengeResourceVerification?: boolean;
     serviceVersion?: SUPPORTED_API_VERSIONS;
 }
@@ -64,29 +66,35 @@ export class KeyVaultAccessControlClient {
     readonly vaultUrl: string;
 }
 
+// Warning: (ae-forgotten-export) The symbol "PollOperationState" needs to be exported by the entry point index.d.ts
+//
 // @public
 export interface KeyVaultAdminPollOperationState<TResult> extends PollOperationState<TResult> {
     endTime?: Date;
     jobId?: string;
     startTime?: Date;
-    status?: string;
+    status: OperationStatus;
     statusDetails?: string;
 }
 
 // @public
 export class KeyVaultBackupClient {
     constructor(vaultUrl: string, credential: TokenCredential, options?: KeyVaultBackupClientOptions);
-    beginBackup(blobStorageUri: string, sasToken: string, options?: KeyVaultBeginBackupOptions): Promise<PollerLike<KeyVaultBackupOperationState, KeyVaultBackupResult>>;
-    beginBackup(blobStorageUri: string, options?: KeyVaultBeginBackupOptions): Promise<PollerLike<KeyVaultBackupOperationState, KeyVaultBackupResult>>;
-    beginRestore(folderUri: string, sasToken: string, options?: KeyVaultBeginRestoreOptions): Promise<PollerLike<KeyVaultRestoreOperationState, KeyVaultRestoreResult>>;
-    beginRestore(folderUri: string, options?: KeyVaultBeginRestoreOptions): Promise<PollerLike<KeyVaultRestoreOperationState, KeyVaultRestoreResult>>;
-    beginSelectiveKeyRestore(keyName: string, folderUri: string, sasToken: string, options?: KeyVaultBeginSelectiveKeyRestoreOptions): Promise<PollerLike<KeyVaultSelectiveKeyRestoreOperationState, KeyVaultSelectiveKeyRestoreResult>>;
-    beginSelectiveKeyRestore(keyName: string, folderUri: string, options?: KeyVaultBeginSelectiveKeyRestoreOptions): Promise<PollerLike<KeyVaultSelectiveKeyRestoreOperationState, KeyVaultSelectiveKeyRestoreResult>>;
+    // Warning: (ae-forgotten-export) The symbol "SimplePollerLike" needs to be exported by the entry point index.d.ts
+    beginBackup(blobStorageUri: string, sasToken: string, options?: KeyVaultBeginBackupOptions): Promise<SimplePollerLike<KeyVaultBackupOperationState, KeyVaultBackupResult>>;
+    beginBackup(blobStorageUri: string, options?: KeyVaultBeginBackupOptions): Promise<SimplePollerLike<KeyVaultBackupOperationState, KeyVaultBackupResult>>;
+    beginRestore(folderUri: string, sasToken: string, options?: KeyVaultBeginRestoreOptions): Promise<SimplePollerLike<KeyVaultRestoreOperationState, KeyVaultRestoreResult>>;
+    // (undocumented)
+    beginRestore(folderUri: string, options?: KeyVaultBeginRestoreOptions): Promise<SimplePollerLike<KeyVaultRestoreOperationState, KeyVaultRestoreResult>>;
+    // (undocumented)
+    beginSelectiveKeyRestore(keyName: string, folderUri: string, sasToken: string, options?: KeyVaultBeginSelectiveKeyRestoreOptions): Promise<SimplePollerLike<KeyVaultSelectiveKeyRestoreOperationState, KeyVaultSelectiveKeyRestoreResult>>;
+    // (undocumented)
+    beginSelectiveKeyRestore(keyName: string, folderUri: string, options?: KeyVaultBeginSelectiveKeyRestoreOptions): Promise<SimplePollerLike<KeyVaultSelectiveKeyRestoreOperationState, KeyVaultSelectiveKeyRestoreResult>>;
     readonly vaultUrl: string;
 }
 
 // @public
-export interface KeyVaultBackupClientOptions extends CommonClientOptions {
+export interface KeyVaultBackupClientOptions extends ClientOptions {
     disableChallengeResourceVerification?: boolean;
     serviceVersion?: SUPPORTED_API_VERSIONS;
 }
@@ -130,14 +138,14 @@ export interface KeyVaultPermission {
     notDataActions?: KeyVaultDataAction[];
 }
 
-// @public
+// @public (undocumented)
 export interface KeyVaultRestoreOperationState extends KeyVaultAdminPollOperationState<KeyVaultRestoreResult> {
 }
 
 // @public
 export interface KeyVaultRestoreResult {
     endTime?: Date;
-    startTime: Date;
+    startTime?: Date;
 }
 
 // @public
@@ -170,14 +178,14 @@ export interface KeyVaultRoleDefinition {
 // @public
 export type KeyVaultRoleScope = string;
 
-// @public
+// @public (undocumented)
 export interface KeyVaultSelectiveKeyRestoreOperationState extends KeyVaultAdminPollOperationState<KeyVaultSelectiveKeyRestoreResult> {
 }
 
 // @public
 export interface KeyVaultSelectiveKeyRestoreResult {
     endTime?: Date;
-    startTime: Date;
+    startTime?: Date;
 }
 
 // @public
@@ -283,7 +291,7 @@ export interface SetRoleDefinitionOptions extends OperationOptions {
 }
 
 // @public
-export interface SettingsClientOptions extends CommonClientOptions {
+export interface SettingsClientOptions extends ClientOptions {
     disableChallengeResourceVerification?: boolean;
     serviceVersion?: SUPPORTED_API_VERSIONS;
 }

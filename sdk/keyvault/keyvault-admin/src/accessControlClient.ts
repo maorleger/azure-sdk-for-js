@@ -13,19 +13,17 @@ import type {
   KeyVaultRoleDefinition,
   KeyVaultRoleScope,
   ListRoleAssignmentsOptions,
-  ListRoleAssignmentsPageSettings,
   ListRoleDefinitionsOptions,
-  ListRoleDefinitionsPageSettings,
   SetRoleDefinitionOptions,
 } from "./accessControlModels.js";
+import type { KeyVaultClientOptionalParams } from "./generated/keyVaultClient.js";
 import { KeyVaultClient } from "./generated/keyVaultClient.js";
-import { LATEST_API_VERSION } from "./constants.js";
+import { LATEST_API_VERSION, SDK_VERSION } from "./constants.js";
 import type { PagedAsyncIterableIterator } from "@azure/core-paging";
-import type { RoleAssignmentsListForScopeOptionalParams } from "./generated/models/index.js";
 import type { TokenCredential } from "@azure/core-auth";
 import { keyVaultAuthenticationPolicy } from "@azure/keyvault-common";
 import { logger } from "./log.js";
-import { mappings } from "./mappings.js";
+import { mapPagedAsyncIterable, mappings } from "./mappings.js";
 import { tracingClient } from "./tracing.js";
 import { randomUUID } from "@azure/core-util";
 
@@ -70,10 +68,14 @@ export class KeyVaultAccessControlClient {
   ) {
     this.vaultUrl = vaultUrl;
 
-    const serviceVersion = options.serviceVersion || LATEST_API_VERSION;
+    const apiVersion = options.serviceVersion || LATEST_API_VERSION;
 
-    const clientOptions = {
+    const clientOptions: KeyVaultClientOptionalParams = {
       ...options,
+      apiVersion,
+      userAgentOptions: {
+        userAgentPrefix: `azsdk-js-keyvault-admin/${SDK_VERSION}`, // TODO: cant this be codegen'd from metadata?
+      },
       loggingOptions: {
         logger: logger.info,
         additionalAllowedHeaderNames: [
@@ -84,11 +86,12 @@ export class KeyVaultAccessControlClient {
       },
     };
 
-    this.client = new KeyVaultClient(serviceVersion, clientOptions);
+    this.client = new KeyVaultClient(vaultUrl, credential, clientOptions);
 
     // The authentication policy must come after the deserialization policy since the deserialization policy
     // converts 401 responses to an Error, and we don't want to deal with that.
-    this.client.pipeline.addPolicy(keyVaultAuthenticationPolicy(credential, clientOptions), {
+    this.client.pipeline.removePolicy({ name: "BearerTokenAuthenticationPolicy" });
+    this.client.pipeline.addPolicy(keyVaultAuthenticationPolicy(credential, options), {
       afterPolicies: ["deserializationPolicy"],
     });
   }
@@ -122,7 +125,6 @@ export class KeyVaultAccessControlClient {
       options,
       async (updatedOptions) => {
         const response = await this.client.roleAssignments.create(
-          this.vaultUrl,
           roleScope,
           name,
           {
@@ -161,7 +163,14 @@ export class KeyVaultAccessControlClient {
       "KeyVaultAccessControlClient.deleteRoleAssignment",
       options,
       async (updatedOptions) => {
-        await this.client.roleAssignments.delete(this.vaultUrl, roleScope, name, updatedOptions);
+        try {
+          await this.client.roleAssignments.delete(roleScope, name, updatedOptions);
+        } catch (err: any) {
+          // We treat 404s as success on delete
+          if (err.statusCode !== 404) {
+            throw err;
+          }
+        }
       },
     );
   }
@@ -190,76 +199,10 @@ export class KeyVaultAccessControlClient {
       "KeyVaultAccessControlClient.getRoleAssignment",
       options,
       async (updatedOptions) => {
-        const response = await this.client.roleAssignments.get(
-          this.vaultUrl,
-          roleScope,
-          name,
-          updatedOptions,
-        );
+        const response = await this.client.roleAssignments.get(roleScope, name, updatedOptions);
         return mappings.roleAssignment.generatedToPublic(response);
       },
     );
-  }
-
-  /**
-   * Deals with the pagination of {@link listRoleAssignments}.
-   * @param roleScope - The scope of the role assignments.
-   * @param continuationState - An object that indicates the position of the paginated request.
-   * @param options - Common options for the iterative endpoints.
-   */
-  private async *listRoleAssignmentsPage(
-    roleScope: KeyVaultRoleScope,
-    continuationState: ListRoleAssignmentsPageSettings,
-    options?: ListRoleAssignmentsOptions,
-  ): AsyncIterableIterator<KeyVaultRoleAssignment[]> {
-    if (!continuationState.continuationToken) {
-      const optionsComplete: RoleAssignmentsListForScopeOptionalParams = options || {};
-      const currentSetResponse = await tracingClient.withSpan(
-        "KeyVaultAccessControlClient.listRoleAssignmentsPage",
-        optionsComplete,
-        async (updatedOptions) => {
-          return this.client.roleAssignments.listForScope(this.vaultUrl, roleScope, updatedOptions);
-        },
-      );
-      continuationState.continuationToken = currentSetResponse.nextLink;
-      if (currentSetResponse.value) {
-        yield currentSetResponse.value.map(mappings.roleAssignment.generatedToPublic, this);
-      }
-    }
-    while (continuationState.continuationToken) {
-      const currentSetResponse = await tracingClient.withSpan(
-        "KeyVaultAccessControlClient.listRoleAssignmentsPage",
-        options || {},
-        async (updatedOptions) => {
-          return this.client.roleAssignments.listForScopeNext(
-            this.vaultUrl,
-            roleScope,
-            continuationState.continuationToken!,
-            updatedOptions,
-          );
-        },
-      );
-      continuationState.continuationToken = currentSetResponse.nextLink;
-      if (currentSetResponse.value) {
-        yield currentSetResponse.value.map(mappings.roleAssignment.generatedToPublic, this);
-      } else {
-        break;
-      }
-    }
-  }
-
-  /**
-   * Deals with the iteration of all the available results of {@link listRoleAssignments}.
-   * @param roleScope - The scope of the role assignments.
-   * @param options - Common options for the iterative endpoints.
-   */
-  private async *listRoleAssignmentsAll(
-    roleScope: KeyVaultRoleScope,
-    options?: ListRoleAssignmentsOptions,
-  ): AsyncIterableIterator<KeyVaultRoleAssignment> {
-    for await (const page of this.listRoleAssignmentsPage(roleScope, {}, options)) {
-      yield* page;
-    }
   }
 
   /**
@@ -280,77 +223,10 @@ export class KeyVaultAccessControlClient {
     roleScope: KeyVaultRoleScope,
     options: ListRoleAssignmentsOptions = {},
   ): PagedAsyncIterableIterator<KeyVaultRoleAssignment> {
-    const iter = this.listRoleAssignmentsAll(roleScope, options);
-
-    return {
-      next() {
-        return iter.next();
-      },
-      [Symbol.asyncIterator]() {
-        return this;
-      },
-      byPage: (settings: ListRoleAssignmentsPageSettings = {}) =>
-        this.listRoleAssignmentsPage(roleScope, settings, options),
-    };
-  }
-
-  /**
-   * Deals with the pagination of {@link listRoleDefinitions}.
-   * @param roleScope - The scope of the role definition.
-   * @param continuationState - An object that indicates the position of the paginated request.
-   * @param options - Common options for the iterative endpoints.
-   */
-  private async *listRoleDefinitionsPage(
-    roleScope: KeyVaultRoleScope,
-    continuationState: ListRoleDefinitionsPageSettings,
-    options: ListRoleDefinitionsOptions = {},
-  ): AsyncIterableIterator<KeyVaultRoleDefinition[]> {
-    if (!continuationState.continuationToken) {
-      const optionsComplete: RoleAssignmentsListForScopeOptionalParams = options || {};
-      const currentSetResponse = await tracingClient.withSpan(
-        "KeyVaultAccessControlClient.listRoleDefinitionsPage",
-        optionsComplete,
-        (updatedOptions) =>
-          this.client.roleDefinitions.list(this.vaultUrl, roleScope, updatedOptions),
-      );
-      continuationState.continuationToken = currentSetResponse.nextLink;
-      if (currentSetResponse.value) {
-        yield currentSetResponse.value.map(mappings.roleDefinition.generatedToPublic, this);
-      }
-    }
-    while (continuationState.continuationToken) {
-      const currentSetResponse = await tracingClient.withSpan(
-        "KeyVaultAccessControlClient.listRoleDefinitionsPage",
-        options,
-        (updatedOptions) =>
-          this.client.roleDefinitions.listNext(
-            this.vaultUrl,
-            roleScope,
-            continuationState.continuationToken!,
-            updatedOptions,
-          ),
-      );
-      continuationState.continuationToken = currentSetResponse.nextLink;
-      if (currentSetResponse.value) {
-        yield currentSetResponse.value.map(mappings.roleDefinition.generatedToPublic, this);
-      } else {
-        break;
-      }
-    }
-  }
-
-  /**
-   * Deals with the iteration of all the available results of {@link listRoleDefinitions}.
-   * @param roleScope - The scope of the role definition.
-   * @param options - Common options for the iterative endpoints.
-   */
-  private async *listRoleDefinitionsAll(
-    roleScope: KeyVaultRoleScope,
-    options?: ListRoleDefinitionsOptions,
-  ): AsyncIterableIterator<KeyVaultRoleDefinition> {
-    for await (const page of this.listRoleDefinitionsPage(roleScope, {}, options)) {
-      yield* page;
-    }
+    return mapPagedAsyncIterable(
+      this.client.roleAssignments.listForScope(roleScope, options),
+      mappings.roleAssignment.generatedToPublic,
+    );
   }
 
   /**
@@ -371,18 +247,10 @@ export class KeyVaultAccessControlClient {
     roleScope: KeyVaultRoleScope,
     options: ListRoleDefinitionsOptions = {},
   ): PagedAsyncIterableIterator<KeyVaultRoleDefinition> {
-    const iter = this.listRoleDefinitionsAll(roleScope, options);
-
-    return {
-      next() {
-        return iter.next();
-      },
-      [Symbol.asyncIterator]() {
-        return this;
-      },
-      byPage: (settings: ListRoleDefinitionsPageSettings = {}) =>
-        this.listRoleDefinitionsPage(roleScope, settings, options),
-    };
+    return mapPagedAsyncIterable(
+      this.client.roleDefinitions.list(roleScope, options),
+      mappings.roleDefinition.generatedToPublic,
+    );
   }
 
   /**
@@ -407,12 +275,7 @@ export class KeyVaultAccessControlClient {
       "KeyVaultAccessControlClient.getRoleDefinition",
       options,
       async (updatedOptions) => {
-        const response = await this.client.roleDefinitions.get(
-          this.vaultUrl,
-          roleScope,
-          name,
-          updatedOptions,
-        );
+        const response = await this.client.roleDefinitions.get(roleScope, name, updatedOptions);
         return mappings.roleDefinition.generatedToPublic(response);
       },
     );
@@ -441,7 +304,6 @@ export class KeyVaultAccessControlClient {
       options,
       async (updatedOptions) => {
         const response = await this.client.roleDefinitions.createOrUpdate(
-          this.vaultUrl,
           roleScope,
           options.roleDefinitionName || randomUUID(),
           {
@@ -482,7 +344,7 @@ export class KeyVaultAccessControlClient {
       "KeyVaultAccessControlClient.deleteRoleDefinition",
       options,
       async (updatedOptions) => {
-        await this.client.roleDefinitions.delete(this.vaultUrl, roleScope, name, updatedOptions);
+        await this.client.roleDefinitions.delete(roleScope, name, updatedOptions);
       },
     );
   }
