@@ -2,28 +2,30 @@
 // Licensed under the MIT License.
 
 import {
-  roleAssignmentPropertiesSerializer,
-  RoleAssignment,
-  RoleAssignmentCreateParameters,
-  _RoleAssignmentListResult,
-} from "../../models/models.js";
-import { KeyVaultContext as Client } from "../index.js";
+  KeyVaultContext as Client,
+  RoleAssignmentsCreateOptionalParams,
+  RoleAssignmentsDeleteOptionalParams,
+  RoleAssignmentsGetOptionalParams,
+  RoleAssignmentsListForScopeOptionalParams,
+} from "../index.js";
 import {
-  StreamableMethod,
-  operationOptionsToRequestParameters,
-  PathUncheckedResponse,
-  createRestError,
-} from "@azure-rest/core-client";
+  RoleAssignment,
+  roleAssignmentDeserializer,
+  RoleAssignmentCreateParameters,
+  roleAssignmentCreateParametersSerializer,
+  _RoleAssignmentListResult,
+  _roleAssignmentListResultDeserializer,
+} from "../../models/models.js";
 import {
   PagedAsyncIterableIterator,
   buildPagedAsyncIterator,
 } from "../../static-helpers/pagingHelpers.js";
 import {
-  RoleAssignmentsDeleteOptionalParams,
-  RoleAssignmentsCreateOptionalParams,
-  RoleAssignmentsGetOptionalParams,
-  RoleAssignmentsListForScopeOptionalParams,
-} from "../../models/options.js";
+  StreamableMethod,
+  PathUncheckedResponse,
+  createRestError,
+  operationOptionsToRequestParameters,
+} from "@azure-rest/core-client";
 
 export function _$deleteSend(
   context: Client,
@@ -34,7 +36,7 @@ export function _$deleteSend(
   return context
     .path(
       "/{scope}/providers/Microsoft.Authorization/roleAssignments/{roleAssignmentName}",
-      scope,
+      { value: scope, allowReserved: true },
       roleAssignmentName,
     )
     .delete({ ...operationOptionsToRequestParameters(options) });
@@ -48,18 +50,7 @@ export async function _$deleteDeserialize(
     throw createRestError(result);
   }
 
-  return {
-    id: result.body["id"],
-    name: result.body["name"],
-    type: result.body["type"],
-    properties: !result.body.properties
-      ? undefined
-      : {
-          scope: result.body.properties?.["scope"],
-          roleDefinitionId: result.body.properties?.["roleDefinitionId"],
-          principalId: result.body.properties?.["principalId"],
-        },
-  };
+  return roleAssignmentDeserializer(result.body);
 }
 
 /** Deletes a role assignment. */
@@ -93,14 +84,12 @@ export function _createSend(
   return context
     .path(
       "/{scope}/providers/Microsoft.Authorization/roleAssignments/{roleAssignmentName}",
-      scope,
+      { value: scope, allowReserved: true },
       roleAssignmentName,
     )
     .put({
       ...operationOptionsToRequestParameters(options),
-      body: {
-        properties: roleAssignmentPropertiesSerializer(parameters.properties),
-      },
+      body: roleAssignmentCreateParametersSerializer(parameters),
     });
 }
 
@@ -112,18 +101,7 @@ export async function _createDeserialize(
     throw createRestError(result);
   }
 
-  return {
-    id: result.body["id"],
-    name: result.body["name"],
-    type: result.body["type"],
-    properties: !result.body.properties
-      ? undefined
-      : {
-          scope: result.body.properties?.["scope"],
-          roleDefinitionId: result.body.properties?.["roleDefinitionId"],
-          principalId: result.body.properties?.["principalId"],
-        },
-  };
+  return roleAssignmentDeserializer(result.body);
 }
 
 /** Creates a role assignment. */
@@ -153,7 +131,7 @@ export function _getSend(
   return context
     .path(
       "/{scope}/providers/Microsoft.Authorization/roleAssignments/{roleAssignmentName}",
-      scope,
+      { value: scope, allowReserved: true },
       roleAssignmentName,
     )
     .get({ ...operationOptionsToRequestParameters(options) });
@@ -167,18 +145,7 @@ export async function _getDeserialize(
     throw createRestError(result);
   }
 
-  return {
-    id: result.body["id"],
-    name: result.body["name"],
-    type: result.body["type"],
-    properties: !result.body.properties
-      ? undefined
-      : {
-          scope: result.body.properties?.["scope"],
-          roleDefinitionId: result.body.properties?.["roleDefinitionId"],
-          principalId: result.body.properties?.["principalId"],
-        },
-  };
+  return roleAssignmentDeserializer(result.body);
 }
 
 /** Get the specified role assignment. */
@@ -198,7 +165,10 @@ export function _listForScopeSend(
   options: RoleAssignmentsListForScopeOptionalParams = { requestOptions: {} },
 ): StreamableMethod {
   return context
-    .path("/{scope}/providers/Microsoft.Authorization/roleAssignments", scope)
+    .path("/{scope}/providers/Microsoft.Authorization/roleAssignments", {
+      value: scope,
+      allowReserved: true,
+    })
     .get({
       ...operationOptionsToRequestParameters(options),
       queryParameters: { $filter: options?.$filter },
@@ -213,23 +183,7 @@ export async function _listForScopeDeserialize(
     throw createRestError(result);
   }
 
-  return {
-    value: result.body["value"].map((p: any) => {
-      return {
-        id: p["id"],
-        name: p["name"],
-        type: p["type"],
-        properties: !p.properties
-          ? undefined
-          : {
-              scope: p.properties?.["scope"],
-              roleDefinitionId: p.properties?.["roleDefinitionId"],
-              principalId: p.properties?.["principalId"],
-            },
-      };
-    }),
-    nextLink: result.body["nextLink"],
-  };
+  return _roleAssignmentListResultDeserializer(result.body);
 }
 
 /** Gets role assignments for a scope. */

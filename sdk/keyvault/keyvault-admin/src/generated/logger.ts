@@ -2,4 +2,4 @@
 // Licensed under the MIT License.
 
 import { createClientLogger } from "@azure/logger";
-export const logger = createClientLogger("keyvault-admin");
+export const logger = createClientLogger("security-keyvault-administration");

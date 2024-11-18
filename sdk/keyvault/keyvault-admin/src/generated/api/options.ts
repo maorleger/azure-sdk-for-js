@@ -2,6 +2,11 @@
 // Licensed under the MIT License.
 
 import { OperationOptions } from "@azure-rest/core-client";
+import {
+  SASTokenParameter,
+  PreBackupOperationParameters,
+  SelectiveKeyRestoreOperationParameters,
+} from "../models/models.js";
 
 /** Optional parameters. */
 export interface FullBackupStatusOptionalParams extends OperationOptions {}
@@ -10,12 +15,19 @@ export interface FullBackupStatusOptionalParams extends OperationOptions {}
 export interface FullBackupOptionalParams extends OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
+  /**
+   * Azure blob shared access signature token pointing to a valid Azure blob container where full backup needs to be
+   * stored. This token needs to be valid for at least next 24 hours from the time of making this call.
+   */
+  azureStorageBlobContainerUri?: SASTokenParameter;
 }
 
 /** Optional parameters. */
 export interface PreFullBackupOptionalParams extends OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
+  /** Optional parameters to validate prior to performing a full backup operation. */
+  preBackupOperationParameters?: PreBackupOperationParameters;
 }
 
 /** Optional parameters. */
@@ -39,6 +51,11 @@ export interface SelectiveKeyRestoreOperationOptionalParams
   extends OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
+  /**
+   * The Azure blob SAS token pointing to a folder where the previous successful
+   * full backup was stored
+   */
+  restoreBlobDetails?: SelectiveKeyRestoreOperationParameters;
 }
 
 /** Optional parameters. */

@@ -1,33 +1,6 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { TokenCredential } from "@azure/core-auth";
-import { Pipeline } from "@azure/core-rest-pipeline";
-import {
-  FullBackupOperation,
-  SASTokenParameter,
-  PreBackupOperationParameters,
-  RestoreOperation,
-  PreRestoreOperationParameters,
-  RestoreOperationParameters,
-  SelectiveKeyRestoreOperationParameters,
-  SelectiveKeyRestoreOperation,
-  UpdateSettingRequest,
-  Setting,
-  SettingsListResult,
-} from "./models/models.js";
-import {
-  FullBackupStatusOptionalParams,
-  FullBackupOptionalParams,
-  PreFullBackupOptionalParams,
-  RestoreStatusOptionalParams,
-  PreFullRestoreOperationOptionalParams,
-  FullRestoreOperationOptionalParams,
-  SelectiveKeyRestoreOperationOptionalParams,
-  UpdateSettingOptionalParams,
-  GetSettingOptionalParams,
-  GetSettingsOptionalParams,
-} from "./models/options.js";
 import {
   getRoleDefinitionsOperations,
   RoleDefinitionsOperations,
@@ -50,7 +23,28 @@ import {
   updateSetting,
   getSetting,
   getSettings,
+  FullBackupStatusOptionalParams,
+  FullBackupOptionalParams,
+  PreFullBackupOptionalParams,
+  RestoreStatusOptionalParams,
+  PreFullRestoreOperationOptionalParams,
+  FullRestoreOperationOptionalParams,
+  SelectiveKeyRestoreOperationOptionalParams,
+  UpdateSettingOptionalParams,
+  GetSettingOptionalParams,
+  GetSettingsOptionalParams,
 } from "./api/index.js";
+import {
+  FullBackupOperation,
+  RestoreOperation,
+  PreRestoreOperationParameters,
+  RestoreOperationParameters,
+  UpdateSettingRequest,
+  Setting,
+  SettingsListResult,
+} from "./models/models.js";
+import { Pipeline } from "@azure/core-rest-pipeline";
+import { TokenCredential } from "@azure/core-auth";
 import { PollerLike, OperationState } from "@azure/core-lro";
 
 export { KeyVaultClientOptionalParams } from "./api/keyVaultContext.js";
@@ -72,7 +66,7 @@ export class KeyVaultClient {
     const prefixFromOptions = options?.userAgentOptions?.userAgentPrefix;
     const userAgentPrefix = prefixFromOptions
       ? `${prefixFromOptions} azsdk-js-client`
-      : "azsdk-js-client";
+      : `azsdk-js-client`;
     this._client = createKeyVault(vaultBaseUrl, credential, {
       ...options,
       userAgentOptions: { userAgentPrefix },
@@ -95,10 +89,9 @@ export class KeyVaultClient {
    * container.
    */
   fullBackup(
-    azureStorageBlobContainerUri?: SASTokenParameter,
     options: FullBackupOptionalParams = { requestOptions: {} },
-  ): PollerLike<OperationState<void>, void> {
-    return fullBackup(this._client, azureStorageBlobContainerUri, options);
+  ): PollerLike<OperationState<FullBackupOperation>, FullBackupOperation> {
+    return fullBackup(this._client, options);
   }
 
   /**
@@ -106,10 +99,9 @@ export class KeyVaultClient {
    * backup operation.
    */
   preFullBackup(
-    preBackupOperationParameters?: PreBackupOperationParameters,
     options: PreFullBackupOptionalParams = { requestOptions: {} },
-  ): PollerLike<OperationState<void>, void> {
-    return preFullBackup(this._client, preBackupOperationParameters, options);
+  ): PollerLike<OperationState<FullBackupOperation>, FullBackupOperation> {
+    return preFullBackup(this._client, options);
   }
 
   /** Returns the status of restore operation */
@@ -152,20 +144,11 @@ export class KeyVaultClient {
    */
   selectiveKeyRestoreOperation(
     keyName: string,
-    restoreBlobDetails?: SelectiveKeyRestoreOperationParameters,
     options: SelectiveKeyRestoreOperationOptionalParams = {
       requestOptions: {},
     },
-  ): PollerLike<
-    OperationState<SelectiveKeyRestoreOperation>,
-    SelectiveKeyRestoreOperation
-  > {
-    return selectiveKeyRestoreOperation(
-      this._client,
-      keyName,
-      restoreBlobDetails,
-      options,
-    );
+  ): PollerLike<OperationState<RestoreOperation>, RestoreOperation> {
+    return selectiveKeyRestoreOperation(this._client, keyName, options);
   }
 
   /** Description of the pool setting to be updated */

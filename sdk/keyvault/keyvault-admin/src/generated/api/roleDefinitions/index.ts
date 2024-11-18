@@ -2,28 +2,30 @@
 // Licensed under the MIT License.
 
 import {
-  roleDefinitionPropertiesSerializer,
-  RoleDefinition,
-  RoleDefinitionCreateParameters,
-  _RoleDefinitionListResult,
-} from "../../models/models.js";
-import { KeyVaultContext as Client } from "../index.js";
+  KeyVaultContext as Client,
+  RoleDefinitionsCreateOrUpdateOptionalParams,
+  RoleDefinitionsDeleteOptionalParams,
+  RoleDefinitionsGetOptionalParams,
+  RoleDefinitionsListOptionalParams,
+} from "../index.js";
 import {
-  StreamableMethod,
-  operationOptionsToRequestParameters,
-  PathUncheckedResponse,
-  createRestError,
-} from "@azure-rest/core-client";
+  RoleDefinition,
+  roleDefinitionDeserializer,
+  RoleDefinitionCreateParameters,
+  roleDefinitionCreateParametersSerializer,
+  _RoleDefinitionListResult,
+  _roleDefinitionListResultDeserializer,
+} from "../../models/models.js";
 import {
   PagedAsyncIterableIterator,
   buildPagedAsyncIterator,
 } from "../../static-helpers/pagingHelpers.js";
 import {
-  RoleDefinitionsDeleteOptionalParams,
-  RoleDefinitionsCreateOrUpdateOptionalParams,
-  RoleDefinitionsGetOptionalParams,
-  RoleDefinitionsListOptionalParams,
-} from "../../models/options.js";
+  StreamableMethod,
+  PathUncheckedResponse,
+  createRestError,
+  operationOptionsToRequestParameters,
+} from "@azure-rest/core-client";
 
 export function _$deleteSend(
   context: Client,
@@ -34,7 +36,7 @@ export function _$deleteSend(
   return context
     .path(
       "/{scope}/providers/Microsoft.Authorization/roleDefinitions/{roleDefinitionName}",
-      scope,
+      { value: scope, allowReserved: true },
       roleDefinitionName,
     )
     .delete({ ...operationOptionsToRequestParameters(options) });
@@ -48,30 +50,7 @@ export async function _$deleteDeserialize(
     throw createRestError(result);
   }
 
-  return {
-    id: result.body["id"],
-    name: result.body["name"],
-    type: result.body["type"],
-    properties: !result.body.properties
-      ? undefined
-      : {
-          roleName: result.body.properties?.["roleName"],
-          description: result.body.properties?.["description"],
-          roleType: result.body.properties?.["type"],
-          permissions:
-            result.body.properties?.["permissions"] === undefined
-              ? result.body.properties?.["permissions"]
-              : result.body.properties?.["permissions"].map((p: any) => {
-                  return {
-                    actions: p["actions"],
-                    notActions: p["notActions"],
-                    dataActions: p["dataActions"],
-                    notDataActions: p["notDataActions"],
-                  };
-                }),
-          assignableScopes: result.body.properties?.["assignableScopes"],
-        },
-  };
+  return roleDefinitionDeserializer(result.body);
 }
 
 /** Deletes a custom role definition. */
@@ -105,14 +84,12 @@ export function _createOrUpdateSend(
   return context
     .path(
       "/{scope}/providers/Microsoft.Authorization/roleDefinitions/{roleDefinitionName}",
-      scope,
+      { value: scope, allowReserved: true },
       roleDefinitionName,
     )
     .put({
       ...operationOptionsToRequestParameters(options),
-      body: {
-        properties: roleDefinitionPropertiesSerializer(parameters.properties),
-      },
+      body: roleDefinitionCreateParametersSerializer(parameters),
     });
 }
 
@@ -124,30 +101,7 @@ export async function _createOrUpdateDeserialize(
     throw createRestError(result);
   }
 
-  return {
-    id: result.body["id"],
-    name: result.body["name"],
-    type: result.body["type"],
-    properties: !result.body.properties
-      ? undefined
-      : {
-          roleName: result.body.properties?.["roleName"],
-          description: result.body.properties?.["description"],
-          roleType: result.body.properties?.["type"],
-          permissions:
-            result.body.properties?.["permissions"] === undefined
-              ? result.body.properties?.["permissions"]
-              : result.body.properties?.["permissions"].map((p: any) => {
-                  return {
-                    actions: p["actions"],
-                    notActions: p["notActions"],
-                    dataActions: p["dataActions"],
-                    notDataActions: p["notDataActions"],
-                  };
-                }),
-          assignableScopes: result.body.properties?.["assignableScopes"],
-        },
-  };
+  return roleDefinitionDeserializer(result.body);
 }
 
 /** Creates or updates a custom role definition. */
@@ -177,7 +131,7 @@ export function _getSend(
   return context
     .path(
       "/{scope}/providers/Microsoft.Authorization/roleDefinitions/{roleDefinitionName}",
-      scope,
+      { value: scope, allowReserved: true },
       roleDefinitionName,
     )
     .get({ ...operationOptionsToRequestParameters(options) });
@@ -191,30 +145,7 @@ export async function _getDeserialize(
     throw createRestError(result);
   }
 
-  return {
-    id: result.body["id"],
-    name: result.body["name"],
-    type: result.body["type"],
-    properties: !result.body.properties
-      ? undefined
-      : {
-          roleName: result.body.properties?.["roleName"],
-          description: result.body.properties?.["description"],
-          roleType: result.body.properties?.["type"],
-          permissions:
-            result.body.properties?.["permissions"] === undefined
-              ? result.body.properties?.["permissions"]
-              : result.body.properties?.["permissions"].map((p: any) => {
-                  return {
-                    actions: p["actions"],
-                    notActions: p["notActions"],
-                    dataActions: p["dataActions"],
-                    notDataActions: p["notDataActions"],
-                  };
-                }),
-          assignableScopes: result.body.properties?.["assignableScopes"],
-        },
-  };
+  return roleDefinitionDeserializer(result.body);
 }
 
 /** Get the specified role definition. */
@@ -234,7 +165,10 @@ export function _listSend(
   options: RoleDefinitionsListOptionalParams = { requestOptions: {} },
 ): StreamableMethod {
   return context
-    .path("/{scope}/providers/Microsoft.Authorization/roleDefinitions", scope)
+    .path("/{scope}/providers/Microsoft.Authorization/roleDefinitions", {
+      value: scope,
+      allowReserved: true,
+    })
     .get({
       ...operationOptionsToRequestParameters(options),
       queryParameters: { $filter: options?.$filter },
@@ -249,35 +183,7 @@ export async function _listDeserialize(
     throw createRestError(result);
   }
 
-  return {
-    value: result.body["value"].map((p: any) => {
-      return {
-        id: p["id"],
-        name: p["name"],
-        type: p["type"],
-        properties: !p.properties
-          ? undefined
-          : {
-              roleName: p.properties?.["roleName"],
-              description: p.properties?.["description"],
-              roleType: p.properties?.["type"],
-              permissions:
-                p.properties?.["permissions"] === undefined
-                  ? p.properties?.["permissions"]
-                  : p.properties?.["permissions"].map((p: any) => {
-                      return {
-                        actions: p["actions"],
-                        notActions: p["notActions"],
-                        dataActions: p["dataActions"],
-                        notDataActions: p["notDataActions"],
-                      };
-                    }),
-              assignableScopes: p.properties?.["assignableScopes"],
-            },
-      };
-    }),
-    nextLink: result.body["nextLink"],
-  };
+  return _roleDefinitionListResultDeserializer(result.body);
 }
 
 /** Get all role definitions that are applicable at scope and above. */

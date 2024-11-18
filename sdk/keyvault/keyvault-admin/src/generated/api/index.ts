@@ -18,3 +18,23 @@ export {
   getSetting,
   getSettings,
 } from "./operations.js";
+export {
+  FullBackupStatusOptionalParams,
+  FullBackupOptionalParams,
+  PreFullBackupOptionalParams,
+  RestoreStatusOptionalParams,
+  PreFullRestoreOperationOptionalParams,
+  FullRestoreOperationOptionalParams,
+  SelectiveKeyRestoreOperationOptionalParams,
+  UpdateSettingOptionalParams,
+  GetSettingOptionalParams,
+  GetSettingsOptionalParams,
+  RoleDefinitionsDeleteOptionalParams,
+  RoleDefinitionsCreateOrUpdateOptionalParams,
+  RoleDefinitionsGetOptionalParams,
+  RoleDefinitionsListOptionalParams,
+  RoleAssignmentsDeleteOptionalParams,
+  RoleAssignmentsCreateOptionalParams,
+  RoleAssignmentsGetOptionalParams,
+  RoleAssignmentsListForScopeOptionalParams,
+} from "./options.js";

@@ -11,20 +11,20 @@ import {
   KeyVaultSelectiveKeyRestoreResult,
 } from "./backupClientModels.js";
 // import { KeyVaultAdminPollOperationState } from "./lro/keyVaultAdminPoller.js";
-import { KeyVaultBackupOperationState } from "./lro/backup/operation.js";
+import { KeyVaultBackupOperationState, KeyVaultBackupPoller } from "./lro/backup/poller.js";
 // import { KeyVaultBackupPoller } from "./lro/backup/poller.js";
 import { KeyVaultClient } from "./generated/keyVaultClient.js";
-import { KeyVaultRestoreOperationState } from "./lro/restore/operation.js";
 // import { KeyVaultRestorePoller } from "./lro/restore/poller.js";
 import { KeyVaultSelectiveKeyRestoreOperationState } from "./lro/selectiveKeyRestore/operation.js";
 // import { KeyVaultSelectiveKeyRestorePoller } from "./lro/selectiveKeyRestore/poller.js";
 import { LATEST_API_VERSION } from "./constants.js";
-import { PollerLike } from "@azure/core-lro";
 import { TokenCredential } from "@azure/core-auth";
 import { keyVaultAuthenticationPolicy } from "@azure/keyvault-common";
 import { logger } from "./log.js";
 import { bearerTokenAuthenticationPolicyName } from "@azure/core-rest-pipeline";
 import { mappings } from "./mappings.js";
+import { PollerLike } from "./lro/keyVaultAdminPoller.js";
+import { KeyVaultRestoreOperationState, KeyVaultRestorePoller } from "./lro/restore/poller.js";
 
 // TODO: discuss no longer exporting the state at the top level as a bugfix
 // export {
@@ -182,18 +182,15 @@ export class KeyVaultBackupClient {
     const options =
       typeof sasTokenOrOptions === "string" ? optionsWhenSasTokenSpecified : sasTokenOrOptions;
 
-    const poller = this.client.fullBackup(
-      {
-        storageResourceUri: blobStorageUri,
-        token: sasToken,
-        useManagedIdentity: sasToken === undefined,
-      },
-      options,
-    );
-
-    await poller.submitted();
-
-    // @ts-expect-error TODO: Poller's type assumes no result, but we need a KeyVaultBackupResult
+    const poller = new KeyVaultBackupPoller({
+      blobStorageUri,
+      sasToken,
+      client: this.client,
+      operationOptions: options,
+      resumeFrom: options.resumeFrom,
+      intervalInMs: options.intervalInMs,
+    });
+    await poller.poll();
     return poller;
   }
 
@@ -282,21 +279,15 @@ export class KeyVaultBackupClient {
       typeof sasTokenOrOptions === "string" ? optionsWhenSasTokenSpecified : sasTokenOrOptions;
 
     const folderParts = mappings.folderUriParts(folderUri);
-    const poller = this.client.fullRestoreOperation(
-      {
-        folderToRestore: folderParts.folderName,
-        sasTokenParameters: {
-          storageResourceUri: folderParts.folderUri,
-          token: sasToken,
-          useManagedIdentity: sasToken === undefined,
-        },
-      },
-      options,
-    );
-
-    await poller.submitted();
-
-    // @ts-expect-error TODO: startTime should be required in the spec
+    const poller = new KeyVaultRestorePoller({
+      ...folderParts,
+      sasToken,
+      client: this.client,
+      operationOptions: options,
+      resumeFrom: options.resumeFrom,
+      intervalInMs: options.intervalInMs,
+    });
+    await poller.poll();
     return poller;
   }
 
@@ -396,9 +387,8 @@ export class KeyVaultBackupClient {
       typeof sasTokenOrOptions === "string" ? optionsWhenSasTokenSpecified : sasTokenOrOptions;
 
     const folderParts = mappings.folderUriParts(folderUri);
-    const poller = this.client.selectiveKeyRestoreOperation(
-      keyName,
-      {
+    const poller = this.client.selectiveKeyRestoreOperation(keyName, {
+      restoreBlobDetails: {
         folder: folderParts.folderName,
         sasTokenParameters: {
           storageResourceUri: folderParts.folderUri,
@@ -406,8 +396,8 @@ export class KeyVaultBackupClient {
           useManagedIdentity: sasToken === undefined,
         },
       },
-      options,
-    );
+      ...options,
+    });
     await poller.submitted();
     // @ts-expect-error TODO: startTime should be required in the spec
     return poller;

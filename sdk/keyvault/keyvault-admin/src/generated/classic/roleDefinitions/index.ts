@@ -3,22 +3,22 @@
 
 import { KeyVaultContext } from "../../api/keyVaultContext.js";
 import {
-  RoleDefinition,
-  RoleDefinitionCreateParameters,
-} from "../../models/models.js";
+  RoleDefinitionsDeleteOptionalParams,
+  RoleDefinitionsCreateOrUpdateOptionalParams,
+  RoleDefinitionsGetOptionalParams,
+  RoleDefinitionsListOptionalParams,
+} from "../../api/options.js";
 import {
   $delete,
   createOrUpdate,
   get,
   list,
 } from "../../api/roleDefinitions/index.js";
-import { PagedAsyncIterableIterator } from "../../static-helpers/pagingHelpers.js";
 import {
-  RoleDefinitionsDeleteOptionalParams,
-  RoleDefinitionsCreateOrUpdateOptionalParams,
-  RoleDefinitionsGetOptionalParams,
-  RoleDefinitionsListOptionalParams,
-} from "../../models/options.js";
+  RoleDefinition,
+  RoleDefinitionCreateParameters,
+} from "../../models/models.js";
+import { PagedAsyncIterableIterator } from "../../static-helpers/pagingHelpers.js";
 
 /** Interface representing a RoleDefinitions operations. */
 export interface RoleDefinitionsOperations {
