@@ -15,8 +15,6 @@ import { LATEST_API_VERSION } from "./constants.js";
 import type { TokenCredential } from "@azure/core-auth";
 import { keyVaultAuthenticationPolicy } from "@azure/keyvault-common";
 import { logger } from "./log.js";
-import type { KeyVaultContext } from "./generated/api/keyVaultContext.js";
-import { createKeyVault } from "./generated/api/keyVaultContext.js";
 import { bearerTokenAuthenticationPolicyName } from "@azure/core-rest-pipeline";
 import type { SimplePollerLike } from "./lro/shim.js";
 import { wrapPoller } from "./lro/shim.js";
@@ -51,8 +49,6 @@ export class KeyVaultBackupClient {
    * A reference to the auto-generated Key Vault HTTP client.
    */
   private readonly client: KeyVaultClient;
-
-  private readonly restClient: KeyVaultContext;
 
   /**
    * Creates an instance of the KeyVaultBackupClient.
@@ -96,12 +92,6 @@ export class KeyVaultBackupClient {
     // converts 401 responses to an Error, and we don't want to deal with that.
     this.client.pipeline.removePolicy({ name: bearerTokenAuthenticationPolicyName });
     this.client.pipeline.addPolicy(keyVaultAuthenticationPolicy(credential, clientOptions), {
-      afterPolicies: ["deserializationPolicy"],
-    });
-
-    this.restClient = createKeyVault(vaultUrl, credential, clientOptions);
-    this.restClient.pipeline.removePolicy({ name: bearerTokenAuthenticationPolicyName });
-    this.restClient.pipeline.addPolicy(keyVaultAuthenticationPolicy(credential, clientOptions), {
       afterPolicies: ["deserializationPolicy"],
     });
   }
