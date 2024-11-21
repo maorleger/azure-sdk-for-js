@@ -15,7 +15,6 @@ import { KeyVaultBackupOperationState, KeyVaultBackupPoller } from "./lro/backup
 // import { KeyVaultBackupPoller } from "./lro/backup/poller.js";
 import { KeyVaultClient } from "./generated/keyVaultClient.js";
 // import { KeyVaultRestorePoller } from "./lro/restore/poller.js";
-import { KeyVaultSelectiveKeyRestoreOperationState } from "./lro/selectiveKeyRestore/operation.js";
 // import { KeyVaultSelectiveKeyRestorePoller } from "./lro/selectiveKeyRestore/poller.js";
 import { LATEST_API_VERSION } from "./constants.js";
 import { TokenCredential } from "@azure/core-auth";
@@ -25,6 +24,10 @@ import { bearerTokenAuthenticationPolicyName } from "@azure/core-rest-pipeline";
 import { mappings } from "./mappings.js";
 import { PollerLike } from "./lro/keyVaultAdminPoller.js";
 import { KeyVaultRestoreOperationState, KeyVaultRestorePoller } from "./lro/restore/poller.js";
+import { KeyVaultSelectiveKeyRestoreOperationState, SimplePollerLike, wrapPoller } from "./lro/shim.js";
+import { OperationState } from "@azure/core-lro";
+import { RestoreOperation } from "./generated/index.js";
+import { selectiveKeyRestoreOperation } from "./lro/selectiveKeyRestore/operation.js";
 
 // TODO: discuss no longer exporting the state at the top level as a bugfix
 // export {
@@ -330,7 +333,7 @@ export class KeyVaultBackupClient {
     sasToken: string,
     options?: KeyVaultBeginSelectiveKeyRestoreOptions,
   ): Promise<
-    PollerLike<KeyVaultSelectiveKeyRestoreOperationState, KeyVaultSelectiveKeyRestoreResult>
+    SimplePollerLike<KeyVaultSelectiveKeyRestoreOperationState<KeyVaultSelectiveKeyRestoreResult>, KeyVaultSelectiveKeyRestoreResult>
   >;
 
   /**
@@ -371,7 +374,7 @@ export class KeyVaultBackupClient {
     folderUri: string,
     options?: KeyVaultBeginSelectiveKeyRestoreOptions,
   ): Promise<
-    PollerLike<KeyVaultSelectiveKeyRestoreOperationState, KeyVaultSelectiveKeyRestoreResult>
+    SimplePollerLike<KeyVaultSelectiveKeyRestoreOperationState<KeyVaultSelectiveKeyRestoreResult>, KeyVaultSelectiveKeyRestoreResult>
   >;
 
   public async beginSelectiveKeyRestore(
@@ -380,26 +383,25 @@ export class KeyVaultBackupClient {
     sasTokenOrOptions: string | KeyVaultBeginSelectiveKeyRestoreOptions = {},
     optionsWhenSasTokenSpecified: KeyVaultBeginSelectiveKeyRestoreOptions = {},
   ): Promise<
-    PollerLike<KeyVaultSelectiveKeyRestoreOperationState, KeyVaultSelectiveKeyRestoreResult>
+    SimplePollerLike<KeyVaultSelectiveKeyRestoreOperationState<KeyVaultSelectiveKeyRestoreResult>, KeyVaultSelectiveKeyRestoreResult>
   > {
     const sasToken = typeof sasTokenOrOptions === "string" ? sasTokenOrOptions : undefined;
     const options =
       typeof sasTokenOrOptions === "string" ? optionsWhenSasTokenSpecified : sasTokenOrOptions;
-
-    const folderParts = mappings.folderUriParts(folderUri);
-    const poller = this.client.selectiveKeyRestoreOperation(keyName, {
-      restoreBlobDetails: {
-        folder: folderParts.folderName,
-        sasTokenParameters: {
-          storageResourceUri: folderParts.folderUri,
-          token: sasToken,
-          useManagedIdentity: sasToken === undefined,
+    const folderUriParts = mappings.folderUriParts(folderUri);
+    return wrapPoller(
+      selectiveKeyRestoreOperation(this.client["_client"], keyName, {
+        ...options,
+        restoreBlobDetails: {
+          folder: folderUriParts.folderName,
+          sasTokenParameters: {
+            storageResourceUri: folderUri,
+            token: sasToken,
+            useManagedIdentity: !sasToken,
+          },
         },
       },
-      ...options,
-    });
-    await poller.submitted();
-    // @ts-expect-error TODO: startTime should be required in the spec
-    return poller;
+      ),
+    );
   }
 }

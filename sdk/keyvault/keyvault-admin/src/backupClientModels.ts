@@ -39,19 +39,19 @@ export interface KeyVaultBackupPollerOptions extends OperationOptions {
  * An interface representing the optional parameters that can be
  * passed to {@link beginBackup}
  */
-export interface KeyVaultBeginBackupOptions extends KeyVaultBackupPollerOptions {}
+export interface KeyVaultBeginBackupOptions extends KeyVaultBackupPollerOptions { }
 
 /**
  * An interface representing the optional parameters that can be
  * passed to {@link beginRestore}
  */
-export interface KeyVaultBeginRestoreOptions extends KeyVaultBackupPollerOptions {}
+export interface KeyVaultBeginRestoreOptions extends KeyVaultBackupPollerOptions { }
 
 /**
  * An interface representing the optional parameters that can be
  * passed to {@link beginSelectiveKeyRestore}
  */
-export interface KeyVaultBeginSelectiveKeyRestoreOptions extends KeyVaultBackupPollerOptions {}
+export interface KeyVaultBeginSelectiveKeyRestoreOptions extends KeyVaultBackupPollerOptions { }
 
 /**
  * An interface representing the result of a backup operation.
@@ -95,10 +95,10 @@ export interface KeyVaultSelectiveKeyRestoreResult {
   /**
    * The start time of the selective key restore operation.
    */
-  startTime: Date;
+  startTime: string;
 
   /**
    * The end time of the selective key restore operation.
    */
-  endTime?: Date;
+  endTime?: string;
 }

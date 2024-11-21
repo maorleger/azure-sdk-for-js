@@ -20,7 +20,7 @@ import {
 } from "@azure-rest/core-client";
 import { AbortSignalLike } from "@azure/abort-controller";
 
-export interface GetLongRunningPollerOptions<TResponse> {
+export interface GetLongRunningPollerOptions<TState, TResponse> {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
   /**
@@ -44,6 +44,11 @@ export interface GetLongRunningPollerOptions<TResponse> {
    * The function to get the initial response
    */
   getInitialResponse?: () => PromiseLike<TResponse>;
+
+  /**
+ * A function to process the state of the LRO.
+ */
+  updateState?: (state: TState, response: OperationResponse) => void;
 }
 export function getLongRunningPoller<
   TResponse extends PathUncheckedResponse,
@@ -52,7 +57,7 @@ export function getLongRunningPoller<
   client: Client,
   processResponseBody: (result: TResponse) => Promise<TResult>,
   expectedStatuses: string[],
-  options: GetLongRunningPollerOptions<TResponse>,
+  options: GetLongRunningPollerOptions<OperationState<TResult>, TResponse>,
 ): PollerLike<OperationState<TResult>, TResult> {
   const { restoreFrom, getInitialResponse } = options;
   if (!restoreFrom && !getInitialResponse) {
@@ -113,6 +118,7 @@ export function getLongRunningPoller<
     processResult: (result: unknown) => {
       return processResponseBody(result as TResponse);
     },
+    updateState: options?.updateState
   });
 }
 /**
