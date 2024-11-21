@@ -2,40 +2,45 @@
 // Licensed under the MIT License.
 
 import {
-  sASTokenParameterSerializer,
-  FullBackupOperation,
-  SASTokenParameter,
-  PreBackupOperationParameters,
-  RestoreOperation,
-  PreRestoreOperationParameters,
-  RestoreOperationParameters,
-  SelectiveKeyRestoreOperationParameters,
-  SelectiveKeyRestoreOperation,
-  UpdateSettingRequest,
-  Setting,
-  SettingsListResult,
-} from "../models/models.js";
-import { KeyVaultContext as Client } from "./index.js";
-import {
-  StreamableMethod,
-  operationOptionsToRequestParameters,
-  PathUncheckedResponse,
-  createRestError,
-} from "@azure-rest/core-client";
-import { getLongRunningPoller } from "../static-helpers/pollingHelpers.js";
-import { PollerLike, OperationState } from "@azure/core-lro";
-import {
-  FullBackupStatusOptionalParams,
+  KeyVaultContext as Client,
   FullBackupOptionalParams,
-  PreFullBackupOptionalParams,
-  RestoreStatusOptionalParams,
-  PreFullRestoreOperationOptionalParams,
+  FullBackupStatusOptionalParams,
   FullRestoreOperationOptionalParams,
-  SelectiveKeyRestoreOperationOptionalParams,
-  UpdateSettingOptionalParams,
   GetSettingOptionalParams,
   GetSettingsOptionalParams,
-} from "../models/options.js";
+  PreFullBackupOptionalParams,
+  PreFullRestoreOperationOptionalParams,
+  RestoreStatusOptionalParams,
+  SelectiveKeyRestoreOperationOptionalParams,
+  UpdateSettingOptionalParams,
+} from "./index.js";
+import {
+  FullBackupOperation,
+  fullBackupOperationDeserializer,
+  sASTokenParameterSerializer,
+  preBackupOperationParametersSerializer,
+  RestoreOperation,
+  restoreOperationDeserializer,
+  PreRestoreOperationParameters,
+  preRestoreOperationParametersSerializer,
+  RestoreOperationParameters,
+  restoreOperationParametersSerializer,
+  selectiveKeyRestoreOperationParametersSerializer,
+  UpdateSettingRequest,
+  updateSettingRequestSerializer,
+  Setting,
+  settingDeserializer,
+  SettingsListResult,
+  settingsListResultDeserializer,
+} from "../models/models.js";
+import { getLongRunningPoller } from "../static-helpers/pollingHelpers.js";
+import {
+  StreamableMethod,
+  PathUncheckedResponse,
+  createRestError,
+  operationOptionsToRequestParameters,
+} from "@azure-rest/core-client";
+import { PollerLike, OperationState } from "@azure/core-lro";
 
 export function _fullBackupStatusSend(
   context: Client,
@@ -55,29 +60,7 @@ export async function _fullBackupStatusDeserialize(
     throw createRestError(result);
   }
 
-  return {
-    status: result.body["status"],
-    statusDetails: result.body["statusDetails"],
-    error: !result.body.error
-      ? undefined
-      : {
-          code: result.body.error?.["code"],
-          message: result.body.error?.["message"],
-          innerError: !result.body.error?.innererror
-            ? undefined
-            : result.body.error?.innererror,
-        },
-    startTime:
-      result.body["startTime"] !== undefined
-        ? new Date(result.body["startTime"])
-        : undefined,
-    endTime:
-      result.body["endTime"] !== undefined
-        ? new Date(result.body["endTime"])
-        : undefined,
-    jobId: result.body["jobId"],
-    azureStorageBlobContainerUri: result.body["azureStorageBlobContainerUri"],
-  };
+  return fullBackupOperationDeserializer(result.body);
 }
 
 /** Returns the status of full backup operation */
@@ -92,35 +75,27 @@ export async function fullBackupStatus(
 
 export function _fullBackupSend(
   context: Client,
-  azureStorageBlobContainerUri?: SASTokenParameter,
   options: FullBackupOptionalParams = { requestOptions: {} },
 ): StreamableMethod {
   return context
     .path("/backup")
     .post({
       ...operationOptionsToRequestParameters(options),
-      body:
-        azureStorageBlobContainerUri === undefined
-          ? azureStorageBlobContainerUri
-          : {
-              storageResourceUri:
-                azureStorageBlobContainerUri["storageResourceUri"],
-              token: azureStorageBlobContainerUri["token"],
-              useManagedIdentity:
-                azureStorageBlobContainerUri["useManagedIdentity"],
-            },
+      body: !options["azureStorageBlobContainerUri"]
+        ? options["azureStorageBlobContainerUri"]
+        : sASTokenParameterSerializer(options["azureStorageBlobContainerUri"]),
     });
 }
 
 export async function _fullBackupDeserialize(
   result: PathUncheckedResponse,
-): Promise<void> {
+): Promise<FullBackupOperation> {
   const expectedStatuses = ["202", "200"];
   if (!expectedStatuses.includes(result.status)) {
     throw createRestError(result);
   }
 
-  return;
+  return fullBackupOperationDeserializer(result.body);
 }
 
 /**
@@ -129,48 +104,41 @@ export async function _fullBackupDeserialize(
  */
 export function fullBackup(
   context: Client,
-  azureStorageBlobContainerUri?: SASTokenParameter,
   options: FullBackupOptionalParams = { requestOptions: {} },
-): PollerLike<OperationState<void>, void> {
+): PollerLike<OperationState<FullBackupOperation>, FullBackupOperation> {
   return getLongRunningPoller(context, _fullBackupDeserialize, ["202", "200"], {
     updateIntervalInMs: options?.updateIntervalInMs,
     abortSignal: options?.abortSignal,
-    getInitialResponse: () =>
-      _fullBackupSend(context, azureStorageBlobContainerUri, options),
-  }) as PollerLike<OperationState<void>, void>;
+    getInitialResponse: () => _fullBackupSend(context, options),
+    resourceLocationConfig: "azure-async-operation",
+  }) as PollerLike<OperationState<FullBackupOperation>, FullBackupOperation>;
 }
 
 export function _preFullBackupSend(
   context: Client,
-  preBackupOperationParameters?: PreBackupOperationParameters,
   options: PreFullBackupOptionalParams = { requestOptions: {} },
 ): StreamableMethod {
   return context
     .path("/prebackup")
     .post({
       ...operationOptionsToRequestParameters(options),
-      body:
-        preBackupOperationParameters === undefined
-          ? preBackupOperationParameters
-          : {
-              storageResourceUri:
-                preBackupOperationParameters["storageResourceUri"],
-              token: preBackupOperationParameters["token"],
-              useManagedIdentity:
-                preBackupOperationParameters["useManagedIdentity"],
-            },
+      body: !options["preBackupOperationParameters"]
+        ? options["preBackupOperationParameters"]
+        : preBackupOperationParametersSerializer(
+            options["preBackupOperationParameters"],
+          ),
     });
 }
 
 export async function _preFullBackupDeserialize(
   result: PathUncheckedResponse,
-): Promise<void> {
+): Promise<FullBackupOperation> {
   const expectedStatuses = ["202", "200"];
   if (!expectedStatuses.includes(result.status)) {
     throw createRestError(result);
   }
 
-  return;
+  return fullBackupOperationDeserializer(result.body);
 }
 
 /**
@@ -179,9 +147,8 @@ export async function _preFullBackupDeserialize(
  */
 export function preFullBackup(
   context: Client,
-  preBackupOperationParameters?: PreBackupOperationParameters,
   options: PreFullBackupOptionalParams = { requestOptions: {} },
-): PollerLike<OperationState<void>, void> {
+): PollerLike<OperationState<FullBackupOperation>, FullBackupOperation> {
   return getLongRunningPoller(
     context,
     _preFullBackupDeserialize,
@@ -189,10 +156,10 @@ export function preFullBackup(
     {
       updateIntervalInMs: options?.updateIntervalInMs,
       abortSignal: options?.abortSignal,
-      getInitialResponse: () =>
-        _preFullBackupSend(context, preBackupOperationParameters, options),
+      getInitialResponse: () => _preFullBackupSend(context, options),
+      resourceLocationConfig: "azure-async-operation",
     },
-  ) as PollerLike<OperationState<void>, void>;
+  ) as PollerLike<OperationState<FullBackupOperation>, FullBackupOperation>;
 }
 
 export function _restoreStatusSend(
@@ -213,28 +180,7 @@ export async function _restoreStatusDeserialize(
     throw createRestError(result);
   }
 
-  return {
-    status: result.body["status"],
-    statusDetails: result.body["statusDetails"],
-    error: !result.body.error
-      ? undefined
-      : {
-          code: result.body.error?.["code"],
-          message: result.body.error?.["message"],
-          innerError: !result.body.error?.innererror
-            ? undefined
-            : result.body.error?.innererror,
-        },
-    jobId: result.body["jobId"],
-    startTime:
-      result.body["startTime"] !== undefined
-        ? new Date(result.body["startTime"])
-        : undefined,
-    endTime:
-      result.body["endTime"] !== undefined
-        ? new Date(result.body["endTime"])
-        : undefined,
-  };
+  return restoreOperationDeserializer(result.body);
 }
 
 /** Returns the status of restore operation */
@@ -256,14 +202,9 @@ export function _preFullRestoreOperationSend(
     .path("/prerestore")
     .put({
       ...operationOptionsToRequestParameters(options),
-      body: {
-        sasTokenParameters: !preRestoreOperationParameters.sasTokenParameters
-          ? preRestoreOperationParameters.sasTokenParameters
-          : sASTokenParameterSerializer(
-              preRestoreOperationParameters.sasTokenParameters,
-            ),
-        folderToRestore: preRestoreOperationParameters["folderToRestore"],
-      },
+      body: preRestoreOperationParametersSerializer(
+        preRestoreOperationParameters,
+      ),
     });
 }
 
@@ -275,28 +216,7 @@ export async function _preFullRestoreOperationDeserialize(
     throw createRestError(result);
   }
 
-  return {
-    status: result.body["status"],
-    statusDetails: result.body["statusDetails"],
-    error: !result.body.error
-      ? undefined
-      : {
-          code: result.body.error?.["code"],
-          message: result.body.error?.["message"],
-          innerError: !result.body.error?.innererror
-            ? undefined
-            : result.body.error?.innererror,
-        },
-    jobId: result.body["jobId"],
-    startTime:
-      result.body["startTime"] !== undefined
-        ? new Date(result.body["startTime"])
-        : undefined,
-    endTime:
-      result.body["endTime"] !== undefined
-        ? new Date(result.body["endTime"])
-        : undefined,
-  };
+  return restoreOperationDeserializer(result.body);
 }
 
 /**
@@ -321,6 +241,7 @@ export function preFullRestoreOperation(
           preRestoreOperationParameters,
           options,
         ),
+      resourceLocationConfig: "azure-async-operation",
     },
   ) as PollerLike<OperationState<RestoreOperation>, RestoreOperation>;
 }
@@ -334,12 +255,7 @@ export function _fullRestoreOperationSend(
     .path("/restore")
     .put({
       ...operationOptionsToRequestParameters(options),
-      body: {
-        sasTokenParameters: sASTokenParameterSerializer(
-          restoreBlobDetails.sasTokenParameters,
-        ),
-        folderToRestore: restoreBlobDetails["folderToRestore"],
-      },
+      body: restoreOperationParametersSerializer(restoreBlobDetails),
     });
 }
 
@@ -351,28 +267,7 @@ export async function _fullRestoreOperationDeserialize(
     throw createRestError(result);
   }
 
-  return {
-    status: result.body["status"],
-    statusDetails: result.body["statusDetails"],
-    error: !result.body.error
-      ? undefined
-      : {
-          code: result.body.error?.["code"],
-          message: result.body.error?.["message"],
-          innerError: !result.body.error?.innererror
-            ? undefined
-            : result.body.error?.innererror,
-        },
-    jobId: result.body["jobId"],
-    startTime:
-      result.body["startTime"] !== undefined
-        ? new Date(result.body["startTime"])
-        : undefined,
-    endTime:
-      result.body["endTime"] !== undefined
-        ? new Date(result.body["endTime"])
-        : undefined,
-  };
+  return restoreOperationDeserializer(result.body);
 }
 
 /**
@@ -393,6 +288,7 @@ export function fullRestoreOperation(
       abortSignal: options?.abortSignal,
       getInitialResponse: () =>
         _fullRestoreOperationSend(context, restoreBlobDetails, options),
+      resourceLocationConfig: "azure-async-operation",
     },
   ) as PollerLike<OperationState<RestoreOperation>, RestoreOperation>;
 }
@@ -400,55 +296,29 @@ export function fullRestoreOperation(
 export function _selectiveKeyRestoreOperationSend(
   context: Client,
   keyName: string,
-  restoreBlobDetails?: SelectiveKeyRestoreOperationParameters,
   options: SelectiveKeyRestoreOperationOptionalParams = { requestOptions: {} },
 ): StreamableMethod {
   return context
     .path("/keys/{keyName}/restore", keyName)
     .put({
       ...operationOptionsToRequestParameters(options),
-      body:
-        restoreBlobDetails === undefined
-          ? restoreBlobDetails
-          : {
-              sasTokenParameters: sASTokenParameterSerializer(
-                restoreBlobDetails.sasTokenParameters,
-              ),
-              folder: restoreBlobDetails["folder"],
-            },
+      body: !options["restoreBlobDetails"]
+        ? options["restoreBlobDetails"]
+        : selectiveKeyRestoreOperationParametersSerializer(
+            options["restoreBlobDetails"],
+          ),
     });
 }
 
 export async function _selectiveKeyRestoreOperationDeserialize(
   result: PathUncheckedResponse,
-): Promise<SelectiveKeyRestoreOperation> {
+): Promise<RestoreOperation> {
   const expectedStatuses = ["202", "200"];
   if (!expectedStatuses.includes(result.status)) {
     throw createRestError(result);
   }
 
-  return {
-    status: result.body["status"],
-    statusDetails: result.body["statusDetails"],
-    error: !result.body.error
-      ? undefined
-      : {
-          code: result.body.error?.["code"],
-          message: result.body.error?.["message"],
-          innerError: !result.body.error?.innererror
-            ? undefined
-            : result.body.error?.innererror,
-        },
-    jobId: result.body["jobId"],
-    startTime:
-      result.body["startTime"] !== undefined
-        ? new Date(result.body["startTime"])
-        : undefined,
-    endTime:
-      result.body["endTime"] !== undefined
-        ? new Date(result.body["endTime"])
-        : undefined,
-  };
+  return restoreOperationDeserializer(result.body);
 }
 
 /**
@@ -458,12 +328,8 @@ export async function _selectiveKeyRestoreOperationDeserialize(
 export function selectiveKeyRestoreOperation(
   context: Client,
   keyName: string,
-  restoreBlobDetails?: SelectiveKeyRestoreOperationParameters,
   options: SelectiveKeyRestoreOperationOptionalParams = { requestOptions: {} },
-): PollerLike<
-  OperationState<SelectiveKeyRestoreOperation>,
-  SelectiveKeyRestoreOperation
-> {
+): PollerLike<OperationState<RestoreOperation>, RestoreOperation> {
   return getLongRunningPoller(
     context,
     _selectiveKeyRestoreOperationDeserialize,
@@ -472,17 +338,10 @@ export function selectiveKeyRestoreOperation(
       updateIntervalInMs: options?.updateIntervalInMs,
       abortSignal: options?.abortSignal,
       getInitialResponse: () =>
-        _selectiveKeyRestoreOperationSend(
-          context,
-          keyName,
-          restoreBlobDetails,
-          options,
-        ),
+        _selectiveKeyRestoreOperationSend(context, keyName, options),
+      resourceLocationConfig: "azure-async-operation",
     },
-  ) as PollerLike<
-    OperationState<SelectiveKeyRestoreOperation>,
-    SelectiveKeyRestoreOperation
-  >;
+  ) as PollerLike<OperationState<RestoreOperation>, RestoreOperation>;
 }
 
 export function _updateSettingSend(
@@ -492,10 +351,10 @@ export function _updateSettingSend(
   options: UpdateSettingOptionalParams = { requestOptions: {} },
 ): StreamableMethod {
   return context
-    .path("/settings/{setting-name}", settingName)
+    .path("/settings/{settingName}", settingName)
     .patch({
       ...operationOptionsToRequestParameters(options),
-      body: { value: parameters["value"] },
+      body: updateSettingRequestSerializer(parameters),
     });
 }
 
@@ -507,11 +366,7 @@ export async function _updateSettingDeserialize(
     throw createRestError(result);
   }
 
-  return {
-    name: result.body["name"],
-    value: result.body["value"],
-    type: result.body["type"],
-  };
+  return settingDeserializer(result.body);
 }
 
 /** Description of the pool setting to be updated */
@@ -536,7 +391,7 @@ export function _getSettingSend(
   options: GetSettingOptionalParams = { requestOptions: {} },
 ): StreamableMethod {
   return context
-    .path("/settings/{setting-name}", settingName)
+    .path("/settings/{settingName}", settingName)
     .get({ ...operationOptionsToRequestParameters(options) });
 }
 
@@ -548,11 +403,7 @@ export async function _getSettingDeserialize(
     throw createRestError(result);
   }
 
-  return {
-    name: result.body["name"],
-    value: result.body["value"],
-    type: result.body["type"],
-  };
+  return settingDeserializer(result.body);
 }
 
 /** Retrieves the setting object of a specified setting name. */
@@ -582,14 +433,7 @@ export async function _getSettingsDeserialize(
     throw createRestError(result);
   }
 
-  return {
-    settings:
-      result.body["settings"] === undefined
-        ? result.body["settings"]
-        : result.body["settings"].map((p: any) => {
-            return { name: p["name"], value: p["value"], type: p["type"] };
-          }),
-  };
+  return settingsListResultDeserializer(result.body);
 }
 
 /** Retrieves a list of all the available account settings that can be configured. */

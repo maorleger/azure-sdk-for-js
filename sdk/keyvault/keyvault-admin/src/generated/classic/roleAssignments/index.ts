@@ -3,22 +3,22 @@
 
 import { KeyVaultContext } from "../../api/keyVaultContext.js";
 import {
-  RoleAssignment,
-  RoleAssignmentCreateParameters,
-} from "../../models/models.js";
+  RoleAssignmentsDeleteOptionalParams,
+  RoleAssignmentsCreateOptionalParams,
+  RoleAssignmentsGetOptionalParams,
+  RoleAssignmentsListForScopeOptionalParams,
+} from "../../api/options.js";
 import {
   $delete,
   create,
   get,
   listForScope,
 } from "../../api/roleAssignments/index.js";
-import { PagedAsyncIterableIterator } from "../../static-helpers/pagingHelpers.js";
 import {
-  RoleAssignmentsDeleteOptionalParams,
-  RoleAssignmentsCreateOptionalParams,
-  RoleAssignmentsGetOptionalParams,
-  RoleAssignmentsListForScopeOptionalParams,
-} from "../../models/options.js";
+  RoleAssignment,
+  RoleAssignmentCreateParameters,
+} from "../../models/models.js";
+import { PagedAsyncIterableIterator } from "../../static-helpers/pagingHelpers.js";
 
 /** Interface representing a RoleAssignments operations. */
 export interface RoleAssignmentsOperations {

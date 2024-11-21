@@ -7,10 +7,7 @@ import {
   PagedAsyncIterableIterator,
 } from "./static-helpers/pagingHelpers.js";
 
-export {
-  KeyVaultClient,
-  KeyVaultClientOptionalParams,
-} from "./keyVaultClient.js";
+export { KeyVaultClient } from "./keyVaultClient.js";
 export { restorePoller, RestorePollerOptions } from "./restorePollerHelpers.js";
 export {
   FullBackupOperation,
@@ -45,8 +42,9 @@ export {
   KnownDataAction,
   DataAction,
   RoleDefinitionCreateParameters,
-  Versions,
-  KeyVaultError,
+} from "./models/index.js";
+export {
+  KeyVaultClientOptionalParams,
   FullBackupStatusOptionalParams,
   FullBackupOptionalParams,
   PreFullBackupOptionalParams,
@@ -65,7 +63,7 @@ export {
   RoleAssignmentsCreateOptionalParams,
   RoleAssignmentsGetOptionalParams,
   RoleAssignmentsListForScopeOptionalParams,
-} from "./models/index.js";
+} from "./api/index.js";
 export {
   RoleAssignmentsOperations,
   RoleDefinitionsOperations,

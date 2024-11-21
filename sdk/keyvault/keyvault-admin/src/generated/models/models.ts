@@ -19,15 +19,31 @@ export interface FullBackupOperation {
   azureStorageBlobContainerUri?: string;
 }
 
-/** Known values of {@link OperationStatus} that the service accepts. */
+export function fullBackupOperationDeserializer(
+  item: any,
+): FullBackupOperation {
+  return {
+    status: item["status"],
+    statusDetails: item["statusDetails"],
+    error: !item["error"] ? item["error"] : errorDeserializer(item["error"]),
+    startTime: !item["startTime"]
+      ? item["startTime"]
+      : new Date(item["startTime"]),
+    endTime: !item["endTime"] ? item["endTime"] : new Date(item["endTime"]),
+    jobId: item["jobId"],
+    azureStorageBlobContainerUri: item["azureStorageBlobContainerUri"],
+  };
+}
+
+/** The status of a long-running operation. */
 export enum KnownOperationStatus {
-  /** InProgress */
+  /** The operation is in progress. */
   InProgress = "InProgress",
-  /** Succeeded */
+  /** The operation successfully completed. */
   Succeeded = "Succeeded",
-  /** Canceled */
+  /** The operation was canceled. */
   Canceled = "Canceled",
-  /** Failed */
+  /** The operation failed. */
   Failed = "Failed",
 }
 
@@ -36,10 +52,10 @@ export enum KnownOperationStatus {
  * {@link KnownOperationStatus} can be used interchangeably with OperationStatus,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **InProgress** \
- * **Succeeded** \
- * **Canceled** \
- * **Failed**
+ * **InProgress**: The operation is in progress. \
+ * **Succeeded**: The operation successfully completed. \
+ * **Canceled**: The operation was canceled. \
+ * **Failed**: The operation failed.
  */
 export type OperationStatus = string;
 
@@ -51,6 +67,16 @@ export interface ErrorModel {
   readonly message?: string;
   /** The key vault server error. */
   readonly innerError?: ErrorModel;
+}
+
+export function errorDeserializer(item: any): ErrorModel {
+  return {
+    code: item["code"],
+    message: item["message"],
+    innerError: !item["innererror"]
+      ? item["innererror"]
+      : errorDeserializer(item["innererror"]),
+  };
 }
 
 /** An authentication method and location for the operation. */
@@ -67,9 +93,7 @@ export interface SASTokenParameter {
   useManagedIdentity?: boolean;
 }
 
-export function sASTokenParameterSerializer(
-  item: SASTokenParameter,
-): Record<string, unknown> {
+export function sASTokenParameterSerializer(item: SASTokenParameter): any {
   return {
     storageResourceUri: item["storageResourceUri"],
     token: item["token"],
@@ -93,7 +117,7 @@ export interface PreBackupOperationParameters {
 
 export function preBackupOperationParametersSerializer(
   item: PreBackupOperationParameters,
-): Record<string, unknown> {
+): any {
   return {
     storageResourceUri: item["storageResourceUri"],
     token: item["token"],
@@ -117,6 +141,19 @@ export interface RestoreOperation {
   endTime?: Date;
 }
 
+export function restoreOperationDeserializer(item: any): RestoreOperation {
+  return {
+    status: item["status"],
+    statusDetails: item["statusDetails"],
+    error: !item["error"] ? item["error"] : errorDeserializer(item["error"]),
+    jobId: item["jobId"],
+    startTime: !item["startTime"]
+      ? item["startTime"]
+      : new Date(item["startTime"]),
+    endTime: !item["endTime"] ? item["endTime"] : new Date(item["endTime"]),
+  };
+}
+
 /** The authentication method and location for the restore operation. */
 export interface PreRestoreOperationParameters {
   /** A user-provided SAS token to an Azure blob storage container. */
@@ -127,11 +164,11 @@ export interface PreRestoreOperationParameters {
 
 export function preRestoreOperationParametersSerializer(
   item: PreRestoreOperationParameters,
-): Record<string, unknown> {
+): any {
   return {
-    sasTokenParameters: !item.sasTokenParameters
-      ? item.sasTokenParameters
-      : sASTokenParameterSerializer(item.sasTokenParameters),
+    sasTokenParameters: !item["sasTokenParameters"]
+      ? item["sasTokenParameters"]
+      : sASTokenParameterSerializer(item["sasTokenParameters"]),
     folderToRestore: item["folderToRestore"],
   };
 }
@@ -146,9 +183,9 @@ export interface RestoreOperationParameters {
 
 export function restoreOperationParametersSerializer(
   item: RestoreOperationParameters,
-): Record<string, unknown> {
+): any {
   return {
-    sasTokenParameters: sASTokenParameterSerializer(item.sasTokenParameters),
+    sasTokenParameters: sASTokenParameterSerializer(item["sasTokenParameters"]),
     folderToRestore: item["folderToRestore"],
   };
 }
@@ -163,9 +200,9 @@ export interface SelectiveKeyRestoreOperationParameters {
 
 export function selectiveKeyRestoreOperationParametersSerializer(
   item: SelectiveKeyRestoreOperationParameters,
-): Record<string, unknown> {
+): any {
   return {
-    sasTokenParameters: sASTokenParameterSerializer(item.sasTokenParameters),
+    sasTokenParameters: sASTokenParameterSerializer(item["sasTokenParameters"]),
     folder: item["folder"],
   };
 }
@@ -186,6 +223,21 @@ export interface SelectiveKeyRestoreOperation {
   endTime?: Date;
 }
 
+export function selectiveKeyRestoreOperationDeserializer(
+  item: any,
+): SelectiveKeyRestoreOperation {
+  return {
+    status: item["status"],
+    statusDetails: item["statusDetails"],
+    error: !item["error"] ? item["error"] : errorDeserializer(item["error"]),
+    jobId: item["jobId"],
+    startTime: !item["startTime"]
+      ? item["startTime"]
+      : new Date(item["startTime"]),
+    endTime: !item["endTime"] ? item["endTime"] : new Date(item["endTime"]),
+  };
+}
+
 /** The update settings request object. */
 export interface UpdateSettingRequest {
   /** The value of the pool setting. */
@@ -194,10 +246,8 @@ export interface UpdateSettingRequest {
 
 export function updateSettingRequestSerializer(
   item: UpdateSettingRequest,
-): Record<string, unknown> {
-  return {
-    value: item["value"],
-  };
+): any {
+  return { value: item["value"] };
 }
 
 /** A Key Vault account setting. */
@@ -210,9 +260,17 @@ export interface Setting {
   type?: SettingTypeEnum;
 }
 
-/** Known values of {@link SettingTypeEnum} that the service accepts. */
+export function settingDeserializer(item: any): Setting {
+  return {
+    name: item["name"],
+    value: item["value"],
+    type: item["type"],
+  };
+}
+
+/** The type specifier of the value. */
 export enum KnownSettingTypeEnum {
-  /** boolean */
+  /** A boolean setting value. */
   boolean = "boolean",
 }
 
@@ -221,7 +279,7 @@ export enum KnownSettingTypeEnum {
  * {@link KnownSettingTypeEnum} can be used interchangeably with SettingTypeEnum,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **boolean**
+ * **boolean**: A boolean setting value.
  */
 export type SettingTypeEnum = string;
 
@@ -232,6 +290,20 @@ export interface SettingsListResult {
    * value.
    */
   readonly settings?: Setting[];
+}
+
+export function settingsListResultDeserializer(item: any): SettingsListResult {
+  return {
+    settings: !item["settings"]
+      ? item["settings"]
+      : settingArrayDeserializer(item["settings"]),
+  };
+}
+
+export function settingArrayDeserializer(result: Array<Setting>): any[] {
+  return result.map((item) => {
+    return settingDeserializer(item);
+  });
 }
 
 /** Role Assignments */
@@ -246,6 +318,17 @@ export interface RoleAssignment {
   properties?: RoleAssignmentPropertiesWithScope;
 }
 
+export function roleAssignmentDeserializer(item: any): RoleAssignment {
+  return {
+    id: item["id"],
+    name: item["name"],
+    type: item["type"],
+    properties: !item["properties"]
+      ? item["properties"]
+      : roleAssignmentPropertiesWithScopeDeserializer(item["properties"]),
+  };
+}
+
 /** Role assignment properties with scope. */
 export interface RoleAssignmentPropertiesWithScope {
   /** The role scope. */
@@ -256,11 +339,21 @@ export interface RoleAssignmentPropertiesWithScope {
   principalId?: string;
 }
 
-/** Known values of {@link RoleScope} that the service accepts. */
+export function roleAssignmentPropertiesWithScopeDeserializer(
+  item: any,
+): RoleAssignmentPropertiesWithScope {
+  return {
+    scope: item["scope"],
+    roleDefinitionId: item["roleDefinitionId"],
+    principalId: item["principalId"],
+  };
+}
+
+/** The role scope. */
 export enum KnownRoleScope {
-  /** Global */
+  /** Global scope */
   Global = "/",
-  /** Keys */
+  /** Keys scope */
   Keys = "/keys",
 }
 
@@ -269,8 +362,8 @@ export enum KnownRoleScope {
  * {@link KnownRoleScope} can be used interchangeably with RoleScope,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **\/** \
- * **\/keys**
+ * **\/**: Global scope \
+ * **\/keys**: Keys scope
  */
 export type RoleScope = string;
 
@@ -282,10 +375,8 @@ export interface RoleAssignmentCreateParameters {
 
 export function roleAssignmentCreateParametersSerializer(
   item: RoleAssignmentCreateParameters,
-): Record<string, unknown> {
-  return {
-    properties: roleAssignmentPropertiesSerializer(item.properties),
-  };
+): any {
+  return { properties: roleAssignmentPropertiesSerializer(item["properties"]) };
 }
 
 /** Role assignment properties. */
@@ -301,7 +392,7 @@ export interface RoleAssignmentProperties {
 
 export function roleAssignmentPropertiesSerializer(
   item: RoleAssignmentProperties,
-): Record<string, unknown> {
+): any {
   return {
     roleDefinitionId: item["roleDefinitionId"],
     principalId: item["principalId"],
@@ -316,6 +407,23 @@ export interface _RoleAssignmentListResult {
   nextLink?: string;
 }
 
+export function _roleAssignmentListResultDeserializer(
+  item: any,
+): _RoleAssignmentListResult {
+  return {
+    value: roleAssignmentArrayDeserializer(item["value"]),
+    nextLink: item["nextLink"],
+  };
+}
+
+export function roleAssignmentArrayDeserializer(
+  result: Array<RoleAssignment>,
+): any[] {
+  return result.map((item) => {
+    return roleAssignmentDeserializer(item);
+  });
+}
+
 /** Role definition. */
 export interface RoleDefinition {
   /** The role definition ID. */
@@ -328,9 +436,20 @@ export interface RoleDefinition {
   properties?: RoleDefinitionProperties;
 }
 
-/** Known values of {@link RoleDefinitionType} that the service accepts. */
+export function roleDefinitionDeserializer(item: any): RoleDefinition {
+  return {
+    id: item["id"],
+    name: item["name"],
+    type: item["type"],
+    properties: !item["properties"]
+      ? item["properties"]
+      : roleDefinitionPropertiesDeserializer(item["properties"]),
+  };
+}
+
+/** The role definition type. */
 export enum KnownRoleDefinitionType {
-  /** Microsoft.Authorization/roleDefinitions */
+  /** Microsoft-defined role definitions. */
   "Microsoft.Authorization/roleDefinitions" = "Microsoft.Authorization/roleDefinitions",
 }
 
@@ -339,7 +458,7 @@ export enum KnownRoleDefinitionType {
  * {@link KnownRoleDefinitionType} can be used interchangeably with RoleDefinitionType,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **Microsoft.Authorization\/roleDefinitions**
+ * **Microsoft.Authorization\/roleDefinitions**: Microsoft-defined role definitions.
  */
 export type RoleDefinitionType = string;
 
@@ -359,24 +478,45 @@ export interface RoleDefinitionProperties {
 
 export function roleDefinitionPropertiesSerializer(
   item: RoleDefinitionProperties,
-): Record<string, unknown> {
+): any {
   return {
     roleName: item["roleName"],
     description: item["description"],
     type: item["roleType"],
-    permissions:
-      item["permissions"] === undefined
-        ? item["permissions"]
-        : item["permissions"].map(permissionSerializer),
-    assignableScopes: item["assignableScopes"],
+    permissions: !item["permissions"]
+      ? item["permissions"]
+      : permissionArraySerializer(item["permissions"]),
+    assignableScopes: !item["assignableScopes"]
+      ? item["assignableScopes"]
+      : item["assignableScopes"].map((p: any) => {
+          return p;
+        }),
   };
 }
 
-/** Known values of {@link RoleType} that the service accepts. */
+export function roleDefinitionPropertiesDeserializer(
+  item: any,
+): RoleDefinitionProperties {
+  return {
+    roleName: item["roleName"],
+    description: item["description"],
+    roleType: item["type"],
+    permissions: !item["permissions"]
+      ? item["permissions"]
+      : permissionArrayDeserializer(item["permissions"]),
+    assignableScopes: !item["assignableScopes"]
+      ? item["assignableScopes"]
+      : item["assignableScopes"].map((p: any) => {
+          return p;
+        }),
+  };
+}
+
+/** The role type. */
 export enum KnownRoleType {
-  /** BuiltInRole */
+  /** Built in role. */
   BuiltInRole = "AKVBuiltInRole",
-  /** CustomRole */
+  /** Custom role. */
   CustomRole = "CustomRole",
 }
 
@@ -385,8 +525,8 @@ export enum KnownRoleType {
  * {@link KnownRoleType} can be used interchangeably with RoleType,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **AKVBuiltInRole** \
- * **CustomRole**
+ * **AKVBuiltInRole**: Built in role. \
+ * **CustomRole**: Custom role.
  */
 export type RoleType = string;
 
@@ -408,86 +548,125 @@ export interface Permission {
   notDataActions?: DataAction[];
 }
 
-export function permissionSerializer(
-  item: Permission,
-): Record<string, unknown> {
+export function permissionSerializer(item: Permission): any {
   return {
-    actions: item["actions"],
-    notActions: item["notActions"],
-    dataActions: item["dataActions"],
-    notDataActions: item["notDataActions"],
+    actions: !item["actions"]
+      ? item["actions"]
+      : item["actions"].map((p: any) => {
+          return p;
+        }),
+    notActions: !item["notActions"]
+      ? item["notActions"]
+      : item["notActions"].map((p: any) => {
+          return p;
+        }),
+    dataActions: !item["dataActions"]
+      ? item["dataActions"]
+      : item["dataActions"].map((p: any) => {
+          return p;
+        }),
+    notDataActions: !item["notDataActions"]
+      ? item["notDataActions"]
+      : item["notDataActions"].map((p: any) => {
+          return p;
+        }),
   };
 }
 
-/** Known values of {@link DataAction} that the service accepts. */
+export function permissionDeserializer(item: any): Permission {
+  return {
+    actions: !item["actions"]
+      ? item["actions"]
+      : item["actions"].map((p: any) => {
+          return p;
+        }),
+    notActions: !item["notActions"]
+      ? item["notActions"]
+      : item["notActions"].map((p: any) => {
+          return p;
+        }),
+    dataActions: !item["dataActions"]
+      ? item["dataActions"]
+      : item["dataActions"].map((p: any) => {
+          return p;
+        }),
+    notDataActions: !item["notDataActions"]
+      ? item["notDataActions"]
+      : item["notDataActions"].map((p: any) => {
+          return p;
+        }),
+  };
+}
+
+/** Supported permissions for data actions. */
 export enum KnownDataAction {
-  /** ReadHsmKey */
+  /** Read HSM key metadata. */
   ReadHsmKey = "Microsoft.KeyVault/managedHsm/keys/read/action",
-  /** WriteHsmKey */
+  /** Update an HSM key. */
   WriteHsmKey = "Microsoft.KeyVault/managedHsm/keys/write/action",
-  /** ReadDeletedHsmKey */
+  /** Read deleted HSM key. */
   ReadDeletedHsmKey = "Microsoft.KeyVault/managedHsm/keys/deletedKeys/read/action",
-  /** RecoverDeletedHsmKey */
+  /** Recover deleted HSM key. */
   RecoverDeletedHsmKey = "Microsoft.KeyVault/managedHsm/keys/deletedKeys/recover/action",
-  /** BackupHsmKeys */
+  /** Backup HSM keys. */
   BackupHsmKeys = "Microsoft.KeyVault/managedHsm/keys/backup/action",
-  /** RestoreHsmKeys */
+  /** Restore HSM keys. */
   RestoreHsmKeys = "Microsoft.KeyVault/managedHsm/keys/restore/action",
-  /** DeleteRoleAssignment */
+  /** Delete role assignment. */
   DeleteRoleAssignment = "Microsoft.KeyVault/managedHsm/roleAssignments/delete/action",
-  /** GetRoleAssignment */
+  /** Get role assignment. */
   GetRoleAssignment = "Microsoft.KeyVault/managedHsm/roleAssignments/read/action",
-  /** WriteRoleAssignment */
+  /** Create or update role assignment. */
   WriteRoleAssignment = "Microsoft.KeyVault/managedHsm/roleAssignments/write/action",
-  /** ReadRoleDefinition */
+  /** Get role definition. */
   ReadRoleDefinition = "Microsoft.KeyVault/managedHsm/roleDefinitions/read/action",
-  /** WriteRoleDefinition */
+  /** Create or update role definition. */
   WriteRoleDefinition = "Microsoft.KeyVault/managedHsm/roleDefinitions/write/action",
-  /** DeleteRoleDefinition */
+  /** Delete role definition. */
   DeleteRoleDefinition = "Microsoft.KeyVault/managedHsm/roleDefinitions/delete/action",
-  /** EncryptHsmKey */
+  /** Encrypt using an HSM key. */
   EncryptHsmKey = "Microsoft.KeyVault/managedHsm/keys/encrypt/action",
-  /** DecryptHsmKey */
+  /** Decrypt using an HSM key. */
   DecryptHsmKey = "Microsoft.KeyVault/managedHsm/keys/decrypt/action",
-  /** WrapHsmKey */
+  /** Wrap using an HSM key. */
   WrapHsmKey = "Microsoft.KeyVault/managedHsm/keys/wrap/action",
-  /** UnwrapHsmKey */
+  /** Unwrap using an HSM key. */
   UnwrapHsmKey = "Microsoft.KeyVault/managedHsm/keys/unwrap/action",
-  /** SignHsmKey */
+  /** Sign using an HSM key. */
   SignHsmKey = "Microsoft.KeyVault/managedHsm/keys/sign/action",
-  /** VerifyHsmKey */
+  /** Verify using an HSM key. */
   VerifyHsmKey = "Microsoft.KeyVault/managedHsm/keys/verify/action",
-  /** CreateHsmKey */
+  /** Create an HSM key. */
   CreateHsmKey = "Microsoft.KeyVault/managedHsm/keys/create",
-  /** DeleteHsmKey */
+  /** Delete an HSM key. */
   DeleteHsmKey = "Microsoft.KeyVault/managedHsm/keys/delete",
-  /** ExportHsmKey */
+  /** Export an HSM key. */
   ExportHsmKey = "Microsoft.KeyVault/managedHsm/keys/export/action",
-  /** ReleaseKey */
+  /** Release an HSM key using Secure Key Release. */
   ReleaseKey = "Microsoft.KeyVault/managedHsm/keys/release/action",
-  /** ImportHsmKey */
+  /** Import an HSM key. */
   ImportHsmKey = "Microsoft.KeyVault/managedHsm/keys/import/action",
-  /** PurgeDeletedHsmKey */
+  /** Purge a deleted HSM key. */
   PurgeDeletedHsmKey = "Microsoft.KeyVault/managedHsm/keys/deletedKeys/delete",
-  /** DownloadHsmSecurityDomain */
+  /** Download an HSM security domain. */
   DownloadHsmSecurityDomain = "Microsoft.KeyVault/managedHsm/securitydomain/download/action",
-  /** DownloadHsmSecurityDomainStatus */
+  /** Check status of HSM security domain download. */
   DownloadHsmSecurityDomainStatus = "Microsoft.KeyVault/managedHsm/securitydomain/download/read",
-  /** UploadHsmSecurityDomain */
+  /** Upload an HSM security domain. */
   UploadHsmSecurityDomain = "Microsoft.KeyVault/managedHsm/securitydomain/upload/action",
-  /** ReadHsmSecurityDomainStatus */
+  /** Check the status of the HSM security domain exchange file. */
   ReadHsmSecurityDomainStatus = "Microsoft.KeyVault/managedHsm/securitydomain/upload/read",
-  /** ReadHsmSecurityDomainTransferKey */
+  /** Download an HSM security domain transfer key. */
   ReadHsmSecurityDomainTransferKey = "Microsoft.KeyVault/managedHsm/securitydomain/transferkey/read",
-  /** StartHsmBackup */
+  /** Start an HSM backup. */
   StartHsmBackup = "Microsoft.KeyVault/managedHsm/backup/start/action",
-  /** StartHsmRestore */
+  /** Start an HSM restore. */
   StartHsmRestore = "Microsoft.KeyVault/managedHsm/restore/start/action",
-  /** ReadHsmBackupStatus */
+  /** Read an HSM backup status. */
   ReadHsmBackupStatus = "Microsoft.KeyVault/managedHsm/backup/status/action",
-  /** ReadHsmRestoreStatus */
+  /** Read an HSM restore status. */
   ReadHsmRestoreStatus = "Microsoft.KeyVault/managedHsm/restore/status/action",
-  /** RandomNumbersGenerate */
+  /** Generate random numbers. */
   RandomNumbersGenerate = "Microsoft.KeyVault/managedHsm/rng/action",
 }
 
@@ -496,42 +675,54 @@ export enum KnownDataAction {
  * {@link KnownDataAction} can be used interchangeably with DataAction,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **Microsoft.KeyVault\/managedHsm\/keys\/read\/action** \
- * **Microsoft.KeyVault\/managedHsm\/keys\/write\/action** \
- * **Microsoft.KeyVault\/managedHsm\/keys\/deletedKeys\/read\/action** \
- * **Microsoft.KeyVault\/managedHsm\/keys\/deletedKeys\/recover\/action** \
- * **Microsoft.KeyVault\/managedHsm\/keys\/backup\/action** \
- * **Microsoft.KeyVault\/managedHsm\/keys\/restore\/action** \
- * **Microsoft.KeyVault\/managedHsm\/roleAssignments\/delete\/action** \
- * **Microsoft.KeyVault\/managedHsm\/roleAssignments\/read\/action** \
- * **Microsoft.KeyVault\/managedHsm\/roleAssignments\/write\/action** \
- * **Microsoft.KeyVault\/managedHsm\/roleDefinitions\/read\/action** \
- * **Microsoft.KeyVault\/managedHsm\/roleDefinitions\/write\/action** \
- * **Microsoft.KeyVault\/managedHsm\/roleDefinitions\/delete\/action** \
- * **Microsoft.KeyVault\/managedHsm\/keys\/encrypt\/action** \
- * **Microsoft.KeyVault\/managedHsm\/keys\/decrypt\/action** \
- * **Microsoft.KeyVault\/managedHsm\/keys\/wrap\/action** \
- * **Microsoft.KeyVault\/managedHsm\/keys\/unwrap\/action** \
- * **Microsoft.KeyVault\/managedHsm\/keys\/sign\/action** \
- * **Microsoft.KeyVault\/managedHsm\/keys\/verify\/action** \
- * **Microsoft.KeyVault\/managedHsm\/keys\/create** \
- * **Microsoft.KeyVault\/managedHsm\/keys\/delete** \
- * **Microsoft.KeyVault\/managedHsm\/keys\/export\/action** \
- * **Microsoft.KeyVault\/managedHsm\/keys\/release\/action** \
- * **Microsoft.KeyVault\/managedHsm\/keys\/import\/action** \
- * **Microsoft.KeyVault\/managedHsm\/keys\/deletedKeys\/delete** \
- * **Microsoft.KeyVault\/managedHsm\/securitydomain\/download\/action** \
- * **Microsoft.KeyVault\/managedHsm\/securitydomain\/download\/read** \
- * **Microsoft.KeyVault\/managedHsm\/securitydomain\/upload\/action** \
- * **Microsoft.KeyVault\/managedHsm\/securitydomain\/upload\/read** \
- * **Microsoft.KeyVault\/managedHsm\/securitydomain\/transferkey\/read** \
- * **Microsoft.KeyVault\/managedHsm\/backup\/start\/action** \
- * **Microsoft.KeyVault\/managedHsm\/restore\/start\/action** \
- * **Microsoft.KeyVault\/managedHsm\/backup\/status\/action** \
- * **Microsoft.KeyVault\/managedHsm\/restore\/status\/action** \
- * **Microsoft.KeyVault\/managedHsm\/rng\/action**
+ * **Microsoft.KeyVault\/managedHsm\/keys\/read\/action**: Read HSM key metadata. \
+ * **Microsoft.KeyVault\/managedHsm\/keys\/write\/action**: Update an HSM key. \
+ * **Microsoft.KeyVault\/managedHsm\/keys\/deletedKeys\/read\/action**: Read deleted HSM key. \
+ * **Microsoft.KeyVault\/managedHsm\/keys\/deletedKeys\/recover\/action**: Recover deleted HSM key. \
+ * **Microsoft.KeyVault\/managedHsm\/keys\/backup\/action**: Backup HSM keys. \
+ * **Microsoft.KeyVault\/managedHsm\/keys\/restore\/action**: Restore HSM keys. \
+ * **Microsoft.KeyVault\/managedHsm\/roleAssignments\/delete\/action**: Delete role assignment. \
+ * **Microsoft.KeyVault\/managedHsm\/roleAssignments\/read\/action**: Get role assignment. \
+ * **Microsoft.KeyVault\/managedHsm\/roleAssignments\/write\/action**: Create or update role assignment. \
+ * **Microsoft.KeyVault\/managedHsm\/roleDefinitions\/read\/action**: Get role definition. \
+ * **Microsoft.KeyVault\/managedHsm\/roleDefinitions\/write\/action**: Create or update role definition. \
+ * **Microsoft.KeyVault\/managedHsm\/roleDefinitions\/delete\/action**: Delete role definition. \
+ * **Microsoft.KeyVault\/managedHsm\/keys\/encrypt\/action**: Encrypt using an HSM key. \
+ * **Microsoft.KeyVault\/managedHsm\/keys\/decrypt\/action**: Decrypt using an HSM key. \
+ * **Microsoft.KeyVault\/managedHsm\/keys\/wrap\/action**: Wrap using an HSM key. \
+ * **Microsoft.KeyVault\/managedHsm\/keys\/unwrap\/action**: Unwrap using an HSM key. \
+ * **Microsoft.KeyVault\/managedHsm\/keys\/sign\/action**: Sign using an HSM key. \
+ * **Microsoft.KeyVault\/managedHsm\/keys\/verify\/action**: Verify using an HSM key. \
+ * **Microsoft.KeyVault\/managedHsm\/keys\/create**: Create an HSM key. \
+ * **Microsoft.KeyVault\/managedHsm\/keys\/delete**: Delete an HSM key. \
+ * **Microsoft.KeyVault\/managedHsm\/keys\/export\/action**: Export an HSM key. \
+ * **Microsoft.KeyVault\/managedHsm\/keys\/release\/action**: Release an HSM key using Secure Key Release. \
+ * **Microsoft.KeyVault\/managedHsm\/keys\/import\/action**: Import an HSM key. \
+ * **Microsoft.KeyVault\/managedHsm\/keys\/deletedKeys\/delete**: Purge a deleted HSM key. \
+ * **Microsoft.KeyVault\/managedHsm\/securitydomain\/download\/action**: Download an HSM security domain. \
+ * **Microsoft.KeyVault\/managedHsm\/securitydomain\/download\/read**: Check status of HSM security domain download. \
+ * **Microsoft.KeyVault\/managedHsm\/securitydomain\/upload\/action**: Upload an HSM security domain. \
+ * **Microsoft.KeyVault\/managedHsm\/securitydomain\/upload\/read**: Check the status of the HSM security domain exchange file. \
+ * **Microsoft.KeyVault\/managedHsm\/securitydomain\/transferkey\/read**: Download an HSM security domain transfer key. \
+ * **Microsoft.KeyVault\/managedHsm\/backup\/start\/action**: Start an HSM backup. \
+ * **Microsoft.KeyVault\/managedHsm\/restore\/start\/action**: Start an HSM restore. \
+ * **Microsoft.KeyVault\/managedHsm\/backup\/status\/action**: Read an HSM backup status. \
+ * **Microsoft.KeyVault\/managedHsm\/restore\/status\/action**: Read an HSM restore status. \
+ * **Microsoft.KeyVault\/managedHsm\/rng\/action**: Generate random numbers.
  */
 export type DataAction = string;
+
+export function permissionArraySerializer(result: Array<Permission>): any[] {
+  return result.map((item) => {
+    return permissionSerializer(item);
+  });
+}
+
+export function permissionArrayDeserializer(result: Array<Permission>): any[] {
+  return result.map((item) => {
+    return permissionDeserializer(item);
+  });
+}
 
 /** Role definition create parameters. */
 export interface RoleDefinitionCreateParameters {
@@ -541,10 +732,8 @@ export interface RoleDefinitionCreateParameters {
 
 export function roleDefinitionCreateParametersSerializer(
   item: RoleDefinitionCreateParameters,
-): Record<string, unknown> {
-  return {
-    properties: roleDefinitionPropertiesSerializer(item.properties),
-  };
+): any {
+  return { properties: roleDefinitionPropertiesSerializer(item["properties"]) };
 }
 
 /** Role definition list operation result. */
@@ -555,11 +744,19 @@ export interface _RoleDefinitionListResult {
   nextLink?: string;
 }
 
-/** The available API versions. */
-export type Versions = "7.5" | "7.6-preview.1";
+export function _roleDefinitionListResultDeserializer(
+  item: any,
+): _RoleDefinitionListResult {
+  return {
+    value: roleDefinitionArrayDeserializer(item["value"]),
+    nextLink: item["nextLink"],
+  };
+}
 
-/** The key vault error exception. */
-export interface KeyVaultError {
-  /** The key vault server error. */
-  readonly error?: ErrorModel;
+export function roleDefinitionArrayDeserializer(
+  result: Array<RoleDefinition>,
+): any[] {
+  return result.map((item) => {
+    return roleDefinitionDeserializer(item);
+  });
 }

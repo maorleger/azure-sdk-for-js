@@ -1,10 +1,14 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { TokenCredential } from "@azure/core-auth";
-import { ClientOptions, Client, getClient } from "@azure-rest/core-client";
 import { logger } from "../logger.js";
+import { Client, ClientOptions, getClient } from "@azure-rest/core-client";
+import { TokenCredential } from "@azure/core-auth";
 
+/**
+ * The key vault client performs cryptographic key operations and vault operations
+ * against the Key Vault service.
+ */
 export interface KeyVaultContext extends Client {}
 
 /** Optional parameters for the client. */
@@ -23,11 +27,11 @@ export function createKeyVault(
   options: KeyVaultClientOptionalParams = {},
 ): KeyVaultContext {
   const endpointUrl = options.endpoint ?? options.baseUrl ?? `${vaultBaseUrl}`;
-
   const prefixFromOptions = options?.userAgentOptions?.userAgentPrefix;
+  const userAgentInfo = `azsdk-js-security-keyvault-administration/1.0.0-beta.1`;
   const userAgentPrefix = prefixFromOptions
-    ? `${prefixFromOptions} azsdk-js-api`
-    : "azsdk-js-api";
+    ? `${prefixFromOptions} azsdk-js-api ${userAgentInfo}`
+    : `azsdk-js-api ${userAgentInfo}`;
   const { apiVersion: _, ...updatedOptions } = {
     ...options,
     userAgentOptions: { userAgentPrefix },
