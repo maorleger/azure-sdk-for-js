@@ -387,7 +387,7 @@ export class KeyVaultBackupClient {
     const options =
       typeof sasTokenOrOptions === "string" ? optionsWhenSasTokenSpecified : sasTokenOrOptions;
     const folderUriParts = mappings.folderUriParts(folderUri);
-    const poller = wrapPoller(
+    const poller = await wrapPoller(
       selectiveKeyRestoreOperation(this.client["_client"], keyName, {
         ...options,
         restoreBlobDetails: {
@@ -401,7 +401,7 @@ export class KeyVaultBackupClient {
       },
       ),
     );
-    (await poller).poll();
+    await poller.poll();
     return poller;
   }
 }
