@@ -8,7 +8,7 @@ import { OperationResponse, OperationState, PollerLike } from "@azure/core-lro";
 import { getLongRunningPoller } from "../../generated/static-helpers/pollingHelpers.js";
 import { _selectiveKeyRestoreOperationSend } from "../../generated/api/operations.js";
 
-export interface KeyVaultSelectiveKeyRestoreOperationState
+export interface KeyVaultSelectiveKeyRestoreOperationState<KeyVaultSelectiveKeyRestoreResult>
   extends OperationState<KeyVaultSelectiveKeyRestoreResult> {
   /**
 * Identifier for the full restore operation.
@@ -30,25 +30,6 @@ export interface KeyVaultSelectiveKeyRestoreOperationState
   isCompleted?: boolean;
 }
 
-export function selectiveKeyRestoreOperation(
-  context: Client,
-  keyName: string,
-  options: SelectiveKeyRestoreOperationOptionalParams = { requestOptions: {} },
-): PollerLike<KeyVaultSelectiveKeyRestoreOperationState, KeyVaultSelectiveKeyRestoreResult> {
-  return getLongRunningPoller(
-    context,
-    processFinalResult, // TODO: this function to update result
-    ["202", "200"],
-    {
-      updateIntervalInMs: options?.updateIntervalInMs,
-      abortSignal: options?.abortSignal,
-      getInitialResponse: () =>
-        _selectiveKeyRestoreOperationSend(context, keyName, options),
-      resourceLocationConfig: "azure-async-operation",
-      updateState: updateRestoreState // TODO: this function to update state
-    },
-  );
-}
 
 function processFinalResult(result: PathUncheckedResponse): Promise<KeyVaultSelectiveKeyRestoreResult> {
   // please note this raw body would be one on the wire
@@ -63,7 +44,7 @@ function processFinalResult(result: PathUncheckedResponse): Promise<KeyVaultSele
   });
 }
 
-function updateRestoreState(state: KeyVaultSelectiveKeyRestoreOperationState, response: OperationResponse<unknown>) {
+function updateRestoreState(state: KeyVaultSelectiveKeyRestoreOperationState<KeyVaultSelectiveKeyRestoreResult>, response: OperationResponse<unknown>): void {
   // please note this raw body would be one on the wire
   const serviceOperation = (response as OperationResponse<PathUncheckedResponse>).flatResponse.body as any;
   const { startTime, jobId, endTime, error, statusDetails } = serviceOperation;
@@ -84,4 +65,25 @@ function updateRestoreState(state: KeyVaultSelectiveKeyRestoreOperationState, re
     state.status = "failed";
     throw new Error(error?.message || statusDetails);
   }
+}
+
+
+export function selectiveKeyRestoreOperation(
+  context: Client,
+  keyName: string,
+  options: SelectiveKeyRestoreOperationOptionalParams = { requestOptions: {} },
+): PollerLike<KeyVaultSelectiveKeyRestoreOperationState<KeyVaultSelectiveKeyRestoreResult>, KeyVaultSelectiveKeyRestoreResult> {
+  return getLongRunningPoller(
+    context,
+    processFinalResult, // TODO: this function to update result
+    ["202", "200"],
+    {
+      updateIntervalInMs: options?.updateIntervalInMs,
+      abortSignal: options?.abortSignal,
+      getInitialResponse: () =>
+        _selectiveKeyRestoreOperationSend(context, keyName, options),
+      resourceLocationConfig: "azure-async-operation",
+      updateState: updateRestoreState // TODO: this function to update state
+    },
+  );
 }

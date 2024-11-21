@@ -24,10 +24,8 @@ import { bearerTokenAuthenticationPolicyName } from "@azure/core-rest-pipeline";
 import { mappings } from "./mappings.js";
 import { PollerLike } from "./lro/keyVaultAdminPoller.js";
 import { KeyVaultRestoreOperationState, KeyVaultRestorePoller } from "./lro/restore/poller.js";
-import { KeyVaultSelectiveKeyRestoreOperationState, SimplePollerLike, wrapPoller } from "./lro/shim.js";
-import { OperationState } from "@azure/core-lro";
-import { RestoreOperation } from "./generated/index.js";
-import { selectiveKeyRestoreOperation } from "./lro/selectiveKeyRestore/operation.js";
+import { SimplePollerLike, wrapPoller } from "./lro/shim.js";
+import { KeyVaultSelectiveKeyRestoreOperationState, selectiveKeyRestoreOperation } from "./lro/selectiveKeyRestore/operation.js";
 
 // TODO: discuss no longer exporting the state at the top level as a bugfix
 // export {
@@ -389,7 +387,7 @@ export class KeyVaultBackupClient {
     const options =
       typeof sasTokenOrOptions === "string" ? optionsWhenSasTokenSpecified : sasTokenOrOptions;
     const folderUriParts = mappings.folderUriParts(folderUri);
-    return wrapPoller(
+    const poller = wrapPoller(
       selectiveKeyRestoreOperation(this.client["_client"], keyName, {
         ...options,
         restoreBlobDetails: {
@@ -403,5 +401,7 @@ export class KeyVaultBackupClient {
       },
       ),
     );
+    (await poller).poll();
+    return poller;
   }
 }

@@ -128,22 +128,3 @@ export async function wrapPoller<TState extends OperationState<TResult>, TResult
   await httpPoller.submitted();
   return simplePoller;
 }
-
-export interface KeyVaultSelectiveKeyRestoreOperationState<TResult> extends OperationState<TResult> {
-  /**
-   * Identifier for the full restore operation.
-   */
-  jobId?: string;
-  /**
-   * The status details of restore operation.
-   */
-  statusDetails?: string;
-  /**
-   * The start time of the restore operation in UTC
-   */
-  startTime?: Date;
-  /**
-   * The end time of the restore operation in UTC
-   */
-  endTime?: Date;
-}
