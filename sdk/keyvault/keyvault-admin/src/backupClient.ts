@@ -25,6 +25,7 @@ import { KeyVaultAdminPollOperationState } from "./lro/keyVaultAdminPoller.js";
 import { mappings } from "./mappings.js";
 import { KeyVaultRestoreOperationState } from "./lro/restore/operation.js";
 import { KeyVaultSelectiveKeyRestoreOperationState } from "./lro/selectiveKeyRestore/poller.js";
+import { KeyVaultBackupPoller } from "./lro/backup/poller.js";
 
 export {
   KeyVaultBackupOperationState,
@@ -177,17 +178,16 @@ export class KeyVaultBackupClient {
     const sasToken = typeof sasTokenOrOptions === "string" ? sasTokenOrOptions : undefined;
     const options =
       typeof sasTokenOrOptions === "string" ? optionsWhenSasTokenSpecified : sasTokenOrOptions;
-
-    return wrapPoller(
-      this.client.fullBackup({
-        ...options,
-        azureStorageBlobContainerUri: {
-          storageResourceUri: blobStorageUri,
-          token: sasToken,
-          useManagedIdentity: !sasToken,
-        },
-      }),
-    );
+    const poller = new KeyVaultBackupPoller({
+      blobStorageUri,
+      sasToken,
+      client: this.client,
+      operationOptions: options,
+      resumeFrom: options.resumeFrom,
+      intervalInMs: options.intervalInMs,
+    });
+    await poller.poll();
+    return poller;
   }
 
   /**

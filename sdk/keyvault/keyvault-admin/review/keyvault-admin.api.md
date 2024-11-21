@@ -9,7 +9,6 @@ import { CancelOnProgress } from '@azure/core-lro';
 import type { ClientOptions } from '@azure-rest/core-client';
 import type { OperationOptions } from '@azure-rest/core-client';
 import { OperationState } from '@azure/core-lro';
-import { OperationStatus } from '@azure/core-lro';
 import type { PagedAsyncIterableIterator } from '@azure/core-paging';
 import type { TokenCredential } from '@azure/core-auth';
 
@@ -73,7 +72,6 @@ export interface KeyVaultAdminPollOperationState<TResult> extends PollOperationS
     endTime?: Date;
     jobId?: string;
     startTime?: Date;
-    status: OperationStatus;
     statusDetails?: string;
 }
 

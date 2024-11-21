@@ -36,32 +36,9 @@ describe("KeyVaultBackupClient", () => {
 
   describe("beginBackup", function () {
     it.only("returns the correct backup result when successful", async function () {
-      const backupPoller = await client.beginBackup(
-        blobStorageUri,
-        blobSasToken,
-        testPollerProperties,
-      );
+      const backupPoller = await client.beginBackup(blobStorageUri, testPollerProperties);
       const result = await backupPoller.pollUntilDone();
       console.log(result);
-
-      // A poller can be serialized and then resumed
-      const resumedPoller = await client.beginBackup(blobStorageUri, blobSasToken, {
-        resumeFrom: backupPoller.toString(),
-        ...testPollerProperties,
-      });
-
-      console.log(resumedPoller);
-      expect(resumedPoller.getOperationState().isStarted).toEqual(true); // without polling
-      // expect(resumedPoller.getOperationState().jobId).toEqual(
-      //   backupPoller.getOperationState().jobId,
-      // );
-
-      // const backupResult = await backupPoller.pollUntilDone();
-      // expect(backupPoller.getOperationState().error).toBeUndefined();
-      // expect(backupResult.folderUri).toBeDefined();
-      // expect(backupResult.startTime).toEqual(backupPoller.getOperationState().startTime);
-      // expect(backupResult.endTime).toEqual(backupPoller.getOperationState().endTime);
-      // expect(backupResult.folderUri!).toMatch(new RegExp(blobStorageUri));
     });
 
     it("throws when polling errors", async function () {

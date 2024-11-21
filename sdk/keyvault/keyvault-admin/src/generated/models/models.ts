@@ -22,7 +22,6 @@ export interface FullBackupOperation {
 export function fullBackupOperationDeserializer(
   item: any,
 ): FullBackupOperation {
-  console.log({item})
   return {
     status: item["status"],
     statusDetails: item["statusDetails"],

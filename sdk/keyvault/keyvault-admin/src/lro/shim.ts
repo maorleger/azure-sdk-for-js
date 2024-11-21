@@ -2,14 +2,7 @@
 // Licensed under the MIT License.
 
 import { AbortSignalLike } from "@azure/abort-controller";
-import {
-  CancelOnProgress,
-  CreateHttpPollerOptions,
-  OperationState,
-  PollerLike,
-  RunningOperation,
-  createHttpPoller as createInternalHttpPoller,
-} from "@azure/core-lro";
+import { CancelOnProgress, OperationState, PollerLike } from "@azure/core-lro";
 
 /**
  * A simple poller that can be used to poll a long running operation.
@@ -38,7 +31,7 @@ export interface SimplePollerLike<TState extends OperationState<TResult>, TResul
    * Returns a promise that will resolve once a single polling request finishes.
    * It does this by calling the update method of the Poller's operation.
    */
-  poll(options?: { abortSignal?: AbortSignalLike }): Promise<TState>;
+  poll(options?: { abortSignal?: AbortSignalLike }): Promise<void>;
   /**
    * Returns a promise that will resolve once the underlying operation is completed.
    */
@@ -67,66 +60,6 @@ export interface SimplePollerLike<TState extends OperationState<TResult>, TResul
   stopPolling(): void;
 }
 
-export async function createHttpPoller<TResult, TState extends OperationState<TResult>>(
-  lro: RunningOperation,
-  options?: CreateHttpPollerOptions<TResult, TState>,
-): Promise<SimplePollerLike<TState, TResult>> {
-  const httpPoller = createInternalHttpPoller(lro, options);
-  const abortController = new AbortController();
-  const simplePoller: SimplePollerLike<TState, TResult> = {
-    isDone() {
-      return httpPoller.isDone;
-    },
-    isStopped() {
-      return abortController.signal.aborted;
-    },
-    getOperationState() {
-      if (!httpPoller.operationState) {
-        throw new Error(
-          "Operation state is not available. The poller may not have been started and you could await submitted() before calling getOperationState().",
-        );
-      }
-      return httpPoller.operationState;
-    },
-    getResult() {
-      return httpPoller.result;
-    },
-    toString() {
-      if (!httpPoller.operationState) {
-        throw new Error(
-          "Operation state is not available. The poller may not have been started and you could await submitted() before calling getOperationState().",
-        );
-      }
-      return JSON.stringify({
-        state: httpPoller.operationState,
-      });
-    },
-    stopPolling() {
-      abortController.abort();
-    },
-    onProgress: httpPoller.onProgress,
-    poll: httpPoller.poll,
-    pollUntilDone(pollOptions?: { abortSignal?: AbortSignalLike }) {
-      function abortListener(): void {
-        abortController.abort();
-      }
-      const inputAbortSignal = pollOptions?.abortSignal;
-      const abortSignal = abortController.signal;
-      if (inputAbortSignal?.aborted) {
-        abortController.abort();
-      } else if (!abortSignal.aborted) {
-        inputAbortSignal?.addEventListener("abort", abortListener, {
-          once: true,
-        });
-      }
-      return httpPoller.pollUntilDone({ abortSignal: abortController.signal });
-    },
-    submitted: httpPoller.submitted,
-  };
-  await httpPoller.submitted();
-  return simplePoller;
-}
-
 export async function wrapPoller<TState extends OperationState<TResult>, TResult>(
   httpPoller: PollerLike<TState, TResult>,
 ): Promise<SimplePollerLike<TState, TResult>> {
@@ -147,7 +80,7 @@ export async function wrapPoller<TState extends OperationState<TResult>, TResult
       return httpPoller.operationState;
     },
     getResult() {
-      return httpPoller.result;
+      return this.getOperationState().result;
     },
     toString() {
       if (!httpPoller.operationState) {
@@ -162,9 +95,15 @@ export async function wrapPoller<TState extends OperationState<TResult>, TResult
     stopPolling() {
       abortController.abort();
     },
-    onProgress: httpPoller.onProgress,
-    poll: httpPoller.poll,
-    pollUntilDone(pollOptions?: { abortSignal?: AbortSignalLike }) {
+    onProgress(cb): CancelOnProgress {
+      // throw new Error("not implemented");
+      // // we could simple castcade here if they are both OperationState
+      return httpPoller.onProgress(cb);
+    },
+    async poll() {
+      await httpPoller.poll();
+    },
+    async pollUntilDone(pollOptions?: { abortSignal?: AbortSignalLike }) {
       function abortListener(): void {
         abortController.abort();
       }
@@ -177,7 +116,8 @@ export async function wrapPoller<TState extends OperationState<TResult>, TResult
           once: true,
         });
       }
-      return httpPoller.pollUntilDone({ abortSignal: abortController.signal });
+      await httpPoller.pollUntilDone({ abortSignal: abortController.signal });
+      return this.getOperationState().result!;
     },
     submitted: httpPoller.submitted,
   };
