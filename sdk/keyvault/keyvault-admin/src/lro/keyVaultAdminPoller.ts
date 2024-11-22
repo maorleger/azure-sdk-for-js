@@ -102,6 +102,8 @@ export class KeyVaultAdminPoller<TState extends KeyVaultAdminPollOperationState<
         restoreFrom: options.resumeFrom,
       },
     );
+    // we need to bind the poll function to the current instance so we could override any polling behavior
+    this.httpPoller.poll = this.poll.bind(this);
   }
   getOperationState(): TState {
     if (!this.httpPoller.operationState) {

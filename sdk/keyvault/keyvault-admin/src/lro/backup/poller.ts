@@ -3,17 +3,12 @@
 
 import type { OperationResponse } from "@azure/core-lro";
 import type { KeyVaultBackupResult } from "../../backupClientModels.js";
-import type {
-  FullBackupOperation,
-  FullBackupOptionalParams,
-  FullBackupStatusOptionalParams,
-} from "../../generated/index.js";
+import type { FullBackupOperation, FullBackupStatusOptionalParams } from "../../generated/index.js";
 import type {
   KeyVaultAdminPollerOptions,
   KeyVaultAdminPollOperationState,
 } from "../keyVaultAdminPoller.js";
 import { KeyVaultAdminPoller } from "../keyVaultAdminPoller.js";
-import type { FullOperationResponse } from "@azure-rest/core-client";
 import { _fullBackupDeserialize, _fullBackupSend } from "../../generated/api/operations.js";
 
 /**
@@ -43,19 +38,6 @@ export class KeyVaultBackupPoller extends KeyVaultAdminPoller<
     this.options = options;
   }
 
-  // Need to re-write the fullBackup because we want to override the default LRO behavior
-  private async fullBackup(option?: FullBackupOptionalParams): Promise<FullBackupOperation> {
-    const res = await _fullBackupSend(this.options.client["_client"], {
-      ...option,
-      azureStorageBlobContainerUri: {
-        storageResourceUri: this.options.blobStorageUri!,
-        token: this.options.sasToken,
-        useManagedIdentity: this.options.sasToken === undefined,
-      },
-    });
-    return _fullBackupDeserialize(res);
-  }
-
   /**
    * Tracing the fullBackupStatus operation
    */
@@ -67,18 +49,24 @@ export class KeyVaultBackupPoller extends KeyVaultAdminPoller<
   }
 
   async sendInitialRequest(): Promise<OperationResponse<unknown>> {
-    let response: FullOperationResponse;
-    this.initialResponseBody = await this.fullBackup({
+    const response = await _fullBackupSend(this.options.client["_client"], {
       ...this.options.operationOptions,
-      onResponse: (rawResponse) => {
-        response = rawResponse;
+      azureStorageBlobContainerUri: {
+        storageResourceUri: this.options.blobStorageUri!,
+        token: this.options.sasToken,
+        useManagedIdentity: this.options.sasToken === undefined,
       },
     });
-    return this.getLroResponse(response! as any);
+    this.initialResponseBody = await _fullBackupDeserialize(response);
+    return this.getLroResponse(response as any);
   }
 
   async poll(_options?: {}): Promise<void> {
     await this.httpPoller.submitted();
+    // reset the resource location to skip final GET
+    // if ((this.httpPoller.operationState as any)?.config) {
+    //   (this.httpPoller.operationState as any).config.resourceLocation = undefined;
+    // }
     if (!this.httpPoller.operationState?.isStarted && this.initialResponseBody) {
       this.mapState(this.initialResponseBody);
     }
