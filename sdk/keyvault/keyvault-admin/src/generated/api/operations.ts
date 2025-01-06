@@ -106,6 +106,7 @@ export function fullBackup(
     abortSignal: options?.abortSignal,
     getInitialResponse: () => _fullBackupSend(context, options),
     resourceLocationConfig: "azure-async-operation",
+    skipFinalGet: options?.skipFinalGet,
   }) as PollerLike<OperationState<FullBackupOperation>, FullBackupOperation>;
 }
 
@@ -269,6 +270,7 @@ export function fullRestoreOperation(
       abortSignal: options?.abortSignal,
       getInitialResponse: () => _fullRestoreOperationSend(context, options),
       resourceLocationConfig: "azure-async-operation",
+      skipFinalGet: options?.skipFinalGet,
     },
   ) as PollerLike<OperationState<RestoreOperation>, RestoreOperation>;
 }
@@ -317,6 +319,7 @@ export function selectiveKeyRestoreOperation(
       getInitialResponse: () =>
         _selectiveKeyRestoreOperationSend(context, keyName, options),
       resourceLocationConfig: "azure-async-operation",
+      skipFinalGet: options?.skipFinalGet,
     },
   ) as PollerLike<OperationState<RestoreOperation>, RestoreOperation>;
 }

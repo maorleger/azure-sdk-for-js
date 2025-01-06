@@ -41,6 +41,10 @@ export interface GetLongRunningPollerOptions<TResponse> {
    * The function to get the initial response
    */
   getInitialResponse?: () => PromiseLike<TResponse>;
+  /**
+   * Skip final GET request to get the final result
+   */
+  skipFinalGet?: boolean;
 }
 export function getLongRunningPoller<
   TResponse extends PathUncheckedResponse,
@@ -110,6 +114,7 @@ export function getLongRunningPoller<
     processResult: (result: unknown) => {
       return processResponseBody(result as TResponse);
     },
+    skipFinalGet: options?.skipFinalGet
   });
 }
 /**
