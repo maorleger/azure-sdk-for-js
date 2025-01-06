@@ -120,4 +120,8 @@ export interface CreateHttpPollerOptions<TResult, TState> {
    * Control whether to throw an exception if the operation failed or was canceled.
    */
   resolveOnUnsuccessful?: boolean;
+  /**
+   * Skip final get request.
+   */
+  skipFinalGet?: boolean;
 }

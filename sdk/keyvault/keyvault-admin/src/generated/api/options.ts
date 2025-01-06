@@ -19,6 +19,8 @@ export interface FullBackupOptionalParams extends OperationOptions {
   updateIntervalInMs?: number;
   /** Azure blob shared access signature token pointing to a valid Azure blob container where full backup needs to be stored. This token needs to be valid for at least next 24 hours from the time of making this call. */
   azureStorageBlobContainerUri?: SASTokenParameter;
+  /** Skip final GET request */
+  skipFinalGet?: boolean;
 }
 
 /** Optional parameters. */
@@ -47,6 +49,8 @@ export interface FullRestoreOperationOptionalParams extends OperationOptions {
   updateIntervalInMs?: number;
   /** The Azure blob SAS token pointing to a folder where the previous successful full backup was stored. */
   restoreBlobDetails?: RestoreOperationParameters;
+  /** * Skip final GET request */
+  skipFinalGet?: boolean;
 }
 
 /** Optional parameters. */
@@ -54,6 +58,8 @@ export interface SelectiveKeyRestoreOperationOptionalParams
   extends OperationOptions {
   /** Delay to wait until next poll, in milliseconds. */
   updateIntervalInMs?: number;
+  /** * Skip final GET request */
+  skipFinalGet?: boolean;
   /** The Azure blob SAS token pointing to a folder where the previous successful full backup was stored */
   restoreBlobDetails?: SelectiveKeyRestoreOperationParameters;
 }

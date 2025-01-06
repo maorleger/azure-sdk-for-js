@@ -15,6 +15,7 @@ import {
 } from "./operation.js";
 import type { CreateHttpPollerOptions } from "./models.js";
 import { buildCreatePoller } from "../poller/poller.js";
+import { logger } from "../logger.js";
 
 /**
  * Creates a poller that can be used to poll a long-running operation.
@@ -34,6 +35,7 @@ export function createHttpPoller<TResult, TState extends OperationState<TResult>
     updateState,
     withOperationLocation,
     resolveOnUnsuccessful = false,
+    skipFinalGet = false,
   } = options || {};
   return buildCreatePoller<OperationResponse, TResult, TState>({
     getStatusFromInitialResponse,
@@ -49,6 +51,10 @@ export function createHttpPoller<TResult, TState extends OperationState<TResult>
       init: async () => {
         const response = await lro.sendInitialRequest();
         const config = inferLroMode(response.rawResponse, resourceLocationConfig);
+        if (skipFinalGet && config?.resourceLocation) {
+          logger.info("skipFinalGet is enabled, skipping final GET operation of LRO");
+          config.resourceLocation = undefined;
+        }
         return {
           response,
           operationLocation: config?.operationLocation,

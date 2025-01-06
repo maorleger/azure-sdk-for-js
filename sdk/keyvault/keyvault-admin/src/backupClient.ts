@@ -175,6 +175,7 @@ export class KeyVaultBackupClient {
         onResponse: options.onResponse,
         tracingOptions: options.tracingOptions,
         updateIntervalInMs: options.intervalInMs,
+        skipFinalGet: true,
       }),
     );
   }
@@ -286,6 +287,7 @@ export class KeyVaultBackupClient {
         onResponse: options.onResponse,
         tracingOptions: options.tracingOptions,
         updateIntervalInMs: options.intervalInMs,
+        skipFinalGet: true,
       }),
     );
   }
@@ -413,6 +415,7 @@ export class KeyVaultBackupClient {
         },
         tracingOptions: options.tracingOptions,
         updateIntervalInMs: options.intervalInMs,
+        skipFinalGet: true,
       }),
     );
   }
