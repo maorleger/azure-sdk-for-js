@@ -123,13 +123,9 @@
       ".": "./src/index.ts"
     },
     "dialects": [
-      "esm",
       "commonjs"
     ],
-    "esmDialects": [
-      "browser",
-      "react-native"
-    ],
+    "esmDialects": [],
     "selfLink": false
   },
   "browser": "./dist/browser/index.js",
