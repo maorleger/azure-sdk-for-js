@@ -12,6 +12,7 @@ import type {
 } from "../types.js";
 import type { AzureMonitorExporterOptions } from "@azure/monitor-opentelemetry-exporter";
 import { Logger } from "./logging/index.js";
+import { dirname } from "../utils/dirname.js";
 
 const ENV_CONFIGURATION_FILE = "APPLICATIONINSIGHTS_CONFIGURATION_FILE";
 const ENV_CONTENT = "APPLICATIONINSIGHTS_CONFIGURATION_CONTENT";
@@ -64,7 +65,7 @@ export class JsonConfig implements AzureMonitorOpenTelemetryOptions {
     // JSON file
     else {
       const configFileName = "applicationinsights.json";
-      const rootPath = path.join(__dirname, "../../../"); // Root of folder (__dirname = ../dist-esm/src)
+      const rootPath = path.join(dirname, "../../../"); // Root of folder (__dirname = ../dist-esm/src)
       this._tempDir = path.join(rootPath, configFileName); // default
       const configFile = process.env[ENV_CONFIGURATION_FILE];
       if (configFile) {
