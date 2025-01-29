@@ -6,13 +6,14 @@ import { TraceBasicScenario } from "../../utils/basic.js";
 import nock from "nock";
 import { successfulBreezeResponse } from "../../utils/breezeTestUtils.js";
 import type { TelemetryItem as Envelope } from "../../utils/models/index.js";
+import { afterAll, beforeAll, describe, it } from "vitest";
 
 describe("Trace Exporter Scenarios", () => {
   describe(TraceBasicScenario.prototype.constructor.name, () => {
     const scenario = new TraceBasicScenario();
     let ingest: Envelope[] = [];
 
-    before(() => {
+    beforeAll(() => {
       nock("https://dc.services.visualstudio.com")
         .post("/v2.1/track", (body: Envelope[]) => {
           ingest.push(...body);
@@ -23,27 +24,18 @@ describe("Trace Exporter Scenarios", () => {
       scenario.prepare();
     });
 
-    after(() => {
+    afterAll(() => {
       scenario.cleanup();
       nock.cleanAll();
       ingest = [];
     });
 
-    it("should work", (done) => {
-      scenario
-        .run()
-        .then(() => {
-          // promisify doesn't work on this, so use callbacks/done for now
-          return scenario.flush().then(() => {
-            assertTraceExpectation(ingest, scenario.expectation);
-            assertCount(ingest, scenario.expectation);
-            done();
-            return;
-          });
-        })
-        .catch((e) => {
-          done(e);
-        });
+    it("should work", async () => {
+      await scenario.run();
+      // promisify doesn't work on this, so use callbacks/done for now
+      await scenario.flush();
+      assertTraceExpectation(ingest, scenario.expectation);
+      assertCount(ingest, scenario.expectation);
     });
   });
 });

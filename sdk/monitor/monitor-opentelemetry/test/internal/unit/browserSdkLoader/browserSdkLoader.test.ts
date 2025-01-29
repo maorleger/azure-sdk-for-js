@@ -12,10 +12,9 @@ import { shutdownAzureMonitor, useAzureMonitor } from "../../../../src/index.js"
 import { getOsPrefix } from "../../../../src/utils/common.js";
 import { metrics, trace } from "@opentelemetry/api";
 import { logs } from "@opentelemetry/api-logs";
-import { vi } from "vitest";
+import { vi, describe, afterEach, beforeEach, it, afterAll, expect } from "vitest";
 
 describe("#BrowserSdkLoader", () => {
-  let sandbox: sinon.SinonSandbox;
   let originalEnv: NodeJS.ProcessEnv;
 
   afterEach(async () => {
@@ -26,10 +25,9 @@ describe("#BrowserSdkLoader", () => {
 
   beforeEach(() => {
     originalEnv = process.env;
-    sandbox = sinon.createSandbox();
   });
 
-  after(() => {
+  afterAll(() => {
     metrics.disable();
     trace.disable();
     logs.disable();
@@ -359,6 +357,6 @@ describe("#BrowserSdkLoader", () => {
     const browserSdkLoader = BrowserSdkLoader.getInstance();
 
     assert.equal(browserSdkLoader["_isIkeyValid"], false, "ikey should be set to invalid");
-    assert.ok(infoStub.calledOn, "invalid key warning was raised");
+    expect(infoStub).toHaveBeenCalled();
   });
 });
