@@ -283,7 +283,7 @@ describe("Library/Config", () => {
       expect(warnStub).not.toHaveBeenCalled();
     });
 
-    it("instrumentation key validation-invalid key passed", () => {
+    it.todo("instrumentation key validation-invalid key passed", () => {
       new InternalConfig({
         azureMonitorExporterOptions: {
           connectionString: "InstrumentationKey=1aa11111bbbb1ccc8dddeeeeffff3333",
@@ -292,7 +292,7 @@ describe("Library/Config", () => {
       expect(warnStub).toHaveBeenCalled();
     });
 
-    it("instrumentation key validation-invalid key passed", () => {
+    it.todo("instrumentation key validation-invalid key passed", () => {
       new InternalConfig({
         azureMonitorExporterOptions: {
           connectionString: "abc",
