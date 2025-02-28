@@ -6,7 +6,6 @@ import type { InvocationContext as AzureFnV4Context } from "@azure/functions";
 import type { Context as OpenTelemetryContext } from "@opentelemetry/api";
 import { context, propagation } from "@opentelemetry/api";
 import { Logger } from "../shared/logging/index.js";
-import Module, { LoadHook, register } from "node:module";
 
 type AzureFnContext = AzureFnV3Context & AzureFnV4Context;
 
@@ -39,28 +38,15 @@ export class AzureFunctionsHook {
   private _preInvocationHook: any;
 
   constructor() {
-    const loader: LoadHook = async (url, ctx, nextLoad) => {
-      console.log("in loader hook");
-      const result = await nextLoad(url);
-      this._functionsCoreModule = await import(url);
-      console.log({ functionsCoreModule: this._functionsCoreModule });
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      this._functionsCoreModule = require("@azure/functions-core");
       this._addPreInvocationHook();
-      return result;
-    };
-
-    // Register the loader
-    register("@azure/functions-core", {
-      data: loader,
-      transferList: [],
-      parentURL: import.meta.url,
-    });
-
-    // @ts-expect-error Use dynamic import instead of require
-    import("@azure/functions-core").catch((error) => {
+    } catch (error) {
       Logger.getInstance().debug(
         "@azure/functions-core failed to load, not running in Azure Functions",
       );
-    });
+    }
   }
 
   public shutdown(): void {
@@ -77,7 +63,7 @@ export class AzureFunctionsHook {
         "preInvocation",
         // eslint-disable-next-line @typescript-eslint/require-await
         async (preInvocationContext: PreInvocationContext) => {
-          const sharedContext = <AzureFnContext>preInvocationContext.invocationContext;
+          const sharedContext = preInvocationContext.invocationContext as AzureFnContext;
           const traceContext = sharedContext.traceContext;
           // Update context to use Azure Functions one
           // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
