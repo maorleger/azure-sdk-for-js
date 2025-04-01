@@ -44,5 +44,14 @@
   "vitest.experimentalStaticAstCollect": true,
   "vitest.configSearchPatternExclude": "{**/node_modules/**,**/.*/**,**/*.d.ts,eng/**,samples/**}",
   "vitest.nodeEnv": {},
-  "azure-pipelines.1ESPipelineTemplatesSchemaFile": true
+  "azure-pipelines.1ESPipelineTemplatesSchemaFile": true,
+  "mcp": {
+    "inputs": [],
+    "servers": {
+      "azure-mcp-server": {
+        "command": "node",
+        "args": ["workspace/azure-sdk-for-js/eng/tools/azure-mcp-server/dist/index.js"] // TODO: Make this relative to the workspace
+      }
+    }
+  }
 }

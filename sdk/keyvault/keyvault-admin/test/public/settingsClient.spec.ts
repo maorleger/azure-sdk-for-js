@@ -28,7 +28,7 @@ describe("KeyVaultSettingsClient", () => {
   });
 
   it("can get and update settings", async () => {
-    const setting = await client.getSetting("AllowKeyManagementOperationsThroughARM");
+    const setting = await client.getSetting("some mismatched setting");
     setting.value = true;
     const updated = await client.updateSetting(setting);
 
