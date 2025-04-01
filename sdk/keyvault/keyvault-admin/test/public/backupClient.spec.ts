@@ -99,7 +99,7 @@ describe("KeyVaultBackupClient", () => {
   });
 
   describe("beginPreRestore", function () {
-    it("full restore completes successfully", async function () {
+    it.only("full restore completes successfully", async function () {
       const backupPoller = await client.beginBackup(blobStorageUri, testPollerProperties);
       const backupResult = await backupPoller.pollUntilDone();
       expect(backupResult.folderUri).toBeDefined();

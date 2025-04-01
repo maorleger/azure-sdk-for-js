@@ -2,39 +2,13 @@ import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mc
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { readFileSync } from "fs";
 import { z } from "zod";
+import { parseLogFile } from "./recorder.js";
 
 // Create an MCP server
 const server = new McpServer({
   name: "Azure SDK Support",
   version: "1.0.0",
 });
-
-function extractSanitizerInfo(logContent: string) {
-  const sanitizerEntries: Record<string, any> = {};
-
-  // Regular expression to match sanitizer log entries
-  const sanitizerRegex =
-    /\[.*?\] dbug: Azure\.Sdk\.Tools\.TestProxy\[0\]\s+Central sanitizer rule (AZSDK\d+) modified the entry\s+(.*?)\s+before:\s+(.*?)\s+after:\s+(.*?)(?=\[|\n$)/gs;
-
-  let match;
-  while ((match = sanitizerRegex.exec(logContent)) !== null) {
-    const [, rule, modificationType, before, after] = match;
-
-    if (!sanitizerEntries[rule]) {
-      sanitizerEntries[rule] = [];
-    }
-
-    sanitizerEntries[rule].push({
-      modificationType: modificationType.trim(),
-      before: before.trim(),
-      after: after.trim(),
-    });
-  }
-
-  delete sanitizerEntries["AZSDK2021"];
-  delete sanitizerEntries["AZSDK0000"];
-  return sanitizerEntries;
-}
 
 server.tool(
   "recorder_errors",
@@ -60,30 +34,29 @@ server.tool(
     const matches = [...logs.matchAll(mismatchRegex)];
     console.log("matches", matches);
 
-    const sanitizerInfo = extractSanitizerInfo(logs);
+    const sanitizerInfo = parseLogFile(logs);
+    // console.error(sanitizerInfo);
     return {
       content: [
         {
           type: "text",
-          text: matches.join("--------------------"),
+          text: JSON.stringify(sanitizerInfo),
+        },
+      ],
+    };
+    return {
+      content: [
+        {
+          type: "text",
+          text: matches,
         },
         {
           type: "text",
-          text: JSON.stringify(sanitizerInfo, null, 2),
+          text: JSON.stringify([...sanitizerInfo].join("\n"), null, 2),
         },
       ],
     };
   },
-);
-
-// Add an addition tool
-server.tool(
-  "add",
-  "add two numbers",
-  { a: z.number(), b: z.number() },
-  async ({ a, b }, extra) => ({
-    content: [{ type: "text", text: String(a + b) }],
-  }),
 );
 
 // Add a dynamic greeting resource

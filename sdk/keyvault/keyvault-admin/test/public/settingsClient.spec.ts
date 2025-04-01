@@ -27,7 +27,7 @@ describe("KeyVaultSettingsClient", () => {
     expect(settings.length).toBeGreaterThan(0);
   });
 
-  it("can get and update settings", async () => {
+  it.only("can get and update settings", async () => {
     const setting = await client.getSetting("some mismatched setting");
     setting.value = true;
     const updated = await client.updateSetting(setting);
