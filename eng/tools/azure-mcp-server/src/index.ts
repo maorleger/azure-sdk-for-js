@@ -1,7 +1,6 @@
 import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { readFileSync } from "fs";
-import turndown from "turndown";
 import { z } from "zod";
 import { parseLogFile } from "./recorder.js";
 import TurndownService from "turndown";
@@ -12,36 +11,33 @@ const server = new McpServer({
   version: "1.0.0",
 });
 
-server.tool("mitm", "runs mitmproxy", {}, async () => {
-  console.error("Starting mitmproxy...");
-  const { spawn } = await import("child_process");
-  const mitmproxy = spawn("mitmproxy", ["--mode", "transparent"], { shell: true });
+// Requires env var Logging__LogLevel__Default=Debug to get the sanitizer info
+server.tool(
+  "recorder_errors",
+  "searches test proxy logs for recorder mismatch errors",
+  { directory: z.string() },
+  ({ directory }) => {
+    // TODO: parameterize this of course
+    const logs = readFileSync(
+      "/home/maorleger/workspace/azure-sdk-for-js/sdk/keyvault/keyvault-admin/testProxyOutput.log",
+      "utf-8",
+    );
 
-  mitmproxy.stdout.on("data", (data) => {
-    console.log(`stdout: ${data}`);
-  });
-
-  mitmproxy.stderr.on("data", (data) => {
-    console.error(`stderr: ${data}`);
-  });
-
-  mitmproxy.on("close", (code) => {
-    console.log(`mitmproxy exited with code ${code}`);
-  });
-  return {
-    content: [
-      {
-        type: "text",
-        text: `mitmproxy started, ensure that all tests are running with the following environment variables set:
-          NODE_TLS_REJECT_UNAUTHORIZED=0 
-          HTTP_PROXY=http://localhost:8080 
-          HTTPS_PROXY=http://localhost:8080 
-          TEST_MODE=live
-          `,
-      },
-    ],
-  };
-});
+    const { recordingMismatches, sanitizerInfo } = parseLogFile(logs);
+    return {
+      content: [
+        {
+          type: "text",
+          text: recordingMismatches.join("\n"),
+        },
+        {
+          type: "text",
+          text: JSON.stringify(sanitizerInfo),
+        },
+      ],
+    };
+  },
+);
 
 server.tool("architect_review", "provides context for architect review", {}, async () => {
   const timeout = AbortSignal.timeout(2000);
@@ -55,10 +51,10 @@ server.tool("architect_review", "provides context for architect review", {}, asy
       // "https://azure.github.io/azure-sdk/general_azurecore.html",
     ],
     typescript: [
-      // "https://azure.github.io/azure-sdk/typescript_introduction.html",
-      // "https://azure.github.io/azure-sdk/typescript_design.html",
+      "https://azure.github.io/azure-sdk/typescript_introduction.html",
+      "https://azure.github.io/azure-sdk/typescript_design.html",
       "https://azure.github.io/azure-sdk/typescript_implementation.html",
-      // "https://azure.github.io/azure-sdk/typescript_documentation.html",
+      "https://azure.github.io/azure-sdk/typescript_documentation.html",
     ],
     implementation: [
       // "https://github.com/Azure/azure-sdk/blob/main/docs/policies/repostructure.md",
@@ -76,73 +72,28 @@ server.tool("architect_review", "provides context for architect review", {}, asy
   const fetchResults = await Promise.allSettled(fetchRequests);
 
   const td = new TurndownService();
-  let guidelines = "";
-  for (const v of Object.values(fetchResults)) {
-    if (v.status === "fulfilled") {
-      const response = v.value as Response;
-      if (response.ok) {
-        const text = await response.text();
-        const mdText = td.turndown(text);
+  const guidelines = Object.values(fetchResults)
+    .filter((v) => v.status === "fulfilled" && (v.value as Response).ok)
+    .map(async (v) => {
+      const response = (v as PromiseFulfilledResult<Response>).value;
+      const text = await response.text();
+      return td.turndown(text);
+    });
 
-        guidelines += mdText + "\n\n";
-      } else {
-        console.error(`Failed to fetch ${response.url}: ${response.statusText}`);
-      }
-    }
-  }
+  const resolvedGuidelines = (await Promise.all(guidelines)).join("\n\n");
+
+  // TODO: this is not working today, but ideally we would have not only the guidelines but also parse the AST
+  // and provide the user with the specific guidelines that apply to the code they are writing
 
   return {
     content: [
       {
         type: "text",
-        text: "Always ensure the code conforms to the guidelines provided in " + guidelines,
+        text: "Always ensure the code conforms to the guidelines provided in " + resolvedGuidelines,
       },
     ],
   };
 });
-
-server.tool(
-  "recorder_errors",
-  "searches test proxy logs for recorder mismatch",
-  { directory: z.string() },
-  ({ directory }) => {
-    let logs = readFileSync(
-      "/home/maorleger/workspace/azure-sdk-for-js/sdk/keyvault/keyvault-admin/testProxyOutput.log",
-      "utf-8",
-    );
-
-    // if (directory === "/home/maorleger/workspace/azure-sdk-for-js") {
-    //   logs = readFileSync(
-    //     `${directory}/sdk/keyvault/keyvault-admin/testProxyOutput.log`, // of course we'd want to parameterize this
-    //     "utf-8",
-    //   );
-    // } else {
-    //   // we're already in the directory we ran the command from
-    //   logs = readFileSync(
-    //     `${directory}/testProxyOutput.log`, // of course we'd want to parameterize this
-    //     "utf-8",
-    //   );
-    // }
-    const mismatchRegex =
-      /^\[\d{2}:\d{2}:\d{2}\] fail: Azure\.Sdk\.Tools\.TestProxy\[0\]\s+Unable to find a record for the request .+?(?:\n\s+.+?)+/gm;
-    // find all text that matches the regex in the file, and it would be multiple lines
-    const matches = [...logs.matchAll(mismatchRegex)];
-
-    const sanitizerInfo = parseLogFile(logs);
-    return {
-      content: [
-        {
-          type: "text",
-          text: matches.join("\n"),
-        },
-        {
-          type: "text",
-          text: JSON.stringify(sanitizerInfo),
-        },
-      ],
-    };
-  },
-);
 
 async function main() {
   const transport = new StdioServerTransport();
