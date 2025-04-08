@@ -1,0 +1,25 @@
+{
+  "name": "azure-mcp-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "tsx src/index.ts",
+    "dev": "npx -y @modelcontextprotocol/inspector tsx src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.8.0",
+    "zx": "^8.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.16",
+    "@types/semver": "^7.7.0",
+    "@types/turndown": "^5.0.5",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  }
+}
