@@ -1,0 +1,10 @@
+{
+  "servers": {
+    "Azure SDK": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "tsx", "${workspaceFolder}/eng/tools/azure-sdk-mcp-server/src/index.ts"],
+      "env": {}
+    }
+  }
+}
