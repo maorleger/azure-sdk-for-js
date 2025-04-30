@@ -1,10 +1,9 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { helloWorldSchema } from "./schema";
+import { helloWorldSchema, helloWorld } from "./tools/helloWorld.js";
 
-// Create an MCP server
 const server = new McpServer({
-  name: "Azure SDK Support",
+  name: "Azure SDK MCP Server",
   version: "0.1.0",
 });
 
@@ -13,22 +12,13 @@ server.tool(
   "hello_world",
   "Prints hello world",
   helloWorldSchema.shape,
-  async ({ workspaceRoot }) => {
-    return {
-      content: [
-        {
-          type: "text",
-          text: `Hello world! from ${workspaceRoot}`,
-        },
-      ],
-    };
-  },
+  async (args) => await helloWorld(args),
 );
 
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("Azure MCP server started");
+  console.error("Azure SDK MCP server started");
 }
 
 main().catch((error) => {
