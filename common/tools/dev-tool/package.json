@@ -48,6 +48,7 @@
     "@azure/identity": "^4.9.0",
     "@microsoft/api-extractor": "^7.52.4",
     "@microsoft/api-extractor-model": "^7.30.5",
+    "@modelcontextprotocol/sdk": "^1.8.0",
     "chalk": "^4.1.1",
     "concurrently": "^8.2.2",
     "dotenv": "^16.0.0",
@@ -67,7 +68,8 @@
     "typescript": "~5.8.2",
     "yaml": "^2.3.4",
     "tar": "^7.4.3",
-    "unzipper": "~0.12.3"
+    "unzipper": "~0.12.3",
+    "zod": "^3.24.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",

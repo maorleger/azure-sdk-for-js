@@ -14,6 +14,7 @@ export default subCommand(commandInfo, {
   "start-browser-relay": () => import("./startBrowserRelay"),
   "update-snippets": () => import("./update-snippets"),
   "build-package": () => import("./build-package"),
+  "start-mcp-server": () => import("./start-mcp-server"),
 
   // "vendored" is a special command that passes through execution to dev-tool's own commands
   vendored: () => import("./vendored"),

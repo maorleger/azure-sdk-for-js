@@ -1,6 +1,6 @@
 # Azure SDK MCP Server
 
-The Azure SDK MCP Server is a tool designed to facilitate communication and interaction with the Model Context Protocol (MCP). It provides a server implementation that supports various tools and schemas for efficient data exchange.
+A Model Context Protocol (MCP) server implementation for the Azure SDK repository. This server is designed to facilitate the development and testing of tools that communicate using the MCP.
 
 ## Getting Started
 
