@@ -1,33 +1,28 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import type { OperationOptions } from "@azure/core-client";
-import type { PagedAsyncIterableIterator } from "@azure/core-paging";
+import type { OperationOptions } from "@azure-rest/core-client";
+import type { PagedAsyncIterableIterator } from "./static-helpers/pagingHelpers.js";
 import type {
   AIFoundryModelCatalogName,
-  AIServices,
   AIServicesAccountKey,
   AsciiFoldingTokenFilter,
   AzureMachineLearningSkill,
   AzureOpenAIModelName,
   AzureOpenAITokenizerParameters,
-  CognitiveServicesAccount as BaseCognitiveServicesAccount,
-  KnowledgeBaseModel as BaseKnowledgeBaseModel,
-  KnowledgeSourceVectorizer as BaseKnowledgeSourceVectorizer,
-  SearchIndexerSkill as BaseSearchIndexerSkill,
   BinaryQuantizationCompression,
-  BM25Similarity,
+  BM25SimilarityAlgorithm as BM25Similarity,
   CharFilterName,
   ChatCompletionExtraParametersBehavior,
   ChatCompletionResponseFormat,
   CjkBigramTokenFilter,
-  ClassicSimilarity,
+  ClassicSimilarityAlgorithm as ClassicSimilarity,
   ClassicTokenizer,
+  CognitiveServicesAccount as BaseCognitiveServicesAccount,
   CognitiveServicesAccountKey,
   CommonGramTokenFilter,
-  CommonModelParameters,
+  ChatCompletionCommonModelParameters as CommonModelParameters,
   ConditionalSkill,
-  ContentUnderstandingSkill,
   CorsOptions,
   CustomEntity,
   CustomNormalizer,
@@ -48,15 +43,12 @@ import type {
   FieldMapping,
   FreshnessScoringFunction,
   HighWaterMarkChangeDetectionPolicy,
-  IndexedSharePointContainerName,
   IndexerPermissionOption,
   IndexingSchedule,
   IndexProjectionMode,
   IndexStatisticsSummary,
   KeepTokenFilter,
   KeywordMarkerTokenFilter,
-  KnowledgeSourceContentExtractionMode,
-  KnowledgeSourceIngestionPermissionOption,
   KnownBlobIndexerDataToExtract,
   KnownBlobIndexerImageAction,
   KnownBlobIndexerParsingMode,
@@ -101,13 +93,12 @@ import type {
   NativeBlobSoftDeleteDeletionDetectionPolicy,
   NGramTokenizer,
   OcrLineEnding,
-  PathHierarchyTokenizerV2 as PathHierarchyTokenizer,
+  PathHierarchyTokenizer,
   PatternCaptureTokenFilter,
   PatternReplaceCharFilter,
   PatternReplaceTokenFilter,
   PermissionFilter,
   PhoneticTokenFilter,
-  RemoteSharePointKnowledgeSourceParameters,
   ScalarQuantizationCompression,
   ScoringFunctionAggregation,
   SearchAlias,
@@ -116,13 +107,13 @@ import type {
   SearchIndexerDataUserAssignedIdentity,
   SearchIndexerIndexProjectionSelector,
   SearchIndexerKnowledgeStoreProjection,
+  SearchIndexerSkill as BaseSearchIndexerSkill,
   SearchIndexKnowledgeSourceParameters,
   SearchIndexPermissionFilterOption,
-  Suggester as SearchSuggester,
   SemanticSearch,
   SentimentSkillV3,
-  ServiceCounters,
-  ServiceLimits,
+  SearchServiceCounters as ServiceCounters,
+  SearchServiceLimits as ServiceLimits,
   ShaperSkill,
   ShingleTokenFilter,
   SnowballTokenFilter,
@@ -133,6 +124,7 @@ import type {
   StemmerTokenFilter,
   StopAnalyzer,
   StopwordsTokenFilter,
+  SearchSuggester,
   SynonymTokenFilter,
   TagScoringFunction,
   TextWeights,
@@ -143,10 +135,9 @@ import type {
   VectorEncodingFormat,
   VectorSearchProfile,
   VectorSearchVectorizerKind,
-  WebKnowledgeSourceParameters,
   WordDelimiterTokenFilter,
-} from "./generated/service/models/index.js";
-import type { KnowledgeBase } from "./knowledgeBaseModels.js";
+} from "./models/azure/search/documents/indexes/models.js";
+import type { KnowledgeAgent } from "./knowledgeAgentModels.js";
 
 /**
  * Options for a list skillsets operation.
@@ -725,7 +716,6 @@ export type SearchIndexerSkill =
   | CustomEntityLookupSkill
   | DocumentExtractionSkill
   | DocumentIntelligenceLayoutSkill
-  | ContentUnderstandingSkill
   | EntityLinkingSkill
   | EntityRecognitionSkill
   | EntityRecognitionSkillV3
@@ -1173,8 +1163,6 @@ export interface SimpleField {
    * The encoding format to interpret the field contents.
    */
   vectorEncodingFormat?: VectorEncodingFormat;
-  /** A value indicating whether the field should be used for sensitivity label filtering. This enables document-level filtering based on Microsoft Purview sensitivity labels. */
-  sensitivityLabel?: boolean;
 }
 
 export function isComplexField(field: SearchField): field is ComplexField {
@@ -1249,13 +1237,17 @@ export type IndexStatisticsSummaryIterator = PagedAsyncIterableIterator<
 >;
 
 /**
- * An iterator for listing the knowledge bases that exist in the Search service. Will make requests
+ * An iterator for listing the knowledge agents that exist in the Search service. Will make requests
  * as needed during iteration. Use .byPage() to make one request to the server per iteration.
  */
-export type KnowledgeBaseIterator = PagedAsyncIterableIterator<KnowledgeBase, KnowledgeBase[], {}>;
+export type KnowledgeAgentIterator = PagedAsyncIterableIterator<
+  KnowledgeAgent,
+  KnowledgeAgent[],
+  {}
+>;
 
 /**
- * An iterator for listing the knowledge sources that exist in the Search service. Will make requests
+ * An iterator for listing the knowledge dSources that exist in the Search service. Will make requests
  * as needed during iteration. Use .byPage() to make one request to the server per iteration.
  */
 export type KnowledgeSourceIterator = PagedAsyncIterableIterator<
@@ -1366,8 +1358,6 @@ export interface SearchIndex {
    * The ETag of the index.
    */
   etag?: string;
-  /** A value indicating whether the index is leveraging Purview-specific features. This property defaults to false and cannot be changed after index creation. */
-  purviewEnabled?: boolean;
 }
 
 export interface SearchIndexerCache {
@@ -3162,11 +3152,7 @@ export interface ImageAnalysisSkill extends BaseSearchIndexerSkill {
 export type KnowledgeSource =
   | BaseKnowledgeSource
   | SearchIndexKnowledgeSource
-  | AzureBlobKnowledgeSource
-  | IndexedSharePointKnowledgeSource
-  | IndexedOneLakeKnowledgeSource
-  | WebKnowledgeSource
-  | RemoteSharePointKnowledgeSource;
+  | AzureBlobKnowledgeSource;
 
 /**
  * Represents a knowledge source definition.
@@ -3175,13 +3161,7 @@ export interface BaseKnowledgeSource {
   /**
    * Polymorphic discriminator, which specifies the different types this object can be
    */
-  kind:
-    | "searchIndex"
-    | "azureBlob"
-    | "indexedSharePoint"
-    | "indexedOneLake"
-    | "web"
-    | "remoteSharePoint";
+  kind: "searchIndex" | "azureBlob";
   /**
    * The name of the knowledge source.
    */
@@ -3191,11 +3171,11 @@ export interface BaseKnowledgeSource {
    */
   description?: string;
   /**
-   * The ETag of the knowledge base.
+   * The ETag of the agent.
    */
   etag?: string;
   /**
-   * A description of an encryption key that you create in Azure Key Vault. This key is used to provide an additional level of encryption-at-rest for your knowledge base definition when you want full assurance that no one, not even Microsoft, can decrypt them. Once you have encrypted your knowledge base definition, it will always remain encrypted. The search service will ignore attempts to set this property to null. You can change this property as needed if you want to rotate your encryption key; Your knowledge base definition will be unaffected. Encryption with customer-managed keys is not available for free search services, and is only available for paid services created on or after January 1, 2019.
+   * A description of an encryption key that you create in Azure Key Vault. This key is used to provide an additional level of encryption-at-rest for your agent definition when you want full assurance that no one, not even Microsoft, can decrypt them. Once you have encrypted your agent definition, it will always remain encrypted. The search service will ignore attempts to set this property to null. You can change this property as needed if you want to rotate your encryption key; Your agent definition will be unaffected. Encryption with customer-managed keys is not available for free search services, and is only available for paid services created on or after January 1, 2019.
    */
   encryptionKey?: SearchResourceEncryptionKey;
 }
@@ -3233,6 +3213,10 @@ export interface AzureBlobKnowledgeSource extends BaseKnowledgeSource {
  */
 export interface AzureBlobKnowledgeSourceParameters {
   /**
+   * An explicit identity to use for this knowledge source.
+   */
+  identity?: SearchIndexerDataIdentity;
+  /**
    * Key-based connection string or the ResourceId format if using a managed identity.
    */
   connectionString: string;
@@ -3245,142 +3229,33 @@ export interface AzureBlobKnowledgeSourceParameters {
    */
   folderPath?: string;
   /**
-   * Resources created by the knowledge source.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
+   * Optional vectorizer configuration for vectorizing content.
    */
-  readonly createdResources?: { [propertyName: string]: string };
-  /** Consolidates all general ingestion settings. */
-  ingestionParameters?: KnowledgeSourceIngestionParameters;
-}
-
-/**
- * Configuration for SharePoint knowledge source.
- */
-export interface IndexedSharePointKnowledgeSource extends BaseKnowledgeSource {
+  embeddingModel?: VectorSearchVectorizer;
   /**
-   * Polymorphic discriminator, which specifies the different types this object can be
+   * Optional chat completion model for image verbalization or context extraction.
    */
-  kind: "indexedSharePoint";
+  chatCompletionModel?: KnowledgeAgentModel;
   /**
-   * The parameters for the SharePoint knowledge source.
+   * Optional schedule for data ingestion.
    */
-  indexedSharePointParameters: IndexedSharePointKnowledgeSourceParameters;
-}
-
-/** Parameters for SharePoint knowledge source. */
-export interface IndexedSharePointKnowledgeSourceParameters {
-  /** SharePoint connection string with format: SharePointOnlineEndpoint=[SharePoint site url];ApplicationId=[Azure AD App ID];ApplicationSecret=[Azure AD App client secret];TenantId=[SharePoint site tenant id] */
-  connectionString: string;
-  /** Specifies which SharePoint libraries to access. */
-  containerName: IndexedSharePointContainerName;
-  /** Optional query to filter SharePoint content. */
-  query?: string;
-  /** Consolidates all general ingestion settings. */
-  ingestionParameters?: KnowledgeSourceIngestionParameters;
-  /**
-   * Resources created by the knowledge source.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly createdResources?: { [propertyName: string]: string };
-}
-
-/**
- * Configuration for OneLake knowledge source.
- */
-export interface IndexedOneLakeKnowledgeSource extends BaseKnowledgeSource {
-  /**
-   * Polymorphic discriminator, which specifies the different types this object can be
-   */
-  kind: "indexedOneLake";
-  /**
-   * The parameters for the OneLake knowledge source.
-   */
-  indexedOneLakeParameters: IndexedOneLakeKnowledgeSourceParameters;
-}
-
-/** Parameters for OneLake knowledge source. */
-export interface IndexedOneLakeKnowledgeSourceParameters {
-  /** OneLake workspace ID. */
-  fabricWorkspaceId: string;
-  /** Specifies which OneLake lakehouse to access. */
-  lakehouseId: string;
-  /** Optional OneLakehouse folder or shortcut to filter OneLake content. */
-  targetPath?: string;
-  /** Consolidates all general ingestion settings. */
-  ingestionParameters?: KnowledgeSourceIngestionParameters;
-  /**
-   * Resources created by the knowledge source.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly createdResources?: { [propertyName: string]: string };
-}
-
-/**
- * Knowledge Source targeting web results.
- */
-export interface WebKnowledgeSource extends BaseKnowledgeSource {
-  /**
-   * Polymorphic discriminator, which specifies the different types this object can be
-   */
-  kind: "web";
-  /**
-   * The parameters for the web knowledge source.
-   */
-  webParameters?: WebKnowledgeSourceParameters;
-}
-
-/**
- * Configuration for remote SharePoint knowledge source.
- */
-export interface RemoteSharePointKnowledgeSource extends BaseKnowledgeSource {
-  /**
-   * Polymorphic discriminator, which specifies the different types this object can be
-   */
-  kind: "remoteSharePoint";
-  /**
-   * The parameters for the knowledge source.
-   */
-  remoteSharePointParameters: RemoteSharePointKnowledgeSourceParameters;
-}
-
-/** Consolidates all general ingestion settings for knowledge sources. */
-export interface KnowledgeSourceIngestionParameters {
-  /** An explicit identity to use for this knowledge source. */
-  identity?: SearchIndexerDataIdentity;
-  /** Optional vectorizer configuration for vectorizing content. */
-  embeddingModel?: KnowledgeSourceVectorizer;
-  /** Optional chat completion model for image verbalization or context extraction. */
-  chatCompletionModel?: KnowledgeBaseModel;
-  /** Indicates whether image verbalization should be disabled. Default is false. */
-  disableImageVerbalization?: boolean;
-  /** Optional schedule for data ingestion. */
   ingestionSchedule?: IndexingSchedule;
-  /** Optional list of permission types to ingest together with document content. If specified, it will set the indexer permission options for the data source. */
-  ingestionPermissionOptions?: KnowledgeSourceIngestionPermissionOption[];
-  /** Optional content extraction mode. Default is 'minimal'. */
-  contentExtractionMode?: KnowledgeSourceContentExtractionMode;
-  /** Optional AI Services configuration for content processing. */
-  aiServices?: AIServices;
+  /**
+   * Resources created by the knowledge source.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly createdResources?: { [propertyName: string]: string };
+  /**
+   * Indicates whether image verbalization should be disabled.
+   */
+  disableImageVerbalization?: boolean;
 }
 
-export type KnowledgeBaseModel = KnowledgeBaseAzureOpenAIModel;
+export type KnowledgeAgentModel = KnowledgeAgentAzureOpenAIModel;
 
-/** Specifies the Azure OpenAI resource used to do query planning. */
-export interface KnowledgeBaseAzureOpenAIModel extends BaseKnowledgeBaseModel {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
-  kind: "azureOpenAI";
-  /** Contains the parameters specific to Azure OpenAI model endpoint. */
+export interface KnowledgeAgentAzureOpenAIModel {
   azureOpenAIParameters: AzureOpenAIParameters;
-}
-
-export type KnowledgeSourceVectorizer = KnowledgeSourceAzureOpenAIVectorizer;
-
-/** Specifies the Azure OpenAI resource used to vectorize a query string. */
-export interface KnowledgeSourceAzureOpenAIVectorizer extends BaseKnowledgeSourceVectorizer {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
   kind: "azureOpenAI";
-  /** Contains the parameters specific to Azure OpenAI embedding vectorization. */
-  azureOpenAIParameters?: AzureOpenAIParameters;
 }
 
 /**
@@ -3390,21 +3265,21 @@ export type VectorSearchCompression = BinaryQuantizationCompression | ScalarQuan
 
 export interface GetIndexStatsSummaryOptions extends OperationOptions {}
 
-export interface CreateOrUpdateKnowledgeBaseOptions extends OperationOptions {
+export interface CreateOrUpdateKnowledgeAgentOptions extends OperationOptions {
   /**
    * If set to true, Resource will be deleted only if the etag matches.
    */
   onlyIfUnchanged?: boolean;
 }
-export interface DeleteKnowledgeBaseOptions extends OperationOptions {
+export interface DeleteKnowledgeAgentOptions extends OperationOptions {
   /**
    * If set to true, Resource will be deleted only if the etag matches.
    */
   onlyIfUnchanged?: boolean;
 }
-export interface GetKnowledgeBaseOptions extends OperationOptions {}
-export interface ListKnowledgeBasesOptions extends OperationOptions {}
-export interface CreateKnowledgeBaseOptions extends OperationOptions {}
+export interface GetKnowledgeAgentOptions extends OperationOptions {}
+export interface ListKnowledgeAgentsOptions extends OperationOptions {}
+export interface CreateKnowledgeAgentOptions extends OperationOptions {}
 
 export interface CreateOrUpdateKnowledgeSourceOptions extends OperationOptions {
   /**
@@ -3421,7 +3296,6 @@ export interface DeleteKnowledgeSourceOptions extends OperationOptions {
 export interface GetKnowledgeSourceOptions extends OperationOptions {}
 export interface ListKnowledgeSourcesOptions extends OperationOptions {}
 export interface CreateKnowledgeSourceOptions extends OperationOptions {}
-export interface GetKnowledgeSourceStatusOptions extends OperationOptions {}
 
 /**
  * Defines values for LexicalAnalyzerName.

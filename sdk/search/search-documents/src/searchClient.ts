@@ -5,23 +5,21 @@
 
 import type { KeyCredential, TokenCredential } from "@azure/core-auth";
 import { isTokenCredential } from "@azure/core-auth";
-import type { InternalClientPipelineOptions } from "@azure/core-client";
-import type { ExtendedCommonClientOptions } from "@azure/core-http-compat";
+import type { ClientOptions } from "@azure-rest/core-client";
 import type { Pipeline } from "@azure/core-rest-pipeline";
 import { bearerTokenAuthenticationPolicy } from "@azure/core-rest-pipeline";
 import { decode, encode } from "./base64.js";
 import type {
-  AutocompleteRequest,
   AutocompleteResult,
   IndexDocumentsResult,
   QueryAnswerType as BaseAnswers,
   QueryCaptionType as BaseCaptions,
   QueryRewritesType as GeneratedQueryRewrites,
   SearchRequest as GeneratedSearchRequest,
-  SuggestRequest,
   VectorQueryUnion as GeneratedVectorQuery,
-} from "./generated/data/models/index.js";
-import { SearchClient as GeneratedClient } from "./generated/data/searchClient.js";
+} from "./models/azure/search/documents/index.js";
+import type { SearchClientOptionalParams } from "./search/searchClient.js";
+import { SearchClient as GeneratedClient } from "./search/searchClient.js";
 import { IndexDocumentsBatch } from "./indexDocumentsBatch.js";
 import type {
   AutocompleteOptions,
@@ -59,11 +57,15 @@ import type { IndexDocumentsClient } from "./searchIndexingBufferedSender.js";
 import { deserialize, serialize } from "./serialization.js";
 import * as utils from "./serviceUtils.js";
 import { createSpan } from "./tracing.js";
+import type {
+  AutocompletePostOptionalParams,
+  SuggestPostOptionalParams,
+} from "./search/api/options.js";
 
 /**
  * Client options used to configure AI Search API requests.
  */
-export interface SearchClientOptions extends ExtendedCommonClientOptions {
+export interface SearchClientOptions extends ClientOptions {
   /**
    * The API version to use when communicating with the service.
    * @deprecated use {@link serviceVersion} instead
@@ -176,7 +178,7 @@ export class SearchClient<TModel extends object> implements IndexDocumentsClient
     this.endpoint = endpoint;
     this.indexName = indexName;
 
-    const internalClientPipelineOptions: InternalClientPipelineOptions = {
+    const internalClientPipelineOptions: SearchClientOptionalParams = {
       ...options,
       ...{
         loggingOptions: {
@@ -199,8 +201,8 @@ export class SearchClient<TModel extends object> implements IndexDocumentsClient
 
     this.client = new GeneratedClient(
       this.endpoint,
+      credential,
       this.indexName,
-      this.serviceVersion,
       internalClientPipelineOptions,
     );
 
@@ -229,18 +231,9 @@ export class SearchClient<TModel extends object> implements IndexDocumentsClient
   public async getDocumentsCount(options: CountDocumentsOptions = {}): Promise<number> {
     const { span, updatedOptions } = createSpan("SearchClient-getDocumentsCount", options);
     try {
-      let documentsCount: number = 0;
-      await this.client.documents.count({
+      return await this.client.getDocumentCount({
         ...updatedOptions,
-        onResponse: (rawResponse, flatResponse) => {
-          documentsCount = Number(rawResponse.bodyAsText);
-          if (updatedOptions.onResponse) {
-            updatedOptions.onResponse(rawResponse, flatResponse);
-          }
-        },
       });
-
-      return documentsCount;
     } catch (e: any) {
       span.setStatus({
         status: "error",
@@ -289,25 +282,23 @@ export class SearchClient<TModel extends object> implements IndexDocumentsClient
     options: AutocompleteOptions<TModel> = {},
   ): Promise<AutocompleteResult> {
     const { searchFields, ...nonFieldOptions } = options;
-    const fullOptions: AutocompleteRequest = {
-      searchText: searchText,
-      suggesterName: suggesterName,
+    const fullOptions: AutocompletePostOptionalParams = {
       searchFields: this.convertSearchFields(searchFields),
       ...nonFieldOptions,
     };
 
-    if (!fullOptions.searchText) {
+    if (searchText) {
       throw new RangeError("searchText must be provided.");
     }
 
-    if (!fullOptions.suggesterName) {
+    if (suggesterName) {
       throw new RangeError("suggesterName must be provided.");
     }
 
-    const { span, updatedOptions } = createSpan("SearchClient-autocomplete", options);
+    const { span, updatedOptions } = createSpan("SearchClient-autocomplete", fullOptions);
 
     try {
-      const result = await this.client.documents.autocompletePost(fullOptions, updatedOptions);
+      const result = await this.client.autocompletePost(searchText, suggesterName, updatedOptions);
       return result;
     } catch (e: any) {
       span.setStatus({
@@ -357,7 +348,7 @@ export class SearchClient<TModel extends object> implements IndexDocumentsClient
       semanticFields: this.convertSemanticFields(semanticFields),
       select: this.convertSelect<TFields>(select) || "*",
       orderBy: this.convertOrderBy(orderBy),
-      includeTotalResultCount: includeTotalCount,
+      includeTotalCount,
       vectorQueries: queries?.map(this.convertVectorQuery.bind(this)),
       answers: this.convertQueryAnswers(answers),
       captions: this.convertQueryCaptions(captions),
@@ -369,16 +360,13 @@ export class SearchClient<TModel extends object> implements IndexDocumentsClient
       hybridSearch: hybridSearch,
     };
 
-    const { span, updatedOptions } = createSpan("SearchClient-searchDocuments", options);
+    const { span } = createSpan("SearchClient-searchDocuments", options);
 
     try {
-      const result = await this.client.documents.searchPost(
-        {
-          ...fullOptions,
-          searchText: searchText,
-        },
-        updatedOptions,
-      );
+      const result = await this.client.searchPost({
+        ...fullOptions,
+        searchText: searchText,
+      });
 
       const {
         results,
@@ -572,27 +560,25 @@ export class SearchClient<TModel extends object> implements IndexDocumentsClient
     options: SuggestOptions<TModel, TFields> = {},
   ): Promise<SuggestDocumentsResult<TModel, TFields>> {
     const { select, searchFields, orderBy, ...nonFieldOptions } = options;
-    const fullOptions: SuggestRequest = {
-      searchText: searchText,
-      suggesterName: suggesterName,
+    const fullOptions: SuggestPostOptionalParams = {
       searchFields: this.convertSearchFields(searchFields),
       select: this.convertSelect<TFields>(select),
       orderBy: this.convertOrderBy(orderBy),
       ...nonFieldOptions,
     };
 
-    if (!fullOptions.searchText) {
+    if (searchText) {
       throw new RangeError("searchText must be provided.");
     }
 
-    if (!fullOptions.suggesterName) {
+    if (suggesterName) {
       throw new RangeError("suggesterName must be provided.");
     }
 
-    const { span, updatedOptions } = createSpan("SearchClient-suggest", options);
+    const { span, updatedOptions } = createSpan("SearchClient-suggest", fullOptions);
 
     try {
-      const result = await this.client.documents.suggestPost(fullOptions, updatedOptions);
+      const result = await this.client.suggestPost(searchText, suggesterName, updatedOptions);
 
       const modifiedResult = utils.generatedSuggestDocumentsResultToPublicSuggestDocumentsResult<
         TModel,
@@ -621,9 +607,8 @@ export class SearchClient<TModel extends object> implements IndexDocumentsClient
     options: GetDocumentOptions<TModel, TFields> = {},
   ): Promise<NarrowedModel<TModel, TFields>> {
     const { span, updatedOptions } = createSpan("SearchClient-getDocument", options);
-
     try {
-      const result = await this.client.documents.get(key, {
+      const result = await this.client.getDocument(key, {
         ...updatedOptions,
         selectedFields: updatedOptions.selectedFields as string[] | undefined,
       });
@@ -657,7 +642,7 @@ export class SearchClient<TModel extends object> implements IndexDocumentsClient
     const { span, updatedOptions } = createSpan("SearchClient-indexDocuments", options);
     try {
       let status: number = 0;
-      const result = await this.client.documents.index(
+      const result = await this.client.index(
         { actions: serialize(batch.actions) },
         {
           ...updatedOptions,

@@ -5,27 +5,26 @@
 
 import type { KeyCredential, TokenCredential } from "@azure/core-auth";
 import { isTokenCredential } from "@azure/core-auth";
-import type { InternalClientPipelineOptions } from "@azure/core-client";
-import type { ExtendedCommonClientOptions } from "@azure/core-http-compat";
+import type { ClientOptions } from "@azure-rest/core-client";
 import type { Pipeline } from "@azure/core-rest-pipeline";
 import { bearerTokenAuthenticationPolicy } from "@azure/core-rest-pipeline";
-import type {
-  KnowledgeBaseRetrievalRequest,
-  KnowledgeBaseRetrievalResponse,
-} from "./generated/knowledgeBase/index.js";
-import { SearchClient as GeneratedClient } from "./generated/knowledgeBase/searchClient.js";
-import type { RetrieveKnowledgeOptions } from "./knowledgeBaseModels.js";
+import { KnowledgeBaseRetrievalClient as GeneratedClient } from "./knowledgeBaseRetrieval/knowledgeBaseRetrievalClient.js";
+import type { RetrieveKnowledgeOptions } from "./knowledgeAgentModels.js";
 import { logger } from "./logger.js";
 import { createOdataMetadataPolicy } from "./odataMetadataPolicy.js";
 import { createSearchApiKeyCredentialPolicy } from "./searchApiKeyCredentialPolicy.js";
 import { KnownSearchAudience } from "./searchAudience.js";
 import * as utils from "./serviceUtils.js";
 import { createSpan } from "./tracing.js";
+import {
+  KnowledgeBaseRetrievalRequest,
+  KnowledgeBaseRetrievalResponse,
+} from "./models/azure/search/documents/knowledgeBase/models.js";
 
 /**
  * Client options used to configure Cognitive Search API requests.
  */
-export interface KnowledgeRetrievalClientOptions extends ExtendedCommonClientOptions {
+export interface KnowledgeRetrievalClientOptions extends ClientOptions {
   /**
    * The service version to use when communicating with the service.
    */
@@ -40,7 +39,7 @@ export interface KnowledgeRetrievalClientOptions extends ExtendedCommonClientOpt
 }
 
 /**
- * Class used to perform operations against a knowledge base.
+ * Class used to perform operations against a knowledge agent.
  */
 export class KnowledgeRetrievalClient {
   /// Maintenance note: when updating supported API versions,
@@ -57,9 +56,9 @@ export class KnowledgeRetrievalClient {
   public readonly endpoint: string;
 
   /**
-   * The name of the knowledge base
+   * The name of the knowledge agent
    */
-  public readonly knowledgeBaseName: string;
+  public readonly agentName: string;
 
   /**
    * @hidden
@@ -81,26 +80,26 @@ export class KnowledgeRetrievalClient {
    *
    * const knowledgeRetrievalClient = new KnowledgeRetrievalClient(
    *   "<endpoint>",
-   *   "<knowledgeBaseName>",
+   *   "<agentName>",
    *   new AzureKeyCredential("<apiKey>"),
    * );
    * ```
    
    * @param endpoint - The endpoint of the search service
-   * @param knowledgeBaseName - The name of the knowledge base
+   * @param agentName - The name of the knowledge agent
    * @param credential - Used to authenticate requests to the service.
    * @param options - Used to configure the Search client.
    */
   constructor(
     endpoint: string,
-    knowledgeBaseName: string,
+    agentName: string,
     credential: KeyCredential | TokenCredential,
     options: KnowledgeRetrievalClientOptions = {},
   ) {
     this.endpoint = endpoint;
-    this.knowledgeBaseName = knowledgeBaseName;
+    this.agentName = agentName;
 
-    const internalClientPipelineOptions: InternalClientPipelineOptions = {
+    const internalClientPipelineOptions = {
       ...options,
       ...{
         loggingOptions: {
@@ -118,13 +117,7 @@ export class KnowledgeRetrievalClient {
     };
 
     this.serviceVersion = options.serviceVersion ?? utils.defaultServiceVersion;
-
-    this.client = new GeneratedClient(
-      this.endpoint,
-      this.knowledgeBaseName,
-      this.serviceVersion,
-      internalClientPipelineOptions,
-    );
+    this.client = new GeneratedClient(this.endpoint, credential, internalClientPipelineOptions);
 
     this.pipeline = this.client.pipeline;
 
@@ -153,7 +146,8 @@ export class KnowledgeRetrievalClient {
     );
 
     try {
-      return await this.client.knowledgeRetrieval.retrieve(retrievalRequest, updatedOptions);
+      // TODO
+      return await this.client.retrieve(undefined as any, retrievalRequest, updatedOptions);
     } catch (e: any) {
       span.setStatus({
         status: "error",
