@@ -27,7 +27,7 @@ import type {
   SemanticFieldState,
   SemanticQueryRewritesResultType,
   VectorsDebugInfo,
-} from "./data/models/index.js";
+} from "./models/azure/search/documents/index.js";
 import type GeographyPoint from "./geographyPoint.js";
 
 /**

@@ -172,13 +172,13 @@ export function azureSearchDocumentsIndexesSearchIndexerDataIdentityUnionSeriali
 ): any {
   switch (item.odataType) {
     case "#Microsoft.Azure.Search.DataNoneIdentity":
-      return searchIndexerDataNoneIdentitySerializer(
-        item as SearchIndexerDataNoneIdentity,
+      return azureSearchDocumentsIndexesSearchIndexerDataNoneIdentitySerializer(
+        item as AzureSearchDocumentsIndexesSearchIndexerDataNoneIdentity,
       );
 
     case "#Microsoft.Azure.Search.DataUserAssignedIdentity":
-      return searchIndexerDataUserAssignedIdentitySerializer(
-        item as SearchIndexerDataUserAssignedIdentity,
+      return azureSearchDocumentsIndexesSearchIndexerDataUserAssignedIdentitySerializer(
+        item as AzureSearchDocumentsIndexesSearchIndexerDataUserAssignedIdentity,
       );
 
     default:
@@ -193,13 +193,13 @@ export function azureSearchDocumentsIndexesSearchIndexerDataIdentityUnionDeseria
 ): SearchIndexerDataIdentityUnion {
   switch (item.odataType) {
     case "#Microsoft.Azure.Search.DataNoneIdentity":
-      return searchIndexerDataNoneIdentityDeserializer(
-        item as SearchIndexerDataNoneIdentity,
+      return azureSearchDocumentsIndexesSearchIndexerDataNoneIdentityDeserializer(
+        item as AzureSearchDocumentsIndexesSearchIndexerDataNoneIdentity,
       );
 
     case "#Microsoft.Azure.Search.DataUserAssignedIdentity":
-      return searchIndexerDataUserAssignedIdentityDeserializer(
-        item as SearchIndexerDataUserAssignedIdentity,
+      return azureSearchDocumentsIndexesSearchIndexerDataUserAssignedIdentityDeserializer(
+        item as AzureSearchDocumentsIndexesSearchIndexerDataUserAssignedIdentity,
       );
 
     default:
@@ -1081,7 +1081,7 @@ export function azureSearchDocumentsIndexesTextWeightsDeserializer(
 }
 
 export function azureSearchDocumentsIndexesScoringFunctionUnionArraySerializer(
-  result: Array<AzureSearchDocumentsIndexesScoringFunctionUnion>,
+  result: Array<ScoringFunctionUnion>,
 ): any[] {
   return result.map((item) => {
     return azureSearchDocumentsIndexesScoringFunctionUnionSerializer(item);
@@ -1089,7 +1089,7 @@ export function azureSearchDocumentsIndexesScoringFunctionUnionArraySerializer(
 }
 
 export function azureSearchDocumentsIndexesScoringFunctionUnionArrayDeserializer(
-  result: Array<AzureSearchDocumentsIndexesScoringFunctionUnion>,
+  result: Array<ScoringFunctionUnion>,
 ): any[] {
   return result.map((item) => {
     return azureSearchDocumentsIndexesScoringFunctionUnionDeserializer(item);
@@ -1144,20 +1144,20 @@ export function azureSearchDocumentsIndexesScoringFunctionUnionSerializer(
 ): any {
   switch (item.type) {
     case "distance":
-      return distanceScoringFunctionSerializer(item as DistanceScoringFunction);
+      return azureSearchDocumentsIndexesDistanceScoringFunctionSerializer(item as AzureSearchDocumentsIndexesDistanceScoringFunction);
 
     case "freshness":
-      return freshnessScoringFunctionSerializer(
-        item as FreshnessScoringFunction,
+      return azureSearchDocumentsIndexesFreshnessScoringFunctionSerializer(
+        item as AzureSearchDocumentsIndexesFreshnessScoringFunction,
       );
 
     case "magnitude":
-      return magnitudeScoringFunctionSerializer(
-        item as MagnitudeScoringFunction,
+      return azureSearchDocumentsIndexesMagnitudeScoringFunctionSerializer(
+        item as AzureSearchDocumentsIndexesMagnitudeScoringFunction,
       );
 
     case "tag":
-      return tagScoringFunctionSerializer(item as TagScoringFunction);
+      return azureSearchDocumentsIndexesTagScoringFunctionSerializer(item as AzureSearchDocumentsIndexesTagScoringFunction);
 
     default:
       return azureSearchDocumentsIndexesScoringFunctionSerializer(item);
@@ -1169,22 +1169,22 @@ export function azureSearchDocumentsIndexesScoringFunctionUnionDeserializer(
 ): ScoringFunctionUnion {
   switch (item.type) {
     case "distance":
-      return distanceScoringFunctionDeserializer(
-        item as DistanceScoringFunction,
+      return azureSearchDocumentsIndexesDistanceScoringFunctionDeserializer(
+        item as AzureSearchDocumentsIndexesDistanceScoringFunction,
       );
 
     case "freshness":
-      return freshnessScoringFunctionDeserializer(
-        item as FreshnessScoringFunction,
+      return azureSearchDocumentsIndexesFreshnessScoringFunctionDeserializer(
+        item as AzureSearchDocumentsIndexesFreshnessScoringFunction,
       );
 
     case "magnitude":
-      return magnitudeScoringFunctionDeserializer(
-        item as MagnitudeScoringFunction,
+      return azureSearchDocumentsIndexesMagnitudeScoringFunctionDeserializer(
+        item as AzureSearchDocumentsIndexesMagnitudeScoringFunction,
       );
 
     case "tag":
-      return tagScoringFunctionDeserializer(item as TagScoringFunction);
+      return azureSearchDocumentsIndexesTagScoringFunctionDeserializer(item as AzureSearchDocumentsIndexesTagScoringFunction);
 
     default:
       return azureSearchDocumentsIndexesScoringFunctionDeserializer(item);

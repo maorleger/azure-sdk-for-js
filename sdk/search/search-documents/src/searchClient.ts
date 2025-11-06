@@ -20,8 +20,8 @@ import type {
   SearchRequest as GeneratedSearchRequest,
   SuggestRequest,
   VectorQueryUnion as GeneratedVectorQuery,
-} from "./data/models/index.js";
-import { SearchClient as GeneratedClient } from "./data/searchClient.js";
+} from "./models/azure/search/documents/index.js";
+import { SearchClient as GeneratedClient } from "./search/searchClient.js";
 import { IndexDocumentsBatch } from "./indexDocumentsBatch.js";
 import type {
   AutocompleteOptions,
