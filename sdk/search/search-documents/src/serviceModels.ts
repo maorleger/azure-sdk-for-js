@@ -137,7 +137,7 @@ import type {
   VectorSearchProfile,
   VectorSearchVectorizerKind,
   WordDelimiterTokenFilter,
-} from "./generated/service/models/index.js";
+} from "./service/models/index.js";
 import type { KnowledgeAgent } from "./knowledgeAgentModels.js";
 
 /**

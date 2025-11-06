@@ -43,7 +43,7 @@ export {
   SingleVectorFieldResult,
   TextResult,
   VectorsDebugInfo,
-} from "./generated/data/models/index.js";
+} from "./data/models/index.js";
 export {
   KnowledgeAgentActivityRecord as BaseKnowledgeAgentActivityRecord,
   KnowledgeAgentActivityRecordUnion as KnowledgeAgentActivityRecord,
@@ -73,7 +73,7 @@ export {
   KnowledgeSourceParamsUnion as KnowledgeSourceParams,
   KnownKnowledgeSourceKind,
   SearchIndexKnowledgeSourceParams,
-} from "./generated/knowledgeAgent/models/index.js";
+} from "./knowledgeAgent/models/index.js";
 export {
   AIFoundryModelCatalogName,
   AIServicesAccountKey,
@@ -306,7 +306,7 @@ export {
   VectorSearchProfile,
   VectorSearchVectorizerKind,
   WordDelimiterTokenFilter,
-} from "./generated/service/models/index.js";
+} from "./service/models/index.js";
 export { default as GeographyPoint } from "./geographyPoint.js";
 export { IndexDocumentsBatch } from "./indexDocumentsBatch.js";
 export {

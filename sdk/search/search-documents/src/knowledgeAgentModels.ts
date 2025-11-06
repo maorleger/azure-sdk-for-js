@@ -6,7 +6,7 @@ import type {
   KnowledgeAgentOutputConfiguration,
   KnowledgeAgentRequestLimits,
   KnowledgeSourceReference,
-} from "./generated/service/index.js";
+} from "./service/index.js";
 import type { KnowledgeAgentModel, SearchResourceEncryptionKey } from "./serviceModels.js";
 
 export interface RetrieveKnowledgeOptions extends OperationOptions {
