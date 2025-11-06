@@ -37,16 +37,12 @@ export interface Documents {
    * Queries the number of documents in the index.
    * @param options The options parameters.
    */
-  count(
-    options?: DocumentsCountOptionalParams,
-  ): Promise<DocumentsCountResponse>;
+  count(options?: DocumentsCountOptionalParams): Promise<DocumentsCountResponse>;
   /**
    * Searches for documents in the index.
    * @param options The options parameters.
    */
-  searchGet(
-    options?: DocumentsSearchGetOptionalParams,
-  ): Promise<DocumentsSearchGetResponse>;
+  searchGet(options?: DocumentsSearchGetOptionalParams): Promise<DocumentsSearchGetResponse>;
   /**
    * Searches for documents in the index.
    * @param searchRequest The definition of the Search request.
@@ -61,10 +57,7 @@ export interface Documents {
    * @param key The key of the document to retrieve.
    * @param options The options parameters.
    */
-  get(
-    key: string,
-    options?: DocumentsGetOptionalParams,
-  ): Promise<DocumentsGetResponse>;
+  get(key: string, options?: DocumentsGetOptionalParams): Promise<DocumentsGetResponse>;
   /**
    * Suggests documents in the index that match the given partial query text.
    * @param searchText The search text to use to suggest documents. Must be at least 1 character, and no
@@ -92,10 +85,7 @@ export interface Documents {
    * @param batch The batch of index actions.
    * @param options The options parameters.
    */
-  index(
-    batch: IndexBatch,
-    options?: DocumentsIndexOptionalParams,
-  ): Promise<DocumentsIndexResponse>;
+  index(batch: IndexBatch, options?: DocumentsIndexOptionalParams): Promise<DocumentsIndexResponse>;
   /**
    * Autocompletes incomplete query terms based on input text and matching terms in the index.
    * @param searchText The incomplete term which should be auto-completed.

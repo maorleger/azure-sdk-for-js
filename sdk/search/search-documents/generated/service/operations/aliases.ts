@@ -45,10 +45,7 @@ export class AliasesImpl implements Aliases {
     alias: SearchAlias,
     options?: AliasesCreateOptionalParams,
   ): Promise<AliasesCreateResponse> {
-    return this.client.sendOperationRequest(
-      { alias, options },
-      createOperationSpec,
-    );
+    return this.client.sendOperationRequest({ alias, options }, createOperationSpec);
   }
 
   /**
@@ -82,14 +79,8 @@ export class AliasesImpl implements Aliases {
    * @param aliasName The name of the alias to delete.
    * @param options The options parameters.
    */
-  delete(
-    aliasName: string,
-    options?: AliasesDeleteOptionalParams,
-  ): Promise<void> {
-    return this.client.sendOperationRequest(
-      { aliasName, options },
-      deleteOperationSpec,
-    );
+  delete(aliasName: string, options?: AliasesDeleteOptionalParams): Promise<void> {
+    return this.client.sendOperationRequest({ aliasName, options }, deleteOperationSpec);
   }
 
   /**
@@ -97,14 +88,8 @@ export class AliasesImpl implements Aliases {
    * @param aliasName The name of the alias to retrieve.
    * @param options The options parameters.
    */
-  get(
-    aliasName: string,
-    options?: AliasesGetOptionalParams,
-  ): Promise<AliasesGetResponse> {
-    return this.client.sendOperationRequest(
-      { aliasName, options },
-      getOperationSpec,
-    );
+  get(aliasName: string, options?: AliasesGetOptionalParams): Promise<AliasesGetResponse> {
+    return this.client.sendOperationRequest({ aliasName, options }, getOperationSpec);
   }
 }
 // Operation Specifications
@@ -183,11 +168,7 @@ const deleteOperationSpec: coreClient.OperationSpec = {
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.endpoint, Parameters.aliasName],
-  headerParameters: [
-    Parameters.accept,
-    Parameters.ifMatch,
-    Parameters.ifNoneMatch,
-  ],
+  headerParameters: [Parameters.accept, Parameters.ifMatch, Parameters.ifNoneMatch],
   serializer,
 };
 const getOperationSpec: coreClient.OperationSpec = {

@@ -37,10 +37,7 @@ export interface SynonymMaps {
    * @param synonymMapName The name of the synonym map to delete.
    * @param options The options parameters.
    */
-  delete(
-    synonymMapName: string,
-    options?: SynonymMapsDeleteOptionalParams,
-  ): Promise<void>;
+  delete(synonymMapName: string, options?: SynonymMapsDeleteOptionalParams): Promise<void>;
   /**
    * Retrieves a synonym map definition.
    * @param synonymMapName The name of the synonym map to retrieve.
@@ -54,9 +51,7 @@ export interface SynonymMaps {
    * Lists all synonym maps available for a search service.
    * @param options The options parameters.
    */
-  list(
-    options?: SynonymMapsListOptionalParams,
-  ): Promise<SynonymMapsListResponse>;
+  list(options?: SynonymMapsListOptionalParams): Promise<SynonymMapsListResponse>;
   /**
    * Creates a new synonym map.
    * @param synonymMap The definition of the synonym map to create.

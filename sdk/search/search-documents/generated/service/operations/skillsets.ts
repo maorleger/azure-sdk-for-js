@@ -60,14 +60,8 @@ export class SkillsetsImpl implements Skillsets {
    * @param skillsetName The name of the skillset to delete.
    * @param options The options parameters.
    */
-  delete(
-    skillsetName: string,
-    options?: SkillsetsDeleteOptionalParams,
-  ): Promise<void> {
-    return this.client.sendOperationRequest(
-      { skillsetName, options },
-      deleteOperationSpec,
-    );
+  delete(skillsetName: string, options?: SkillsetsDeleteOptionalParams): Promise<void> {
+    return this.client.sendOperationRequest({ skillsetName, options }, deleteOperationSpec);
   }
 
   /**
@@ -75,14 +69,8 @@ export class SkillsetsImpl implements Skillsets {
    * @param skillsetName The name of the skillset to retrieve.
    * @param options The options parameters.
    */
-  get(
-    skillsetName: string,
-    options?: SkillsetsGetOptionalParams,
-  ): Promise<SkillsetsGetResponse> {
-    return this.client.sendOperationRequest(
-      { skillsetName, options },
-      getOperationSpec,
-    );
+  get(skillsetName: string, options?: SkillsetsGetOptionalParams): Promise<SkillsetsGetResponse> {
+    return this.client.sendOperationRequest({ skillsetName, options }, getOperationSpec);
   }
 
   /**
@@ -102,10 +90,7 @@ export class SkillsetsImpl implements Skillsets {
     skillset: SearchIndexerSkillset,
     options?: SkillsetsCreateOptionalParams,
   ): Promise<SkillsetsCreateResponse> {
-    return this.client.sendOperationRequest(
-      { skillset, options },
-      createOperationSpec,
-    );
+    return this.client.sendOperationRequest({ skillset, options }, createOperationSpec);
   }
 
   /**
@@ -171,11 +156,7 @@ const deleteOperationSpec: coreClient.OperationSpec = {
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.endpoint, Parameters.skillsetName],
-  headerParameters: [
-    Parameters.accept,
-    Parameters.ifMatch,
-    Parameters.ifNoneMatch,
-  ],
+  headerParameters: [Parameters.accept, Parameters.ifMatch, Parameters.ifNoneMatch],
   serializer,
 };
 const getOperationSpec: coreClient.OperationSpec = {

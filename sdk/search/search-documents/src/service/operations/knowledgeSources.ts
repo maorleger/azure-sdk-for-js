@@ -58,14 +58,8 @@ export class KnowledgeSourcesImpl implements KnowledgeSources {
    * @param sourceName The name of the knowledge source to delete.
    * @param options The options parameters.
    */
-  delete(
-    sourceName: string,
-    options?: KnowledgeSourcesDeleteOptionalParams,
-  ): Promise<void> {
-    return this.client.sendOperationRequest(
-      { sourceName, options },
-      deleteOperationSpec,
-    );
+  delete(sourceName: string, options?: KnowledgeSourcesDeleteOptionalParams): Promise<void> {
+    return this.client.sendOperationRequest({ sourceName, options }, deleteOperationSpec);
   }
 
   /**
@@ -77,19 +71,14 @@ export class KnowledgeSourcesImpl implements KnowledgeSources {
     sourceName: string,
     options?: KnowledgeSourcesGetOptionalParams,
   ): Promise<KnowledgeSourcesGetResponse> {
-    return this.client.sendOperationRequest(
-      { sourceName, options },
-      getOperationSpec,
-    );
+    return this.client.sendOperationRequest({ sourceName, options }, getOperationSpec);
   }
 
   /**
    * Lists all knowledge sources available for a search service.
    * @param options The options parameters.
    */
-  list(
-    options?: KnowledgeSourcesListOptionalParams,
-  ): Promise<KnowledgeSourcesListResponse> {
+  list(options?: KnowledgeSourcesListOptionalParams): Promise<KnowledgeSourcesListResponse> {
     return this.client.sendOperationRequest({ options }, listOperationSpec);
   }
 
@@ -102,10 +91,7 @@ export class KnowledgeSourcesImpl implements KnowledgeSources {
     knowledgeSource: KnowledgeSourceUnion,
     options?: KnowledgeSourcesCreateOptionalParams,
   ): Promise<KnowledgeSourcesCreateResponse> {
-    return this.client.sendOperationRequest(
-      { knowledgeSource, options },
-      createOperationSpec,
-    );
+    return this.client.sendOperationRequest({ knowledgeSource, options }, createOperationSpec);
   }
 }
 // Operation Specifications
@@ -150,11 +136,7 @@ const deleteOperationSpec: coreClient.OperationSpec = {
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.endpoint, Parameters.sourceName],
-  headerParameters: [
-    Parameters.accept,
-    Parameters.ifMatch,
-    Parameters.ifNoneMatch,
-  ],
+  headerParameters: [Parameters.accept, Parameters.ifMatch, Parameters.ifNoneMatch],
   serializer,
 };
 const getOperationSpec: coreClient.OperationSpec = {

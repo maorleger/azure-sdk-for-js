@@ -26,10 +26,7 @@ export interface Aliases {
    * @param alias The definition of the alias to create.
    * @param options The options parameters.
    */
-  create(
-    alias: SearchAlias,
-    options?: AliasesCreateOptionalParams,
-  ): Promise<AliasesCreateResponse>;
+  create(alias: SearchAlias, options?: AliasesCreateOptionalParams): Promise<AliasesCreateResponse>;
   /**
    * Lists all aliases available for a search service.
    * @param options The options parameters.
@@ -52,17 +49,11 @@ export interface Aliases {
    * @param aliasName The name of the alias to delete.
    * @param options The options parameters.
    */
-  delete(
-    aliasName: string,
-    options?: AliasesDeleteOptionalParams,
-  ): Promise<void>;
+  delete(aliasName: string, options?: AliasesDeleteOptionalParams): Promise<void>;
   /**
    * Retrieves an alias definition.
    * @param aliasName The name of the alias to retrieve.
    * @param options The options parameters.
    */
-  get(
-    aliasName: string,
-    options?: AliasesGetOptionalParams,
-  ): Promise<AliasesGetResponse>;
+  get(aliasName: string, options?: AliasesGetOptionalParams): Promise<AliasesGetResponse>;
 }

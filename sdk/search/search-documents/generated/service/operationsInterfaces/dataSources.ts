@@ -37,10 +37,7 @@ export interface DataSources {
    * @param dataSourceName The name of the datasource to delete.
    * @param options The options parameters.
    */
-  delete(
-    dataSourceName: string,
-    options?: DataSourcesDeleteOptionalParams,
-  ): Promise<void>;
+  delete(dataSourceName: string, options?: DataSourcesDeleteOptionalParams): Promise<void>;
   /**
    * Retrieves a datasource definition.
    * @param dataSourceName The name of the datasource to retrieve.
@@ -54,9 +51,7 @@ export interface DataSources {
    * Lists all datasources available for a search service.
    * @param options The options parameters.
    */
-  list(
-    options?: DataSourcesListOptionalParams,
-  ): Promise<DataSourcesListResponse>;
+  list(options?: DataSourcesListOptionalParams): Promise<DataSourcesListResponse>;
   /**
    * Creates a new datasource.
    * @param dataSource The definition of the datasource to create.

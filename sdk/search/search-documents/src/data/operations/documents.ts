@@ -52,9 +52,7 @@ export class DocumentsImpl implements Documents {
    * Queries the number of documents in the index.
    * @param options The options parameters.
    */
-  count(
-    options?: DocumentsCountOptionalParams,
-  ): Promise<DocumentsCountResponse> {
+  count(options?: DocumentsCountOptionalParams): Promise<DocumentsCountResponse> {
     return this.client.sendOperationRequest({ options }, countOperationSpec);
   }
 
@@ -62,13 +60,8 @@ export class DocumentsImpl implements Documents {
    * Searches for documents in the index.
    * @param options The options parameters.
    */
-  searchGet(
-    options?: DocumentsSearchGetOptionalParams,
-  ): Promise<DocumentsSearchGetResponse> {
-    return this.client.sendOperationRequest(
-      { options },
-      searchGetOperationSpec,
-    );
+  searchGet(options?: DocumentsSearchGetOptionalParams): Promise<DocumentsSearchGetResponse> {
+    return this.client.sendOperationRequest({ options }, searchGetOperationSpec);
   }
 
   /**
@@ -80,10 +73,7 @@ export class DocumentsImpl implements Documents {
     searchRequest: SearchRequest,
     options?: DocumentsSearchPostOptionalParams,
   ): Promise<DocumentsSearchPostResponse> {
-    return this.client.sendOperationRequest(
-      { searchRequest, options },
-      searchPostOperationSpec,
-    );
+    return this.client.sendOperationRequest({ searchRequest, options }, searchPostOperationSpec);
   }
 
   /**
@@ -91,10 +81,7 @@ export class DocumentsImpl implements Documents {
    * @param key The key of the document to retrieve.
    * @param options The options parameters.
    */
-  get(
-    key: string,
-    options?: DocumentsGetOptionalParams,
-  ): Promise<DocumentsGetResponse> {
+  get(key: string, options?: DocumentsGetOptionalParams): Promise<DocumentsGetResponse> {
     return this.client.sendOperationRequest({ key, options }, getOperationSpec);
   }
 
@@ -126,10 +113,7 @@ export class DocumentsImpl implements Documents {
     suggestRequest: SuggestRequest,
     options?: DocumentsSuggestPostOptionalParams,
   ): Promise<DocumentsSuggestPostResponse> {
-    return this.client.sendOperationRequest(
-      { suggestRequest, options },
-      suggestPostOperationSpec,
-    );
+    return this.client.sendOperationRequest({ suggestRequest, options }, suggestPostOperationSpec);
   }
 
   /**
@@ -141,10 +125,7 @@ export class DocumentsImpl implements Documents {
     batch: IndexBatch,
     options?: DocumentsIndexOptionalParams,
   ): Promise<DocumentsIndexResponse> {
-    return this.client.sendOperationRequest(
-      { batch, options },
-      indexOperationSpec,
-    );
+    return this.client.sendOperationRequest({ batch, options }, indexOperationSpec);
   }
 
   /**

@@ -31,10 +31,7 @@ export interface Indexes {
    * @param index The definition of the index to create.
    * @param options The options parameters.
    */
-  create(
-    index: SearchIndex,
-    options?: IndexesCreateOptionalParams,
-  ): Promise<IndexesCreateResponse>;
+  create(index: SearchIndex, options?: IndexesCreateOptionalParams): Promise<IndexesCreateResponse>;
   /**
    * Lists all indexes available for a search service.
    * @param options The options parameters.
@@ -58,19 +55,13 @@ export interface Indexes {
    * @param indexName The name of the index to delete.
    * @param options The options parameters.
    */
-  delete(
-    indexName: string,
-    options?: IndexesDeleteOptionalParams,
-  ): Promise<void>;
+  delete(indexName: string, options?: IndexesDeleteOptionalParams): Promise<void>;
   /**
    * Retrieves an index definition.
    * @param indexName The name of the index to retrieve.
    * @param options The options parameters.
    */
-  get(
-    indexName: string,
-    options?: IndexesGetOptionalParams,
-  ): Promise<IndexesGetResponse>;
+  get(indexName: string, options?: IndexesGetOptionalParams): Promise<IndexesGetResponse>;
   /**
    * Returns statistics for the given index, including a document count and storage usage.
    * @param indexName The name of the index for which to retrieve statistics.

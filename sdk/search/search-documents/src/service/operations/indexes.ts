@@ -50,10 +50,7 @@ export class IndexesImpl implements Indexes {
     index: SearchIndex,
     options?: IndexesCreateOptionalParams,
   ): Promise<IndexesCreateResponse> {
-    return this.client.sendOperationRequest(
-      { index, options },
-      createOperationSpec,
-    );
+    return this.client.sendOperationRequest({ index, options }, createOperationSpec);
   }
 
   /**
@@ -88,14 +85,8 @@ export class IndexesImpl implements Indexes {
    * @param indexName The name of the index to delete.
    * @param options The options parameters.
    */
-  delete(
-    indexName: string,
-    options?: IndexesDeleteOptionalParams,
-  ): Promise<void> {
-    return this.client.sendOperationRequest(
-      { indexName, options },
-      deleteOperationSpec,
-    );
+  delete(indexName: string, options?: IndexesDeleteOptionalParams): Promise<void> {
+    return this.client.sendOperationRequest({ indexName, options }, deleteOperationSpec);
   }
 
   /**
@@ -103,14 +94,8 @@ export class IndexesImpl implements Indexes {
    * @param indexName The name of the index to retrieve.
    * @param options The options parameters.
    */
-  get(
-    indexName: string,
-    options?: IndexesGetOptionalParams,
-  ): Promise<IndexesGetResponse> {
-    return this.client.sendOperationRequest(
-      { indexName, options },
-      getOperationSpec,
-    );
+  get(indexName: string, options?: IndexesGetOptionalParams): Promise<IndexesGetResponse> {
+    return this.client.sendOperationRequest({ indexName, options }, getOperationSpec);
   }
 
   /**
@@ -122,10 +107,7 @@ export class IndexesImpl implements Indexes {
     indexName: string,
     options?: IndexesGetStatisticsOptionalParams,
   ): Promise<IndexesGetStatisticsResponse> {
-    return this.client.sendOperationRequest(
-      { indexName, options },
-      getStatisticsOperationSpec,
-    );
+    return this.client.sendOperationRequest({ indexName, options }, getStatisticsOperationSpec);
   }
 
   /**
@@ -139,10 +121,7 @@ export class IndexesImpl implements Indexes {
     request: AnalyzeRequest,
     options?: IndexesAnalyzeOptionalParams,
   ): Promise<IndexesAnalyzeResponse> {
-    return this.client.sendOperationRequest(
-      { indexName, request, options },
-      analyzeOperationSpec,
-    );
+    return this.client.sendOperationRequest({ indexName, request, options }, analyzeOperationSpec);
   }
 }
 // Operation Specifications
@@ -221,11 +200,7 @@ const deleteOperationSpec: coreClient.OperationSpec = {
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.endpoint, Parameters.indexName],
-  headerParameters: [
-    Parameters.accept,
-    Parameters.ifMatch,
-    Parameters.ifNoneMatch,
-  ],
+  headerParameters: [Parameters.accept, Parameters.ifMatch, Parameters.ifNoneMatch],
   serializer,
 };
 const getOperationSpec: coreClient.OperationSpec = {

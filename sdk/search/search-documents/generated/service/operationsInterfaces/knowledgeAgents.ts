@@ -37,10 +37,7 @@ export interface KnowledgeAgents {
    * @param agentName The name of the agent to delete.
    * @param options The options parameters.
    */
-  delete(
-    agentName: string,
-    options?: KnowledgeAgentsDeleteOptionalParams,
-  ): Promise<void>;
+  delete(agentName: string, options?: KnowledgeAgentsDeleteOptionalParams): Promise<void>;
   /**
    * Retrieves an agent definition.
    * @param agentName The name of the agent to retrieve.
@@ -54,9 +51,7 @@ export interface KnowledgeAgents {
    * Lists all agents available for a search service.
    * @param options The options parameters.
    */
-  list(
-    options?: KnowledgeAgentsListOptionalParams,
-  ): Promise<KnowledgeAgentsListResponse>;
+  list(options?: KnowledgeAgentsListOptionalParams): Promise<KnowledgeAgentsListResponse>;
   /**
    * Creates a new agent.
    * @param knowledgeAgent The definition of the agent to create.

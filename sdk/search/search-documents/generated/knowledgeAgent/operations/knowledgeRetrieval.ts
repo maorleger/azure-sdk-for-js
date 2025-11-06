@@ -38,10 +38,7 @@ export class KnowledgeRetrievalImpl implements KnowledgeRetrieval {
     retrievalRequest: KnowledgeAgentRetrievalRequest,
     options?: KnowledgeRetrievalRetrieveOptionalParams,
   ): Promise<KnowledgeRetrievalRetrieveResponse> {
-    return this.client.sendOperationRequest(
-      { retrievalRequest, options },
-      retrieveOperationSpec,
-    );
+    return this.client.sendOperationRequest({ retrievalRequest, options }, retrieveOperationSpec);
   }
 }
 // Operation Specifications

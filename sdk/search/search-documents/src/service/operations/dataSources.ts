@@ -58,14 +58,8 @@ export class DataSourcesImpl implements DataSources {
    * @param dataSourceName The name of the datasource to delete.
    * @param options The options parameters.
    */
-  delete(
-    dataSourceName: string,
-    options?: DataSourcesDeleteOptionalParams,
-  ): Promise<void> {
-    return this.client.sendOperationRequest(
-      { dataSourceName, options },
-      deleteOperationSpec,
-    );
+  delete(dataSourceName: string, options?: DataSourcesDeleteOptionalParams): Promise<void> {
+    return this.client.sendOperationRequest({ dataSourceName, options }, deleteOperationSpec);
   }
 
   /**
@@ -77,19 +71,14 @@ export class DataSourcesImpl implements DataSources {
     dataSourceName: string,
     options?: DataSourcesGetOptionalParams,
   ): Promise<DataSourcesGetResponse> {
-    return this.client.sendOperationRequest(
-      { dataSourceName, options },
-      getOperationSpec,
-    );
+    return this.client.sendOperationRequest({ dataSourceName, options }, getOperationSpec);
   }
 
   /**
    * Lists all datasources available for a search service.
    * @param options The options parameters.
    */
-  list(
-    options?: DataSourcesListOptionalParams,
-  ): Promise<DataSourcesListResponse> {
+  list(options?: DataSourcesListOptionalParams): Promise<DataSourcesListResponse> {
     return this.client.sendOperationRequest({ options }, listOperationSpec);
   }
 
@@ -102,10 +91,7 @@ export class DataSourcesImpl implements DataSources {
     dataSource: SearchIndexerDataSource,
     options?: DataSourcesCreateOptionalParams,
   ): Promise<DataSourcesCreateResponse> {
-    return this.client.sendOperationRequest(
-      { dataSource, options },
-      createOperationSpec,
-    );
+    return this.client.sendOperationRequest({ dataSource, options }, createOperationSpec);
   }
 }
 // Operation Specifications
@@ -126,10 +112,7 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
     },
   },
   requestBody: Parameters.dataSource,
-  queryParameters: [
-    Parameters.apiVersion,
-    Parameters.skipIndexerResetRequirementForCache,
-  ],
+  queryParameters: [Parameters.apiVersion, Parameters.skipIndexerResetRequirementForCache],
   urlParameters: [Parameters.endpoint, Parameters.dataSourceName],
   headerParameters: [
     Parameters.contentType,
@@ -153,11 +136,7 @@ const deleteOperationSpec: coreClient.OperationSpec = {
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.endpoint, Parameters.dataSourceName],
-  headerParameters: [
-    Parameters.accept,
-    Parameters.ifMatch,
-    Parameters.ifNoneMatch,
-  ],
+  headerParameters: [Parameters.accept, Parameters.ifMatch, Parameters.ifNoneMatch],
   serializer,
 };
 const getOperationSpec: coreClient.OperationSpec = {

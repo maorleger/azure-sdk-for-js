@@ -58,14 +58,8 @@ export class KnowledgeAgentsImpl implements KnowledgeAgents {
    * @param agentName The name of the agent to delete.
    * @param options The options parameters.
    */
-  delete(
-    agentName: string,
-    options?: KnowledgeAgentsDeleteOptionalParams,
-  ): Promise<void> {
-    return this.client.sendOperationRequest(
-      { agentName, options },
-      deleteOperationSpec,
-    );
+  delete(agentName: string, options?: KnowledgeAgentsDeleteOptionalParams): Promise<void> {
+    return this.client.sendOperationRequest({ agentName, options }, deleteOperationSpec);
   }
 
   /**
@@ -77,19 +71,14 @@ export class KnowledgeAgentsImpl implements KnowledgeAgents {
     agentName: string,
     options?: KnowledgeAgentsGetOptionalParams,
   ): Promise<KnowledgeAgentsGetResponse> {
-    return this.client.sendOperationRequest(
-      { agentName, options },
-      getOperationSpec,
-    );
+    return this.client.sendOperationRequest({ agentName, options }, getOperationSpec);
   }
 
   /**
    * Lists all agents available for a search service.
    * @param options The options parameters.
    */
-  list(
-    options?: KnowledgeAgentsListOptionalParams,
-  ): Promise<KnowledgeAgentsListResponse> {
+  list(options?: KnowledgeAgentsListOptionalParams): Promise<KnowledgeAgentsListResponse> {
     return this.client.sendOperationRequest({ options }, listOperationSpec);
   }
 
@@ -102,10 +91,7 @@ export class KnowledgeAgentsImpl implements KnowledgeAgents {
     knowledgeAgent: KnowledgeAgent,
     options?: KnowledgeAgentsCreateOptionalParams,
   ): Promise<KnowledgeAgentsCreateResponse> {
-    return this.client.sendOperationRequest(
-      { knowledgeAgent, options },
-      createOperationSpec,
-    );
+    return this.client.sendOperationRequest({ knowledgeAgent, options }, createOperationSpec);
   }
 }
 // Operation Specifications
@@ -150,11 +136,7 @@ const deleteOperationSpec: coreClient.OperationSpec = {
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.endpoint, Parameters.agentName],
-  headerParameters: [
-    Parameters.accept,
-    Parameters.ifMatch,
-    Parameters.ifNoneMatch,
-  ],
+  headerParameters: [Parameters.accept, Parameters.ifMatch, Parameters.ifNoneMatch],
   serializer,
 };
 const getOperationSpec: coreClient.OperationSpec = {

@@ -39,19 +39,13 @@ export interface Skillsets {
    * @param skillsetName The name of the skillset to delete.
    * @param options The options parameters.
    */
-  delete(
-    skillsetName: string,
-    options?: SkillsetsDeleteOptionalParams,
-  ): Promise<void>;
+  delete(skillsetName: string, options?: SkillsetsDeleteOptionalParams): Promise<void>;
   /**
    * Retrieves a skillset in a search service.
    * @param skillsetName The name of the skillset to retrieve.
    * @param options The options parameters.
    */
-  get(
-    skillsetName: string,
-    options?: SkillsetsGetOptionalParams,
-  ): Promise<SkillsetsGetResponse>;
+  get(skillsetName: string, options?: SkillsetsGetOptionalParams): Promise<SkillsetsGetResponse>;
   /**
    * List all skillsets in a search service.
    * @param options The options parameters.

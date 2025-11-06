@@ -210,16 +210,15 @@ export const indexer: OperationParameter = {
   mapper: SearchIndexerMapper,
 };
 
-export const disableCacheReprocessingChangeDetection: OperationQueryParameter =
-  {
-    parameterPath: ["options", "disableCacheReprocessingChangeDetection"],
-    mapper: {
-      serializedName: "disableCacheReprocessingChangeDetection",
-      type: {
-        name: "Boolean",
-      },
+export const disableCacheReprocessingChangeDetection: OperationQueryParameter = {
+  parameterPath: ["options", "disableCacheReprocessingChangeDetection"],
+  mapper: {
+    serializedName: "disableCacheReprocessingChangeDetection",
+    type: {
+      name: "Boolean",
     },
-  };
+  },
+};
 
 export const skillset: OperationParameter = {
   parameterPath: "skillset",

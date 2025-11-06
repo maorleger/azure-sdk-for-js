@@ -33,19 +33,13 @@ export interface Indexers {
    * @param indexerName The name of the indexer to reset.
    * @param options The options parameters.
    */
-  reset(
-    indexerName: string,
-    options?: IndexersResetOptionalParams,
-  ): Promise<void>;
+  reset(indexerName: string, options?: IndexersResetOptionalParams): Promise<void>;
   /**
    * Resets specific documents in the datasource to be selectively re-ingested by the indexer.
    * @param indexerName The name of the indexer to reset documents for.
    * @param options The options parameters.
    */
-  resetDocs(
-    indexerName: string,
-    options?: IndexersResetDocsOptionalParams,
-  ): Promise<void>;
+  resetDocs(indexerName: string, options?: IndexersResetDocsOptionalParams): Promise<void>;
   /**
    * Resync selective options from the datasource to be re-ingested by the indexer.
    * @param indexerName The name of the indexer to resync for.
@@ -79,19 +73,13 @@ export interface Indexers {
    * @param indexerName The name of the indexer to delete.
    * @param options The options parameters.
    */
-  delete(
-    indexerName: string,
-    options?: IndexersDeleteOptionalParams,
-  ): Promise<void>;
+  delete(indexerName: string, options?: IndexersDeleteOptionalParams): Promise<void>;
   /**
    * Retrieves an indexer definition.
    * @param indexerName The name of the indexer to retrieve.
    * @param options The options parameters.
    */
-  get(
-    indexerName: string,
-    options?: IndexersGetOptionalParams,
-  ): Promise<IndexersGetResponse>;
+  get(indexerName: string, options?: IndexersGetOptionalParams): Promise<IndexersGetResponse>;
   /**
    * Lists all indexers available for a search service.
    * @param options The options parameters.

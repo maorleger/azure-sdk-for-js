@@ -13,9 +13,7 @@ export type KnowledgeAgentMessageContentUnion =
   | KnowledgeAgentMessageContent
   | KnowledgeAgentMessageTextContent
   | KnowledgeAgentMessageImageContent;
-export type KnowledgeSourceParamsUnion =
-  | KnowledgeSourceParams
-  | SearchIndexKnowledgeSourceParams;
+export type KnowledgeSourceParamsUnion = KnowledgeSourceParams | SearchIndexKnowledgeSourceParams;
 export type KnowledgeAgentActivityRecordUnion =
   | KnowledgeAgentActivityRecord
   | KnowledgeAgentRetrievalActivityRecordUnion
@@ -165,24 +163,21 @@ export interface KnowledgeAgentAzureBlobActivityArguments {
 }
 
 /** Text message type. */
-export interface KnowledgeAgentMessageTextContent
-  extends KnowledgeAgentMessageContent {
+export interface KnowledgeAgentMessageTextContent extends KnowledgeAgentMessageContent {
   /** Polymorphic discriminator, which specifies the different types this object can be */
   type: "text";
   text: string;
 }
 
 /** Text message type. */
-export interface KnowledgeAgentMessageImageContent
-  extends KnowledgeAgentMessageContent {
+export interface KnowledgeAgentMessageImageContent extends KnowledgeAgentMessageContent {
   /** Polymorphic discriminator, which specifies the different types this object can be */
   type: "image";
   image: KnowledgeAgentMessageImageContentImage;
 }
 
 /** Specifies runtime parameters for a search index knowledge source */
-export interface SearchIndexKnowledgeSourceParams
-  extends KnowledgeSourceParams {
+export interface SearchIndexKnowledgeSourceParams extends KnowledgeSourceParams {
   /** Polymorphic discriminator, which specifies the different types this object can be */
   kind: "searchIndex";
   /** A filter condition applied to the index (e.g., 'State eq VA'). */
@@ -190,8 +185,7 @@ export interface SearchIndexKnowledgeSourceParams
 }
 
 /** Represents a retrieval activity record. */
-export interface KnowledgeAgentRetrievalActivityRecord
-  extends KnowledgeAgentActivityRecord {
+export interface KnowledgeAgentRetrievalActivityRecord extends KnowledgeAgentActivityRecord {
   /** Polymorphic discriminator, which specifies the different types this object can be */
   type: "KnowledgeAgentRetrievalActivityRecord" | "searchIndex" | "azureBlob";
   /** The knowledge source for the retrieval activity. */
@@ -225,8 +219,7 @@ export interface KnowledgeAgentModelAnswerSynthesisActivityRecord
 }
 
 /** Represents a semantic ranker activity record. */
-export interface KnowledgeAgentSemanticRerankerActivityRecord
-  extends KnowledgeAgentActivityRecord {
+export interface KnowledgeAgentSemanticRerankerActivityRecord extends KnowledgeAgentActivityRecord {
   /** Polymorphic discriminator, which specifies the different types this object can be */
   type: "semanticReranker";
   /** The number of input tokens for the semantic ranker activity. */
@@ -234,8 +227,7 @@ export interface KnowledgeAgentSemanticRerankerActivityRecord
 }
 
 /** Represents an Azure Search document reference. */
-export interface KnowledgeAgentSearchIndexReference
-  extends KnowledgeAgentReference {
+export interface KnowledgeAgentSearchIndexReference extends KnowledgeAgentReference {
   /** Polymorphic discriminator, which specifies the different types this object can be */
   type: "searchIndex";
   /** The document key for the reference. */
@@ -243,8 +235,7 @@ export interface KnowledgeAgentSearchIndexReference
 }
 
 /** Represents an Azure Blob Storage document reference. */
-export interface KnowledgeAgentAzureBlobReference
-  extends KnowledgeAgentReference {
+export interface KnowledgeAgentAzureBlobReference extends KnowledgeAgentReference {
   /** Polymorphic discriminator, which specifies the different types this object can be */
   type: "azureBlob";
   /** The blob URL for the reference. */
@@ -321,19 +312,16 @@ export enum KnownKnowledgeSourceKind {
 export type KnowledgeSourceKind = string;
 
 /** Optional parameters. */
-export interface KnowledgeRetrievalRetrieveOptionalParams
-  extends coreClient.OperationOptions {
+export interface KnowledgeRetrievalRetrieveOptionalParams extends coreClient.OperationOptions {
   /** Token identifying the user for which the query is being executed. This token is used to enforce security restrictions on documents. */
   xMsQuerySourceAuthorization?: string;
 }
 
 /** Contains response data for the retrieve operation. */
-export type KnowledgeRetrievalRetrieveResponse =
-  KnowledgeAgentRetrievalResponse;
+export type KnowledgeRetrievalRetrieveResponse = KnowledgeAgentRetrievalResponse;
 
 /** Optional parameters. */
-export interface SearchClientOptionalParams
-  extends coreHttpCompat.ExtendedServiceClientOptions {
+export interface SearchClientOptionalParams extends coreHttpCompat.ExtendedServiceClientOptions {
   /** Overrides client endpoint. */
   endpoint?: string;
 }

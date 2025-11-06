@@ -8,11 +8,7 @@
 
 import * as coreClient from "@azure/core-client";
 import * as coreHttpCompat from "@azure/core-http-compat";
-import {
-  PipelineRequest,
-  PipelineResponse,
-  SendRequest,
-} from "@azure/core-rest-pipeline";
+import { PipelineRequest, PipelineResponse, SendRequest } from "@azure/core-rest-pipeline";
 import {
   KnowledgeAgentsImpl,
   KnowledgeSourcesImpl,
@@ -111,10 +107,7 @@ export class SearchServiceClient extends coreHttpCompat.ExtendedServiceClient {
     }
     const apiVersionPolicy = {
       name: "CustomApiVersionPolicy",
-      async sendRequest(
-        request: PipelineRequest,
-        next: SendRequest,
-      ): Promise<PipelineResponse> {
+      async sendRequest(request: PipelineRequest, next: SendRequest): Promise<PipelineResponse> {
         const param = request.url.split("?");
         if (param.length > 1) {
           const newParams = param[1].split("&").map((item) => {
@@ -139,10 +132,7 @@ export class SearchServiceClient extends coreHttpCompat.ExtendedServiceClient {
   getServiceStatistics(
     options?: GetServiceStatisticsOptionalParams,
   ): Promise<GetServiceStatisticsResponse> {
-    return this.sendOperationRequest(
-      { options },
-      getServiceStatisticsOperationSpec,
-    );
+    return this.sendOperationRequest({ options }, getServiceStatisticsOperationSpec);
   }
 
   /**
@@ -152,10 +142,7 @@ export class SearchServiceClient extends coreHttpCompat.ExtendedServiceClient {
   getIndexStatsSummary(
     options?: GetIndexStatsSummaryOptionalParams,
   ): Promise<GetIndexStatsSummaryResponse> {
-    return this.sendOperationRequest(
-      { options },
-      getIndexStatsSummaryOperationSpec,
-    );
+    return this.sendOperationRequest({ options }, getIndexStatsSummaryOperationSpec);
   }
 
   knowledgeAgents: KnowledgeAgents;

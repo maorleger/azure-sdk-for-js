@@ -58,14 +58,8 @@ export class SynonymMapsImpl implements SynonymMaps {
    * @param synonymMapName The name of the synonym map to delete.
    * @param options The options parameters.
    */
-  delete(
-    synonymMapName: string,
-    options?: SynonymMapsDeleteOptionalParams,
-  ): Promise<void> {
-    return this.client.sendOperationRequest(
-      { synonymMapName, options },
-      deleteOperationSpec,
-    );
+  delete(synonymMapName: string, options?: SynonymMapsDeleteOptionalParams): Promise<void> {
+    return this.client.sendOperationRequest({ synonymMapName, options }, deleteOperationSpec);
   }
 
   /**
@@ -77,19 +71,14 @@ export class SynonymMapsImpl implements SynonymMaps {
     synonymMapName: string,
     options?: SynonymMapsGetOptionalParams,
   ): Promise<SynonymMapsGetResponse> {
-    return this.client.sendOperationRequest(
-      { synonymMapName, options },
-      getOperationSpec,
-    );
+    return this.client.sendOperationRequest({ synonymMapName, options }, getOperationSpec);
   }
 
   /**
    * Lists all synonym maps available for a search service.
    * @param options The options parameters.
    */
-  list(
-    options?: SynonymMapsListOptionalParams,
-  ): Promise<SynonymMapsListResponse> {
+  list(options?: SynonymMapsListOptionalParams): Promise<SynonymMapsListResponse> {
     return this.client.sendOperationRequest({ options }, listOperationSpec);
   }
 
@@ -102,10 +91,7 @@ export class SynonymMapsImpl implements SynonymMaps {
     synonymMap: SynonymMap,
     options?: SynonymMapsCreateOptionalParams,
   ): Promise<SynonymMapsCreateResponse> {
-    return this.client.sendOperationRequest(
-      { synonymMap, options },
-      createOperationSpec,
-    );
+    return this.client.sendOperationRequest({ synonymMap, options }, createOperationSpec);
   }
 }
 // Operation Specifications
@@ -150,11 +136,7 @@ const deleteOperationSpec: coreClient.OperationSpec = {
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.endpoint, Parameters.synonymMapName],
-  headerParameters: [
-    Parameters.accept,
-    Parameters.ifMatch,
-    Parameters.ifNoneMatch,
-  ],
+  headerParameters: [Parameters.accept, Parameters.ifMatch, Parameters.ifNoneMatch],
   serializer,
 };
 const getOperationSpec: coreClient.OperationSpec = {

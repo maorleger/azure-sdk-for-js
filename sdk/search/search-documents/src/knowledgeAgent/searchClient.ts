@@ -7,17 +7,10 @@
  */
 
 import * as coreHttpCompat from "@azure/core-http-compat";
-import {
-  PipelineRequest,
-  PipelineResponse,
-  SendRequest,
-} from "@azure/core-rest-pipeline";
+import { PipelineRequest, PipelineResponse, SendRequest } from "@azure/core-rest-pipeline";
 import { KnowledgeRetrievalImpl } from "./operations/index.js";
 import { KnowledgeRetrieval } from "./operationsInterfaces/index.js";
-import {
-  ApiVersion20250801Preview,
-  SearchClientOptionalParams,
-} from "./models/index.js";
+import { ApiVersion20250801Preview, SearchClientOptionalParams } from "./models/index.js";
 
 /** @internal */
 export class SearchClient extends coreHttpCompat.ExtendedServiceClient {
@@ -68,10 +61,7 @@ export class SearchClient extends coreHttpCompat.ExtendedServiceClient {
       userAgentOptions: {
         userAgentPrefix,
       },
-      endpoint:
-        options.endpoint ??
-        options.baseUri ??
-        "{endpoint}/agents('{agentName}')",
+      endpoint: options.endpoint ?? options.baseUri ?? "{endpoint}/agents('{agentName}')",
     };
     super(optionsWithDefaults);
     // Parameter assignments
@@ -89,10 +79,7 @@ export class SearchClient extends coreHttpCompat.ExtendedServiceClient {
     }
     const apiVersionPolicy = {
       name: "CustomApiVersionPolicy",
-      async sendRequest(
-        request: PipelineRequest,
-        next: SendRequest,
-      ): Promise<PipelineResponse> {
+      async sendRequest(request: PipelineRequest, next: SendRequest): Promise<PipelineResponse> {
         const param = request.url.split("?");
         if (param.length > 1) {
           const newParams = param[1].split("&").map((item) => {

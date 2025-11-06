@@ -37,10 +37,7 @@ export interface KnowledgeSources {
    * @param sourceName The name of the knowledge source to delete.
    * @param options The options parameters.
    */
-  delete(
-    sourceName: string,
-    options?: KnowledgeSourcesDeleteOptionalParams,
-  ): Promise<void>;
+  delete(sourceName: string, options?: KnowledgeSourcesDeleteOptionalParams): Promise<void>;
   /**
    * Retrieves a knowledge source definition.
    * @param sourceName The name of the knowledge source to retrieve.
@@ -54,9 +51,7 @@ export interface KnowledgeSources {
    * Lists all knowledge sources available for a search service.
    * @param options The options parameters.
    */
-  list(
-    options?: KnowledgeSourcesListOptionalParams,
-  ): Promise<KnowledgeSourcesListResponse>;
+  list(options?: KnowledgeSourcesListOptionalParams): Promise<KnowledgeSourcesListResponse>;
   /**
    * Creates a new knowledge source.
    * @param knowledgeSource The definition of the knowledge source to create.

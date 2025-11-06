@@ -48,14 +48,8 @@ export class IndexersImpl implements Indexers {
    * @param indexerName The name of the indexer to reset.
    * @param options The options parameters.
    */
-  reset(
-    indexerName: string,
-    options?: IndexersResetOptionalParams,
-  ): Promise<void> {
-    return this.client.sendOperationRequest(
-      { indexerName, options },
-      resetOperationSpec,
-    );
+  reset(indexerName: string, options?: IndexersResetOptionalParams): Promise<void> {
+    return this.client.sendOperationRequest({ indexerName, options }, resetOperationSpec);
   }
 
   /**
@@ -63,14 +57,8 @@ export class IndexersImpl implements Indexers {
    * @param indexerName The name of the indexer to reset documents for.
    * @param options The options parameters.
    */
-  resetDocs(
-    indexerName: string,
-    options?: IndexersResetDocsOptionalParams,
-  ): Promise<void> {
-    return this.client.sendOperationRequest(
-      { indexerName, options },
-      resetDocsOperationSpec,
-    );
+  resetDocs(indexerName: string, options?: IndexersResetDocsOptionalParams): Promise<void> {
+    return this.client.sendOperationRequest({ indexerName, options }, resetDocsOperationSpec);
   }
 
   /**
@@ -96,10 +84,7 @@ export class IndexersImpl implements Indexers {
    * @param options The options parameters.
    */
   run(indexerName: string, options?: IndexersRunOptionalParams): Promise<void> {
-    return this.client.sendOperationRequest(
-      { indexerName, options },
-      runOperationSpec,
-    );
+    return this.client.sendOperationRequest({ indexerName, options }, runOperationSpec);
   }
 
   /**
@@ -124,14 +109,8 @@ export class IndexersImpl implements Indexers {
    * @param indexerName The name of the indexer to delete.
    * @param options The options parameters.
    */
-  delete(
-    indexerName: string,
-    options?: IndexersDeleteOptionalParams,
-  ): Promise<void> {
-    return this.client.sendOperationRequest(
-      { indexerName, options },
-      deleteOperationSpec,
-    );
+  delete(indexerName: string, options?: IndexersDeleteOptionalParams): Promise<void> {
+    return this.client.sendOperationRequest({ indexerName, options }, deleteOperationSpec);
   }
 
   /**
@@ -139,14 +118,8 @@ export class IndexersImpl implements Indexers {
    * @param indexerName The name of the indexer to retrieve.
    * @param options The options parameters.
    */
-  get(
-    indexerName: string,
-    options?: IndexersGetOptionalParams,
-  ): Promise<IndexersGetResponse> {
-    return this.client.sendOperationRequest(
-      { indexerName, options },
-      getOperationSpec,
-    );
+  get(indexerName: string, options?: IndexersGetOptionalParams): Promise<IndexersGetResponse> {
+    return this.client.sendOperationRequest({ indexerName, options }, getOperationSpec);
   }
 
   /**
@@ -166,10 +139,7 @@ export class IndexersImpl implements Indexers {
     indexer: SearchIndexer,
     options?: IndexersCreateOptionalParams,
   ): Promise<IndexersCreateResponse> {
-    return this.client.sendOperationRequest(
-      { indexer, options },
-      createOperationSpec,
-    );
+    return this.client.sendOperationRequest({ indexer, options }, createOperationSpec);
   }
 
   /**
@@ -181,10 +151,7 @@ export class IndexersImpl implements Indexers {
     indexerName: string,
     options?: IndexersGetStatusOptionalParams,
   ): Promise<IndexersGetStatusResponse> {
-    return this.client.sendOperationRequest(
-      { indexerName, options },
-      getStatusOperationSpec,
-    );
+    return this.client.sendOperationRequest({ indexerName, options }, getStatusOperationSpec);
   }
 }
 // Operation Specifications
@@ -293,11 +260,7 @@ const deleteOperationSpec: coreClient.OperationSpec = {
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.endpoint, Parameters.indexerName],
-  headerParameters: [
-    Parameters.accept,
-    Parameters.ifMatch,
-    Parameters.ifNoneMatch,
-  ],
+  headerParameters: [Parameters.accept, Parameters.ifMatch, Parameters.ifNoneMatch],
   serializer,
 };
 const getOperationSpec: coreClient.OperationSpec = {
