@@ -3,23 +3,26 @@
 
 /// <reference lib="esnext.asynciterable" />
 
-import type { KeyCredential, TokenCredential } from "@azure/core-auth";
+import type {
+  KeyCredential,
+  TokenCredential } from "@azure/core-auth";
 import { isTokenCredential } from "@azure/core-auth";
 import type { InternalClientPipelineOptions } from "@azure/core-client";
 import type { ExtendedCommonClientOptions } from "@azure/core-http-compat";
 import type { Pipeline } from "@azure/core-rest-pipeline";
 import { bearerTokenAuthenticationPolicy } from "@azure/core-rest-pipeline";
-import { decode, encode } from "./base64.js";
+import { decode,
+  encode } from "./base64.js";
 import type {
   AutocompleteRequest,
-  AutocompleteResult,
-  IndexDocumentsResult,
+  AzureSearchDocumentsAutocompleteResult as AutocompleteResult,
+  AzureSearchDocumentsIndexDocumentsResult as IndexDocumentsResult,
   QueryAnswerType as BaseAnswers,
   QueryCaptionType as BaseCaptions,
   QueryRewritesType as GeneratedQueryRewrites,
   SearchRequest as GeneratedSearchRequest,
   SuggestRequest,
-  VectorQueryUnion as GeneratedVectorQuery,
+  VectorQueryUnion as GeneratedVectorQuery
 } from "./models/azure/search/documents/index.js";
 import { SearchClient as GeneratedClient } from "./search/searchClient.js";
 import { IndexDocumentsBatch } from "./indexDocumentsBatch.js";

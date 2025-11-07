@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import type { OperationOptions } from "@azure/core-client";
+import type { OperationOptions } from "@azure-rest/core-client";
 import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import type {
   AIFoundryModelCatalogName,

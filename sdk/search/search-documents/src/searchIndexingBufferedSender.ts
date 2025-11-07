@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import type { OperationOptions } from "@azure/core-client";
+import type { OperationOptions } from "@azure-rest/core-client";
 import type { RestError } from "@azure/core-rest-pipeline";
 import { delay } from "@azure/core-util";
 import EventEmitter from "node:events";

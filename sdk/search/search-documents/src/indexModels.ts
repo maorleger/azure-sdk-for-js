@@ -1,32 +1,33 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import type { OperationOptions } from "@azure/core-client";
+import type {
+  OperationOptions } from "@azure-rest/core-client";
 import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import type {
   AutocompleteMode,
-  DebugInfo,
-  FacetResult,
-  HybridSearch,
-  IndexActionType,
-  KnownSemanticErrorMode,
-  KnownSemanticErrorReason,
-  KnownSemanticSearchResultsType,
-  KnownVectorFilterMode,
-  KnownVectorQueryKind,
-  QueryAnswerResult,
-  QueryCaptionResult,
-  QueryDebugMode,
-  QueryLanguage,
-  QueryResultDocumentInnerHit,
-  QueryResultDocumentRerankerInput,
-  QuerySpellerType as QuerySpeller,
-  QueryType,
-  ScoringStatistics,
-  SearchMode,
-  SemanticFieldState,
-  SemanticQueryRewritesResultType,
-  VectorsDebugInfo,
+  AzureSearchDocumentsDebugInfo as DebugInfo,
+  AzureSearchDocumentsFacetResult as FacetResult,
+  AzureSearchDocumentsHybridSearch as HybridSearch,
+  AzureSearchDocumentsIndexActionType as IndexActionType,
+  KnownAzureSearchDocumentsSemanticErrorMode as KnownSemanticErrorMode,
+  KnownAzureSearchDocumentsSemanticErrorReason as KnownSemanticErrorReason,
+  KnownAzureSearchDocumentsSemanticSearchResultsType as KnownSemanticSearchResultsType,
+  KnownAzureSearchDocumentsVectorFilterMode as KnownVectorFilterMode,
+  KnownAzureSearchDocumentsVectorQueryKind as KnownVectorQueryKind,
+  AzureSearchDocumentsQueryAnswerResult as QueryAnswerResult,
+  AzureSearchDocumentsQueryCaptionResult as QueryCaptionResult,
+  AzureSearchDocumentsQueryDebugMode as QueryDebugMode,
+  AzureSearchDocumentsQueryLanguage as QueryLanguage,
+  AzureSearchDocumentsQueryResultDocumentInnerHit as QueryResultDocumentInnerHit,
+  AzureSearchDocumentsQueryResultDocumentRerankerInput as QueryResultDocumentRerankerInput,
+  AzureSearchDocumentsQuerySpellerType as QuerySpeller,
+  AzureSearchDocumentsQueryType as QueryType,
+  AzureSearchDocumentsScoringStatistics as ScoringStatistics,
+  AzureSearchDocumentsSearchMode as SearchMode,
+  AzureSearchDocumentsSemanticFieldState as SemanticFieldState,
+  AzureSearchDocumentsSemanticQueryRewritesResultType as SemanticQueryRewritesResultType,
+  AzureSearchDocumentsVectorsDebugInfo as VectorsDebugInfo
 } from "./models/azure/search/documents/index.js";
 import type GeographyPoint from "./geographyPoint.js";
 
