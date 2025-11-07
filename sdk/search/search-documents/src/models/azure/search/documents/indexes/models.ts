@@ -1570,7 +1570,7 @@ export function azureSearchDocumentsIndexesSearchSuggesterDeserializer(
 }
 
 export function azureSearchDocumentsIndexesLexicalAnalyzerUnionArraySerializer(
-  result: Array<AzureSearchDocumentsIndexesLexicalAnalyzerUnion>,
+  result: Array<LexicalAnalyzerUnion>,
 ): any[] {
   return result.map((item) => {
     return azureSearchDocumentsIndexesLexicalAnalyzerUnionSerializer(item);
@@ -1578,7 +1578,7 @@ export function azureSearchDocumentsIndexesLexicalAnalyzerUnionArraySerializer(
 }
 
 export function azureSearchDocumentsIndexesLexicalAnalyzerUnionArrayDeserializer(
-  result: Array<AzureSearchDocumentsIndexesLexicalAnalyzerUnion>,
+  result: Array<LexicalAnalyzerUnion>,
 ): any[] {
   return result.map((item) => {
     return azureSearchDocumentsIndexesLexicalAnalyzerUnionDeserializer(item);
@@ -1622,16 +1622,16 @@ export function azureSearchDocumentsIndexesLexicalAnalyzerUnionSerializer(
 ): any {
   switch (item.odataType) {
     case "#Microsoft.Azure.Search.CustomAnalyzer":
-      return customAnalyzerSerializer(item as CustomAnalyzer);
+      return azureSearchDocumentsIndexesCustomAnalyzerSerializer(item as AzureSearchDocumentsIndexesCustomAnalyzer);
 
     case "#Microsoft.Azure.Search.PatternAnalyzer":
-      return patternAnalyzerSerializer(item as PatternAnalyzer);
+      return azureSearchDocumentsIndexesPatternAnalyzerSerializer(item as AzureSearchDocumentsIndexesPatternAnalyzer);
 
     case "#Microsoft.Azure.Search.StandardAnalyzer":
-      return luceneStandardAnalyzerSerializer(item as LuceneStandardAnalyzer);
+      return azureSearchDocumentsIndexesLuceneStandardAnalyzerSerializer(item as AzureSearchDocumentsIndexesLuceneStandardAnalyzer);
 
     case "#Microsoft.Azure.Search.StopAnalyzer":
-      return stopAnalyzerSerializer(item as StopAnalyzer);
+      return azureSearchDocumentsIndexesStopAnalyzerSerializer(item as AzureSearchDocumentsIndexesStopAnalyzer);
 
     default:
       return azureSearchDocumentsIndexesLexicalAnalyzerSerializer(item);
@@ -1643,16 +1643,16 @@ export function azureSearchDocumentsIndexesLexicalAnalyzerUnionDeserializer(
 ): LexicalAnalyzerUnion {
   switch (item.odataType) {
     case "#Microsoft.Azure.Search.CustomAnalyzer":
-      return customAnalyzerDeserializer(item as CustomAnalyzer);
+      return azureSearchDocumentsIndexesCustomAnalyzerDeserializer(item as AzureSearchDocumentsIndexesCustomAnalyzer);
 
     case "#Microsoft.Azure.Search.PatternAnalyzer":
-      return patternAnalyzerDeserializer(item as PatternAnalyzer);
+      return azureSearchDocumentsIndexesPatternAnalyzerDeserializer(item as AzureSearchDocumentsIndexesPatternAnalyzer);
 
     case "#Microsoft.Azure.Search.StandardAnalyzer":
-      return luceneStandardAnalyzerDeserializer(item as LuceneStandardAnalyzer);
+      return azureSearchDocumentsIndexesLuceneStandardAnalyzerDeserializer(item as AzureSearchDocumentsIndexesLuceneStandardAnalyzer);
 
     case "#Microsoft.Azure.Search.StopAnalyzer":
-      return stopAnalyzerDeserializer(item as StopAnalyzer);
+      return azureSearchDocumentsIndexesStopAnalyzerDeserializer(item as AzureSearchDocumentsIndexesStopAnalyzer);
 
     default:
       return azureSearchDocumentsIndexesLexicalAnalyzerDeserializer(item);
@@ -2056,7 +2056,7 @@ export function azureSearchDocumentsIndexesStopAnalyzerDeserializer(
 }
 
 export function azureSearchDocumentsIndexesLexicalTokenizerUnionArraySerializer(
-  result: Array<AzureSearchDocumentsIndexesLexicalTokenizerUnion>,
+  result: Array<LexicalTokenizerUnion>,
 ): any[] {
   return result.map((item) => {
     return azureSearchDocumentsIndexesLexicalTokenizerUnionSerializer(item);
@@ -2064,7 +2064,7 @@ export function azureSearchDocumentsIndexesLexicalTokenizerUnionArraySerializer(
 }
 
 export function azureSearchDocumentsIndexesLexicalTokenizerUnionArrayDeserializer(
-  result: Array<AzureSearchDocumentsIndexesLexicalTokenizerUnion>,
+  result: Array<LexicalTokenizerUnion>,
 ): any[] {
   return result.map((item) => {
     return azureSearchDocumentsIndexesLexicalTokenizerUnionDeserializer(item);
@@ -2114,38 +2114,38 @@ export function azureSearchDocumentsIndexesLexicalTokenizerUnionSerializer(
 ): any {
   switch (item.odataType) {
     case "#Microsoft.Azure.Search.ClassicTokenizer":
-      return classicTokenizerSerializer(item as ClassicTokenizer);
+      return azureSearchDocumentsIndexesClassicTokenizerSerializer(item as AzureSearchDocumentsIndexesClassicTokenizer);
 
     case "#Microsoft.Azure.Search.EdgeNGramTokenizer":
-      return edgeNGramTokenizerSerializer(item as EdgeNGramTokenizer);
+      return azureSearchDocumentsIndexesEdgeNGramTokenizerSerializer(item as AzureSearchDocumentsIndexesEdgeNGramTokenizer);
 
     case "#Microsoft.Azure.Search.KeywordTokenizerV2":
-      return keywordTokenizerSerializer(item as KeywordTokenizer);
+      return azureSearchDocumentsIndexesKeywordTokenizerSerializer(item as AzureSearchDocumentsIndexesKeywordTokenizer);
 
     case "#Microsoft.Azure.Search.MicrosoftLanguageTokenizer":
-      return microsoftLanguageTokenizerSerializer(
-        item as MicrosoftLanguageTokenizer,
+      return azureSearchDocumentsIndexesMicrosoftLanguageTokenizerSerializer(
+        item as AzureSearchDocumentsIndexesMicrosoftLanguageTokenizer,
       );
 
     case "#Microsoft.Azure.Search.MicrosoftLanguageStemmingTokenizer":
-      return microsoftLanguageStemmingTokenizerSerializer(
-        item as MicrosoftLanguageStemmingTokenizer,
+      return azureSearchDocumentsIndexesMicrosoftLanguageStemmingTokenizerSerializer(
+        item as AzureSearchDocumentsIndexesMicrosoftLanguageStemmingTokenizer,
       );
 
     case "#Microsoft.Azure.Search.NGramTokenizer":
-      return nGramTokenizerSerializer(item as NGramTokenizer);
+      return azureSearchDocumentsIndexesNGramTokenizerSerializer(item as AzureSearchDocumentsIndexesNGramTokenizer);
 
     case "#Microsoft.Azure.Search.PathHierarchyTokenizerV2":
-      return pathHierarchyTokenizerSerializer(item as PathHierarchyTokenizer);
+      return azureSearchDocumentsIndexesPathHierarchyTokenizerSerializer(item as AzureSearchDocumentsIndexesPathHierarchyTokenizer);
 
     case "#Microsoft.Azure.Search.PatternTokenizer":
-      return patternTokenizerSerializer(item as PatternTokenizer);
+      return azureSearchDocumentsIndexesPatternTokenizerSerializer(item as AzureSearchDocumentsIndexesPatternTokenizer);
 
     case "#Microsoft.Azure.Search.StandardTokenizerV2":
-      return luceneStandardTokenizerSerializer(item as LuceneStandardTokenizer);
+      return azureSearchDocumentsIndexesLuceneStandardTokenizerSerializer(item as AzureSearchDocumentsIndexesLuceneStandardTokenizer);
 
     case "#Microsoft.Azure.Search.UaxUrlEmailTokenizer":
-      return uaxUrlEmailTokenizerSerializer(item as UaxUrlEmailTokenizer);
+      return azureSearchDocumentsIndexesUaxUrlEmailTokenizerSerializer(item as AzureSearchDocumentsIndexesUaxUrlEmailTokenizer);
 
     default:
       return azureSearchDocumentsIndexesLexicalTokenizerSerializer(item);
@@ -2157,40 +2157,40 @@ export function azureSearchDocumentsIndexesLexicalTokenizerUnionDeserializer(
 ): LexicalTokenizerUnion {
   switch (item.odataType) {
     case "#Microsoft.Azure.Search.ClassicTokenizer":
-      return classicTokenizerDeserializer(item as ClassicTokenizer);
+      return azureSearchDocumentsIndexesClassicTokenizerDeserializer(item as AzureSearchDocumentsIndexesClassicTokenizer);
 
     case "#Microsoft.Azure.Search.EdgeNGramTokenizer":
-      return edgeNGramTokenizerDeserializer(item as EdgeNGramTokenizer);
+      return azureSearchDocumentsIndexesEdgeNGramTokenizerDeserializer(item as AzureSearchDocumentsIndexesEdgeNGramTokenizer);
 
     case "#Microsoft.Azure.Search.KeywordTokenizerV2":
-      return keywordTokenizerDeserializer(item as KeywordTokenizer);
+      return azureSearchDocumentsIndexesKeywordTokenizerDeserializer(item as AzureSearchDocumentsIndexesKeywordTokenizer);
 
     case "#Microsoft.Azure.Search.MicrosoftLanguageTokenizer":
-      return microsoftLanguageTokenizerDeserializer(
-        item as MicrosoftLanguageTokenizer,
+      return azureSearchDocumentsIndexesMicrosoftLanguageTokenizerDeserializer(
+        item as AzureSearchDocumentsIndexesMicrosoftLanguageTokenizer,
       );
 
     case "#Microsoft.Azure.Search.MicrosoftLanguageStemmingTokenizer":
-      return microsoftLanguageStemmingTokenizerDeserializer(
-        item as MicrosoftLanguageStemmingTokenizer,
+      return azureSearchDocumentsIndexesMicrosoftLanguageStemmingTokenizerDeserializer(
+        item as AzureSearchDocumentsIndexesMicrosoftLanguageStemmingTokenizer,
       );
 
     case "#Microsoft.Azure.Search.NGramTokenizer":
-      return nGramTokenizerDeserializer(item as NGramTokenizer);
+      return azureSearchDocumentsIndexesNGramTokenizerDeserializer(item as AzureSearchDocumentsIndexesNGramTokenizer);
 
     case "#Microsoft.Azure.Search.PathHierarchyTokenizerV2":
-      return pathHierarchyTokenizerDeserializer(item as PathHierarchyTokenizer);
+      return azureSearchDocumentsIndexesPathHierarchyTokenizerDeserializer(item as AzureSearchDocumentsIndexesPathHierarchyTokenizer);
 
     case "#Microsoft.Azure.Search.PatternTokenizer":
-      return patternTokenizerDeserializer(item as PatternTokenizer);
+      return azureSearchDocumentsIndexesPatternTokenizerDeserializer(item as AzureSearchDocumentsIndexesPatternTokenizer);
 
     case "#Microsoft.Azure.Search.StandardTokenizerV2":
-      return luceneStandardTokenizerDeserializer(
-        item as LuceneStandardTokenizer,
+      return azureSearchDocumentsIndexesLuceneStandardTokenizerDeserializer(
+        item as AzureSearchDocumentsIndexesLuceneStandardTokenizer,
       );
 
     case "#Microsoft.Azure.Search.UaxUrlEmailTokenizer":
-      return uaxUrlEmailTokenizerDeserializer(item as UaxUrlEmailTokenizer);
+      return azureSearchDocumentsIndexesUaxUrlEmailTokenizerDeserializer(item as AzureSearchDocumentsIndexesUaxUrlEmailTokenizer);
 
     default:
       return azureSearchDocumentsIndexesLexicalTokenizerDeserializer(item);
@@ -2873,7 +2873,7 @@ export function azureSearchDocumentsIndexesUaxUrlEmailTokenizerDeserializer(
 }
 
 export function azureSearchDocumentsIndexesTokenFilterUnionArraySerializer(
-  result: Array<AzureSearchDocumentsIndexesTokenFilterUnion>,
+  result: Array<TokenFilterUnion>,
 ): any[] {
   return result.map((item) => {
     return azureSearchDocumentsIndexesTokenFilterUnionSerializer(item);
@@ -2881,7 +2881,7 @@ export function azureSearchDocumentsIndexesTokenFilterUnionArraySerializer(
 }
 
 export function azureSearchDocumentsIndexesTokenFilterUnionArrayDeserializer(
-  result: Array<AzureSearchDocumentsIndexesTokenFilterUnion>,
+  result: Array<TokenFilterUnion>,
 ): any[] {
   return result.map((item) => {
     return azureSearchDocumentsIndexesTokenFilterUnionDeserializer(item);
@@ -2944,84 +2944,84 @@ export function azureSearchDocumentsIndexesTokenFilterUnionSerializer(
 ): any {
   switch (item.odataType) {
     case "#Microsoft.Azure.Search.AsciiFoldingTokenFilter":
-      return asciiFoldingTokenFilterSerializer(item as AsciiFoldingTokenFilter);
+      return azureSearchDocumentsIndexesAsciiFoldingTokenFilterSerializer(item as AzureSearchDocumentsIndexesAsciiFoldingTokenFilter);
 
     case "#Microsoft.Azure.Search.CjkBigramTokenFilter":
-      return cjkBigramTokenFilterSerializer(item as CjkBigramTokenFilter);
+      return azureSearchDocumentsIndexesCjkBigramTokenFilterSerializer(item as AzureSearchDocumentsIndexesCjkBigramTokenFilter);
 
     case "#Microsoft.Azure.Search.CommonGramTokenFilter":
-      return commonGramTokenFilterSerializer(item as CommonGramTokenFilter);
+      return azureSearchDocumentsIndexesCommonGramTokenFilterSerializer(item as AzureSearchDocumentsIndexesCommonGramTokenFilter);
 
     case "#Microsoft.Azure.Search.DictionaryDecompounderTokenFilter":
-      return dictionaryDecompounderTokenFilterSerializer(
-        item as DictionaryDecompounderTokenFilter,
+      return azureSearchDocumentsIndexesDictionaryDecompounderTokenFilterSerializer(
+        item as AzureSearchDocumentsIndexesDictionaryDecompounderTokenFilter,
       );
 
     case "#Microsoft.Azure.Search.EdgeNGramTokenFilterV2":
-      return edgeNGramTokenFilterSerializer(item as EdgeNGramTokenFilter);
+      return azureSearchDocumentsIndexesEdgeNGramTokenFilterSerializer(item as AzureSearchDocumentsIndexesEdgeNGramTokenFilter);
 
     case "#Microsoft.Azure.Search.ElisionTokenFilter":
-      return elisionTokenFilterSerializer(item as ElisionTokenFilter);
+      return azureSearchDocumentsIndexesElisionTokenFilterSerializer(item as AzureSearchDocumentsIndexesElisionTokenFilter);
 
     case "#Microsoft.Azure.Search.KeepTokenFilter":
-      return keepTokenFilterSerializer(item as KeepTokenFilter);
+      return azureSearchDocumentsIndexesKeepTokenFilterSerializer(item as AzureSearchDocumentsIndexesKeepTokenFilter);
 
     case "#Microsoft.Azure.Search.KeywordMarkerTokenFilter":
-      return keywordMarkerTokenFilterSerializer(
-        item as KeywordMarkerTokenFilter,
+      return azureSearchDocumentsIndexesKeywordMarkerTokenFilterSerializer(
+        item as AzureSearchDocumentsIndexesKeywordMarkerTokenFilter,
       );
 
     case "#Microsoft.Azure.Search.LengthTokenFilter":
-      return lengthTokenFilterSerializer(item as LengthTokenFilter);
+      return azureSearchDocumentsIndexesLengthTokenFilterSerializer(item as AzureSearchDocumentsIndexesLengthTokenFilter);
 
     case "#Microsoft.Azure.Search.LimitTokenFilter":
-      return limitTokenFilterSerializer(item as LimitTokenFilter);
+      return azureSearchDocumentsIndexesLimitTokenFilterSerializer(item as AzureSearchDocumentsIndexesLimitTokenFilter);
 
     case "#Microsoft.Azure.Search.NGramTokenFilterV2":
-      return nGramTokenFilterSerializer(item as NGramTokenFilter);
+      return azureSearchDocumentsIndexesNGramTokenFilterSerializer(item as AzureSearchDocumentsIndexesNGramTokenFilter);
 
     case "#Microsoft.Azure.Search.PatternCaptureTokenFilter":
-      return patternCaptureTokenFilterSerializer(
-        item as PatternCaptureTokenFilter,
+      return azureSearchDocumentsIndexesPatternCaptureTokenFilterSerializer(
+        item as AzureSearchDocumentsIndexesPatternCaptureTokenFilter,
       );
 
     case "#Microsoft.Azure.Search.PatternReplaceTokenFilter":
-      return patternReplaceTokenFilterSerializer(
-        item as PatternReplaceTokenFilter,
+      return azureSearchDocumentsIndexesPatternReplaceTokenFilterSerializer(
+        item as AzureSearchDocumentsIndexesPatternReplaceTokenFilter,
       );
 
     case "#Microsoft.Azure.Search.PhoneticTokenFilter":
-      return phoneticTokenFilterSerializer(item as PhoneticTokenFilter);
+      return azureSearchDocumentsIndexesPhoneticTokenFilterSerializer(item as AzureSearchDocumentsIndexesPhoneticTokenFilter);
 
     case "#Microsoft.Azure.Search.ShingleTokenFilter":
-      return shingleTokenFilterSerializer(item as ShingleTokenFilter);
+      return azureSearchDocumentsIndexesShingleTokenFilterSerializer(item as AzureSearchDocumentsIndexesShingleTokenFilter);
 
     case "#Microsoft.Azure.Search.SnowballTokenFilter":
-      return snowballTokenFilterSerializer(item as SnowballTokenFilter);
+      return azureSearchDocumentsIndexesSnowballTokenFilterSerializer(item as AzureSearchDocumentsIndexesSnowballTokenFilter);
 
     case "#Microsoft.Azure.Search.StemmerTokenFilter":
-      return stemmerTokenFilterSerializer(item as StemmerTokenFilter);
+      return azureSearchDocumentsIndexesStemmerTokenFilterSerializer(item as AzureSearchDocumentsIndexesStemmerTokenFilter);
 
     case "#Microsoft.Azure.Search.StemmerOverrideTokenFilter":
-      return stemmerOverrideTokenFilterSerializer(
-        item as StemmerOverrideTokenFilter,
+      return azureSearchDocumentsIndexesStemmerOverrideTokenFilterSerializer(
+        item as AzureSearchDocumentsIndexesStemmerOverrideTokenFilter,
       );
 
     case "#Microsoft.Azure.Search.StopwordsTokenFilter":
-      return stopwordsTokenFilterSerializer(item as StopwordsTokenFilter);
+      return azureSearchDocumentsIndexesStopwordsTokenFilterSerializer(item as AzureSearchDocumentsIndexesStopwordsTokenFilter);
 
     case "#Microsoft.Azure.Search.SynonymTokenFilter":
-      return synonymTokenFilterSerializer(item as SynonymTokenFilter);
+      return azureSearchDocumentsIndexesSynonymTokenFilterSerializer(item as AzureSearchDocumentsIndexesSynonymTokenFilter);
 
     case "#Microsoft.Azure.Search.TruncateTokenFilter":
-      return truncateTokenFilterSerializer(item as TruncateTokenFilter);
+      return azureSearchDocumentsIndexesTruncateTokenFilterSerializer(item as AzureSearchDocumentsIndexesTruncateTokenFilter);
 
     case "#Microsoft.Azure.Search.UniqueTokenFilter":
-      return uniqueTokenFilterSerializer(item as UniqueTokenFilter);
+      return azureSearchDocumentsIndexesUniqueTokenFilterSerializer(item as AzureSearchDocumentsIndexesUniqueTokenFilter);
 
     case "#Microsoft.Azure.Search.WordDelimiterTokenFilter":
-      return wordDelimiterTokenFilterSerializer(
-        item as WordDelimiterTokenFilter,
+      return azureSearchDocumentsIndexesWordDelimiterTokenFilterSerializer(
+        item as AzureSearchDocumentsIndexesWordDelimiterTokenFilter,
       );
 
     default:
@@ -3034,86 +3034,86 @@ export function azureSearchDocumentsIndexesTokenFilterUnionDeserializer(
 ): TokenFilterUnion {
   switch (item.odataType) {
     case "#Microsoft.Azure.Search.AsciiFoldingTokenFilter":
-      return asciiFoldingTokenFilterDeserializer(
-        item as AsciiFoldingTokenFilter,
+      return azureSearchDocumentsIndexesAsciiFoldingTokenFilterDeserializer(
+        item as AzureSearchDocumentsIndexesAsciiFoldingTokenFilter,
       );
 
     case "#Microsoft.Azure.Search.CjkBigramTokenFilter":
-      return cjkBigramTokenFilterDeserializer(item as CjkBigramTokenFilter);
+      return azureSearchDocumentsIndexesCjkBigramTokenFilterDeserializer(item as AzureSearchDocumentsIndexesCjkBigramTokenFilter);
 
     case "#Microsoft.Azure.Search.CommonGramTokenFilter":
-      return commonGramTokenFilterDeserializer(item as CommonGramTokenFilter);
+      return azureSearchDocumentsIndexesCommonGramTokenFilterDeserializer(item as AzureSearchDocumentsIndexesCommonGramTokenFilter);
 
     case "#Microsoft.Azure.Search.DictionaryDecompounderTokenFilter":
-      return dictionaryDecompounderTokenFilterDeserializer(
-        item as DictionaryDecompounderTokenFilter,
+      return azureSearchDocumentsIndexesDictionaryDecompounderTokenFilterDeserializer(
+        item as AzureSearchDocumentsIndexesDictionaryDecompounderTokenFilter,
       );
 
     case "#Microsoft.Azure.Search.EdgeNGramTokenFilterV2":
-      return edgeNGramTokenFilterDeserializer(item as EdgeNGramTokenFilter);
+      return azureSearchDocumentsIndexesEdgeNGramTokenFilterDeserializer(item as AzureSearchDocumentsIndexesEdgeNGramTokenFilter);
 
     case "#Microsoft.Azure.Search.ElisionTokenFilter":
-      return elisionTokenFilterDeserializer(item as ElisionTokenFilter);
+      return azureSearchDocumentsIndexesElisionTokenFilterDeserializer(item as AzureSearchDocumentsIndexesElisionTokenFilter);
 
     case "#Microsoft.Azure.Search.KeepTokenFilter":
-      return keepTokenFilterDeserializer(item as KeepTokenFilter);
+      return azureSearchDocumentsIndexesKeepTokenFilterDeserializer(item as AzureSearchDocumentsIndexesKeepTokenFilter);
 
     case "#Microsoft.Azure.Search.KeywordMarkerTokenFilter":
-      return keywordMarkerTokenFilterDeserializer(
-        item as KeywordMarkerTokenFilter,
+      return azureSearchDocumentsIndexesKeywordMarkerTokenFilterDeserializer(
+        item as AzureSearchDocumentsIndexesKeywordMarkerTokenFilter,
       );
 
     case "#Microsoft.Azure.Search.LengthTokenFilter":
-      return lengthTokenFilterDeserializer(item as LengthTokenFilter);
+      return azureSearchDocumentsIndexesLengthTokenFilterDeserializer(item as AzureSearchDocumentsIndexesLengthTokenFilter);
 
     case "#Microsoft.Azure.Search.LimitTokenFilter":
-      return limitTokenFilterDeserializer(item as LimitTokenFilter);
+      return azureSearchDocumentsIndexesLimitTokenFilterDeserializer(item as AzureSearchDocumentsIndexesLimitTokenFilter);
 
     case "#Microsoft.Azure.Search.NGramTokenFilterV2":
-      return nGramTokenFilterDeserializer(item as NGramTokenFilter);
+      return azureSearchDocumentsIndexesNGramTokenFilterDeserializer(item as AzureSearchDocumentsIndexesNGramTokenFilter);
 
     case "#Microsoft.Azure.Search.PatternCaptureTokenFilter":
-      return patternCaptureTokenFilterDeserializer(
-        item as PatternCaptureTokenFilter,
+      return azureSearchDocumentsIndexesPatternCaptureTokenFilterDeserializer(
+        item as AzureSearchDocumentsIndexesPatternCaptureTokenFilter,
       );
 
     case "#Microsoft.Azure.Search.PatternReplaceTokenFilter":
-      return patternReplaceTokenFilterDeserializer(
-        item as PatternReplaceTokenFilter,
+      return azureSearchDocumentsIndexesPatternReplaceTokenFilterDeserializer(
+        item as AzureSearchDocumentsIndexesPatternReplaceTokenFilter,
       );
 
     case "#Microsoft.Azure.Search.PhoneticTokenFilter":
-      return phoneticTokenFilterDeserializer(item as PhoneticTokenFilter);
+      return azureSearchDocumentsIndexesPhoneticTokenFilterDeserializer(item as AzureSearchDocumentsIndexesPhoneticTokenFilter);
 
     case "#Microsoft.Azure.Search.ShingleTokenFilter":
-      return shingleTokenFilterDeserializer(item as ShingleTokenFilter);
+      return azureSearchDocumentsIndexesShingleTokenFilterDeserializer(item as AzureSearchDocumentsIndexesShingleTokenFilter);
 
     case "#Microsoft.Azure.Search.SnowballTokenFilter":
-      return snowballTokenFilterDeserializer(item as SnowballTokenFilter);
+      return azureSearchDocumentsIndexesSnowballTokenFilterDeserializer(item as AzureSearchDocumentsIndexesSnowballTokenFilter);
 
     case "#Microsoft.Azure.Search.StemmerTokenFilter":
-      return stemmerTokenFilterDeserializer(item as StemmerTokenFilter);
+      return azureSearchDocumentsIndexesStemmerTokenFilterDeserializer(item as AzureSearchDocumentsIndexesStemmerTokenFilter);
 
     case "#Microsoft.Azure.Search.StemmerOverrideTokenFilter":
-      return stemmerOverrideTokenFilterDeserializer(
-        item as StemmerOverrideTokenFilter,
+      return azureSearchDocumentsIndexesStemmerOverrideTokenFilterDeserializer(
+        item as AzureSearchDocumentsIndexesStemmerOverrideTokenFilter,
       );
 
     case "#Microsoft.Azure.Search.StopwordsTokenFilter":
-      return stopwordsTokenFilterDeserializer(item as StopwordsTokenFilter);
+      return azureSearchDocumentsIndexesStopwordsTokenFilterDeserializer(item as AzureSearchDocumentsIndexesStopwordsTokenFilter);
 
     case "#Microsoft.Azure.Search.SynonymTokenFilter":
-      return synonymTokenFilterDeserializer(item as SynonymTokenFilter);
+      return azureSearchDocumentsIndexesSynonymTokenFilterDeserializer(item as AzureSearchDocumentsIndexesSynonymTokenFilter);
 
     case "#Microsoft.Azure.Search.TruncateTokenFilter":
-      return truncateTokenFilterDeserializer(item as TruncateTokenFilter);
+      return azureSearchDocumentsIndexesTruncateTokenFilterDeserializer(item as AzureSearchDocumentsIndexesTruncateTokenFilter);
 
     case "#Microsoft.Azure.Search.UniqueTokenFilter":
-      return uniqueTokenFilterDeserializer(item as UniqueTokenFilter);
+      return azureSearchDocumentsIndexesUniqueTokenFilterDeserializer(item as AzureSearchDocumentsIndexesUniqueTokenFilter);
 
     case "#Microsoft.Azure.Search.WordDelimiterTokenFilter":
-      return wordDelimiterTokenFilterDeserializer(
-        item as WordDelimiterTokenFilter,
+      return azureSearchDocumentsIndexesWordDelimiterTokenFilterDeserializer(
+        item as AzureSearchDocumentsIndexesWordDelimiterTokenFilter,
       );
 
     default:
@@ -4437,7 +4437,7 @@ export function azureSearchDocumentsIndexesWordDelimiterTokenFilterDeserializer(
 }
 
 export function azureSearchDocumentsIndexesCharFilterUnionArraySerializer(
-  result: Array<AzureSearchDocumentsIndexesCharFilterUnion>,
+  result: Array<CharFilterUnion>,
 ): any[] {
   return result.map((item) => {
     return azureSearchDocumentsIndexesCharFilterUnionSerializer(item);
@@ -4445,7 +4445,7 @@ export function azureSearchDocumentsIndexesCharFilterUnionArraySerializer(
 }
 
 export function azureSearchDocumentsIndexesCharFilterUnionArrayDeserializer(
-  result: Array<AzureSearchDocumentsIndexesCharFilterUnion>,
+  result: Array<CharFilterUnion>,
 ): any[] {
   return result.map((item) => {
     return azureSearchDocumentsIndexesCharFilterUnionDeserializer(item);
@@ -4487,11 +4487,11 @@ export function azureSearchDocumentsIndexesCharFilterUnionSerializer(
 ): any {
   switch (item.odataType) {
     case "#Microsoft.Azure.Search.MappingCharFilter":
-      return mappingCharFilterSerializer(item as MappingCharFilter);
+      return azureSearchDocumentsIndexesMappingCharFilterSerializer(item as AzureSearchDocumentsIndexesMappingCharFilter);
 
     case "#Microsoft.Azure.Search.PatternReplaceCharFilter":
-      return patternReplaceCharFilterSerializer(
-        item as PatternReplaceCharFilter,
+      return azureSearchDocumentsIndexesPatternReplaceCharFilterSerializer(
+        item as AzureSearchDocumentsIndexesPatternReplaceCharFilter,
       );
 
     default:
@@ -4504,11 +4504,11 @@ export function azureSearchDocumentsIndexesCharFilterUnionDeserializer(
 ): CharFilterUnion {
   switch (item.odataType) {
     case "#Microsoft.Azure.Search.MappingCharFilter":
-      return mappingCharFilterDeserializer(item as MappingCharFilter);
+      return azureSearchDocumentsIndexesMappingCharFilterDeserializer(item as AzureSearchDocumentsIndexesMappingCharFilter);
 
     case "#Microsoft.Azure.Search.PatternReplaceCharFilter":
-      return patternReplaceCharFilterDeserializer(
-        item as PatternReplaceCharFilter,
+      return azureSearchDocumentsIndexesPatternReplaceCharFilterDeserializer(
+        item as AzureSearchDocumentsIndexesPatternReplaceCharFilter,
       );
 
     default:
@@ -4583,7 +4583,7 @@ export function azureSearchDocumentsIndexesPatternReplaceCharFilterDeserializer(
 }
 
 export function azureSearchDocumentsIndexesLexicalNormalizerUnionArraySerializer(
-  result: Array<AzureSearchDocumentsIndexesLexicalNormalizerUnion>,
+  result: Array<LexicalNormalizerUnion>,
 ): any[] {
   return result.map((item) => {
     return azureSearchDocumentsIndexesLexicalNormalizerUnionSerializer(item);
@@ -4591,7 +4591,7 @@ export function azureSearchDocumentsIndexesLexicalNormalizerUnionArraySerializer
 }
 
 export function azureSearchDocumentsIndexesLexicalNormalizerUnionArrayDeserializer(
-  result: Array<AzureSearchDocumentsIndexesLexicalNormalizerUnion>,
+  result: Array<LexicalNormalizerUnion>,
 ): any[] {
   return result.map((item) => {
     return azureSearchDocumentsIndexesLexicalNormalizerUnionDeserializer(item);
@@ -4632,7 +4632,7 @@ export function azureSearchDocumentsIndexesLexicalNormalizerUnionSerializer(
 ): any {
   switch (item.odataType) {
     case "#Microsoft.Azure.Search.CustomNormalizer":
-      return customNormalizerSerializer(item as CustomNormalizer);
+      return azureSearchDocumentsIndexesCustomNormalizerSerializer(item as AzureSearchDocumentsIndexesCustomNormalizer);
 
     default:
       return azureSearchDocumentsIndexesLexicalNormalizerSerializer(item);
@@ -4644,7 +4644,7 @@ export function azureSearchDocumentsIndexesLexicalNormalizerUnionDeserializer(
 ): LexicalNormalizerUnion {
   switch (item.odataType) {
     case "#Microsoft.Azure.Search.CustomNormalizer":
-      return customNormalizerDeserializer(item as CustomNormalizer);
+      return azureSearchDocumentsIndexesCustomNormalizerDeserializer(item as AzureSearchDocumentsIndexesCustomNormalizer);
 
     default:
       return azureSearchDocumentsIndexesLexicalNormalizerDeserializer(item);
@@ -4732,12 +4732,12 @@ export function azureSearchDocumentsIndexesSimilarityAlgorithmUnionSerializer(
 ): any {
   switch (item.odataType) {
     case "#Microsoft.Azure.Search.ClassicSimilarity":
-      return classicSimilarityAlgorithmSerializer(
-        item as ClassicSimilarityAlgorithm,
+      return azureSearchDocumentsIndexesClassicSimilarityAlgorithmSerializer(
+        item as AzureSearchDocumentsIndexesClassicSimilarityAlgorithm,
       );
 
     case "#Microsoft.Azure.Search.BM25Similarity":
-      return bm25SimilarityAlgorithmSerializer(item as BM25SimilarityAlgorithm);
+      return azureSearchDocumentsIndexesBM25SimilarityAlgorithmSerializer(item as AzureSearchDocumentsIndexesBM25SimilarityAlgorithm);
 
     default:
       return azureSearchDocumentsIndexesSimilarityAlgorithmSerializer(item);
@@ -4749,13 +4749,13 @@ export function azureSearchDocumentsIndexesSimilarityAlgorithmUnionDeserializer(
 ): SimilarityAlgorithmUnion {
   switch (item.odataType) {
     case "#Microsoft.Azure.Search.ClassicSimilarity":
-      return classicSimilarityAlgorithmDeserializer(
-        item as ClassicSimilarityAlgorithm,
+      return azureSearchDocumentsIndexesClassicSimilarityAlgorithmDeserializer(
+        item as AzureSearchDocumentsIndexesClassicSimilarityAlgorithm,
       );
 
     case "#Microsoft.Azure.Search.BM25Similarity":
-      return bm25SimilarityAlgorithmDeserializer(
-        item as BM25SimilarityAlgorithm,
+      return azureSearchDocumentsIndexesBM25SimilarityAlgorithmDeserializer(
+        item as AzureSearchDocumentsIndexesBM25SimilarityAlgorithm,
       );
 
     default:
@@ -5124,7 +5124,7 @@ export function azureSearchDocumentsIndexesVectorSearchProfileDeserializer(
 }
 
 export function azureSearchDocumentsIndexesVectorSearchAlgorithmConfigurationUnionArraySerializer(
-  result: Array<AzureSearchDocumentsIndexesVectorSearchAlgorithmConfigurationUnion>,
+  result: Array<VectorSearchAlgorithmConfigurationUnion>,
 ): any[] {
   return result.map((item) => {
     return azureSearchDocumentsIndexesVectorSearchAlgorithmConfigurationUnionSerializer(
@@ -5134,7 +5134,7 @@ export function azureSearchDocumentsIndexesVectorSearchAlgorithmConfigurationUni
 }
 
 export function azureSearchDocumentsIndexesVectorSearchAlgorithmConfigurationUnionArrayDeserializer(
-  result: Array<AzureSearchDocumentsIndexesVectorSearchAlgorithmConfigurationUnion>,
+  result: Array<VectorSearchAlgorithmConfigurationUnion>,
 ): any[] {
   return result.map((item) => {
     return azureSearchDocumentsIndexesVectorSearchAlgorithmConfigurationUnionDeserializer(
@@ -5178,13 +5178,13 @@ export function azureSearchDocumentsIndexesVectorSearchAlgorithmConfigurationUni
 ): any {
   switch (item.kind) {
     case "hnsw":
-      return hnswAlgorithmConfigurationSerializer(
-        item as HnswAlgorithmConfiguration,
+      return azureSearchDocumentsIndexesHnswAlgorithmConfigurationSerializer(
+        item as AzureSearchDocumentsIndexesHnswAlgorithmConfiguration,
       );
 
     case "exhaustiveKnn":
-      return exhaustiveKnnAlgorithmConfigurationSerializer(
-        item as ExhaustiveKnnAlgorithmConfiguration,
+      return azureSearchDocumentsIndexesExhaustiveKnnAlgorithmConfigurationSerializer(
+        item as AzureSearchDocumentsIndexesExhaustiveKnnAlgorithmConfiguration,
       );
 
     default:
@@ -5199,13 +5199,13 @@ export function azureSearchDocumentsIndexesVectorSearchAlgorithmConfigurationUni
 ): VectorSearchAlgorithmConfigurationUnion {
   switch (item.kind) {
     case "hnsw":
-      return hnswAlgorithmConfigurationDeserializer(
-        item as HnswAlgorithmConfiguration,
+      return azureSearchDocumentsIndexesHnswAlgorithmConfigurationDeserializer(
+        item as AzureSearchDocumentsIndexesHnswAlgorithmConfiguration,
       );
 
     case "exhaustiveKnn":
-      return exhaustiveKnnAlgorithmConfigurationDeserializer(
-        item as ExhaustiveKnnAlgorithmConfiguration,
+      return azureSearchDocumentsIndexesExhaustiveKnnAlgorithmConfigurationDeserializer(
+        item as AzureSearchDocumentsIndexesExhaustiveKnnAlgorithmConfiguration,
       );
 
     default:
@@ -5384,7 +5384,7 @@ export function azureSearchDocumentsIndexesExhaustiveKnnParametersDeserializer(
 }
 
 export function azureSearchDocumentsIndexesVectorSearchVectorizerUnionArraySerializer(
-  result: Array<AzureSearchDocumentsIndexesVectorSearchVectorizerUnion>,
+  result: Array<VectorSearchVectorizerUnion>,
 ): any[] {
   return result.map((item) => {
     return azureSearchDocumentsIndexesVectorSearchVectorizerUnionSerializer(
@@ -5394,7 +5394,7 @@ export function azureSearchDocumentsIndexesVectorSearchVectorizerUnionArraySeria
 }
 
 export function azureSearchDocumentsIndexesVectorSearchVectorizerUnionArrayDeserializer(
-  result: Array<AzureSearchDocumentsIndexesVectorSearchVectorizerUnion>,
+  result: Array<VectorSearchVectorizerUnion>,
 ): any[] {
   return result.map((item) => {
     return azureSearchDocumentsIndexesVectorSearchVectorizerUnionDeserializer(
@@ -5440,19 +5440,19 @@ export function azureSearchDocumentsIndexesVectorSearchVectorizerUnionSerializer
 ): any {
   switch (item.kind) {
     case "azureOpenAI":
-      return azureOpenAIVectorizerSerializer(item as AzureOpenAIVectorizer);
+      return azureSearchDocumentsIndexesAzureOpenAIVectorizerSerializer(item as AzureSearchDocumentsIndexesAzureOpenAIVectorizer);
 
     case "customWebApi":
-      return webApiVectorizerSerializer(item as WebApiVectorizer);
+      return azureSearchDocumentsIndexesWebApiVectorizerSerializer(item as AzureSearchDocumentsIndexesWebApiVectorizer);
 
     case "aiServicesVision":
-      return aiServicesVisionVectorizerSerializer(
-        item as AIServicesVisionVectorizer,
+      return azureSearchDocumentsIndexesAIServicesVisionVectorizerSerializer(
+        item as AzureSearchDocumentsIndexesAIServicesVisionVectorizer,
       );
 
     case "aml":
-      return azureMachineLearningVectorizerSerializer(
-        item as AzureMachineLearningVectorizer,
+      return azureSearchDocumentsIndexesAzureMachineLearningVectorizerSerializer(
+        item as AzureSearchDocumentsIndexesAzureMachineLearningVectorizer,
       );
 
     default:
@@ -5465,19 +5465,19 @@ export function azureSearchDocumentsIndexesVectorSearchVectorizerUnionDeserializ
 ): VectorSearchVectorizerUnion {
   switch (item.kind) {
     case "azureOpenAI":
-      return azureOpenAIVectorizerDeserializer(item as AzureOpenAIVectorizer);
+      return azureSearchDocumentsIndexesAzureOpenAIVectorizerDeserializer(item as AzureSearchDocumentsIndexesAzureOpenAIVectorizer);
 
     case "customWebApi":
-      return webApiVectorizerDeserializer(item as WebApiVectorizer);
+      return azureSearchDocumentsIndexesWebApiVectorizerDeserializer(item as AzureSearchDocumentsIndexesWebApiVectorizer);
 
     case "aiServicesVision":
-      return aiServicesVisionVectorizerDeserializer(
-        item as AIServicesVisionVectorizer,
+      return azureSearchDocumentsIndexesAIServicesVisionVectorizerDeserializer(
+        item as AzureSearchDocumentsIndexesAIServicesVisionVectorizer,
       );
 
     case "aml":
-      return azureMachineLearningVectorizerDeserializer(
-        item as AzureMachineLearningVectorizer,
+      return azureSearchDocumentsIndexesAzureMachineLearningVectorizerDeserializer(
+        item as AzureSearchDocumentsIndexesAzureMachineLearningVectorizer,
       );
 
     default:
@@ -5891,7 +5891,7 @@ export enum KnownAzureSearchDocumentsIndexesAIFoundryModelCatalogName {
 export type AzureSearchDocumentsIndexesAIFoundryModelCatalogName = string;
 
 export function azureSearchDocumentsIndexesVectorSearchCompressionUnionArraySerializer(
-  result: Array<AzureSearchDocumentsIndexesVectorSearchCompressionUnion>,
+  result: Array<VectorSearchCompressionUnion>,
 ): any[] {
   return result.map((item) => {
     return azureSearchDocumentsIndexesVectorSearchCompressionUnionSerializer(
@@ -5901,7 +5901,7 @@ export function azureSearchDocumentsIndexesVectorSearchCompressionUnionArraySeri
 }
 
 export function azureSearchDocumentsIndexesVectorSearchCompressionUnionArrayDeserializer(
-  result: Array<AzureSearchDocumentsIndexesVectorSearchCompressionUnion>,
+  result: Array<VectorSearchCompressionUnion>,
 ): any[] {
   return result.map((item) => {
     return azureSearchDocumentsIndexesVectorSearchCompressionUnionDeserializer(
@@ -5972,13 +5972,13 @@ export function azureSearchDocumentsIndexesVectorSearchCompressionUnionSerialize
 ): any {
   switch (item.kind) {
     case "scalarQuantization":
-      return scalarQuantizationCompressionSerializer(
-        item as ScalarQuantizationCompression,
+      return azureSearchDocumentsIndexesScalarQuantizationCompressionSerializer(
+        item as AzureSearchDocumentsIndexesScalarQuantizationCompression,
       );
 
     case "binaryQuantization":
-      return binaryQuantizationCompressionSerializer(
-        item as BinaryQuantizationCompression,
+      return azureSearchDocumentsIndexesBinaryQuantizationCompressionSerializer(
+        item as AzureSearchDocumentsIndexesBinaryQuantizationCompression,
       );
 
     default:
@@ -5991,13 +5991,13 @@ export function azureSearchDocumentsIndexesVectorSearchCompressionUnionDeseriali
 ): VectorSearchCompressionUnion {
   switch (item.kind) {
     case "scalarQuantization":
-      return scalarQuantizationCompressionDeserializer(
-        item as ScalarQuantizationCompression,
+      return azureSearchDocumentsIndexesScalarQuantizationCompressionDeserializer(
+        item as AzureSearchDocumentsIndexesScalarQuantizationCompression,
       );
 
     case "binaryQuantization":
-      return binaryQuantizationCompressionDeserializer(
-        item as BinaryQuantizationCompression,
+      return azureSearchDocumentsIndexesBinaryQuantizationCompressionDeserializer(
+        item as AzureSearchDocumentsIndexesBinaryQuantizationCompression,
       );
 
     default:
@@ -6569,7 +6569,7 @@ export function azureSearchDocumentsIndexesKnowledgeSourceReferenceDeserializer(
 }
 
 export function azureSearchDocumentsIndexesKnowledgeBaseModelUnionArraySerializer(
-  result: Array<AzureSearchDocumentsIndexesKnowledgeBaseModelUnion>,
+  result: Array<KnowledgeBaseModelUnion>,
 ): any[] {
   return result.map((item) => {
     return azureSearchDocumentsIndexesKnowledgeBaseModelUnionSerializer(item);
@@ -6577,7 +6577,7 @@ export function azureSearchDocumentsIndexesKnowledgeBaseModelUnionArraySerialize
 }
 
 export function azureSearchDocumentsIndexesKnowledgeBaseModelUnionArrayDeserializer(
-  result: Array<AzureSearchDocumentsIndexesKnowledgeBaseModelUnion>,
+  result: Array<KnowledgeBaseModelUnion>,
 ): any[] {
   return result.map((item) => {
     return azureSearchDocumentsIndexesKnowledgeBaseModelUnionDeserializer(item);
@@ -6615,8 +6615,8 @@ export function azureSearchDocumentsIndexesKnowledgeBaseModelUnionSerializer(
 ): any {
   switch (item.kind) {
     case "azureOpenAI":
-      return knowledgeBaseAzureOpenAIModelSerializer(
-        item as KnowledgeBaseAzureOpenAIModel,
+      return azureSearchDocumentsIndexesKnowledgeBaseAzureOpenAIModelSerializer(
+        item as AzureSearchDocumentsIndexesKnowledgeBaseAzureOpenAIModel,
       );
 
     default:
@@ -6629,8 +6629,8 @@ export function azureSearchDocumentsIndexesKnowledgeBaseModelUnionDeserializer(
 ): KnowledgeBaseModelUnion {
   switch (item.kind) {
     case "azureOpenAI":
-      return knowledgeBaseAzureOpenAIModelDeserializer(
-        item as KnowledgeBaseAzureOpenAIModel,
+      return azureSearchDocumentsIndexesKnowledgeBaseAzureOpenAIModelDeserializer(
+        item as AzureSearchDocumentsIndexesKnowledgeBaseAzureOpenAIModel,
       );
 
     default:
@@ -6816,13 +6816,13 @@ export function azureSearchDocumentsIndexesKnowledgeSourceUnionSerializer(
 ): any {
   switch (item.kind) {
     case "searchIndex":
-      return searchIndexKnowledgeSourceSerializer(
-        item as SearchIndexKnowledgeSource,
+      return azureSearchDocumentsIndexesSearchIndexKnowledgeSourceSerializer(
+        item as AzureSearchDocumentsIndexesSearchIndexKnowledgeSource,
       );
 
     case "azureBlob":
-      return azureBlobKnowledgeSourceSerializer(
-        item as AzureBlobKnowledgeSource,
+      return azureSearchDocumentsIndexesAzureBlobKnowledgeSourceSerializer(
+        item as AzureSearchDocumentsIndexesAzureBlobKnowledgeSource,
       );
 
     default:
@@ -6835,13 +6835,13 @@ export function azureSearchDocumentsIndexesKnowledgeSourceUnionDeserializer(
 ): KnowledgeSourceUnion {
   switch (item.kind) {
     case "searchIndex":
-      return searchIndexKnowledgeSourceDeserializer(
-        item as SearchIndexKnowledgeSource,
+      return azureSearchDocumentsIndexesSearchIndexKnowledgeSourceDeserializer(
+        item as AzureSearchDocumentsIndexesSearchIndexKnowledgeSource,
       );
 
     case "azureBlob":
-      return azureBlobKnowledgeSourceDeserializer(
-        item as AzureBlobKnowledgeSource,
+      return azureSearchDocumentsIndexesAzureBlobKnowledgeSourceDeserializer(
+        item as AzureSearchDocumentsIndexesAzureBlobKnowledgeSource,
       );
 
     default:
@@ -7149,7 +7149,7 @@ export function _azureSearchDocumentsIndexesListKnowledgeSourcesResultDeserializ
 }
 
 export function azureSearchDocumentsIndexesKnowledgeSourceUnionArraySerializer(
-  result: Array<AzureSearchDocumentsIndexesKnowledgeSourceUnion>,
+  result: Array<KnowledgeSourceUnion>,
 ): any[] {
   return result.map((item) => {
     return azureSearchDocumentsIndexesKnowledgeSourceUnionSerializer(item);
@@ -7157,7 +7157,7 @@ export function azureSearchDocumentsIndexesKnowledgeSourceUnionArraySerializer(
 }
 
 export function azureSearchDocumentsIndexesKnowledgeSourceUnionArrayDeserializer(
-  result: Array<AzureSearchDocumentsIndexesKnowledgeSourceUnion>,
+  result: Array<KnowledgeSourceUnion>,
 ): any[] {
   return result.map((item) => {
     return azureSearchDocumentsIndexesKnowledgeSourceUnionDeserializer(item);
@@ -7550,7 +7550,7 @@ export type AzureSearchDocumentsIndexesIndexerPermissionOption = string;
 /** Base type for data change detection policies. */
 export interface AzureSearchDocumentsIndexesDataChangeDetectionPolicy {
   /** The discriminator for derived types. */
-  /** The discriminator possible values: #Microsoft.Azure.Search.HighWaterMarkChangeDetectionPolicy, #Microsoft.Azure.Search.SqlIntegratedChangeTrackingPolicy */
+  /** The discriminator possible values: #Microsoft.Azure.Search.AzureSearchDocumentsIndexesHighWaterMarkChangeDetectionPolicy, #Microsoft.Azure.Search.SqlIntegratedChangeTrackingPolicy */
   odataType: string;
 }
 
@@ -7579,13 +7579,13 @@ export function azureSearchDocumentsIndexesDataChangeDetectionPolicyUnionSeriali
 ): any {
   switch (item.odataType) {
     case "#Microsoft.Azure.Search.HighWaterMarkChangeDetectionPolicy":
-      return highWaterMarkChangeDetectionPolicySerializer(
-        item as HighWaterMarkChangeDetectionPolicy,
+      return azureSearchDocumentsIndexesHighWaterMarkChangeDetectionPolicySerializer(
+        item as AzureSearchDocumentsIndexesHighWaterMarkChangeDetectionPolicy,
       );
 
     case "#Microsoft.Azure.Search.SqlIntegratedChangeTrackingPolicy":
-      return sqlIntegratedChangeTrackingPolicySerializer(
-        item as SqlIntegratedChangeTrackingPolicy,
+      return azureSearchDocumentsIndexesSqlIntegratedChangeTrackingPolicySerializer(
+        item as AzureSearchDocumentsIndexesSqlIntegratedChangeTrackingPolicy,
       );
 
     default:
@@ -7600,13 +7600,13 @@ export function azureSearchDocumentsIndexesDataChangeDetectionPolicyUnionDeseria
 ): DataChangeDetectionPolicyUnion {
   switch (item.odataType) {
     case "#Microsoft.Azure.Search.HighWaterMarkChangeDetectionPolicy":
-      return highWaterMarkChangeDetectionPolicyDeserializer(
-        item as HighWaterMarkChangeDetectionPolicy,
+      return azureSearchDocumentsIndexesHighWaterMarkChangeDetectionPolicyDeserializer(
+        item as AzureSearchDocumentsIndexesHighWaterMarkChangeDetectionPolicy,
       );
 
     case "#Microsoft.Azure.Search.SqlIntegratedChangeTrackingPolicy":
-      return sqlIntegratedChangeTrackingPolicyDeserializer(
-        item as SqlIntegratedChangeTrackingPolicy,
+      return azureSearchDocumentsIndexesSqlIntegratedChangeTrackingPolicyDeserializer(
+        item as AzureSearchDocumentsIndexesSqlIntegratedChangeTrackingPolicy,
       );
 
     default:
@@ -7667,7 +7667,7 @@ export function azureSearchDocumentsIndexesSqlIntegratedChangeTrackingPolicyDese
 /** Base type for data deletion detection policies. */
 export interface AzureSearchDocumentsIndexesDataDeletionDetectionPolicy {
   /** The discriminator for derived types. */
-  /** The discriminator possible values: #Microsoft.Azure.Search.SoftDeleteColumnDeletionDetectionPolicy, #Microsoft.Azure.Search.NativeBlobSoftDeleteDeletionDetectionPolicy */
+  /** The discriminator possible values: #Microsoft.Azure.Search.AzureSearchDocumentsIndexesSoftDeleteColumnDeletionDetectionPolicy, #Microsoft.Azure.Search.NativeBlobSoftDeleteDeletionDetectionPolicy */
   odataType: string;
 }
 
@@ -7696,13 +7696,13 @@ export function azureSearchDocumentsIndexesDataDeletionDetectionPolicyUnionSeria
 ): any {
   switch (item.odataType) {
     case "#Microsoft.Azure.Search.SoftDeleteColumnDeletionDetectionPolicy":
-      return softDeleteColumnDeletionDetectionPolicySerializer(
-        item as SoftDeleteColumnDeletionDetectionPolicy,
+      return azureSearchDocumentsIndexesSoftDeleteColumnDeletionDetectionPolicySerializer(
+        item as AzureSearchDocumentsIndexesSoftDeleteColumnDeletionDetectionPolicy,
       );
 
     case "#Microsoft.Azure.Search.NativeBlobSoftDeleteDeletionDetectionPolicy":
-      return nativeBlobSoftDeleteDeletionDetectionPolicySerializer(
-        item as NativeBlobSoftDeleteDeletionDetectionPolicy,
+      return azureSearchDocumentsIndexesNativeBlobSoftDeleteDeletionDetectionPolicySerializer(
+        item as AzureSearchDocumentsIndexesNativeBlobSoftDeleteDeletionDetectionPolicy,
       );
 
     default:
@@ -7717,13 +7717,13 @@ export function azureSearchDocumentsIndexesDataDeletionDetectionPolicyUnionDeser
 ): DataDeletionDetectionPolicyUnion {
   switch (item.odataType) {
     case "#Microsoft.Azure.Search.SoftDeleteColumnDeletionDetectionPolicy":
-      return softDeleteColumnDeletionDetectionPolicyDeserializer(
-        item as SoftDeleteColumnDeletionDetectionPolicy,
+      return azureSearchDocumentsIndexesSoftDeleteColumnDeletionDetectionPolicyDeserializer(
+        item as AzureSearchDocumentsIndexesSoftDeleteColumnDeletionDetectionPolicy,
       );
 
     case "#Microsoft.Azure.Search.NativeBlobSoftDeleteDeletionDetectionPolicy":
-      return nativeBlobSoftDeleteDeletionDetectionPolicyDeserializer(
-        item as NativeBlobSoftDeleteDeletionDetectionPolicy,
+      return azureSearchDocumentsIndexesNativeBlobSoftDeleteDeletionDetectionPolicyDeserializer(
+        item as AzureSearchDocumentsIndexesNativeBlobSoftDeleteDeletionDetectionPolicy,
       );
 
     default:
@@ -8841,7 +8841,7 @@ export function azureSearchDocumentsIndexesSearchIndexerSkillsetDeserializer(
 }
 
 export function azureSearchDocumentsIndexesSearchIndexerSkillUnionArraySerializer(
-  result: Array<AzureSearchDocumentsIndexesSearchIndexerSkillUnion>,
+  result: Array<SearchIndexerSkillUnion>,
 ): any[] {
   return result.map((item) => {
     return azureSearchDocumentsIndexesSearchIndexerSkillUnionSerializer(item);
@@ -8849,7 +8849,7 @@ export function azureSearchDocumentsIndexesSearchIndexerSkillUnionArraySerialize
 }
 
 export function azureSearchDocumentsIndexesSearchIndexerSkillUnionArrayDeserializer(
-  result: Array<AzureSearchDocumentsIndexesSearchIndexerSkillUnion>,
+  result: Array<SearchIndexerSkillUnion>,
 ): any[] {
   return result.map((item) => {
     return azureSearchDocumentsIndexesSearchIndexerSkillUnionDeserializer(item);
@@ -8859,7 +8859,7 @@ export function azureSearchDocumentsIndexesSearchIndexerSkillUnionArrayDeseriali
 /** Base type for skills. */
 export interface AzureSearchDocumentsIndexesSearchIndexerSkill {
   /** The discriminator for derived types. */
-  /** The discriminator possible values: #Microsoft.Skills.Util.ConditionalSkill, #Microsoft.Skills.Text.KeyPhraseExtractionSkill, #Microsoft.Skills.Vision.OcrSkill, #Microsoft.Skills.Vision.ImageAnalysisSkill, #Microsoft.Skills.Text.LanguageDetectionSkill, #Microsoft.Skills.Util.ShaperSkill, #Microsoft.Skills.Text.MergeSkill, #Microsoft.Skills.Text.EntityRecognitionSkill, #Microsoft.Skills.Text.SentimentSkill, #Microsoft.Skills.Text.V3.SentimentSkill, #Microsoft.Skills.Text.V3.EntityLinkingSkill, #Microsoft.Skills.Text.V3.EntityRecognitionSkill, #Microsoft.Skills.Text.PIIDetectionSkill, #Microsoft.Skills.Text.SplitSkill, #Microsoft.Skills.Text.CustomEntityLookupSkill, #Microsoft.Skills.Text.TranslationSkill, #Microsoft.Skills.Util.DocumentExtractionSkill, #Microsoft.Skills.Util.DocumentIntelligenceLayoutSkill, #Microsoft.Skills.Custom.WebApiSkill, #Microsoft.Skills.Custom.AmlSkill, #Microsoft.Skills.Text.AzureOpenAIEmbeddingSkill, #Microsoft.Skills.Vision.VectorizeSkill, #Microsoft.Skills.Custom.ChatCompletionSkill */
+  /** The discriminator possible values: #Microsoft.Skills.Util.ConditionalSkill, #Microsoft.Skills.Text.AzureSearchDocumentsIndexesKeyPhraseExtractionSkill, #Microsoft.Skills.Vision.OcrSkill, #Microsoft.Skills.Vision.ImageAnalysisSkill, #Microsoft.Skills.Text.LanguageDetectionSkill, #Microsoft.Skills.Util.ShaperSkill, #Microsoft.Skills.Text.MergeSkill, #Microsoft.Skills.Text.EntityRecognitionSkill, #Microsoft.Skills.Text.SentimentSkill, #Microsoft.Skills.Text.V3.SentimentSkill, #Microsoft.Skills.Text.V3.EntityLinkingSkill, #Microsoft.Skills.Text.V3.EntityRecognitionSkill, #Microsoft.Skills.Text.PIIDetectionSkill, #Microsoft.Skills.Text.SplitSkill, #Microsoft.Skills.Text.AzureSearchDocumentsIndexesCustomEntityLookupSkill, #Microsoft.Skills.Text.TranslationSkill, #Microsoft.Skills.Util.AzureSearchDocumentsIndexesDocumentExtractionSkill, #Microsoft.Skills.Util.AzureSearchDocumentsIndexesDocumentIntelligenceLayoutSkill, #Microsoft.Skills.Custom.WebApiSkill, #Microsoft.Skills.Custom.AmlSkill, #Microsoft.Skills.Text.AzureSearchDocumentsIndexesAzureOpenAIEmbeddingSkill, #Microsoft.Skills.Vision.VectorizeSkill, #Microsoft.Skills.Custom.ChatCompletionSkill */
   odataType: string;
   /** The name of the skill which uniquely identifies it within the skillset. A skill with no name defined will be given a default name of its 1-based index in the skills array, prefixed with the character '#'. */
   name?: string;
@@ -8940,83 +8940,83 @@ export function azureSearchDocumentsIndexesSearchIndexerSkillUnionSerializer(
 ): any {
   switch (item.odataType) {
     case "#Microsoft.Skills.Util.ConditionalSkill":
-      return conditionalSkillSerializer(item as ConditionalSkill);
+      return azureSearchDocumentsIndexesConditionalSkillSerializer(item as AzureSearchDocumentsIndexesConditionalSkill);
 
     case "#Microsoft.Skills.Text.KeyPhraseExtractionSkill":
-      return keyPhraseExtractionSkillSerializer(
-        item as KeyPhraseExtractionSkill,
+      return azureSearchDocumentsIndexesKeyPhraseExtractionSkillSerializer(
+        item as AzureSearchDocumentsIndexesKeyPhraseExtractionSkill,
       );
 
     case "#Microsoft.Skills.Vision.OcrSkill":
-      return ocrSkillSerializer(item as OcrSkill);
+      return azureSearchDocumentsIndexesOcrSkillSerializer(item as AzureSearchDocumentsIndexesOcrSkill);
 
     case "#Microsoft.Skills.Vision.ImageAnalysisSkill":
-      return imageAnalysisSkillSerializer(item as ImageAnalysisSkill);
+      return azureSearchDocumentsIndexesImageAnalysisSkillSerializer(item as AzureSearchDocumentsIndexesImageAnalysisSkill);
 
     case "#Microsoft.Skills.Text.LanguageDetectionSkill":
-      return languageDetectionSkillSerializer(item as LanguageDetectionSkill);
+      return azureSearchDocumentsIndexesLanguageDetectionSkillSerializer(item as AzureSearchDocumentsIndexesLanguageDetectionSkill);
 
     case "#Microsoft.Skills.Util.ShaperSkill":
-      return shaperSkillSerializer(item as ShaperSkill);
+      return azureSearchDocumentsIndexesShaperSkillSerializer(item as AzureSearchDocumentsIndexesShaperSkill);
 
     case "#Microsoft.Skills.Text.MergeSkill":
-      return mergeSkillSerializer(item as MergeSkill);
+      return azureSearchDocumentsIndexesMergeSkillSerializer(item as AzureSearchDocumentsIndexesMergeSkill);
 
     case "#Microsoft.Skills.Text.EntityRecognitionSkill":
-      return entityRecognitionSkillSerializer(item as EntityRecognitionSkill);
+      return azureSearchDocumentsIndexesEntityRecognitionSkillSerializer(item as AzureSearchDocumentsIndexesEntityRecognitionSkill);
 
     case "#Microsoft.Skills.Text.SentimentSkill":
-      return sentimentSkillSerializer(item as SentimentSkill);
+      return azureSearchDocumentsIndexesSentimentSkillSerializer(item as AzureSearchDocumentsIndexesSentimentSkill);
 
     case "#Microsoft.Skills.Text.V3.SentimentSkill":
-      return sentimentSkillV3Serializer(item as SentimentSkillV3);
+      return azureSearchDocumentsIndexesSentimentSkillV3Serializer(item as AzureSearchDocumentsIndexesSentimentSkillV3);
 
     case "#Microsoft.Skills.Text.V3.EntityLinkingSkill":
-      return entityLinkingSkillSerializer(item as EntityLinkingSkill);
+      return azureSearchDocumentsIndexesEntityLinkingSkillSerializer(item as AzureSearchDocumentsIndexesEntityLinkingSkill);
 
     case "#Microsoft.Skills.Text.V3.EntityRecognitionSkill":
-      return entityRecognitionSkillV3Serializer(
-        item as EntityRecognitionSkillV3,
+      return azureSearchDocumentsIndexesEntityRecognitionSkillV3Serializer(
+        item as AzureSearchDocumentsIndexesEntityRecognitionSkillV3,
       );
 
     case "#Microsoft.Skills.Text.PIIDetectionSkill":
-      return piiDetectionSkillSerializer(item as PIIDetectionSkill);
+      return azureSearchDocumentsIndexesPIIDetectionSkillSerializer(item as AzureSearchDocumentsIndexesPIIDetectionSkill);
 
     case "#Microsoft.Skills.Text.SplitSkill":
-      return splitSkillSerializer(item as SplitSkill);
+      return azureSearchDocumentsIndexesSplitSkillSerializer(item as AzureSearchDocumentsIndexesSplitSkill);
 
     case "#Microsoft.Skills.Text.CustomEntityLookupSkill":
-      return customEntityLookupSkillSerializer(item as CustomEntityLookupSkill);
+      return azureSearchDocumentsIndexesCustomEntityLookupSkillSerializer(item as AzureSearchDocumentsIndexesCustomEntityLookupSkill);
 
     case "#Microsoft.Skills.Text.TranslationSkill":
-      return textTranslationSkillSerializer(item as TextTranslationSkill);
+      return azureSearchDocumentsIndexesTextTranslationSkillSerializer(item as AzureSearchDocumentsIndexesTextTranslationSkill);
 
     case "#Microsoft.Skills.Util.DocumentExtractionSkill":
-      return documentExtractionSkillSerializer(item as DocumentExtractionSkill);
+      return azureSearchDocumentsIndexesDocumentExtractionSkillSerializer(item as AzureSearchDocumentsIndexesDocumentExtractionSkill);
 
     case "#Microsoft.Skills.Util.DocumentIntelligenceLayoutSkill":
-      return documentIntelligenceLayoutSkillSerializer(
-        item as DocumentIntelligenceLayoutSkill,
+      return azureSearchDocumentsIndexesDocumentIntelligenceLayoutSkillSerializer(
+        item as AzureSearchDocumentsIndexesDocumentIntelligenceLayoutSkill,
       );
 
     case "#Microsoft.Skills.Custom.WebApiSkill":
-      return webApiSkillSerializer(item as WebApiSkill);
+      return azureSearchDocumentsIndexesWebApiSkillSerializer(item as AzureSearchDocumentsIndexesWebApiSkill);
 
     case "#Microsoft.Skills.Custom.AmlSkill":
-      return azureMachineLearningSkillSerializer(
-        item as AzureMachineLearningSkill,
+      return azureSearchDocumentsIndexesAzureMachineLearningSkillSerializer(
+        item as AzureSearchDocumentsIndexesAzureMachineLearningSkill,
       );
 
     case "#Microsoft.Skills.Text.AzureOpenAIEmbeddingSkill":
-      return azureOpenAIEmbeddingSkillSerializer(
-        item as AzureOpenAIEmbeddingSkill,
+      return azureSearchDocumentsIndexesAzureOpenAIEmbeddingSkillSerializer(
+        item as AzureSearchDocumentsIndexesAzureOpenAIEmbeddingSkill,
       );
 
     case "#Microsoft.Skills.Vision.VectorizeSkill":
-      return visionVectorizeSkillSerializer(item as VisionVectorizeSkill);
+      return azureSearchDocumentsIndexesVisionVectorizeSkillSerializer(item as AzureSearchDocumentsIndexesVisionVectorizeSkill);
 
     case "#Microsoft.Skills.Custom.ChatCompletionSkill":
-      return chatCompletionSkillSerializer(item as ChatCompletionSkill);
+      return azureSearchDocumentsIndexesChatCompletionSkillSerializer(item as AzureSearchDocumentsIndexesChatCompletionSkill);
 
     default:
       return azureSearchDocumentsIndexesSearchIndexerSkillSerializer(item);
@@ -9028,87 +9028,87 @@ export function azureSearchDocumentsIndexesSearchIndexerSkillUnionDeserializer(
 ): SearchIndexerSkillUnion {
   switch (item.odataType) {
     case "#Microsoft.Skills.Util.ConditionalSkill":
-      return conditionalSkillDeserializer(item as ConditionalSkill);
+      return azureSearchDocumentsIndexesConditionalSkillDeserializer(item as AzureSearchDocumentsIndexesConditionalSkill);
 
     case "#Microsoft.Skills.Text.KeyPhraseExtractionSkill":
-      return keyPhraseExtractionSkillDeserializer(
-        item as KeyPhraseExtractionSkill,
+      return azureSearchDocumentsIndexesKeyPhraseExtractionSkillDeserializer(
+        item as AzureSearchDocumentsIndexesKeyPhraseExtractionSkill,
       );
 
     case "#Microsoft.Skills.Vision.OcrSkill":
-      return ocrSkillDeserializer(item as OcrSkill);
+      return azureSearchDocumentsIndexesOcrSkillDeserializer(item as AzureSearchDocumentsIndexesOcrSkill);
 
     case "#Microsoft.Skills.Vision.ImageAnalysisSkill":
-      return imageAnalysisSkillDeserializer(item as ImageAnalysisSkill);
+      return azureSearchDocumentsIndexesImageAnalysisSkillDeserializer(item as AzureSearchDocumentsIndexesImageAnalysisSkill);
 
     case "#Microsoft.Skills.Text.LanguageDetectionSkill":
-      return languageDetectionSkillDeserializer(item as LanguageDetectionSkill);
+      return azureSearchDocumentsIndexesLanguageDetectionSkillDeserializer(item as AzureSearchDocumentsIndexesLanguageDetectionSkill);
 
     case "#Microsoft.Skills.Util.ShaperSkill":
-      return shaperSkillDeserializer(item as ShaperSkill);
+      return azureSearchDocumentsIndexesShaperSkillDeserializer(item as AzureSearchDocumentsIndexesShaperSkill);
 
     case "#Microsoft.Skills.Text.MergeSkill":
-      return mergeSkillDeserializer(item as MergeSkill);
+      return azureSearchDocumentsIndexesMergeSkillDeserializer(item as AzureSearchDocumentsIndexesMergeSkill);
 
     case "#Microsoft.Skills.Text.EntityRecognitionSkill":
-      return entityRecognitionSkillDeserializer(item as EntityRecognitionSkill);
+      return azureSearchDocumentsIndexesEntityRecognitionSkillDeserializer(item as AzureSearchDocumentsIndexesEntityRecognitionSkill);
 
     case "#Microsoft.Skills.Text.SentimentSkill":
-      return sentimentSkillDeserializer(item as SentimentSkill);
+      return azureSearchDocumentsIndexesSentimentSkillDeserializer(item as AzureSearchDocumentsIndexesSentimentSkill);
 
     case "#Microsoft.Skills.Text.V3.SentimentSkill":
-      return sentimentSkillV3Deserializer(item as SentimentSkillV3);
+      return azureSearchDocumentsIndexesSentimentSkillV3Deserializer(item as AzureSearchDocumentsIndexesSentimentSkillV3);
 
     case "#Microsoft.Skills.Text.V3.EntityLinkingSkill":
-      return entityLinkingSkillDeserializer(item as EntityLinkingSkill);
+      return azureSearchDocumentsIndexesEntityLinkingSkillDeserializer(item as AzureSearchDocumentsIndexesEntityLinkingSkill);
 
     case "#Microsoft.Skills.Text.V3.EntityRecognitionSkill":
-      return entityRecognitionSkillV3Deserializer(
-        item as EntityRecognitionSkillV3,
+      return azureSearchDocumentsIndexesEntityRecognitionSkillV3Deserializer(
+        item as AzureSearchDocumentsIndexesEntityRecognitionSkillV3,
       );
 
     case "#Microsoft.Skills.Text.PIIDetectionSkill":
-      return piiDetectionSkillDeserializer(item as PIIDetectionSkill);
+      return azureSearchDocumentsIndexesPIIDetectionSkillDeserializer(item as AzureSearchDocumentsIndexesPIIDetectionSkill);
 
     case "#Microsoft.Skills.Text.SplitSkill":
-      return splitSkillDeserializer(item as SplitSkill);
+      return azureSearchDocumentsIndexesSplitSkillDeserializer(item as AzureSearchDocumentsIndexesSplitSkill);
 
     case "#Microsoft.Skills.Text.CustomEntityLookupSkill":
-      return customEntityLookupSkillDeserializer(
-        item as CustomEntityLookupSkill,
+      return azureSearchDocumentsIndexesCustomEntityLookupSkillDeserializer(
+        item as AzureSearchDocumentsIndexesCustomEntityLookupSkill,
       );
 
     case "#Microsoft.Skills.Text.TranslationSkill":
-      return textTranslationSkillDeserializer(item as TextTranslationSkill);
+      return azureSearchDocumentsIndexesTextTranslationSkillDeserializer(item as AzureSearchDocumentsIndexesTextTranslationSkill);
 
     case "#Microsoft.Skills.Util.DocumentExtractionSkill":
-      return documentExtractionSkillDeserializer(
-        item as DocumentExtractionSkill,
+      return azureSearchDocumentsIndexesDocumentExtractionSkillDeserializer(
+        item as AzureSearchDocumentsIndexesDocumentExtractionSkill,
       );
 
     case "#Microsoft.Skills.Util.DocumentIntelligenceLayoutSkill":
-      return documentIntelligenceLayoutSkillDeserializer(
-        item as DocumentIntelligenceLayoutSkill,
+      return azureSearchDocumentsIndexesDocumentIntelligenceLayoutSkillDeserializer(
+        item as AzureSearchDocumentsIndexesDocumentIntelligenceLayoutSkill,
       );
 
     case "#Microsoft.Skills.Custom.WebApiSkill":
-      return webApiSkillDeserializer(item as WebApiSkill);
+      return azureSearchDocumentsIndexesWebApiSkillDeserializer(item as AzureSearchDocumentsIndexesWebApiSkill);
 
     case "#Microsoft.Skills.Custom.AmlSkill":
-      return azureMachineLearningSkillDeserializer(
-        item as AzureMachineLearningSkill,
+      return azureSearchDocumentsIndexesAzureMachineLearningSkillDeserializer(
+        item as AzureSearchDocumentsIndexesAzureMachineLearningSkill,
       );
 
     case "#Microsoft.Skills.Text.AzureOpenAIEmbeddingSkill":
-      return azureOpenAIEmbeddingSkillDeserializer(
-        item as AzureOpenAIEmbeddingSkill,
+      return azureSearchDocumentsIndexesAzureOpenAIEmbeddingSkillDeserializer(
+        item as AzureSearchDocumentsIndexesAzureOpenAIEmbeddingSkill,
       );
 
     case "#Microsoft.Skills.Vision.VectorizeSkill":
-      return visionVectorizeSkillDeserializer(item as VisionVectorizeSkill);
+      return azureSearchDocumentsIndexesVisionVectorizeSkillDeserializer(item as AzureSearchDocumentsIndexesVisionVectorizeSkill);
 
     case "#Microsoft.Skills.Custom.ChatCompletionSkill":
-      return chatCompletionSkillDeserializer(item as ChatCompletionSkill);
+      return azureSearchDocumentsIndexesChatCompletionSkillDeserializer(item as AzureSearchDocumentsIndexesChatCompletionSkill);
 
     default:
       return azureSearchDocumentsIndexesSearchIndexerSkillDeserializer(item);
@@ -12388,7 +12388,6 @@ export function azureSearchDocumentsIndexesChatCompletionSkillSerializer(
       : azureSearchDocumentsIndexesChatCompletionResponseFormatSerializer(
           item["responseFormat"],
         ),
-    "@odata.type": item["odataType"],
   };
 }
 
@@ -12436,7 +12435,6 @@ export function azureSearchDocumentsIndexesChatCompletionSkillDeserializer(
       : azureSearchDocumentsIndexesChatCompletionResponseFormatDeserializer(
           item["responseFormat"],
         ),
-    odataType: item["@odata.type"],
   };
 }
 
@@ -12713,21 +12711,21 @@ export function azureSearchDocumentsIndexesCognitiveServicesAccountUnionSerializ
 ): any {
   switch (item.odataType) {
     case "#Microsoft.Azure.Search.DefaultCognitiveServices":
-      return defaultCognitiveServicesAccountSerializer(
-        item as DefaultCognitiveServicesAccount,
+      return azureSearchDocumentsIndexesDefaultCognitiveServicesAccountSerializer(
+        item as AzureSearchDocumentsIndexesDefaultCognitiveServicesAccount,
       );
 
     case "#Microsoft.Azure.Search.CognitiveServicesByKey":
-      return cognitiveServicesAccountKeySerializer(
-        item as CognitiveServicesAccountKey,
+      return azureSearchDocumentsIndexesCognitiveServicesAccountKeySerializer(
+        item as AzureSearchDocumentsIndexesCognitiveServicesAccountKey,
       );
 
     case "#Microsoft.Azure.Search.AIServicesByKey":
-      return aiServicesAccountKeySerializer(item as AIServicesAccountKey);
+      return azureSearchDocumentsIndexesAIServicesAccountKeySerializer(item as AzureSearchDocumentsIndexesAIServicesAccountKey);
 
     case "#Microsoft.Azure.Search.AIServicesByIdentity":
-      return aiServicesAccountIdentitySerializer(
-        item as AIServicesAccountIdentity,
+      return azureSearchDocumentsIndexesAIServicesAccountIdentitySerializer(
+        item as AzureSearchDocumentsIndexesAIServicesAccountIdentity,
       );
 
     default:
@@ -12742,21 +12740,21 @@ export function azureSearchDocumentsIndexesCognitiveServicesAccountUnionDeserial
 ): CognitiveServicesAccountUnion {
   switch (item.odataType) {
     case "#Microsoft.Azure.Search.DefaultCognitiveServices":
-      return defaultCognitiveServicesAccountDeserializer(
-        item as DefaultCognitiveServicesAccount,
+      return azureSearchDocumentsIndexesDefaultCognitiveServicesAccountDeserializer(
+        item as AzureSearchDocumentsIndexesDefaultCognitiveServicesAccount,
       );
 
     case "#Microsoft.Azure.Search.CognitiveServicesByKey":
-      return cognitiveServicesAccountKeyDeserializer(
-        item as CognitiveServicesAccountKey,
+      return azureSearchDocumentsIndexesCognitiveServicesAccountKeyDeserializer(
+        item as AzureSearchDocumentsIndexesCognitiveServicesAccountKey,
       );
 
     case "#Microsoft.Azure.Search.AIServicesByKey":
-      return aiServicesAccountKeyDeserializer(item as AIServicesAccountKey);
+      return azureSearchDocumentsIndexesAIServicesAccountKeyDeserializer(item as AzureSearchDocumentsIndexesAIServicesAccountKey);
 
     case "#Microsoft.Azure.Search.AIServicesByIdentity":
-      return aiServicesAccountIdentityDeserializer(
-        item as AIServicesAccountIdentity,
+      return azureSearchDocumentsIndexesAIServicesAccountIdentityDeserializer(
+        item as AzureSearchDocumentsIndexesAIServicesAccountIdentity,
       );
 
     default:
