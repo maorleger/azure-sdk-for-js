@@ -3,31 +3,27 @@
 
 /// <reference lib="esnext.asynciterable" />
 
-import type {
-  KeyCredential,
-  TokenCredential } from "@azure/core-auth";
+import type { KeyCredential, TokenCredential } from "@azure/core-auth";
 import { isTokenCredential } from "@azure/core-auth";
 import type { InternalClientPipelineOptions } from "@azure/core-client";
 import type { ExtendedCommonClientOptions } from "@azure/core-http-compat";
 import type { Pipeline } from "@azure/core-rest-pipeline";
 import { bearerTokenAuthenticationPolicy } from "@azure/core-rest-pipeline";
-import { decode,
-  encode } from "./base64.js";
+import { decode, encode } from "./base64.js";
 import type {
-  AutocompleteRequest,
   AzureSearchDocumentsAutocompleteResult as AutocompleteResult,
   AzureSearchDocumentsIndexDocumentsResult as IndexDocumentsResult,
-  QueryAnswerType as BaseAnswers,
-  QueryCaptionType as BaseCaptions,
-  QueryRewritesType as GeneratedQueryRewrites,
-  SearchRequest as GeneratedSearchRequest,
-  SuggestRequest,
-  VectorQueryUnion as GeneratedVectorQuery
+  AzureSearchDocumentsQueryAnswerType as BaseAnswers,
+  AzureSearchDocumentsQueryCaptionType as BaseCaptions,
+  AzureSearchDocumentsQueryRewritesType as GeneratedQueryRewrites,
+  AzureSearchDocumentsSearchRequest as GeneratedSearchRequest,
+  VectorQueryUnion as GeneratedVectorQuery,
 } from "./models/azure/search/documents/index.js";
 import { SearchClient as GeneratedClient } from "./search/searchClient.js";
 import { IndexDocumentsBatch } from "./indexDocumentsBatch.js";
 import type {
   AutocompleteOptions,
+  AutocompleteRequest,
   CountDocumentsOptions,
   DeleteDocumentsOptions,
   GetDocumentOptions,
@@ -202,8 +198,8 @@ export class SearchClient<TModel extends object> implements IndexDocumentsClient
 
     this.client = new GeneratedClient(
       this.endpoint,
+      credential,
       this.indexName,
-      this.serviceVersion,
       internalClientPipelineOptions,
     );
 
@@ -232,18 +228,19 @@ export class SearchClient<TModel extends object> implements IndexDocumentsClient
   public async getDocumentsCount(options: CountDocumentsOptions = {}): Promise<number> {
     const { span, updatedOptions } = createSpan("SearchClient-getDocumentsCount", options);
     try {
-      let documentsCount: number = 0;
-      await this.client.documents.count({
-        ...updatedOptions,
-        onResponse: (rawResponse, flatResponse) => {
-          documentsCount = Number(rawResponse.bodyAsText);
-          if (updatedOptions.onResponse) {
-            updatedOptions.onResponse(rawResponse, flatResponse);
-          }
-        },
-      });
+      return await this.client.getDocumentCount(updatedOptions);
+      // ONRESPONSE STUFF CAN GO
+      // await this.client.documents.count({
+      //   ...updatedOptions,
+      //   onResponse: (rawResponse, flatResponse) => {
+      //     documentsCount = Number(rawResponse.bodyAsText);
+      //     if (updatedOptions.onResponse) {
+      //       updatedOptions.onResponse(rawResponse, flatResponse);
+      //     }
+      //   },
+      // });
 
-      return documentsCount;
+      // return documentsCount;
     } catch (e: any) {
       span.setStatus({
         status: "error",
@@ -292,7 +289,7 @@ export class SearchClient<TModel extends object> implements IndexDocumentsClient
     options: AutocompleteOptions<TModel> = {},
   ): Promise<AutocompleteResult> {
     const { searchFields, ...nonFieldOptions } = options;
-    const fullOptions: AutocompleteRequest = {
+    const fullOptions: AutocompleteRequest<TModel> = {
       searchText: searchText,
       suggesterName: suggesterName,
       searchFields: this.convertSearchFields(searchFields),

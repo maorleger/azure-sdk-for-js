@@ -4,141 +4,142 @@
 import type { OperationOptions } from "@azure-rest/core-client";
 import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import type {
-  AIFoundryModelCatalogName,
-  AIServicesAccountKey,
-  AsciiFoldingTokenFilter,
-  AzureMachineLearningSkill,
-  AzureOpenAIModelName,
-  AzureOpenAITokenizerParameters,
-  BinaryQuantizationCompression,
-  BM25Similarity,
-  CharFilterName,
-  ChatCompletionExtraParametersBehavior,
-  ChatCompletionResponseFormat,
-  CjkBigramTokenFilter,
-  ClassicSimilarity,
-  ClassicTokenizer,
-  CognitiveServicesAccount as BaseCognitiveServicesAccount,
-  CognitiveServicesAccountKey,
-  CommonGramTokenFilter,
-  CommonModelParameters,
-  ConditionalSkill,
-  CorsOptions,
-  CustomEntity,
-  CustomNormalizer,
-  DefaultCognitiveServicesAccount,
-  DictionaryDecompounderTokenFilter,
-  DistanceScoringFunction,
-  DocumentExtractionSkill,
-  DocumentIntelligenceLayoutSkillChunkingProperties,
-  DocumentIntelligenceLayoutSkillExtractionOptions,
-  DocumentIntelligenceLayoutSkillMarkdownHeaderDepth,
-  DocumentIntelligenceLayoutSkillOutputFormat,
-  DocumentIntelligenceLayoutSkillOutputMode,
-  EdgeNGramTokenFilterSide,
-  EdgeNGramTokenizer,
-  ElisionTokenFilter,
-  EntityLinkingSkill,
-  EntityRecognitionSkillV3,
-  FieldMapping,
-  FreshnessScoringFunction,
-  HighWaterMarkChangeDetectionPolicy,
-  IndexerPermissionOption,
-  IndexingSchedule,
-  IndexProjectionMode,
-  IndexStatisticsSummary,
-  KeepTokenFilter,
-  KeywordMarkerTokenFilter,
-  KnowledgeAgentModel as BaseKnowledgeAgentModel,
-  KnownBlobIndexerDataToExtract,
-  KnownBlobIndexerImageAction,
-  KnownBlobIndexerParsingMode,
-  KnownBlobIndexerPDFTextRotationAlgorithm,
-  KnownCharFilterName,
-  KnownCustomEntityLookupSkillLanguage,
-  KnownEntityCategory,
-  KnownEntityRecognitionSkillLanguage,
-  KnownImageAnalysisSkillLanguage,
-  KnownImageDetail,
-  KnownIndexerExecutionEnvironment,
-  KnownKeyPhraseExtractionSkillLanguage,
-  KnownLexicalAnalyzerName,
-  KnownLexicalTokenizerName,
-  KnownOcrSkillLanguage,
-  KnownPIIDetectionSkillMaskingMode,
-  KnownRegexFlags,
-  KnownSearchFieldDataType,
-  KnownSearchIndexerDataSourceType,
-  KnownSentimentSkillLanguage,
-  KnownSplitSkillLanguage,
-  KnownTextSplitMode,
-  KnownTextTranslationSkillLanguage,
-  KnownTokenFilterName,
-  KnownVectorSearchAlgorithmKind,
-  KnownVectorSearchAlgorithmMetric,
-  KnownVisualFeature,
-  LanguageDetectionSkill,
-  LengthTokenFilter,
-  LexicalAnalyzerName,
-  LexicalNormalizerName,
-  LexicalTokenizerName,
-  LimitTokenFilter,
-  LuceneStandardAnalyzer,
-  MagnitudeScoringFunction,
-  MappingCharFilter,
-  MarkdownHeaderDepth,
-  MarkdownParsingSubmode,
-  MergeSkill,
-  MicrosoftLanguageStemmingTokenizer,
-  MicrosoftLanguageTokenizer,
-  NativeBlobSoftDeleteDeletionDetectionPolicy,
-  NGramTokenizer,
-  OcrLineEnding,
-  PathHierarchyTokenizerV2 as PathHierarchyTokenizer,
-  PatternCaptureTokenFilter,
-  PatternReplaceCharFilter,
-  PatternReplaceTokenFilter,
-  PermissionFilter,
-  PhoneticTokenFilter,
-  ScalarQuantizationCompression,
-  ScoringFunctionAggregation,
-  SearchAlias,
-  SearchIndexerDataContainer,
-  SearchIndexerDataNoneIdentity,
-  SearchIndexerDataUserAssignedIdentity,
-  SearchIndexerIndexProjectionSelector,
-  SearchIndexerKnowledgeStoreProjection,
-  SearchIndexerSkill as BaseSearchIndexerSkill,
-  SearchIndexKnowledgeSourceParameters,
-  SearchIndexPermissionFilterOption,
-  SemanticSearch,
-  SentimentSkillV3,
-  ServiceCounters,
-  ServiceLimits,
-  ShaperSkill,
-  ShingleTokenFilter,
-  SnowballTokenFilter,
-  SoftDeleteColumnDeletionDetectionPolicy,
-  SplitSkillUnit,
-  SqlIntegratedChangeTrackingPolicy,
-  StemmerOverrideTokenFilter,
-  StemmerTokenFilter,
-  StopAnalyzer,
-  StopwordsTokenFilter,
-  Suggester as SearchSuggester,
-  SynonymTokenFilter,
-  TagScoringFunction,
-  TextWeights,
-  TokenFilterName,
-  TruncateTokenFilter,
-  UaxUrlEmailTokenizer,
-  UniqueTokenFilter,
-  VectorEncodingFormat,
-  VectorSearchProfile,
-  VectorSearchVectorizerKind,
-  WordDelimiterTokenFilter,
-} from "./service/models/index.js";
+  AzureSearchDocumentsIndexesAIFoundryModelCatalogName as AIFoundryModelCatalogName,
+  AzureSearchDocumentsIndexesAIServicesAccountKey as AIServicesAccountKey,
+  AzureSearchDocumentsIndexesAsciiFoldingTokenFilter as AsciiFoldingTokenFilter,
+  AzureSearchDocumentsIndexesAzureMachineLearningSkill as AzureMachineLearningSkill,
+  AzureSearchDocumentsIndexesAzureOpenAIModelName as AzureOpenAIModelName,
+  AzureSearchDocumentsIndexesAzureOpenAITokenizerParameters as AzureOpenAITokenizerParameters,
+  AzureSearchDocumentsIndexesBinaryQuantizationCompression as BinaryQuantizationCompression,
+  AzureSearchDocumentsIndexesBM25SimilarityAlgorithm as BM25Similarity,
+  AzureSearchDocumentsIndexesCharFilterName as CharFilterName,
+  AzureSearchDocumentsIndexesChatCompletionExtraParametersBehavior as ChatCompletionExtraParametersBehavior,
+  AzureSearchDocumentsIndexesChatCompletionResponseFormat as ChatCompletionResponseFormat,
+  AzureSearchDocumentsIndexesCjkBigramTokenFilter as CjkBigramTokenFilter,
+  AzureSearchDocumentsIndexesClassicSimilarityAlgorithm as ClassicSimilarity,
+  AzureSearchDocumentsIndexesClassicTokenizer as ClassicTokenizer,
+  AzureSearchDocumentsIndexesCognitiveServicesAccount as BaseCognitiveServicesAccount,
+  AzureSearchDocumentsIndexesCognitiveServicesAccountKey as CognitiveServicesAccountKey,
+  AzureSearchDocumentsIndexesCommonGramTokenFilter as CommonGramTokenFilter,
+  AzureSearchDocumentsIndexesChatCompletionCommonModelParameters as CommonModelParameters,
+  AzureSearchDocumentsIndexesConditionalSkill as ConditionalSkill,
+  AzureSearchDocumentsIndexesCorsOptions as CorsOptions,
+  AzureSearchDocumentsIndexesCustomEntity as CustomEntity,
+  AzureSearchDocumentsIndexesCustomNormalizer as CustomNormalizer,
+  AzureSearchDocumentsIndexesDefaultCognitiveServicesAccount as DefaultCognitiveServicesAccount,
+  AzureSearchDocumentsIndexesDictionaryDecompounderTokenFilter as DictionaryDecompounderTokenFilter,
+  AzureSearchDocumentsIndexesDistanceScoringFunction as DistanceScoringFunction,
+  AzureSearchDocumentsIndexesDocumentExtractionSkill as DocumentExtractionSkill,
+  AzureSearchDocumentsIndexesDocumentIntelligenceLayoutSkillChunkingProperties as DocumentIntelligenceLayoutSkillChunkingProperties,
+  AzureSearchDocumentsIndexesDocumentIntelligenceLayoutSkillExtractionOptions as DocumentIntelligenceLayoutSkillExtractionOptions,
+  AzureSearchDocumentsIndexesDocumentIntelligenceLayoutSkillMarkdownHeaderDepth as DocumentIntelligenceLayoutSkillMarkdownHeaderDepth,
+  AzureSearchDocumentsIndexesDocumentIntelligenceLayoutSkillOutputFormat as DocumentIntelligenceLayoutSkillOutputFormat,
+  AzureSearchDocumentsIndexesDocumentIntelligenceLayoutSkillOutputMode as DocumentIntelligenceLayoutSkillOutputMode,
+  AzureSearchDocumentsIndexesEdgeNGramTokenFilterSide as EdgeNGramTokenFilterSide,
+  AzureSearchDocumentsIndexesEdgeNGramTokenizer as EdgeNGramTokenizer,
+  AzureSearchDocumentsIndexesElisionTokenFilter as ElisionTokenFilter,
+  AzureSearchDocumentsIndexesEntityLinkingSkill as EntityLinkingSkill,
+  AzureSearchDocumentsIndexesEntityRecognitionSkillV3 as EntityRecognitionSkillV3,
+  AzureSearchDocumentsIndexesFieldMapping as FieldMapping,
+  AzureSearchDocumentsIndexesFreshnessScoringFunction as FreshnessScoringFunction,
+  AzureSearchDocumentsIndexesHighWaterMarkChangeDetectionPolicy as HighWaterMarkChangeDetectionPolicy,
+  AzureSearchDocumentsIndexesIndexerPermissionOption as IndexerPermissionOption,
+  AzureSearchDocumentsIndexesIndexingSchedule as IndexingSchedule,
+  AzureSearchDocumentsIndexesIndexProjectionMode as IndexProjectionMode,
+  AzureSearchDocumentsIndexesIndexStatisticsSummary as IndexStatisticsSummary,
+  AzureSearchDocumentsIndexesKeepTokenFilter as KeepTokenFilter,
+  AzureSearchDocumentsIndexesKeywordMarkerTokenFilter as KeywordMarkerTokenFilter,
+  AzureSearchDocumentsIndexesKnowledgeBaseModel as BaseKnowledgeAgentModel,
+  AzureSearchDocumentsIndexesBlobIndexerDataToExtract as KnownBlobIndexerDataToExtract,
+  AzureSearchDocumentsIndexesBlobIndexerImageAction as KnownBlobIndexerImageAction,
+  AzureSearchDocumentsIndexesBlobIndexerParsingMode as KnownBlobIndexerParsingMode,
+  AzureSearchDocumentsIndexesBlobIndexerPDFTextRotationAlgorithm as KnownBlobIndexerPDFTextRotationAlgorithm,
+  AzureSearchDocumentsIndexesCharFilterName as KnownCharFilterName,
+  AzureSearchDocumentsIndexesCustomEntityLookupSkillLanguage as KnownCustomEntityLookupSkillLanguage,
+  AzureSearchDocumentsIndexesEntityCategory as KnownEntityCategory,
+  AzureSearchDocumentsIndexesEntityRecognitionSkillLanguage as KnownEntityRecognitionSkillLanguage,
+  AzureSearchDocumentsIndexesImageAnalysisSkillLanguage as KnownImageAnalysisSkillLanguage,
+  AzureSearchDocumentsIndexesImageDetail as KnownImageDetail,
+  AzureSearchDocumentsIndexesIndexerExecutionEnvironment as KnownIndexerExecutionEnvironment,
+  AzureSearchDocumentsIndexesKeyPhraseExtractionSkillLanguage as KnownKeyPhraseExtractionSkillLanguage,
+  AzureSearchDocumentsIndexesLexicalAnalyzerName as KnownLexicalAnalyzerName,
+  AzureSearchDocumentsIndexesLexicalTokenizerName as KnownLexicalTokenizerName,
+  AzureSearchDocumentsIndexesOcrSkillLanguage as KnownOcrSkillLanguage,
+  AzureSearchDocumentsIndexesPIIDetectionSkillMaskingMode as KnownPIIDetectionSkillMaskingMode,
+  AzureSearchDocumentsIndexesRegexFlags as KnownRegexFlags,
+  AzureSearchDocumentsIndexesSearchFieldDataType as KnownSearchFieldDataType,
+  AzureSearchDocumentsIndexesSearchIndexerDataSourceType as KnownSearchIndexerDataSourceType,
+  AzureSearchDocumentsIndexesSentimentSkillLanguage as KnownSentimentSkillLanguage,
+  AzureSearchDocumentsIndexesSplitSkillLanguage as KnownSplitSkillLanguage,
+  AzureSearchDocumentsIndexesTextSplitMode as KnownTextSplitMode,
+  AzureSearchDocumentsIndexesTextTranslationSkillLanguage as KnownTextTranslationSkillLanguage,
+  AzureSearchDocumentsIndexesTokenFilterName as KnownTokenFilterName,
+  AzureSearchDocumentsIndexesVectorSearchAlgorithmKind as KnownVectorSearchAlgorithmKind,
+  AzureSearchDocumentsIndexesVectorSearchAlgorithmMetric as KnownVectorSearchAlgorithmMetric,
+  AzureSearchDocumentsIndexesVisualFeature as KnownVisualFeature,
+  AzureSearchDocumentsIndexesLanguageDetectionSkill as LanguageDetectionSkill,
+  AzureSearchDocumentsIndexesLengthTokenFilter as LengthTokenFilter,
+  LexicalAnalyzerUnion,
+  LexicalNormalizerUnion,
+  LexicalTokenizerUnion,
+  AzureSearchDocumentsIndexesLimitTokenFilter as LimitTokenFilter,
+  AzureSearchDocumentsIndexesLuceneStandardAnalyzer as LuceneStandardAnalyzer,
+  AzureSearchDocumentsIndexesMagnitudeScoringFunction as MagnitudeScoringFunction,
+  AzureSearchDocumentsIndexesMappingCharFilter as MappingCharFilter,
+  AzureSearchDocumentsIndexesDocumentIntelligenceLayoutSkillMarkdownHeaderDepth as MarkdownHeaderDepth,
+  AzureSearchDocumentsIndexesMarkdownParsingSubmode as MarkdownParsingSubmode,
+  AzureSearchDocumentsIndexesMergeSkill as MergeSkill,
+  AzureSearchDocumentsIndexesMicrosoftLanguageStemmingTokenizer as MicrosoftLanguageStemmingTokenizer,
+  AzureSearchDocumentsIndexesMicrosoftLanguageTokenizer as MicrosoftLanguageTokenizer,
+  AzureSearchDocumentsIndexesNativeBlobSoftDeleteDeletionDetectionPolicy as NativeBlobSoftDeleteDeletionDetectionPolicy,
+  AzureSearchDocumentsIndexesNGramTokenizer as NGramTokenizer,
+  AzureSearchDocumentsIndexesOcrLineEnding as OcrLineEnding,
+  AzureSearchDocumentsIndexesPathHierarchyTokenizer as PathHierarchyTokenizer,
+  AzureSearchDocumentsIndexesPatternCaptureTokenFilter as PatternCaptureTokenFilter,
+  AzureSearchDocumentsIndexesPatternReplaceCharFilter as PatternReplaceCharFilter,
+  AzureSearchDocumentsIndexesPatternReplaceTokenFilter as PatternReplaceTokenFilter,
+  AzureSearchDocumentsIndexesPermissionFilter as PermissionFilter,
+  AzureSearchDocumentsIndexesPhoneticTokenFilter as PhoneticTokenFilter,
+  AzureSearchDocumentsIndexesScalarQuantizationCompression as ScalarQuantizationCompression,
+  ScoringFunctionUnion,
+  AzureSearchDocumentsIndexesSearchAlias as SearchAlias,
+  AzureSearchDocumentsIndexesSearchIndexerDataContainer as SearchIndexerDataContainer,
+  SearchIndexerDataIdentityUnion,
+  AzureSearchDocumentsIndexesSearchIndexerDataUserAssignedIdentity as SearchIndexerDataUserAssignedIdentity,
+  AzureSearchDocumentsIndexesSearchIndexerIndexProjectionSelector as SearchIndexerIndexProjectionSelector,
+  AzureSearchDocumentsIndexesSearchIndexerKnowledgeStoreProjection as SearchIndexerKnowledgeStoreProjection,
+  AzureSearchDocumentsIndexesSearchIndexKnowledgeSource as SearchIndexKnowledgeSourceParameters,
+  AzureSearchDocumentsIndexesSearchIndexPermissionFilterOption as SearchIndexPermissionFilterOption,
+  AzureSearchDocumentsIndexesSemanticSearch as SemanticSearch,
+  AzureSearchDocumentsIndexesSentimentSkillV3 as SentimentSkillV3,
+  AzureSearchDocumentsIndexesSearchServiceCounters as ServiceCounters,
+  AzureSearchDocumentsIndexesSearchServiceLimits as ServiceLimits,
+  AzureSearchDocumentsIndexesShaperSkill as ShaperSkill,
+  AzureSearchDocumentsIndexesShingleTokenFilter as ShingleTokenFilter,
+  AzureSearchDocumentsIndexesSnowballTokenFilter as SnowballTokenFilter,
+  AzureSearchDocumentsIndexesSoftDeleteColumnDeletionDetectionPolicy as SoftDeleteColumnDeletionDetectionPolicy,
+  AzureSearchDocumentsIndexesSplitSkillUnit as SplitSkillUnit,
+  AzureSearchDocumentsIndexesSqlIntegratedChangeTrackingPolicy as SqlIntegratedChangeTrackingPolicy,
+  AzureSearchDocumentsIndexesStemmerOverrideTokenFilter as StemmerOverrideTokenFilter,
+  AzureSearchDocumentsIndexesStemmerTokenFilter as StemmerTokenFilter,
+  AzureSearchDocumentsIndexesStopAnalyzer as StopAnalyzer,
+  AzureSearchDocumentsIndexesStopwordsTokenFilter as StopwordsTokenFilter,
+  AzureSearchDocumentsIndexesSearchSuggester as SearchSuggester,
+  AzureSearchDocumentsIndexesSynonymTokenFilter as SynonymTokenFilter,
+  AzureSearchDocumentsIndexesTagScoringFunction as TagScoringFunction,
+  AzureSearchDocumentsIndexesTextWeights as TextWeights,
+  AzureSearchDocumentsIndexesTokenFilterName as TokenFilterName,
+  AzureSearchDocumentsIndexesTruncateTokenFilter as TruncateTokenFilter,
+  AzureSearchDocumentsIndexesUaxUrlEmailTokenizer as UaxUrlEmailTokenizer,
+  AzureSearchDocumentsIndexesUniqueTokenFilter as UniqueTokenFilter,
+  AzureSearchDocumentsIndexesVectorEncodingFormat as VectorEncodingFormat,
+  AzureSearchDocumentsIndexesVectorSearchProfile as VectorSearchProfile,
+  VectorSearchVectorizerUnion,
+  AzureSearchDocumentsIndexesWordDelimiterTokenFilter as WordDelimiterTokenFilter,
+  AzureSearchDocumentsIndexesSearchIndexerSkill as BaseSearchIndexerSkill,
+} from "./models/azure/search/documents/indexes/index.js";
 import type { KnowledgeAgent } from "./knowledgeAgentModels.js";
+import { SearchIndexerDataNoneIdentity } from "./index.js";
 
 /**
  * Options for a list skillsets operation.
@@ -487,19 +488,19 @@ export interface AnalyzeRequest {
    * exclusive. {@link KnownAnalyzerNames} is an enum containing built-in analyzer names.
    * NOTE: Either analyzerName or tokenizerName is required in an AnalyzeRequest.
    */
-  analyzerName?: LexicalAnalyzerName;
+  analyzerName?: LexicalAnalyzer;
   /**
    * The name of the tokenizer to use to break the given text. If this parameter is not specified,
    * you must specify an analyzer instead. The tokenizer and analyzer parameters are mutually
    * exclusive. {@link KnownTokenizerNames} is an enum containing built-in tokenizer names.
    * NOTE: Either analyzerName or tokenizerName is required in an AnalyzeRequest.
    */
-  tokenizerName?: LexicalTokenizerName;
+  tokenizerName?: LexicalTokenizer;
   /**
    * The name of the normalizer to use to normalize the given text. {@link KnownNormalizerNames} is
    * an enum containing built-in analyzer names.
    */
-  normalizerName?: LexicalNormalizerName;
+  normalizerName?: LexicalNormalizer;
   /**
    * An optional list of token filters to use when breaking the given text. This parameter can only
    * be set when using the tokenizer parameter.
@@ -579,7 +580,7 @@ export interface CustomAnalyzer {
    * breaking a sentence into words. {@link KnownTokenizerNames} is an enum containing built-in
    * tokenizer names.
    */
-  tokenizerName: LexicalTokenizerName;
+  tokenizerName: LexicalTokenizer;
   /**
    * A list of token filters used to filter out or modify the tokens generated by a tokenizer. For
    * example, you can specify a lowercase filter that converts all characters to lowercase. The
@@ -710,7 +711,7 @@ export interface VisionVectorizeSkill extends BaseSearchIndexerSkill {
 /**
  * Contains the possible cases for Skill.
  */
-export type SearchIndexerSkill =
+export type SearchIndexerSkillUnion =
   | AzureMachineLearningSkill
   | AzureOpenAIEmbeddingSkill
   | ConditionalSkill
@@ -1123,7 +1124,7 @@ export interface SimpleField {
    * searchable fields and it can't be set together with either searchAnalyzer or indexAnalyzer.
    * Once the analyzer is chosen, it cannot be changed for the field.
    */
-  analyzerName?: LexicalAnalyzerName;
+  analyzerName?: LexicalAnalyzer;
   /**
    * The name of the analyzer used at search time for the field. This option can be used only with
    * searchable fields. It must be set together with `indexAnalyzerName` and it cannot be set
@@ -1131,14 +1132,14 @@ export interface SimpleField {
    * analyzer; use the `analyzerName` property instead if you need a language analyzer. This
    * analyzer can be updated on an existing field.
    */
-  searchAnalyzerName?: LexicalAnalyzerName;
+  searchAnalyzerName?: LexicalAnalyzer;
   /**
    * The name of the analyzer used at indexing time for the field. This option can be used only with
    * searchable fields. It must be set together with searchAnalyzer and it cannot be set together
    * with the `analyzerName` option. Once the analyzer is chosen, it cannot be changed for the
    * field. KnownAnalyzerNames is an enum containing known values.
    */
-  indexAnalyzerName?: LexicalAnalyzerName;
+  indexAnalyzerName?: LexicalAnalyzer;
   /**
    * A list of the names of synonym maps to associate with this field. This option can be used only
    * with searchable fields. Currently only one synonym map per field is supported. Assigning a
@@ -1150,7 +1151,7 @@ export interface SimpleField {
   /**
    * The name of the normalizer used at indexing time for the field.
    */
-  normalizerName?: LexicalNormalizerName;
+  normalizerName?: LexicalNormalizer;
   /**
    * The dimensionality of the vector field.
    */
@@ -1506,7 +1507,7 @@ export interface SearchIndexerSkillset {
   /**
    * A list of skills in the skillset.
    */
-  skills: SearchIndexerSkill[];
+  skills: SearchIndexerSkillUnion[];
   /**
    * Details about cognitive services to be used when running skills.
    */
@@ -1557,7 +1558,7 @@ export interface ScoringProfile {
    * Defaults to "Sum". Ignored if there are no scoring functions. Possible values include: 'sum',
    * 'average', 'minimum', 'maximum', 'firstMatching'
    */
-  functionAggregation?: ScoringFunctionAggregation;
+  functionAggregation?: ScoringFunction;
 }
 
 /**
@@ -2446,7 +2447,7 @@ export interface BaseVectorSearchVectorizer {
   /**
    * Polymorphic discriminator, which specifies the different types this object can be
    */
-  kind: VectorSearchVectorizerKind;
+  kind: string;
   /**
    * The name to associate with this particular vectorization method.
    */
@@ -3299,8 +3300,8 @@ export interface ListKnowledgeSourcesOptions extends OperationOptions {}
 export interface CreateKnowledgeSourceOptions extends OperationOptions {}
 
 /**
- * Defines values for LexicalAnalyzerName.
- * {@link KnownLexicalAnalyzerName} can be used interchangeably with LexicalAnalyzerName,
+ * Defines values for LexicalAnalyzer.
+ * {@link KnownLexicalAnalyzerName} can be used interchangeably with LexicalAnalyzerUnion,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
  * **ar.microsoft**: Microsoft analyzer for Arabic.

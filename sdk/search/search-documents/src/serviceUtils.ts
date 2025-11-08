@@ -2,63 +2,54 @@
 // Licensed under the MIT License.
 
 import type {
-  SearchResult as GeneratedSearchResult,
-  SuggestDocumentsResult as GeneratedSuggestDocumentsResult,
-} from "./data/models/index.js";
+  AzureSearchDocumentsSearchResult as GeneratedSearchResult,
+  AzureSearchDocumentsSuggestDocumentsResult as GeneratedSuggestDocumentsResult,
+} from "./models/azure/search/documents/index.js";
 import type {
-  AIServicesAccountIdentity as GeneratedAIServicesAccountIdentity,
-  AIServicesAccountKey as GeneratedAIServicesAccountKey,
-  AIServicesVisionVectorizer as GeneratedAIServicesVisionVectorizer,
-  AMLParameters as GeneratedAMLParameters,
-  AMLVectorizer as GeneratedAMLVectorizer,
-  AzureBlobKnowledgeSource as GeneratedAzureBlobKnowledgeSource,
-  AzureBlobKnowledgeSourceParameters as GeneratedAzureBlobKnowledgeSourceParameters,
-  AzureOpenAIParameters as GeneratedAzureOpenAIParameters,
-  AzureOpenAIVectorizer as GeneratedAzureOpenAIVectorizer,
-  BM25Similarity,
-  ClassicSimilarity,
-  CognitiveServicesAccountKey as GeneratedCognitiveServicesAccountKey,
+  AzureSearchDocumentsIndexesAIServicesAccountIdentity as GeneratedAIServicesAccountIdentity,
+  AzureSearchDocumentsIndexesAIServicesAccountKey as GeneratedAIServicesAccountKey,
+  AzureSearchDocumentsIndexesAIServicesVisionVectorizer as GeneratedAIServicesVisionVectorizer,
+  AzureSearchDocumentsIndexesAzureMachineLearningParameters as GeneratedAMLParameters,
+  AzureSearchDocumentsIndexesAzureMachineLearningVectorizer as GeneratedAMLVectorizer,
+  AzureSearchDocumentsIndexesAzureBlobKnowledgeSource as GeneratedAzureBlobKnowledgeSource,
+  AzureSearchDocumentsIndexesAzureBlobKnowledgeSourceParameters as GeneratedAzureBlobKnowledgeSourceParameters,
+  AzureSearchDocumentsIndexesAzureOpenAiParameters as GeneratedAzureOpenAIParameters,
+  AzureSearchDocumentsIndexesAzureOpenAIVectorizer as GeneratedAzureOpenAIVectorizer,
+  AzureSearchDocumentsIndexesCognitiveServicesAccountKey as GeneratedCognitiveServicesAccountKey,
   CognitiveServicesAccountUnion,
-  CustomAnalyzer as BaseCustomAnalyzer,
+  AzureSearchDocumentsIndexesCustomAnalyzer as BaseCustomAnalyzer,
   DataChangeDetectionPolicyUnion,
   DataDeletionDetectionPolicyUnion,
-  DefaultCognitiveServicesAccount as GeneratedDefaultCognitiveServicesAccount,
-  ExhaustiveKnnAlgorithmConfiguration as GeneratedExhaustiveKnnAlgorithmConfiguration,
-  HighWaterMarkChangeDetectionPolicy,
-  HnswAlgorithmConfiguration as GeneratedHnswAlgorithmConfiguration,
-  KnowledgeAgent as GeneratedKnowledgeAgent,
-  KnowledgeAgentAzureOpenAIModel as GeneratedKnowledgeAgentAzureOpenAIModel,
-  KnowledgeAgentModelUnion as GeneratedKnowledgeAgentModel,
+  AzureSearchDocumentsIndexesDefaultCognitiveServicesAccount as GeneratedDefaultCognitiveServicesAccount,
+  AzureSearchDocumentsIndexesExhaustiveKnnAlgorithmConfiguration as GeneratedExhaustiveKnnAlgorithmConfiguration,
+  AzureSearchDocumentsIndexesHnswAlgorithmConfiguration as GeneratedHnswAlgorithmConfiguration,
+  AzureSearchDocumentsIndexesKnowledgeBase as GeneratedKnowledgeAgent,
+  AzureSearchDocumentsIndexesKnowledgeBaseAzureOpenAIModel as GeneratedKnowledgeAgentAzureOpenAIModel,
+  KnowledgeBaseModelUnion as GeneratedKnowledgeAgentModel,
   KnowledgeSourceUnion as GeneratedKnowledgeSource,
+  AzureSearchDocumentsIndexesLuceneStandardAnalyzer as LuceneStandardAnalyzer,
+  AzureSearchDocumentsIndexesPatternAnalyzer as GeneratedPatternAnalyzer,
+  AzureSearchDocumentsIndexesSearchField as GeneratedSearchField,
+  AzureSearchDocumentsIndexesSearchIndex as GeneratedSearchIndex,
+  AzureSearchDocumentsIndexesSearchIndexer as GeneratedSearchIndexer,
+  AzureSearchDocumentsIndexesSearchIndexerCache as GeneratedSearchIndexerCache,
+  AzureSearchDocumentsIndexesSearchIndexerDataSourceConnection as GeneratedSearchIndexerDataSourceConnection,
+  AzureSearchDocumentsIndexesSearchIndexerKnowledgeStore as BaseSearchIndexerKnowledgeStore,
+  AzureSearchDocumentsIndexesSearchIndexerSkillset as GeneratedSearchIndexerSkillset,
+  AzureSearchDocumentsIndexesSearchIndexKnowledgeSource as GeneratedSearchIndexKnowledgeSource,
+  AzureSearchDocumentsIndexesSearchResourceEncryptionKey as GeneratedSearchResourceEncryptionKey,
+  SimilarityAlgorithmUnion as SimilarityUnion,
+  AzureSearchDocumentsIndexesStopAnalyzer as StopAnalyzer,
+  AzureSearchDocumentsIndexesSynonymMap as GeneratedSynonymMap,
+  AzureSearchDocumentsIndexesVectorSearch as GeneratedVectorSearch,
+  AzureSearchDocumentsIndexesVectorSearchAlgorithmConfiguration as GeneratedVectorSearchAlgorithmConfiguration,
+  AzureSearchDocumentsIndexesVectorSearchVectorizer as GeneratedVectorSearchVectorizer,
+  AzureSearchDocumentsIndexesWebApiVectorizer as GeneratedWebApiVectorizer,
   LexicalAnalyzerUnion,
   LexicalTokenizerUnion,
-  LuceneStandardAnalyzer,
-  PatternAnalyzer as GeneratedPatternAnalyzer,
-  PatternTokenizer,
-  SearchField as GeneratedSearchField,
-  SearchIndex as GeneratedSearchIndex,
-  SearchIndexer as GeneratedSearchIndexer,
-  SearchIndexerCache as GeneratedSearchIndexerCache,
   SearchIndexerDataIdentityUnion,
-  SearchIndexerDataNoneIdentity,
-  SearchIndexerDataSource as GeneratedSearchIndexerDataSourceConnection,
-  SearchIndexerDataUserAssignedIdentity,
-  SearchIndexerKnowledgeStore as BaseSearchIndexerKnowledgeStore,
-  SearchIndexerSkillset as GeneratedSearchIndexerSkillset,
-  SearchIndexerSkillUnion,
-  SearchIndexKnowledgeSource as GeneratedSearchIndexKnowledgeSource,
-  SearchResourceEncryptionKey as GeneratedSearchResourceEncryptionKey,
-  SimilarityUnion,
-  SoftDeleteColumnDeletionDetectionPolicy,
-  SqlIntegratedChangeTrackingPolicy,
-  StopAnalyzer,
-  SynonymMap as GeneratedSynonymMap,
   TokenFilterUnion,
-  VectorSearch as GeneratedVectorSearch,
-  VectorSearchAlgorithmConfigurationUnion as GeneratedVectorSearchAlgorithmConfiguration,
-  VectorSearchVectorizerUnion as GeneratedVectorSearchVectorizer,
-  WebApiVectorizer as GeneratedWebApiVectorizer,
-} from "./service/models/index.js";
+} from "./models/azure/search/documents/indexes/index.js";
 import type {
   SearchResult,
   SelectFields,
@@ -93,6 +84,7 @@ import type {
   LexicalTokenizer,
   NoAuthAzureMachineLearningVectorizerParameters,
   PatternAnalyzer,
+  PatternTokenizer,
   RegexFlags,
   ScoringProfile,
   SearchField,
@@ -105,8 +97,8 @@ import type {
   SearchIndexerDataSourceType,
   SearchIndexerIndexProjection,
   SearchIndexerKnowledgeStore,
-  SearchIndexerSkill,
   SearchIndexerSkillset,
+  SearchIndexerSkillUnion,
   SearchResourceEncryptionKey,
   SimilarityAlgorithm,
   SimpleField,
@@ -120,10 +112,20 @@ import type {
   WebApiVectorizer,
 } from "./serviceModels.js";
 import { isComplexField } from "./serviceModels.js";
+import {
+  BM25Similarity,
+  ClassicSimilarity,
+  HighWaterMarkChangeDetectionPolicy,
+  SearchIndexerDataNoneIdentity,
+  SearchIndexerDataUserAssignedIdentity,
+  SearchIndexerSkill,
+  SoftDeleteColumnDeletionDetectionPolicy,
+  SqlIntegratedChangeTrackingPolicy,
+} from "./index.js";
 
 export const defaultServiceVersion = "2025-08-01-Preview";
 
-const knownSkills: Record<`${SearchIndexerSkillUnion["odatatype"]}`, true> = {
+const knownSkills: Record<`${SearchIndexerSkillUnion["odataType"]}`, true> = {
   "#Microsoft.Skills.Custom.ChatCompletionSkill": true,
   "#Microsoft.Skills.Custom.WebApiSkill": true,
   "#Microsoft.Skills.Text.AzureOpenAIEmbeddingSkill": true,
@@ -155,7 +157,7 @@ export function convertSkillsToPublic(skills: SearchIndexerSkillUnion[]): Search
   }
 
   // This validation has already GAed
-  return skills.filter((skill): skill is SearchIndexerSkill => knownSkills[skill.odatatype]);
+  return skills.filter((skill): skill is SearchIndexerSkill => knownSkills[skill.odataType]);
 }
 
 export function convertCognitiveServicesAccountToGenerated(
@@ -165,7 +167,7 @@ export function convertCognitiveServicesAccountToGenerated(
     return cognitiveServicesAccount;
   }
 
-  switch (cognitiveServicesAccount.odatatype) {
+  switch (cognitiveServicesAccount.odataType) {
     case "#Microsoft.Azure.Search.AIServicesByIdentity":
     case "#Microsoft.Azure.Search.DefaultCognitiveServices":
     case "#Microsoft.Azure.Search.CognitiveServicesByKey":
@@ -173,7 +175,7 @@ export function convertCognitiveServicesAccountToGenerated(
       return cognitiveServicesAccount;
     default: {
       logger.warning(
-        `Unsupported Cognitive Services account odatatype: ${(cognitiveServicesAccount as any).odatatype}`,
+        `Unsupported Cognitive Services account odatatype: ${(cognitiveServicesAccount as any).odataType}`,
       );
       return cognitiveServicesAccount as any;
     }
@@ -188,7 +190,7 @@ export function convertCognitiveServicesAccountToPublic(
   }
 
   const deserializers: Record<
-    CognitiveServicesAccountUnion["odatatype"],
+    CognitiveServicesAccountUnion["odataType"],
     () => CognitiveServicesAccount
   > = {
     "#Microsoft.Azure.Search.DefaultCognitiveServices": () => {
@@ -201,10 +203,11 @@ export function convertCognitiveServicesAccountToPublic(
       return cognitiveServicesAccount as GeneratedAIServicesAccountKey;
     },
     "#Microsoft.Azure.Search.AIServicesByIdentity": () => {
-      const { identity, ...restParams } =
+      const { identity, odataType, ...restParams } =
         cognitiveServicesAccount as GeneratedAIServicesAccountIdentity;
       return {
         ...restParams,
+        odatatype: odataType,
         identity: convertSearchIndexerDataIdentityToPublic(identity ?? undefined),
       };
     },
@@ -212,12 +215,12 @@ export function convertCognitiveServicesAccountToPublic(
 
   const defaultDeserializer: () => CognitiveServicesAccount = () => {
     logger.warning(
-      `Unsupported Cognitive Services account odatatype: ${(cognitiveServicesAccount as CognitiveServicesAccount).odatatype}`,
+      `Unsupported Cognitive Services account odatatype: ${(cognitiveServicesAccount as CognitiveServicesAccount).odataType}`,
     );
     return cognitiveServicesAccount as CognitiveServicesAccount;
   };
 
-  return (deserializers[cognitiveServicesAccount.odatatype] ?? defaultDeserializer)();
+  return (deserializers[cognitiveServicesAccount.odataType] ?? defaultDeserializer)();
 }
 
 export function convertTokenFiltersToGenerated(
@@ -244,7 +247,7 @@ function convertAnalyzersToGenerated(
 
   const result: LexicalAnalyzerUnion[] = [];
   for (const analyzer of analyzers) {
-    switch (analyzer.odatatype) {
+    switch (analyzer.odataType) {
       case "#Microsoft.Azure.Search.StandardAnalyzer":
       case "#Microsoft.Azure.Search.StopAnalyzer":
         result.push(analyzer);
@@ -275,7 +278,7 @@ function convertAnalyzersToPublic(
 
   const result: LexicalAnalyzer[] = [];
   for (const analyzer of analyzers) {
-    switch (analyzer.odatatype) {
+    switch (analyzer.odataType) {
       case "#Microsoft.Azure.Search.StandardAnalyzer":
         result.push(analyzer as LuceneStandardAnalyzer);
         break;
@@ -374,7 +377,7 @@ function convertTokenizersToGenerated(
 
   const result: LexicalTokenizerUnion[] = [];
   for (const tokenizer of tokenizers) {
-    if (tokenizer.odatatype === "#Microsoft.Azure.Search.PatternTokenizer") {
+    if (tokenizer.odataType === "#Microsoft.Azure.Search.PatternTokenizer") {
       result.push({
         ...tokenizer,
         flags: tokenizer.flags ? tokenizer.flags.join("|") : undefined,
@@ -395,7 +398,7 @@ function convertTokenizersToPublic(
 
   const result: LexicalTokenizer[] = [];
   for (const tokenizer of tokenizers) {
-    if (tokenizer.odatatype === "#Microsoft.Azure.Search.PatternTokenizer") {
+    if (tokenizer.odataType === "#Microsoft.Azure.Search.PatternTokenizer") {
       const patternTokenizer = tokenizer as PatternTokenizer;
       const flags = patternTokenizer.flags?.split("|") as RegexFlags[] | undefined;
       result.push({
@@ -426,7 +429,7 @@ export function convertSimilarityToPublic(
     return similarity;
   }
 
-  if (similarity.odatatype === "#Microsoft.Azure.Search.ClassicSimilarity") {
+  if (similarity.odataType === "#Microsoft.Azure.Search.ClassicSimilarity") {
     return similarity as ClassicSimilarity;
   } else {
     return similarity as BM25Similarity;
@@ -876,7 +879,7 @@ export function convertSearchIndexerDataIdentityToPublic(
     return searchIndexerDataIdentity;
   }
 
-  if (searchIndexerDataIdentity.odatatype === "#Microsoft.Azure.Search.DataNoneIdentity") {
+  if (searchIndexerDataIdentity.odataType === "#Microsoft.Azure.Search.DataNoneIdentity") {
     return searchIndexerDataIdentity as SearchIndexerDataNoneIdentity;
   } else {
     return searchIndexerDataIdentity as SearchIndexerDataUserAssignedIdentity;
@@ -891,7 +894,7 @@ export function convertDataChangeDetectionPolicyToPublic(
   }
 
   if (
-    dataChangeDetectionPolicy.odatatype ===
+    dataChangeDetectionPolicy.odataType ===
     "#Microsoft.Azure.Search.HighWaterMarkChangeDetectionPolicy"
   ) {
     return dataChangeDetectionPolicy as HighWaterMarkChangeDetectionPolicy;

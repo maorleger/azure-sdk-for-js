@@ -119,12 +119,7 @@ export class KnowledgeRetrievalClient {
 
     this.serviceVersion = options.serviceVersion ?? utils.defaultServiceVersion;
 
-    this.client = new GeneratedClient(
-      this.endpoint,
-      this.agentName,
-      this.serviceVersion,
-      internalClientPipelineOptions,
-    );
+    this.client = new GeneratedClient(this.endpoint, credential, internalClientPipelineOptions);
 
     this.pipeline = this.client.pipeline;
 
@@ -153,7 +148,8 @@ export class KnowledgeRetrievalClient {
     );
 
     try {
-      return await this.client.knowledgeRetrieval.retrieve(retrievalRequest, updatedOptions);
+      return undefined; // renamed to Knowledgebase something or other
+      // return await this.client.knowledgeRetrieval.retrieve(retrievalRequest, updatedOptions);
     } catch (e: any) {
       span.setStatus({
         status: "error",

@@ -3,10 +3,10 @@
 
 import type { OperationOptions } from "@azure-rest/core-client";
 import type {
-  KnowledgeAgentOutputConfiguration,
-  KnowledgeAgentRequestLimits,
-  KnowledgeSourceReference,
-} from "./service/index.js";
+  // AzureSearchDocumentsIndexesKnowledgeBaseOutputConfiguration as KnowledgeAgentOutputConfiguration,
+  // AzureSearchDocumentsIndexesKnowledgeBaseRequestLimits as KnowledgeAgentRequestLimits,
+  AzureSearchDocumentsIndexesKnowledgeSourceReference as KnowledgeSourceReference,
+} from "./models/azure/search/documents/indexes/index.js";
 import type { KnowledgeAgentModel, SearchResourceEncryptionKey } from "./serviceModels.js";
 
 export interface RetrieveKnowledgeOptions extends OperationOptions {
@@ -27,11 +27,11 @@ export interface KnowledgeAgent {
    */
   models: KnowledgeAgentModel[];
   knowledgeSources: KnowledgeSourceReference[];
-  outputConfiguration?: KnowledgeAgentOutputConfiguration;
+  outputConfiguration?: any;
   /**
    * Guardrails to limit how much resources are utilized for a single agent retrieval request.
    */
-  requestLimits?: KnowledgeAgentRequestLimits;
+  requestLimits?: any;
   /**
    * Instructions considered by the knowledge agent when developing query plan.
    */

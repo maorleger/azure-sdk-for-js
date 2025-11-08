@@ -5,7 +5,7 @@ import type {
   OperationOptions } from "@azure-rest/core-client";
 import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import type {
-  AutocompleteMode,
+  AzureSearchDocumentsAutocompleteMode as AutocompleteMode,
   AzureSearchDocumentsDebugInfo as DebugInfo,
   AzureSearchDocumentsFacetResult as FacetResult,
   AzureSearchDocumentsHybridSearch as HybridSearch,
