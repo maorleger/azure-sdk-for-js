@@ -9,18 +9,16 @@ import type { InternalClientPipelineOptions } from "@azure/core-client";
 import type { ExtendedCommonClientOptions } from "@azure/core-http-compat";
 import type { Pipeline } from "@azure/core-rest-pipeline";
 import { bearerTokenAuthenticationPolicy } from "@azure/core-rest-pipeline";
-import type {
-  KnowledgeAgentRetrievalRequest,
-  KnowledgeAgentRetrievalResponse,
-} from "./knowledgeBaseRetrieval/index.js";
+// import type {
+//    as KnowledgeAgentRetrievalRequest,
+//   KnowledgeAgentRetrievalResponse,
+// } from "./knowledgeBaseRetrieval/index.js";
 import { KnowledgeBaseRetrievalClient as GeneratedClient } from "./knowledgeBaseRetrieval/knowledgeBaseRetrievalClient.js";
-import type { RetrieveKnowledgeOptions } from "./knowledgeAgentModels.js";
 import { logger } from "./logger.js";
 import { createOdataMetadataPolicy } from "./odataMetadataPolicy.js";
 import { createSearchApiKeyCredentialPolicy } from "./searchApiKeyCredentialPolicy.js";
 import { KnownSearchAudience } from "./searchAudience.js";
 import * as utils from "./serviceUtils.js";
-import { createSpan } from "./tracing.js";
 
 /**
  * Client options used to configure Cognitive Search API requests.
@@ -138,26 +136,26 @@ export class KnowledgeRetrievalClient {
     this.client.pipeline.addPolicy(createOdataMetadataPolicy("none"));
   }
 
-  public async retrieveKnowledge(
-    retrievalRequest: KnowledgeAgentRetrievalRequest,
-    options?: RetrieveKnowledgeOptions,
-  ): Promise<KnowledgeAgentRetrievalResponse> {
-    const { span, updatedOptions } = createSpan(
-      "KnowledgeRetrievalClient-retrieveKnowledge",
-      options,
-    );
+  // public async retrieveKnowledge(
+  //   retrievalRequest: KnowledgeAgentRetrievalRequest,
+  //   options?: RetrieveKnowledgeOptions,
+  // ): Promise<KnowledgeAgentRetrievalResponse> {
+  //   const { span, updatedOptions } = createSpan(
+  //     "KnowledgeRetrievalClient-retrieveKnowledge",
+  //     options,
+  //   );
 
-    try {
-      return undefined; // renamed to Knowledgebase something or other
-      // return await this.client.knowledgeRetrieval.retrieve(retrievalRequest, updatedOptions);
-    } catch (e: any) {
-      span.setStatus({
-        status: "error",
-        error: e.message,
-      });
-      throw e;
-    } finally {
-      span.end();
-    }
-  }
+  //   try {
+  //     return undefined; // renamed to Knowledgebase something or other
+  //     // return await this.client.knowledgeRetrieval.retrieve(retrievalRequest, updatedOptions);
+  //   } catch (e: any) {
+  //     span.setStatus({
+  //       status: "error",
+  //       error: e.message,
+  //     });
+  //     throw e;
+  //   } finally {
+  //     span.end();
+  //   }
+  // }
 }

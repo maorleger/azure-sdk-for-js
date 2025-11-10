@@ -1124,7 +1124,7 @@ export interface SimpleField {
    * searchable fields and it can't be set together with either searchAnalyzer or indexAnalyzer.
    * Once the analyzer is chosen, it cannot be changed for the field.
    */
-  analyzerName?: LexicalAnalyzer;
+  analyzerName?: string;
   /**
    * The name of the analyzer used at search time for the field. This option can be used only with
    * searchable fields. It must be set together with `indexAnalyzerName` and it cannot be set
@@ -1132,14 +1132,14 @@ export interface SimpleField {
    * analyzer; use the `analyzerName` property instead if you need a language analyzer. This
    * analyzer can be updated on an existing field.
    */
-  searchAnalyzerName?: LexicalAnalyzer;
+  searchAnalyzerName?: string;
   /**
    * The name of the analyzer used at indexing time for the field. This option can be used only with
    * searchable fields. It must be set together with searchAnalyzer and it cannot be set together
    * with the `analyzerName` option. Once the analyzer is chosen, it cannot be changed for the
    * field. KnownAnalyzerNames is an enum containing known values.
    */
-  indexAnalyzerName?: LexicalAnalyzer;
+  indexAnalyzerName?: string;
   /**
    * A list of the names of synonym maps to associate with this field. This option can be used only
    * with searchable fields. Currently only one synonym map per field is supported. Assigning a
@@ -1151,7 +1151,7 @@ export interface SimpleField {
   /**
    * The name of the normalizer used at indexing time for the field.
    */
-  normalizerName?: LexicalNormalizer;
+  normalizerName?: string;
   /**
    * The dimensionality of the vector field.
    */
@@ -1507,7 +1507,7 @@ export interface SearchIndexerSkillset {
   /**
    * A list of skills in the skillset.
    */
-  skills: SearchIndexerSkillUnion[];
+  skills: string[];
   /**
    * Details about cognitive services to be used when running skills.
    */

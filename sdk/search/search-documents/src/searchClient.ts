@@ -18,6 +18,7 @@ import type {
   AzureSearchDocumentsQueryRewritesType as GeneratedQueryRewrites,
   AzureSearchDocumentsSearchRequest as GeneratedSearchRequest,
   VectorQueryUnion as GeneratedVectorQuery,
+  AzureSearchDocumentsSearchRequest,
 } from "./models/azure/search/documents/index.js";
 import { SearchClient as GeneratedClient } from "./search/searchClient.js";
 import { IndexDocumentsBatch } from "./indexDocumentsBatch.js";
@@ -290,24 +291,25 @@ export class SearchClient<TModel extends object> implements IndexDocumentsClient
   ): Promise<AutocompleteResult> {
     const { searchFields, ...nonFieldOptions } = options;
     const fullOptions: AutocompleteRequest<TModel> = {
-      searchText: searchText,
-      suggesterName: suggesterName,
-      searchFields: this.convertSearchFields(searchFields),
       ...nonFieldOptions,
     };
 
-    if (!fullOptions.searchText) {
+    if (searchText) {
       throw new RangeError("searchText must be provided.");
     }
 
-    if (!fullOptions.suggesterName) {
+    if (suggesterName) {
       throw new RangeError("suggesterName must be provided.");
     }
 
-    const { span, updatedOptions } = createSpan("SearchClient-autocomplete", options);
+    const { span, updatedOptions } = createSpan("SearchClient-autocomplete", fullOptions as any);
 
     try {
-      const result = await this.client.documents.autocompletePost(fullOptions, updatedOptions);
+      const result = await this.client.autocompletePost(
+        searchText,
+        suggesterName,
+        updatedOptions as any,
+      );
       return result;
     } catch (e: any) {
       span.setStatus({
@@ -357,7 +359,7 @@ export class SearchClient<TModel extends object> implements IndexDocumentsClient
       semanticFields: this.convertSemanticFields(semanticFields),
       select: this.convertSelect<TFields>(select) || "*",
       orderBy: this.convertOrderBy(orderBy),
-      includeTotalResultCount: includeTotalCount,
+      includeTotalCount,
       vectorQueries: queries?.map(this.convertVectorQuery.bind(this)),
       answers: this.convertQueryAnswers(answers),
       captions: this.convertQueryCaptions(captions),
@@ -369,16 +371,13 @@ export class SearchClient<TModel extends object> implements IndexDocumentsClient
       hybridSearch: hybridSearch,
     };
 
-    const { span, updatedOptions } = createSpan("SearchClient-searchDocuments", options);
+    const { span } = createSpan("SearchClient-searchDocuments", options);
 
     try {
-      const result = await this.client.documents.searchPost(
-        {
-          ...fullOptions,
-          searchText: searchText,
-        },
-        updatedOptions,
-      );
+      const result = await this.client.searchPost({
+        ...fullOptions,
+        searchText: searchText,
+      });
 
       const {
         results,
@@ -572,9 +571,8 @@ export class SearchClient<TModel extends object> implements IndexDocumentsClient
     options: SuggestOptions<TModel, TFields> = {},
   ): Promise<SuggestDocumentsResult<TModel, TFields>> {
     const { select, searchFields, orderBy, ...nonFieldOptions } = options;
-    const fullOptions: SuggestRequest = {
+    const fullOptions: AzureSearchDocumentsSearchRequest = {
       searchText: searchText,
-      suggesterName: suggesterName,
       searchFields: this.convertSearchFields(searchFields),
       select: this.convertSelect<TFields>(select),
       orderBy: this.convertOrderBy(orderBy),
@@ -585,14 +583,14 @@ export class SearchClient<TModel extends object> implements IndexDocumentsClient
       throw new RangeError("searchText must be provided.");
     }
 
-    if (!fullOptions.suggesterName) {
+    if (suggesterName) {
       throw new RangeError("suggesterName must be provided.");
     }
 
     const { span, updatedOptions } = createSpan("SearchClient-suggest", options);
 
     try {
-      const result = await this.client.documents.suggestPost(fullOptions, updatedOptions);
+      const result = await this.client.suggestPost(searchText, suggesterName, fullOptions);
 
       const modifiedResult = utils.generatedSuggestDocumentsResultToPublicSuggestDocumentsResult<
         TModel,
@@ -622,7 +620,7 @@ export class SearchClient<TModel extends object> implements IndexDocumentsClient
   ): Promise<NarrowedModel<TModel, TFields>> {
     const { span, updatedOptions } = createSpan("SearchClient-getDocument", options);
     try {
-      const result = await this.client.documents.get(key, {
+      const result = await this.client.getDocument(key, {
         ...updatedOptions,
         selectedFields: updatedOptions.selectedFields as string[] | undefined,
       });
@@ -656,7 +654,7 @@ export class SearchClient<TModel extends object> implements IndexDocumentsClient
     const { span, updatedOptions } = createSpan("SearchClient-indexDocuments", options);
     try {
       let status: number = 0;
-      const result = await this.client.documents.index(
+      const result = await this.client.index(
         { actions: serialize(batch.actions) },
         {
           ...updatedOptions,

@@ -9,8 +9,11 @@ import type { InternalClientPipelineOptions } from "@azure/core-client";
 import type { ExtendedCommonClientOptions } from "@azure/core-http-compat";
 import type { Pipeline } from "@azure/core-rest-pipeline";
 import { bearerTokenAuthenticationPolicy } from "@azure/core-rest-pipeline";
-import type { AnalyzeResult, IndexStatisticsSummary } from "./models/azure/search/documents/indexes/index.js";
-import { SearchServiceClient as GeneratedClient } from "./indexes/searchServiceClient.js";
+import type {
+  AzureSearchDocumentsIndexesAnalyzeResult as AnalyzeResult,
+  AzureSearchDocumentsIndexesIndexStatisticsSummary as IndexStatisticsSummary,
+} from "./models/azure/search/documents/indexes/index.js";
+import { SearchIndexClient as GeneratedClient } from "./searchIndex/searchIndexClient.js";
 import type { KnowledgeAgent } from "./knowledgeAgentModels.js";
 import type { KnowledgeRetrievalClientOptions as GetKnowledgeRetrievalClientOptions } from "./knowledgeRetrievalClient.js";
 import { KnowledgeRetrievalClient } from "./knowledgeRetrievalClient.js";
@@ -175,11 +178,7 @@ export class SearchIndexClient {
       this.options.serviceVersion ?? this.options.apiVersion ?? utils.defaultServiceVersion;
     this.apiVersion = this.serviceVersion;
 
-    this.client = new GeneratedClient(
-      this.endpoint,
-      this.serviceVersion,
-      internalClientPipelineOptions,
-    );
+    this.client = new GeneratedClient(this.endpoint, credential, internalClientPipelineOptions);
     this.pipeline = this.client.pipeline;
 
     if (isTokenCredential(credential)) {
@@ -197,193 +196,193 @@ export class SearchIndexClient {
     this.client.pipeline.addPolicy(createOdataMetadataPolicy("minimal"));
   }
 
-  private async *listIndexesPage(
-    options: ListIndexesOptions = {},
-  ): AsyncIterableIterator<SearchIndex[]> {
-    const { span, updatedOptions } = createSpan("SearchIndexClient-listIndexesPage", options);
-    try {
-      const result = await this.client.indexes.list(updatedOptions);
-      const mapped = result.indexes.map(utils.generatedIndexToPublicIndex);
-      yield mapped;
-    } catch (e: any) {
-      span.setStatus({
-        status: "error",
-        error: e.message,
-      });
-      throw e;
-    } finally {
-      span.end();
-    }
-  }
+  // private async *listIndexesPage(
+  //   options: ListIndexesOptions = {},
+  // ): AsyncIterableIterator<SearchIndex[]> {
+  //   const { span, updatedOptions } = createSpan("SearchIndexClient-listIndexesPage", options);
+  //   try {
+  //     const result = this.client.listIndexes(updatedOptions).byPage();
+  //     const mapped = result.indexes.map(utils.generatedIndexToPublicIndex);
+  //     yield mapped;
+  //   } catch (e: any) {
+  //     span.setStatus({
+  //       status: "error",
+  //       error: e.message,
+  //     });
+  //     throw e;
+  //   } finally {
+  //     span.end();
+  //   }
+  // }
 
-  private async *listIndexesAll(
-    options: ListIndexesOptions = {},
-  ): AsyncIterableIterator<SearchIndex> {
-    for await (const page of this.listIndexesPage(options)) {
-      yield* page;
-    }
-  }
+  // private async *listIndexesAll(
+  //   options: ListIndexesOptions = {},
+  // ): AsyncIterableIterator<SearchIndex> {
+  //   for await (const page of this.listIndexesPage(options)) {
+  //     yield* page;
+  //   }
+  // }
 
-  /**
-   * Retrieves a list of existing indexes in the service.
-   * @param options - Options to the list index operation.
-   */
-  public listIndexes(options: ListIndexesOptions = {}): IndexIterator {
-    const iter = this.listIndexesAll(options);
+  // /**
+  //  * Retrieves a list of existing indexes in the service.
+  //  * @param options - Options to the list index operation.
+  //  */
+  // public listIndexes(options: ListIndexesOptions = {}): IndexIterator {
+  //   const iter = this.listIndexesAll(options);
 
-    return {
-      next() {
-        return iter.next();
-      },
-      [Symbol.asyncIterator]() {
-        return this;
-      },
-      byPage: () => {
-        return this.listIndexesPage(options);
-      },
-    };
-  }
+  //   return {
+  //     next() {
+  //       return iter.next();
+  //     },
+  //     [Symbol.asyncIterator]() {
+  //       return this;
+  //     },
+  //     byPage: () => {
+  //       return this.listIndexesPage(options);
+  //     },
+  //   };
+  // }
 
-  private async *listAliasesPage(
-    options: ListAliasesOptions = {},
-  ): AsyncIterableIterator<SearchIndexAlias[]> {
-    const { span, updatedOptions } = createSpan("SearchIndexClient-listAliases", options);
-    try {
-      const result = await this.client.aliases.list(updatedOptions);
-      yield result.aliases;
-    } catch (e: any) {
-      span.setStatus({
-        status: "error",
-        error: e.message,
-      });
-      throw e;
-    } finally {
-      span.end();
-    }
-  }
+  // private async *listAliasesPage(
+  //   options: ListAliasesOptions = {},
+  // ): AsyncIterableIterator<SearchIndexAlias[]> {
+  //   const { span, updatedOptions } = createSpan("SearchIndexClient-listAliases", options);
+  //   try {
+  //     const result = await this.client.aliases.list(updatedOptions);
+  //     yield result.aliases;
+  //   } catch (e: any) {
+  //     span.setStatus({
+  //       status: "error",
+  //       error: e.message,
+  //     });
+  //     throw e;
+  //   } finally {
+  //     span.end();
+  //   }
+  // }
 
-  private async *listAliasesAll(
-    options: ListAliasesOptions = {},
-  ): AsyncIterableIterator<SearchIndexAlias> {
-    for await (const page of this.listAliasesPage(options)) {
-      yield* page;
-    }
-  }
+  // private async *listAliasesAll(
+  //   options: ListAliasesOptions = {},
+  // ): AsyncIterableIterator<SearchIndexAlias> {
+  //   for await (const page of this.listAliasesPage(options)) {
+  //     yield* page;
+  //   }
+  // }
 
-  /**
-   * Lists all aliases available for a search service.
-   * @param options - The options parameters.
-   */
-  public listAliases(options: ListAliasesOptions = {}): AliasIterator {
-    const iter = this.listAliasesAll(options);
+  // /**
+  //  * Lists all aliases available for a search service.
+  //  * @param options - The options parameters.
+  //  */
+  // public listAliases(options: ListAliasesOptions = {}): AliasIterator {
+  //   const iter = this.listAliasesAll(options);
 
-    return {
-      next() {
-        return iter.next();
-      },
-      [Symbol.asyncIterator]() {
-        return this;
-      },
-      byPage: () => {
-        return this.listAliasesPage(options);
-      },
-    };
-  }
+  //   return {
+  //     next() {
+  //       return iter.next();
+  //     },
+  //     [Symbol.asyncIterator]() {
+  //       return this;
+  //     },
+  //     byPage: () => {
+  //       return this.listAliasesPage(options);
+  //     },
+  //   };
+  // }
 
-  private async *listIndexesNamesPage(
-    options: ListIndexesOptions = {},
-  ): AsyncIterableIterator<string[]> {
-    const { span, updatedOptions } = createSpan("SearchIndexClient-listIndexesNamesPage", options);
-    try {
-      const result = await this.client.indexes.list({
-        ...updatedOptions,
-        select: "name",
-      });
-      const mapped = result.indexes.map((idx) => idx.name);
-      yield mapped;
-    } catch (e: any) {
-      span.setStatus({
-        status: "error",
-        error: e.message,
-      });
-      throw e;
-    } finally {
-      span.end();
-    }
-  }
+  // private async *listIndexesNamesPage(
+  //   options: ListIndexesOptions = {},
+  // ): AsyncIterableIterator<string[]> {
+  //   const { span, updatedOptions } = createSpan("SearchIndexClient-listIndexesNamesPage", options);
+  //   try {
+  //     const result = await this.client.indexes.list({
+  //       ...updatedOptions,
+  //       select: "name",
+  //     });
+  //     const mapped = result.indexes.map((idx) => idx.name);
+  //     yield mapped;
+  //   } catch (e: any) {
+  //     span.setStatus({
+  //       status: "error",
+  //       error: e.message,
+  //     });
+  //     throw e;
+  //   } finally {
+  //     span.end();
+  //   }
+  // }
 
-  private async *listIndexesNamesAll(
-    options: ListIndexesOptions = {},
-  ): AsyncIterableIterator<string> {
-    for await (const page of this.listIndexesNamesPage(options)) {
-      yield* page;
-    }
-  }
+  // private async *listIndexesNamesAll(
+  //   options: ListIndexesOptions = {},
+  // ): AsyncIterableIterator<string> {
+  //   for await (const page of this.listIndexesNamesPage(options)) {
+  //     yield* page;
+  //   }
+  // }
 
-  /**
-   * Retrieves a list of names of existing indexes in the service.
-   * @param options - Options to the list index operation.
-   */
-  // eslint-disable-next-line @azure/azure-sdk/ts-naming-options
-  public listIndexesNames(options: ListIndexesOptions = {}): IndexNameIterator {
-    const iter = this.listIndexesNamesAll(options);
+  // /**
+  //  * Retrieves a list of names of existing indexes in the service.
+  //  * @param options - Options to the list index operation.
+  //  */
+  // // eslint-disable-next-line @azure/azure-sdk/ts-naming-options
+  // public listIndexesNames(options: ListIndexesOptions = {}): IndexNameIterator {
+  //   const iter = this.listIndexesNamesAll(options);
 
-    return {
-      next() {
-        return iter.next();
-      },
-      [Symbol.asyncIterator]() {
-        return this;
-      },
-      byPage: () => {
-        return this.listIndexesNamesPage(options);
-      },
-    };
-  }
+  //   return {
+  //     next() {
+  //       return iter.next();
+  //     },
+  //     [Symbol.asyncIterator]() {
+  //       return this;
+  //     },
+  //     byPage: () => {
+  //       return this.listIndexesNamesPage(options);
+  //     },
+  //   };
+  // }
 
-  /**
-   * Retrieves a list of existing SynonymMaps in the service.
-   * @param options - Options to the list SynonymMaps operation.
-   */
-  public async listSynonymMaps(options: ListSynonymMapsOptions = {}): Promise<Array<SynonymMap>> {
-    const { span, updatedOptions } = createSpan("SearchIndexClient-listSynonymMaps", options);
-    try {
-      const result = await this.client.synonymMaps.list(updatedOptions);
-      return result.synonymMaps.map(utils.generatedSynonymMapToPublicSynonymMap);
-    } catch (e: any) {
-      span.setStatus({
-        status: "error",
-        error: e.message,
-      });
-      throw e;
-    } finally {
-      span.end();
-    }
-  }
+  // /**
+  //  * Retrieves a list of existing SynonymMaps in the service.
+  //  * @param options - Options to the list SynonymMaps operation.
+  //  */
+  // public async listSynonymMaps(options: ListSynonymMapsOptions = {}): Promise<Array<SynonymMap>> {
+  //   const { span, updatedOptions } = createSpan("SearchIndexClient-listSynonymMaps", options);
+  //   try {
+  //     const result = await this.client.synonymMaps.list(updatedOptions);
+  //     return result.synonymMaps.map(utils.generatedSynonymMapToPublicSynonymMap);
+  //   } catch (e: any) {
+  //     span.setStatus({
+  //       status: "error",
+  //       error: e.message,
+  //     });
+  //     throw e;
+  //   } finally {
+  //     span.end();
+  //   }
+  // }
 
-  /**
-   * Retrieves a list of names of existing SynonymMaps in the service.
-   * @param options - Options to the list SynonymMaps operation.
-   */
-  // eslint-disable-next-line @azure/azure-sdk/ts-naming-options
-  public async listSynonymMapsNames(options: ListSynonymMapsOptions = {}): Promise<Array<string>> {
-    const { span, updatedOptions } = createSpan("SearchIndexClient-listSynonymMapsNames", options);
-    try {
-      const result = await this.client.synonymMaps.list({
-        ...updatedOptions,
-        select: "name",
-      });
-      return result.synonymMaps.map((sm) => sm.name);
-    } catch (e: any) {
-      span.setStatus({
-        status: "error",
-        error: e.message,
-      });
-      throw e;
-    } finally {
-      span.end();
-    }
-  }
+  // /**
+  //  * Retrieves a list of names of existing SynonymMaps in the service.
+  //  * @param options - Options to the list SynonymMaps operation.
+  //  */
+  // // eslint-disable-next-line @azure/azure-sdk/ts-naming-options
+  // public async listSynonymMapsNames(options: ListSynonymMapsOptions = {}): Promise<Array<string>> {
+  //   const { span, updatedOptions } = createSpan("SearchIndexClient-listSynonymMapsNames", options);
+  //   try {
+  //     const result = await this.client.synonymMaps.list({
+  //       ...updatedOptions,
+  //       select: "name",
+  //     });
+  //     return result.synonymMaps.map((sm) => sm.name);
+  //   } catch (e: any) {
+  //     span.setStatus({
+  //       status: "error",
+  //       error: e.message,
+  //     });
+  //     throw e;
+  //   } finally {
+  //     span.end();
+  //   }
+  // }
 
   /**
    * Retrieves information about an index.
@@ -393,7 +392,7 @@ export class SearchIndexClient {
   public async getIndex(indexName: string, options: GetIndexOptions = {}): Promise<SearchIndex> {
     const { span, updatedOptions } = createSpan("SearchIndexClient-getIndex", options);
     try {
-      const result = await this.client.indexes.get(indexName, updatedOptions);
+      const result = await this.client.getIndex(indexName, updatedOptions);
       return utils.generatedIndexToPublicIndex(result);
     } catch (e: any) {
       span.setStatus({
@@ -418,7 +417,7 @@ export class SearchIndexClient {
   ): Promise<SynonymMap> {
     const { span, updatedOptions } = createSpan("SearchIndexClient-getSynonymMaps", options);
     try {
-      const result = await this.client.synonymMaps.get(synonymMapName, updatedOptions);
+      const result = await this.client.getSynonymMap(synonymMapName, updatedOptions);
       return utils.generatedSynonymMapToPublicSynonymMap(result);
     } catch (e: any) {
       span.setStatus({
@@ -442,7 +441,7 @@ export class SearchIndexClient {
   ): Promise<SearchIndex> {
     const { span, updatedOptions } = createSpan("SearchIndexClient-createIndex", options);
     try {
-      const result = await this.client.indexes.create(
+      const result = await this.client.createIndex(
         utils.publicIndexToGeneratedIndex(index),
         updatedOptions,
       );
@@ -469,7 +468,7 @@ export class SearchIndexClient {
   ): Promise<SynonymMap> {
     const { span, updatedOptions } = createSpan("SearchIndexClient-createSynonymMaps", options);
     try {
-      const result = await this.client.synonymMaps.create(
+      const result = await this.client.createSynonymMap(
         utils.publicSynonymMapToGeneratedSynonymMap(synonymMap),
         updatedOptions,
       );
@@ -498,9 +497,9 @@ export class SearchIndexClient {
     try {
       const etag = options.onlyIfUnchanged ? index.etag : undefined;
 
-      const result = await this.client.indexes.createOrUpdate(
-        index.name,
+      const result = await this.client.createOrUpdateIndex(
         utils.publicIndexToGeneratedIndex(index),
+        index.name,
         {
           ...updatedOptions,
           ifMatch: etag,
@@ -534,9 +533,9 @@ export class SearchIndexClient {
     try {
       const etag = options.onlyIfUnchanged ? synonymMap.etag : undefined;
 
-      const result = await this.client.synonymMaps.createOrUpdate(
-        synonymMap.name,
+      const result = await this.client.createOrUpdateSynonymMap(
         utils.publicSynonymMapToGeneratedSynonymMap(synonymMap),
+        synonymMap.name,
         {
           ...updatedOptions,
           ifMatch: etag,
@@ -577,7 +576,7 @@ export class SearchIndexClient {
       const etag =
         typeof index === "string" ? undefined : options.onlyIfUnchanged ? index.etag : undefined;
 
-      await this.client.indexes.delete(indexName, {
+      await this.client.deleteIndex(indexName, {
         ...updatedOptions,
         ifMatch: etag,
       });
@@ -611,7 +610,7 @@ export class SearchIndexClient {
             ? synonymMap.etag
             : undefined;
 
-      await this.client.synonymMaps.delete(synonymMapName, {
+      await this.client.deleteSynonymMap(synonymMapName, {
         ...updatedOptions,
         ifMatch: etag,
       });
@@ -637,9 +636,9 @@ export class SearchIndexClient {
   ): Promise<SearchIndexAlias> {
     const { span, updatedOptions } = createSpan("SearchIndexClient-createOrUpdateAlias", options);
     try {
-      const etag = options.onlyIfUnchanged ? alias.etag : undefined;
+      const etag = options.onlyIfUnchanged ? alias.eTag : undefined;
 
-      const result = await this.client.aliases.createOrUpdate(alias.name, alias, {
+      const result = await this.client.createOrUpdateAlias(alias, alias.name, {
         ...updatedOptions,
         ifMatch: etag,
       });
@@ -666,7 +665,7 @@ export class SearchIndexClient {
   ): Promise<SearchIndexAlias> {
     const { span, updatedOptions } = createSpan("SearchIndexClient-createAlias", options);
     try {
-      const result = await this.client.aliases.create(alias, updatedOptions);
+      const result = await this.client.createAlias(alias, updatedOptions);
       return result;
     } catch (e: any) {
       span.setStatus({
@@ -702,9 +701,9 @@ export class SearchIndexClient {
     try {
       const aliasName: string = typeof alias === "string" ? alias : alias.name;
       const etag =
-        typeof alias === "string" ? undefined : options.onlyIfUnchanged ? alias.etag : undefined;
+        typeof alias === "string" ? undefined : options.onlyIfUnchanged ? alias.eTag : undefined;
 
-      await this.client.aliases.delete(aliasName, {
+      await this.client.deleteAlias(aliasName, {
         ...updatedOptions,
         ifMatch: etag,
       });
@@ -730,7 +729,7 @@ export class SearchIndexClient {
   ): Promise<SearchIndexAlias> {
     const { span, updatedOptions } = createSpan("SearchIndexClient-getAlias", options);
     try {
-      const result = await this.client.aliases.get(aliasName, updatedOptions);
+      const result = await this.client.getAlias(aliasName, updatedOptions);
       return result;
     } catch (e: any) {
       span.setStatus({
@@ -755,7 +754,7 @@ export class SearchIndexClient {
   ): Promise<SearchIndexStatistics> {
     const { span, updatedOptions } = createSpan("SearchIndexClient-getIndexStatistics", options);
     try {
-      const result = await this.client.indexes.getStatistics(indexName, updatedOptions);
+      const result = await this.client.getIndexStatistics(indexName, updatedOptions);
       return result;
     } catch (e: any) {
       span.setStatus({
@@ -793,9 +792,14 @@ export class SearchIndexClient {
     const { span, updatedOptions } = createSpan("SearchIndexClient-analyzeText", operationOptions);
 
     try {
-      const result = await this.client.indexes.analyze(
+      const result = await this.client.analyzeText(
+        {
+          normalizerName: restOptions.normalizerName?.name,
+          analyzerName: analyzer?.name,
+          tokenizerName: tokenizer?.name,
+          text: restOptions.text,
+        },
         indexName,
-        { ...restOptions, analyzer, tokenizer },
         updatedOptions,
       );
       return result;
@@ -832,57 +836,6 @@ export class SearchIndexClient {
     }
   }
 
-  private async *getIndexStatsSummaryPage(
-    options: GetIndexStatsSummaryOptions = {},
-  ): AsyncIterableIterator<IndexStatisticsSummary[]> {
-    const { span, updatedOptions } = createSpan(
-      "SearchIndexClient-getIndexStatsSummaryPage",
-      options,
-    );
-    try {
-      const { indexesStatistics } = await this.client.getIndexStatsSummary(updatedOptions);
-      yield indexesStatistics;
-    } catch (e: any) {
-      span.setStatus({
-        status: "error",
-        error: e.message,
-      });
-      throw e;
-    } finally {
-      span.end();
-    }
-  }
-
-  private async *getIndexStatsSummaryAll(
-    options: GetIndexStatsSummaryOptions = {},
-  ): AsyncIterableIterator<IndexStatisticsSummary> {
-    for await (const page of this.getIndexStatsSummaryPage(options)) {
-      yield* page;
-    }
-  }
-
-  /**
-   * Retrieves a list of existing indexes in the service.
-   * @param options - Options to the list index operation.
-   */
-  public getIndexStatsSummary(
-    options: GetIndexStatsSummaryOptions = {},
-  ): IndexStatisticsSummaryIterator {
-    const iter = this.getIndexStatsSummaryAll(options);
-
-    return {
-      next() {
-        return iter.next();
-      },
-      [Symbol.asyncIterator]() {
-        return this;
-      },
-      byPage: () => {
-        return this.getIndexStatsSummaryPage(options);
-      },
-    };
-  }
-
   /**
    * Creates a new agent.
    * @param knowledgeAgent - definition of the agent to create.
@@ -894,7 +847,7 @@ export class SearchIndexClient {
   ): Promise<KnowledgeAgent> {
     const { span, updatedOptions } = createSpan("SearchIndexClient-createKnowledgeAgent", options);
     try {
-      const result = await this.client.knowledgeAgents.create(
+      const result = await this.client.createKnowledgeBase(
         utils.convertKnowledgeAgentToGenerated(knowledgeAgent)!,
         updatedOptions,
       );
@@ -910,43 +863,43 @@ export class SearchIndexClient {
     }
   }
 
-  /**
-   * Creates a new agent or updates an agent if it already exists.
-   * @param agentName - name of the agent to create or update.
-   * @param knowledgeAgent - definition of the agent to create or update.
-   * @param options - options parameters.
-   */
-  public async createOrUpdateKnowledgeAgent(
-    agentName: string,
-    knowledgeAgent: KnowledgeAgent,
-    options?: CreateOrUpdateKnowledgeAgentOptions,
-  ): Promise<KnowledgeAgent> {
-    const { span, updatedOptions } = createSpan(
-      "SearchIndexClient-createOrUpdateKnowledgeAgent",
-      options,
-    );
-    try {
-      const etag = updatedOptions.onlyIfUnchanged ? knowledgeAgent.etag : undefined;
+  // /**
+  //  * Creates a new agent or updates an agent if it already exists.
+  //  * @param agentName - name of the agent to create or update.
+  //  * @param knowledgeAgent - definition of the agent to create or update.
+  //  * @param options - options parameters.
+  //  */
+  // public async createOrUpdateKnowledgeAgent(
+  //   agentName: string,
+  //   knowledgeAgent: KnowledgeAgent,
+  //   options?: CreateOrUpdateKnowledgeAgentOptions,
+  // ): Promise<KnowledgeAgent> {
+  //   const { span, updatedOptions } = createSpan(
+  //     "SearchIndexClient-createOrUpdateKnowledgeAgent",
+  //     options,
+  //   );
+  //   try {
+  //     const etag = updatedOptions.onlyIfUnchanged ? knowledgeAgent.etag : undefined;
 
-      const result = await this.client.knowledgeAgents.createOrUpdate(
-        agentName,
-        utils.convertKnowledgeAgentToGenerated(knowledgeAgent)!,
-        {
-          ...updatedOptions,
-          ifMatch: etag,
-        },
-      );
-      return utils.convertKnowledgeAgentToPublic(result)!;
-    } catch (e: any) {
-      span.setStatus({
-        status: "error",
-        error: e.message,
-      });
-      throw e;
-    } finally {
-      span.end();
-    }
-  }
+  //     const result = await this.client.createOrUpdateKnowledgeBase(
+  //       knowledgeAgent,
+  //       utils.convertKnowledgeAgentToGenerated(knowledgeAgent)!,
+  //       {
+  //         ...updatedOptions,
+  //         ifMatch: etag,
+  //       },
+  //     );
+  //     return utils.convertKnowledgeAgentToPublic(result)!;
+  //   } catch (e: any) {
+  //     span.setStatus({
+  //       status: "error",
+  //       error: e.message,
+  //     });
+  //     throw e;
+  //   } finally {
+  //     span.end();
+  //   }
+  // }
 
   /**
    * Retrieves an agent definition.
@@ -959,7 +912,7 @@ export class SearchIndexClient {
   ): Promise<KnowledgeAgent> {
     const { span, updatedOptions } = createSpan("SearchIndexClient-getKnowledgeAgent", options);
     try {
-      const result = await this.client.knowledgeAgents.get(agentName, updatedOptions);
+      const result = await this.client.getKnowledgeBase(agentName, updatedOptions);
       return utils.convertKnowledgeAgentToPublic(result)!;
     } catch (e: any) {
       span.setStatus({
@@ -972,55 +925,55 @@ export class SearchIndexClient {
     }
   }
 
-  private async *listKnowledgeAgentsPage(
-    options: ListKnowledgeAgentsOptions = {},
-  ): AsyncIterableIterator<KnowledgeAgent[]> {
-    const { span, updatedOptions } = createSpan(
-      "SearchIndexClient-listKnowledgeAgentsPage",
-      options,
-    );
-    try {
-      const { knowledgeAgents } = await this.client.knowledgeAgents.list(updatedOptions);
-      const mapped = knowledgeAgents.map((agent) => utils.convertKnowledgeAgentToPublic(agent)!);
-      yield mapped;
-    } catch (e: any) {
-      span.setStatus({
-        status: "error",
-        error: e.message,
-      });
-      throw e;
-    } finally {
-      span.end();
-    }
-  }
+  // private async *listKnowledgeAgentsPage(
+  //   options: ListKnowledgeAgentsOptions = {},
+  // ): AsyncIterableIterator<KnowledgeAgent[]> {
+  //   const { span, updatedOptions } = createSpan(
+  //     "SearchIndexClient-listKnowledgeAgentsPage",
+  //     options,
+  //   );
+  //   try {
+  //     const { knowledgeAgents } = await this.client.knowledgeAgents.list(updatedOptions);
+  //     const mapped = knowledgeAgents.map((agent) => utils.convertKnowledgeAgentToPublic(agent)!);
+  //     yield mapped;
+  //   } catch (e: any) {
+  //     span.setStatus({
+  //       status: "error",
+  //       error: e.message,
+  //     });
+  //     throw e;
+  //   } finally {
+  //     span.end();
+  //   }
+  // }
 
-  private async *listKnowledgeAgentsAll(
-    options: ListKnowledgeAgentsOptions = {},
-  ): AsyncIterableIterator<KnowledgeAgent> {
-    for await (const page of this.listKnowledgeAgentsPage(options)) {
-      yield* page;
-    }
-  }
+  // private async *listKnowledgeAgentsAll(
+  //   options: ListKnowledgeAgentsOptions = {},
+  // ): AsyncIterableIterator<KnowledgeAgent> {
+  //   for await (const page of this.listKnowledgeAgentsPage(options)) {
+  //     yield* page;
+  //   }
+  // }
 
-  /**
-   * Retrieves a list of existing KnowledgeAgents in the service.
-   * @param options - Options to the list knowledge agents operation.
-   */
-  public listKnowledgeAgents(options: ListKnowledgeAgentsOptions = {}): KnowledgeAgentIterator {
-    const iter = this.listKnowledgeAgentsAll(options);
+  // /**
+  //  * Retrieves a list of existing KnowledgeAgents in the service.
+  //  * @param options - Options to the list knowledge agents operation.
+  //  */
+  // public listKnowledgeAgents(options: ListKnowledgeAgentsOptions = {}): KnowledgeAgentIterator {
+  //   const iter = this.listKnowledgeAgentsAll(options);
 
-    return {
-      next() {
-        return iter.next();
-      },
-      [Symbol.asyncIterator]() {
-        return this;
-      },
-      byPage: () => {
-        return this.listKnowledgeAgentsPage(options);
-      },
-    };
-  }
+  //   return {
+  //     next() {
+  //       return iter.next();
+  //     },
+  //     [Symbol.asyncIterator]() {
+  //       return this;
+  //     },
+  //     byPage: () => {
+  //       return this.listKnowledgeAgentsPage(options);
+  //     },
+  //   };
+  // }
 
   /**
    * Deletes an existing agent.
@@ -1050,7 +1003,7 @@ export class SearchIndexClient {
       const etag =
         typeof agent !== "string" && updatedOptions.onlyIfUnchanged ? agent.etag : undefined;
 
-      const result = await this.client.knowledgeAgents.delete(agentName, {
+      const result = await this.client.deleteKnowledgeBase(agentName, {
         ...updatedOptions,
         ifMatch: etag,
       });
@@ -1078,9 +1031,9 @@ export class SearchIndexClient {
     try {
       const etag = updatedOptions.onlyIfUnchanged ? knowledgeSource.etag : undefined;
 
-      const result = await this.client.knowledgeSources.createOrUpdate(
-        sourceName,
+      const result = await this.client.createOrUpdateKnowledgeSource(
         utils.convertKnowledgeSourceToGenerated(knowledgeSource)!,
+        sourceName,
         {
           ...updatedOptions,
           ifMatch: etag,
@@ -1126,7 +1079,7 @@ export class SearchIndexClient {
       const etag =
         typeof source !== "string" && updatedOptions.onlyIfUnchanged ? source.etag : undefined;
 
-      const result = await this.client.knowledgeSources.delete(sourceName, {
+      const result = await this.client.deleteKnowledgeSource(sourceName, {
         ...updatedOptions,
         ifMatch: etag,
       });
@@ -1153,7 +1106,7 @@ export class SearchIndexClient {
   ): Promise<KnowledgeSource> {
     const { span, updatedOptions } = createSpan("SearchIndexClient-getKnowledgeSource", options);
     try {
-      const result = await this.client.knowledgeSources.get(sourceName, updatedOptions);
+      const result = await this.client.getKnowledgeSource(sourceName, updatedOptions);
       return utils.convertKnowledgeSourceToPublic(result)!;
     } catch (e: any) {
       span.setStatus({
@@ -1166,57 +1119,57 @@ export class SearchIndexClient {
     }
   }
 
-  private async *listKnowledgeSourcesPage(
-    options: ListKnowledgeSourcesOptions = {},
-  ): AsyncIterableIterator<KnowledgeSource[]> {
-    const { span, updatedOptions } = createSpan(
-      "SearchIndexClient-listKnowledgeSourcesPage",
-      options,
-    );
-    try {
-      const { knowledgeSources } = await this.client.knowledgeSources.list(updatedOptions);
-      const mapped = knowledgeSources.map(
-        (source) => utils.convertKnowledgeSourceToPublic(source)!,
-      );
-      yield mapped;
-    } catch (e: any) {
-      span.setStatus({
-        status: "error",
-        error: e.message,
-      });
-      throw e;
-    } finally {
-      span.end();
-    }
-  }
+  // private async *listKnowledgeSourcesPage(
+  //   options: ListKnowledgeSourcesOptions = {},
+  // ): AsyncIterableIterator<KnowledgeSource[]> {
+  //   const { span, updatedOptions } = createSpan(
+  //     "SearchIndexClient-listKnowledgeSourcesPage",
+  //     options,
+  //   );
+  //   try {
+  //     const { knowledgeSources } = await this.client.knowledgeSources.list(updatedOptions);
+  //     const mapped = knowledgeSources.map(
+  //       (source) => utils.convertKnowledgeSourceToPublic(source)!,
+  //     );
+  //     yield mapped;
+  //   } catch (e: any) {
+  //     span.setStatus({
+  //       status: "error",
+  //       error: e.message,
+  //     });
+  //     throw e;
+  //   } finally {
+  //     span.end();
+  //   }
+  // }
 
-  private async *listKnowledgeSourcesAll(
-    options: ListKnowledgeSourcesOptions = {},
-  ): AsyncIterableIterator<KnowledgeSource> {
-    for await (const page of this.listKnowledgeSourcesPage(options)) {
-      yield* page;
-    }
-  }
+  // private async *listKnowledgeSourcesAll(
+  //   options: ListKnowledgeSourcesOptions = {},
+  // ): AsyncIterableIterator<KnowledgeSource> {
+  //   for await (const page of this.listKnowledgeSourcesPage(options)) {
+  //     yield* page;
+  //   }
+  // }
 
-  /**
-   * Retrieves a list of existing KnowledgeSources in the service.
-   * @param options - Options to the list knowledge sources operation.
-   */
-  public listKnowledgeSources(options: ListKnowledgeSourcesOptions = {}): KnowledgeSourceIterator {
-    const iter = this.listKnowledgeSourcesAll(options);
+  // /**
+  //  * Retrieves a list of existing KnowledgeSources in the service.
+  //  * @param options - Options to the list knowledge sources operation.
+  //  */
+  // public listKnowledgeSources(options: ListKnowledgeSourcesOptions = {}): KnowledgeSourceIterator {
+  //   const iter = this.listKnowledgeSourcesAll(options);
 
-    return {
-      next() {
-        return iter.next();
-      },
-      [Symbol.asyncIterator]() {
-        return this;
-      },
-      byPage: () => {
-        return this.listKnowledgeSourcesPage(options);
-      },
-    };
-  }
+  //   return {
+  //     next() {
+  //       return iter.next();
+  //     },
+  //     [Symbol.asyncIterator]() {
+  //       return this;
+  //     },
+  //     byPage: () => {
+  //       return this.listKnowledgeSourcesPage(options);
+  //     },
+  //   };
+  // }
 
   /**
    * Creates a new knowledge source.
@@ -1229,7 +1182,7 @@ export class SearchIndexClient {
   ): Promise<KnowledgeSource> {
     const { span, updatedOptions } = createSpan("SearchIndexClient-createKnowledgeSource", options);
     try {
-      const result = await this.client.knowledgeSources.create(
+      const result = await this.client.createKnowledgeSource(
         utils.convertKnowledgeSourceToGenerated(knowledgeSource)!,
         updatedOptions,
       );
