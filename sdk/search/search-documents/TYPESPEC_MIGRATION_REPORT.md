@@ -24,10 +24,9 @@ This report documents the requirements and scope for migrating the `@azure/searc
 
 **Required Changes**:
 
-- Generated code outputs to `./generated` directory (already implemented)
+- Generated code outputs to `./generated` directory
 - Custom code in `./src` imports from generated models
 - Generated code is treated as read-only, never modified directly
-- Create post-generation script to copy generated files to `./src` for backward compatibility if needed
 
 The customization flow is described in the [RLC Customization](https://github.com/Azure/azure-sdk-for-js/blob/main/documentation/RLC-customization.md) document. The document refers to RLC; however, the same principles apply to all TypeSpec-generated SDKs.
 
@@ -37,7 +36,7 @@ The customization flow is described in the [RLC Customization](https://github.co
 
 **TypeSpec Generated Structure**:
 
-```
+```text
 generated/
 ├── search/                          # SearchClient operations
 │   ├── searchClient.ts
@@ -110,13 +109,7 @@ import {
 
 2. **Update internal code** to use prefixed names or aliases consistently
 
-3. **Automated tooling created**:
-   - `generate-mappings.cjs`: Extracts all type mappings from generated code
-   - `type-mappings.txt`: Complete list of 376 type name mappings
-   - `fix-indexes-exports.cjs`: Script to automatically apply mappings (partially complete)
-
 > Alternatively, there may be ways to configure TypeSpec to avoid prefixing, but this has not been explored in depth.
-
 
 ### 2.2 Known Type Name Changes
 
@@ -418,7 +411,7 @@ function convertSearchResult<T>(
 
 ## 7. Known TypeSpec Codegen Considerations
 
-### 7.1 Union Type Serialization Pattern (RESOLVED)
+### 7.1 Union Type Serialization Pattern
 
 **Note**: Initial investigation revealed what appeared to be a codegen bug where union serializers called non-existent short-name functions. This was manually fixed by adding proper prefixes throughout generated files.
 
@@ -561,160 +554,6 @@ This is tracked in [Azure/autorest.typescript/issues/3588](https://github.com/Az
 
 ---
 
-## 11. Build and Release Process
-
-### 11.1 Code Generation Scripts
-
-**New Scripts Required**:
-
-1. **TypeSpec compilation**: Run TypeSpec compiler to generate code
-
-   ```bash
-   npx tsp compile specification/search/Azure.Search
-   ```
-
-2. **Post-generation processing** (if needed):
-   - Copy generated files to `src/` (or update imports)
-   - Run fix scripts for any known codegen issues
-   - Generate type mapping files
-
-3. **Update `package.json` scripts**:
-
-   ```json
-   {
-     "scripts": {
-       "generate": "tsp compile ...",
-       "generate:mappings": "node generate-mappings.cjs > type-mappings.txt",
-       "build": "npm run generate && tsc && ..."
-     }
-   }
-   ```
-
-### 11.2 CI/CD Updates
-
-**Required Changes**:
-
-1. Install TypeSpec compiler in CI environment
-2. Add TypeSpec compilation step before build
-3. Verify generated code is not committed (or is, depending on strategy)
-4. Add validation that generated code is up-to-date
-
-### 11.3 Version Strategy
-
-**Recommendation**:
-
-- If no breaking changes: Minor version bump
-- If breaking changes: Major version bump
-- Consider beta release first for feedback
-
----
-
-## 12. Risks and Mitigations
-
-### 12.1 Breaking Changes Risk
-
-**Risk**: Type name changes or API changes break existing user code
-
-**Mitigation**:
-
-- Extensive use of type aliases for backward compatibility
-- Thorough API review process
-- Beta release for early feedback
-- Comprehensive migration guide
-
-**Likelihood**: Low (due to alias strategy)  
-**Impact**: High (if it occurs)
-
-### 12.2 Performance Regression Risk
-
-**Risk**: Additional transformation layer impacts performance
-
-**Mitigation**:
-
-- Performance testing before release
-- Benchmark critical paths (search, indexing)
-- Optimize hot paths if needed
-
-**Likelihood**: Low  
-**Impact**: Medium
-
-### 12.3 TypeSpec Generator Maturity Risk
-
-**Risk**: TypeSpec generator has bugs or limitations
-
-**Mitigation**:
-
-- Work closely with TypeSpec team
-- Report issues with clear repro
-- Have fallback plan (manual fixes or stay on Swagger)
-- This PoC identified and resolved some patterns
-
-**Likelihood**: Medium  
-**Impact**: Medium-High
-
-### 12.4 Maintenance Burden Risk
-
-**Risk**: More complex build process and dual-mode code maintenance
-
-**Mitigation**:
-
-- Automate as much as possible
-- Clear documentation of build process
-- Consider eventually removing old generated code entirely
-
-**Likelihood**: Medium  
-**Impact**: Low-Medium
-
----
-
-## 13. Migration Timeline Estimate
-
-### Phase 1: Preparation (1 week)
-
-- Finalize build scripts and tooling
-- Set up TypeSpec compilation in CI
-- Complete API review for breaking changes
-- Get approval for any required breaking changes
-
-### Phase 2: Code Completion (2-3 weeks)
-
-- Complete all type mapping and aliasing (1 week)
-- Finish client wrapper updates (3-4 days)
-- Implement missing features (field builders, etc.) (2-3 days)
-- Update internal utilities and transformations (2-3 days)
-
-### Phase 3: Testing (2 weeks)
-
-- Update and fix unit tests (1 week)
-- Run integration tests and fix issues (1 week)
-- Performance testing and optimization (2-3 days)
-- Backward compatibility validation (2 days)
-
-### Phase 4: Documentation (1 week)
-
-- Write migration guide
-- Update README and docs
-- Review and update code samples
-- Generate final API reference
-
-### Phase 5: Release (1 week)
-
-- Beta release
-- Gather feedback
-- Fix critical issues
-- Stable release
-
-**Total Estimated Time**: 7-9 weeks (with 1-2 engineers)
-
-**Critical Path**:
-
-1. API review approval
-2. Type mapping completion
-3. Test validation
-4. Documentation review
-
----
-
 ## 14. Comparison with Other Language SDKs
 
 ### Python SDK Findings
@@ -761,67 +600,8 @@ This is tracked in [Azure/autorest.typescript/issues/3588](https://github.com/Az
 **Common Patterns Across SDKs**:
 
 1. Type name prefixing requires aliasing for backward compatibility
-2. Custom convenience methods are essential user experience
-3. Batch operations and buffered senders are critical features
-4. Parameter reordering in constructors is a common issue
-5. Version-specific types may be consolidated
-
-**TypeScript-Specific Considerations**:
-
-1. Type system makes generic `TModel` approach cleaner than Java's approach
-2. Less serialization concern than Python (JSON native)
-3. Strong type inference reduces need for as many helper types as Java
-
----
-
-## 15. Action Items Summary
-
-### High Priority (Blocking)
-
-- [ ] Complete type alias mappings for all 376+ types
-- [ ] Update all client constructors to new signatures  
-- [ ] Fix wrapper method implementations (autocomplete, suggest, etc.)
-- [ ] Verify and restore field builder utilities
-- [ ] Resolve KnowledgeAgent → KnowledgeBase rename strategy
-- [ ] Complete API review process
-
-### Medium Priority (Important)
-
-- [ ] Implement list operations with name-only results
-- [ ] Test and fix all model transformations
-- [ ] Update all unit tests
-- [ ] Run full integration test suite
-- [ ] Write migration guide
-- [ ] Update documentation and samples
-
-### Low Priority (Nice to Have)
-
-- [ ] Performance optimization of transformation layer
-- [ ] Enhanced error messages for migration
-- [ ] Automated refactoring tools for users
-- [ ] Advanced logging for debugging transformations
-
-### Nice to Have (Future)
-
-- [ ] Consider consolidating similar wrapper patterns
-- [ ] Evaluate if semantic search could have its own convenience wrapper
-- [ ] Look into Java's separate facet result models for better typing
-
----
-
-## 16. Open Questions
-
-1. **KnowledgeBase Rename**: Is `KnowledgeAgent` → `KnowledgeBase` rename intentional from service? Should we maintain old names?
-
-2. **Version-Specific Skills**: Should we maintain separate V3 skill types or document that only latest versions are supported?
-
-3. **Response Unwrapping**: Should we unwrap inner results like Python SDK does (e.g., for list operations)?
-
-4. **TypeSpec Generator**: Should the union serializer naming pattern be reported as a bug or is it expected behavior?
-
-5. **Enum Value Format**: Can we request TypeSpec generator to preserve PascalCase enum member names for consistency?
-
-6. **New Types**: Several new types appeared (e.g., new `SearchFieldDataType` values). Are these officially supported by the service?
+2. Parameter reordering in constructors is a common issue
+3. Version-specific types may be consolidated
 
 ---
 
@@ -838,7 +618,7 @@ With proper planning and execution, this migration can be completed with **minim
 
 **Recommended Approach**:
 
-I recommend strongly considering a major version bump and taking this opportunity to move to a fully generated SDK with minimal custom code. The benefits of maintainability and alignment with modern Azure SDK practices outweigh the migration effort. A backwards-compatible migration _is_ possible; however, it will require extensive type aliasing and careful testing due to the large hand-authored convenience layer.
+I recommend seriously considering a major version bump and taking this opportunity to move to a fully generated SDK with minimal custom code. The benefits of maintainability and alignment with modern Azure SDK practices outweigh the migration effort. A backwards-compatible migration _is_ possible; however, it will require extensive type aliasing and careful testing due to the large hand-authored convenience layer.
 
 ---
 
@@ -860,17 +640,10 @@ I recommend strongly considering a major version bump and taking this opportunit
 - **Total new generated code**: ~60,000+ lines
 - **Existing custom code**: ~15,000+ lines requiring updates
 
-## Appendix C: Script Utilities Created
-
-1. **generate-mappings.cjs**: Extracts all type name mappings from generated index files
-2. **type-mappings.txt**: Complete reference of all 376 type mappings
-3. **fix-indexes-exports.cjs**: Automated script to apply mappings to src/index.ts (partially complete)
-4. **MIGRATION_STATUS.md**: Detailed technical tracking document
-5. **README-MIGRATION.md**: Guide for using migration tooling
-
-## Appendix D: Reference Documents
+## Appendix C: Reference Documents
 
 - Python Migration Report: https://gist.github.com/xiangyan99/44333124fc86d0d2621fabbc20901c40
 - Java Migration Report: https://gist.github.com/alzimmermsft/ee56ed3c53faf8e0e9495ec0f71dc7f5
 - TypeSpec Documentation: https://microsoft.github.io/typespec/
 - Azure SDK TypeScript Guidelines: https://azure.github.io/azure-sdk/typescript_introduction.html
+- Proof-of-concept: https://github.com/maorleger/azure-sdk-for-js/tree/search-documents-typespec-eval
