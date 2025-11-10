@@ -9,10 +9,7 @@ import type { InternalClientPipelineOptions } from "@azure/core-client";
 import type { ExtendedCommonClientOptions } from "@azure/core-http-compat";
 import type { Pipeline } from "@azure/core-rest-pipeline";
 import { bearerTokenAuthenticationPolicy } from "@azure/core-rest-pipeline";
-import type {
-  AzureSearchDocumentsIndexesAnalyzeResult as AnalyzeResult,
-  AzureSearchDocumentsIndexesIndexStatisticsSummary as IndexStatisticsSummary,
-} from "./models/azure/search/documents/indexes/index.js";
+import type { AzureSearchDocumentsIndexesAnalyzeResult as AnalyzeResult } from "./models/azure/search/documents/indexes/index.js";
 import { SearchIndexClient as GeneratedClient } from "./searchIndex/searchIndexClient.js";
 import type { KnowledgeAgent } from "./knowledgeAgentModels.js";
 import type { KnowledgeRetrievalClientOptions as GetKnowledgeRetrievalClientOptions } from "./knowledgeRetrievalClient.js";
@@ -24,7 +21,6 @@ import { KnownSearchAudience } from "./searchAudience.js";
 import type { SearchClientOptions as GetSearchClientOptions } from "./searchClient.js";
 import { SearchClient } from "./searchClient.js";
 import type {
-  AliasIterator,
   AnalyzeTextOptions,
   CreateAliasOptions,
   CreateIndexOptions,
@@ -32,7 +28,6 @@ import type {
   CreateKnowledgeSourceOptions,
   CreateOrUpdateAliasOptions,
   CreateOrUpdateIndexOptions,
-  CreateOrUpdateKnowledgeAgentOptions,
   CreateOrUpdateKnowledgeSourceOptions,
   CreateOrUpdateSynonymMapOptions,
   CreateSynonymMapOptions,
@@ -44,22 +39,13 @@ import type {
   GetAliasOptions,
   GetIndexOptions,
   GetIndexStatisticsOptions,
-  GetIndexStatsSummaryOptions,
   GetKnowledgeAgentOptions,
   GetKnowledgeSourceOptions,
   GetServiceStatisticsOptions,
   GetSynonymMapsOptions,
   IndexIterator,
-  IndexNameIterator,
-  IndexStatisticsSummaryIterator,
-  KnowledgeAgentIterator,
   KnowledgeSource,
-  KnowledgeSourceIterator,
-  ListAliasesOptions,
   ListIndexesOptions,
-  ListKnowledgeAgentsOptions,
-  ListKnowledgeSourcesOptions,
-  ListSynonymMapsOptions,
   SearchIndex,
   SearchIndexAlias,
   SearchIndexStatistics,
@@ -196,52 +182,16 @@ export class SearchIndexClient {
     this.client.pipeline.addPolicy(createOdataMetadataPolicy("minimal"));
   }
 
-  // private async *listIndexesPage(
-  //   options: ListIndexesOptions = {},
-  // ): AsyncIterableIterator<SearchIndex[]> {
-  //   const { span, updatedOptions } = createSpan("SearchIndexClient-listIndexesPage", options);
-  //   try {
-  //     const result = this.client.listIndexes(updatedOptions).byPage();
-  //     const mapped = result.indexes.map(utils.generatedIndexToPublicIndex);
-  //     yield mapped;
-  //   } catch (e: any) {
-  //     span.setStatus({
-  //       status: "error",
-  //       error: e.message,
-  //     });
-  //     throw e;
-  //   } finally {
-  //     span.end();
-  //   }
-  // }
-
-  // private async *listIndexesAll(
-  //   options: ListIndexesOptions = {},
-  // ): AsyncIterableIterator<SearchIndex> {
-  //   for await (const page of this.listIndexesPage(options)) {
-  //     yield* page;
-  //   }
-  // }
-
-  // /**
-  //  * Retrieves a list of existing indexes in the service.
-  //  * @param options - Options to the list index operation.
-  //  */
-  // public listIndexes(options: ListIndexesOptions = {}): IndexIterator {
-  //   const iter = this.listIndexesAll(options);
-
-  //   return {
-  //     next() {
-  //       return iter.next();
-  //     },
-  //     [Symbol.asyncIterator]() {
-  //       return this;
-  //     },
-  //     byPage: () => {
-  //       return this.listIndexesPage(options);
-  //     },
-  //   };
-  // }
+  /**
+   * Retrieves a list of existing indexes in the service.
+   * @param options - Options to the list index operation.
+   */
+  public listIndexes(options: ListIndexesOptions = {}): IndexIterator {
+    return utils.mapPagedAsyncIterable(
+      this.client.listIndexes(options),
+      utils.generatedIndexToPublicIndex,
+    );
+  }
 
   // private async *listAliasesPage(
   //   options: ListAliasesOptions = {},

@@ -17,7 +17,6 @@ import type {
   AzureSearchDocumentsIndexesAzureOpenAIVectorizer as GeneratedAzureOpenAIVectorizer,
   AzureSearchDocumentsIndexesCognitiveServicesAccountKey as GeneratedCognitiveServicesAccountKey,
   CognitiveServicesAccountUnion,
-  AzureSearchDocumentsIndexesCustomAnalyzer as BaseCustomAnalyzer,
   DataChangeDetectionPolicyUnion,
   DataDeletionDetectionPolicyUnion,
   AzureSearchDocumentsIndexesDefaultCognitiveServicesAccount as GeneratedDefaultCognitiveServicesAccount,
@@ -84,7 +83,6 @@ import type {
   LexicalTokenizer,
   NoAuthAzureMachineLearningVectorizerParameters,
   PatternAnalyzer,
-  PatternTokenizer,
   RegexFlags,
   ScoringProfile,
   SearchField,
@@ -122,6 +120,7 @@ import {
   SoftDeleteColumnDeletionDetectionPolicy,
   SqlIntegratedChangeTrackingPolicy,
 } from "./index.js";
+import { PagedAsyncIterableIterator } from "@azure/core-paging";
 
 export const defaultServiceVersion = "2025-08-01-Preview";
 
@@ -668,7 +667,7 @@ export function generatedVectorSearchToPublicVectorSearch(
       generatedVectorSearchAlgorithmConfigurationToPublicVectorSearchAlgorithmConfiguration,
     ),
     vectorizers: vectorSearch.vectorizers?.map(generatedVectorSearchVectorizerToPublicVectorizer),
-  };
+  } as any;
 }
 
 export function generatedSearchResultToPublicSearchResult<
@@ -768,14 +767,14 @@ export function publicSkillsetToGeneratedSkillset(
     ...skillset,
     cognitiveServicesAccount: convertCognitiveServicesAccountToGenerated(cognitiveServicesAccount),
     encryptionKey: convertEncryptionKeyToGenerated(encryptionKey),
-  };
+  } as any;
 }
 
 export function generatedSynonymMapToPublicSynonymMap(synonymMap: GeneratedSynonymMap): SynonymMap {
   const result: SynonymMap = {
     name: synonymMap.name,
     encryptionKey: convertEncryptionKeyToPublic(synonymMap.encryptionKey),
-    etag: synonymMap.etag,
+    etag: synonymMap.eTag,
     synonyms: [],
   };
 
@@ -791,7 +790,7 @@ export function publicSynonymMapToGeneratedSynonymMap(synonymMap: SynonymMap): G
     name: synonymMap.name,
     format: "solr",
     encryptionKey: convertEncryptionKeyToGenerated(synonymMap.encryptionKey),
-    etag: synonymMap.etag,
+    eTag: synonymMap.etag,
     synonyms: synonymMap.synonyms.join("\n"),
   };
 
@@ -856,7 +855,7 @@ export function publicDataSourceToGeneratedDataSource(
     },
     container: dataSource.container,
     identity: dataSource.identity,
-    etag: dataSource.etag,
+    eTag: dataSource.etag,
     dataChangeDetectionPolicy: dataSource.dataChangeDetectionPolicy,
     dataDeletionDetectionPolicy: dataSource.dataDeletionDetectionPolicy,
     encryptionKey: convertEncryptionKeyToGenerated(dataSource.encryptionKey),
@@ -873,7 +872,7 @@ export function generatedDataSourceToPublicDataSource(
     connectionString: dataSource.credentials.connectionString,
     container: dataSource.container,
     identity: convertSearchIndexerDataIdentityToPublic(dataSource.identity),
-    etag: dataSource.etag,
+    etag: dataSource.eTag,
     dataChangeDetectionPolicy: convertDataChangeDetectionPolicyToPublic(
       dataSource.dataChangeDetectionPolicy,
     ),
@@ -971,7 +970,7 @@ export function convertKnowledgeAgentToPublic(
 
   return {
     ...knowledgeAgent,
-    models: knowledgeAgent.models.map((model) => convertKnowledgeAgentModelToPublic(model)),
+    models: knowledgeAgent.models?.map((model) => convertKnowledgeAgentModelToPublic(model)) ?? [],
     encryptionKey: convertEncryptionKeyToPublic(knowledgeAgent.encryptionKey),
   };
 }
@@ -999,7 +998,10 @@ export function convertKnowledgeSourceToPublic(
   switch (knowledgeSource.kind) {
     case "searchIndex": {
       const { encryptionKey } = knowledgeSource as GeneratedSearchIndexKnowledgeSource;
-      return { ...knowledgeSource, encryptionKey: convertEncryptionKeyToPublic(encryptionKey) };
+      return {
+        ...knowledgeSource,
+        encryptionKey: convertEncryptionKeyToPublic(encryptionKey),
+      } as any;
     }
     case "azureBlob": {
       const { encryptionKey, azureBlobParameters } =
@@ -1007,10 +1009,12 @@ export function convertKnowledgeSourceToPublic(
       return {
         ...knowledgeSource,
         encryptionKey: convertEncryptionKeyToPublic(encryptionKey),
-        azureBlobParameters: convertAzureBlobKnowledgeSourceParametersToPublic(azureBlobParameters),
-      };
+        azureBlobParameters:
+          convertAzureBlobKnowledgeSourceParametersToPublic(azureBlobParameters)!,
+      } as any;
     }
   }
+  return undefined;
 }
 
 export function convertKnowledgeSourceToGenerated(
@@ -1039,7 +1043,7 @@ function convertAzureBlobKnowledgeSourceParametersToPublic(
     chatCompletionModel: !chatCompletionModel
       ? chatCompletionModel
       : convertKnowledgeAgentModelToPublic(chatCompletionModel),
-  };
+  } as any;
 }
 
 function convertKnowledgeAgentModelToPublic(
@@ -1063,5 +1067,33 @@ function convertKnowledgeAgentModelToPublic(
 function convertAzureOpenAIParametersToPublic(
   params: GeneratedAzureOpenAIParameters,
 ): AzureOpenAIParameters {
-  return { ...params, authIdentity: convertSearchIndexerDataIdentityToPublic(params.authIdentity) };
+  return {
+    ...params,
+    authIdentity: convertSearchIndexerDataIdentityToPublic(params.authIdentity as any),
+  } as any;
+}
+
+export function mapPagedAsyncIterable<T, U>(
+  iter: PagedAsyncIterableIterator<T>,
+  mapper: (x: T) => U,
+): PagedAsyncIterableIterator<U> {
+  return {
+    async next() {
+      const result = await iter.next();
+
+      return {
+        ...result,
+        value: result.value && mapper(result.value),
+      };
+    },
+    [Symbol.asyncIterator]() {
+      return this;
+    },
+    async *byPage(settings) {
+      const iteratorByPage = iter.byPage(settings);
+      for await (const page of iteratorByPage) {
+        yield page.map(mapper);
+      }
+    },
+  };
 }

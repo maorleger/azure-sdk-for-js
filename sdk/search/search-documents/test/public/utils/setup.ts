@@ -332,9 +332,9 @@ export async function createIndex(
         {
           name: "semantic-configuration",
           prioritizedFields: {
-            titleField: { name: "hotelName" },
-            contentFields: [{ name: "description" }],
-            keywordsFields: [{ name: "tags" }],
+            titleField: { fieldName: "hotelName" },
+            contentFields: [{ fieldName: "description" }],
+            keywordsFields: [{ fieldName: "tags" }],
           },
         },
       ],

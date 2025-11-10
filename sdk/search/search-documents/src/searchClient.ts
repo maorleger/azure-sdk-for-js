@@ -587,7 +587,7 @@ export class SearchClient<TModel extends object> implements IndexDocumentsClient
       throw new RangeError("suggesterName must be provided.");
     }
 
-    const { span, updatedOptions } = createSpan("SearchClient-suggest", options);
+    const { span } = createSpan("SearchClient-suggest", options);
 
     try {
       const result = await this.client.suggestPost(searchText, suggesterName, fullOptions);

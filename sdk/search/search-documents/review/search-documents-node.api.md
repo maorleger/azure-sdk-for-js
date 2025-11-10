@@ -2984,6 +2984,7 @@ export class SearchIndexClient {
     getSearchClient<TModel extends object>(indexName: string, options?: SearchClientOptions): SearchClient<TModel>;
     getServiceStatistics(options?: GetServiceStatisticsOptions): Promise<SearchServiceStatistics>;
     getSynonymMap(synonymMapName: string, options?: GetSynonymMapsOptions): Promise<SynonymMap>;
+    listIndexes(options?: ListIndexesOptions): IndexIterator;
     readonly pipeline: Pipeline;
     readonly serviceVersion: string;
 }
