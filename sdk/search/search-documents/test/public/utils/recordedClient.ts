@@ -1,169 +1,29 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { createTestCredential } from "@azure-tools/test-credential";
-import type { Recorder, RecorderStartOptions, SanitizerOptions } from "@azure-tools/test-recorder";
-import { assertEnvironmentVariable, env } from "@azure-tools/test-recorder";
-import { isDefined } from "@azure/core-util";
-import { OpenAIClient } from "@azure/openai";
-import type { AzureOpenAIParameters } from "../../../src/index.js";
 import {
-  KnowledgeRetrievalClient,
-  SearchClient,
-  SearchIndexClient,
-  SearchIndexerClient,
-} from "../../../src/index.js";
+  Recorder,
+  RecorderStartOptions,
+  VitestTestContext,
+} from "@azure-tools/test-recorder";
 
-export interface Clients<IndexModel extends object> {
-  searchClient: SearchClient<IndexModel>;
-  indexClient: SearchIndexClient;
-  indexerClient: SearchIndexerClient;
-  indexName: string;
-  baseName: string;
-  openAIClient: OpenAIClient;
-  knowledgeRetrievalClient: KnowledgeRetrievalClient;
-  embeddingAzureOpenAIParameters: AzureOpenAIParameters;
-  chatAzureOpenAIParameters: AzureOpenAIParameters;
-}
+const replaceableVariables: Record<string, string> = {
+  SUBSCRIPTION_ID: "azure_subscription_id",
+};
 
-interface Env {
-  ENDPOINT: string;
-  AZURE_OPENAI_ENDPOINT: string;
-}
+const recorderEnvSetup: RecorderStartOptions = {
+  envSetupForPlayback: replaceableVariables,
+};
 
-// modifies URIs in the environment to end in a trailing slash
-const uriEnvVars = ["ENDPOINT", "AZURE_OPENAI_ENDPOINT"] as const;
-
-function appendTrailingSlashesToEnvironment(envSetupForPlayback: Env): void {
-  for (const envBag of [env, envSetupForPlayback]) {
-    for (const name of uriEnvVars) {
-      const value = envBag[name];
-      if (value) {
-        envBag[name] = value.endsWith("/") ? value : `${value}/`;
-      }
-    }
-  }
-}
-
-function createRecorderStartOptions(): RecorderStartOptions {
-  const envSetupForPlayback = {
-    ENDPOINT: "https://subdomain.search.windows.net/",
-    AZURE_OPENAI_ENDPOINT: "https://subdomain.openai.azure.com/",
-  };
-
-  appendTrailingSlashesToEnvironment(envSetupForPlayback);
-  const generalSanitizers = getSubdomainSanitizers();
-  const bodyKeySanitizer = {
-    jsonPath: "$..deploymentId",
-    value: "deployment-name",
-  };
-  return {
-    envSetupForPlayback,
-    removeCentralSanitizers: ["AZSDK2021", "AZSDK3493"],
-    sanitizerOptions: {
-      generalSanitizers,
-      bodyKeySanitizers: [bodyKeySanitizer],
-    },
-  };
-}
-
-function getSubdomainSanitizers(): SanitizerOptions["generalSanitizers"] {
-  const uriDomainMap: Pick<Env, (typeof uriEnvVars)[number]> = {
-    ENDPOINT: "search.windows.net",
-    AZURE_OPENAI_ENDPOINT: "openai.azure.com",
-  };
-
-  const subdomains = Object.entries(uriDomainMap)
-    .map(([name, domain]) => {
-      const uri = env[name];
-      const subdomain = uri?.match(String.raw`\/\/(.*?)\.` + domain)?.[1];
-
-      return subdomain;
-    })
-    .filter(isDefined);
-
-  const generalSanitizers = subdomains.map((target) => {
-    return {
-      target,
-      value: "subdomain",
-    };
-  });
-
-  return generalSanitizers;
-}
-
-export async function createClients<IndexModel extends object>(
-  serviceVersion: string,
-  recorder: Recorder,
-  indexName: string,
-  baseName: string,
-): Promise<Clients<IndexModel>> {
-  const recorderOptions = createRecorderStartOptions();
-  await recorder.start(recorderOptions);
-
-  indexName = recorder.variable("TEST_INDEX_NAME", indexName);
-  baseName = recorder.variable("TEST_BASE_NAME", baseName);
-
-  const credential = createTestCredential();
-
-  const endPoint: string = assertEnvironmentVariable("ENDPOINT");
-  const openAIEndpoint = assertEnvironmentVariable("AZURE_OPENAI_ENDPOINT");
-
-  const embeddingAzureOpenAIParameters: AzureOpenAIParameters = {
-    deploymentId: env.AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME,
-    resourceUrl: env.AZURE_OPENAI_ENDPOINT,
-    modelName: "text-embedding-ada-002",
-  };
-
-  const chatAzureOpenAIParameters: AzureOpenAIParameters = {
-    deploymentId: env.AZURE_OPENAI_CHAT_DEPLOYMENT_NAME,
-    resourceUrl: env.AZURE_OPENAI_ENDPOINT,
-    modelName: "gpt-4o",
-  };
-
-  const searchClient = new SearchClient<IndexModel>(
-    endPoint,
-    indexName,
-    credential,
-    recorder.configureClientOptions({
-      serviceVersion,
-    }),
-  );
-  const indexClient = new SearchIndexClient(
-    endPoint,
-    credential,
-    recorder.configureClientOptions({
-      serviceVersion,
-    }),
-  );
-  const indexerClient = new SearchIndexerClient(
-    endPoint,
-    credential,
-    recorder.configureClientOptions({
-      serviceVersion,
-    }),
-  );
-  const openAIClient = new OpenAIClient(
-    openAIEndpoint,
-    credential,
-    recorder.configureClientOptions({}),
-  );
-  const knowledgeRetrievalClient = new KnowledgeRetrievalClient(
-    endPoint,
-    baseName,
-    credential,
-    recorder.configureClientOptions({}),
-  );
-
-  return {
-    searchClient,
-    indexClient,
-    indexerClient,
-    openAIClient,
-    knowledgeRetrievalClient,
-    indexName,
-    baseName,
-    embeddingAzureOpenAIParameters,
-    chatAzureOpenAIParameters,
-  };
+/**
+ * creates the recorder and reads the environment variables from the `.env` file.
+ * Should be called first in the test suite to make sure environment variables are
+ * read before they are being used.
+ */
+export async function createRecorder(
+  context: VitestTestContext,
+): Promise<Recorder> {
+  const recorder = new Recorder(context);
+  await recorder.start(recorderEnvSetup);
+  return recorder;
 }
