@@ -10880,7 +10880,6 @@ export function contentUnderstandingSkillSerializer(item: ContentUnderstandingSk
     chunkingProperties: !item["chunkingProperties"]
       ? item["chunkingProperties"]
       : contentUnderstandingSkillChunkingPropertiesSerializer(item["chunkingProperties"]),
-    "@odata.type": item["odataType"],
   };
 }
 
@@ -11028,7 +11027,6 @@ export function chatCompletionSkillSerializer(item: ChatCompletionSkill): any {
     responseFormat: !item["responseFormat"]
       ? item["responseFormat"]
       : chatCompletionResponseFormatSerializer(item["responseFormat"]),
-    "@odata.type": item["odataType"],
   };
 }
 
