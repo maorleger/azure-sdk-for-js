@@ -45,6 +45,7 @@ export function nGramTokenFilterV2Serializer(item: NGramTokenFilterV2): any {
     name: item["name"],
     minGram: item["minGram"],
     maxGram: item["maxGram"],
+    "@odata.type": item["odataType"],
   };
 }
 
