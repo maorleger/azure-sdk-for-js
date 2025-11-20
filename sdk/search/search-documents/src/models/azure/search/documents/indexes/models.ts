@@ -18,6 +18,16 @@ import {
   serviceIndexersRuntimeDeserializer,
   IndexerRuntime,
   indexerRuntimeDeserializer,
+  indexedOneLakeKnowledgeSourceDeserializer,
+  indexedOneLakeKnowledgeSourceSerializer,
+  indexedSharePointKnowledgeSourceDeserializer,
+  indexedSharePointKnowledgeSourceSerializer,
+  nGramTokenFilterV2Deserializer,
+  nGramTokenFilterV2Serializer,
+  remoteSharePointKnowledgeSourceDeserializer,
+  remoteSharePointKnowledgeSourceSerializer,
+  webKnowledgeSourceDeserializer,
+  webKnowledgeSourceSerializer,
 } from "../../../../models.js";
 import {
   knowledgeRetrievalReasoningEffortUnionSerializer,
