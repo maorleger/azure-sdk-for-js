@@ -3568,6 +3568,10 @@ export class SearchClient {
     getDocumentCount(options?: GetDocumentCountOptionalParams): Promise<number>;
     index(batch: IndexDocumentsBatch, options?: IndexOptionalParams): Promise<IndexDocumentsResult>;
     readonly pipeline: Pipeline;
+    // Warning: (ae-forgotten-export) The symbol "SearchDocumentsResultWithIterator" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    search(options?: SearchPostOptionalParams): Promise<SearchDocumentsResultWithIterator>;
     searchGet(options?: SearchGetOptionalParams): Promise<SearchDocumentsResult>;
     searchPost(options?: SearchPostOptionalParams): Promise<SearchDocumentsResult>;
     suggestGet(searchText: string, suggesterName: string, options?: SuggestGetOptionalParams): Promise<SuggestDocumentsResult>;

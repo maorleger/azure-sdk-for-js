@@ -17,9 +17,9 @@ import {
   suggestPost,
   suggestGet,
   getDocument,
-  searchPost,
   searchGet,
   getDocumentCount,
+  searchPost,
 } from "./api/operations.js";
 import {
   AutocompletePostOptionalParams,
@@ -34,6 +34,10 @@ import {
 } from "./api/options.js";
 import { KeyCredential, TokenCredential } from "@azure/core-auth";
 import { Pipeline } from "@azure/core-rest-pipeline";
+import {
+  createSearchIterator,
+  SearchDocumentsResultWithIterator,
+} from "./searchClientPaginationHelpers.js";
 
 export { SearchClientOptionalParams } from "./api/searchContext.js";
 
@@ -116,6 +120,17 @@ export class SearchClient {
     options: SearchPostOptionalParams = { requestOptions: {} },
   ): Promise<SearchDocumentsResult> {
     return searchPost(this._client, options);
+  }
+
+  async search(
+    options: SearchPostOptionalParams = { requestOptions: {} },
+  ): Promise<SearchDocumentsResultWithIterator> {
+    const firstPageResult = await searchPost(this._client, options);
+
+    return {
+      ...firstPageResult,
+      results: createSearchIterator(this._client, options, firstPageResult),
+    };
   }
 
   /** Searches for documents in the index. */

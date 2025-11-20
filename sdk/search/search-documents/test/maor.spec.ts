@@ -165,14 +165,16 @@ describe("Search operations", async () => {
       "realestate-us-sample-index1",
     );
 
-    const results = await client.searchPost({
+    const response = await client.search({
       searchText: "ho",
       includeTotalCount: true,
     });
 
+    console.log(`Total count: ${response.count}`);
+    console.log(`Coverage: ${response.coverage}`);
+
     const count = new Set<string>();
-    console.log("Search results for 'ho':", results.count);
-    for await (const h of results.results) {
+    for await (const h of response.results) {
       console.log(`Found hotel with listingID ${h.additionalProperties?.listingId}`);
       count.add(h.additionalProperties?.listingId);
     }
