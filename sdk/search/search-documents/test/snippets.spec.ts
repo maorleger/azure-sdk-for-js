@@ -2,19 +2,13 @@
 // Licensed under the MIT License.
 
 import { KnowledgeBaseRetrievalClient } from "../src/index.js";
-import {
-  DefaultAzureCredential,
-  InteractiveBrowserCredential,
-} from "@azure/identity";
+import { DefaultAzureCredential, InteractiveBrowserCredential } from "@azure/identity";
 import { setLogLevel } from "@azure/logger";
 import { describe, it } from "vitest";
 
 describe("snippets", () => {
   it("ReadmeSampleCreateClient_Node", async () => {
-    const client = new KnowledgeBaseRetrievalClient(
-      "<endpoint>",
-      new DefaultAzureCredential(),
-    );
+    const client = new KnowledgeBaseRetrievalClient("<endpoint>", new DefaultAzureCredential());
   });
 
   it("ReadmeSampleCreateClient_Browser", async () => {

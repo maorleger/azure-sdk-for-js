@@ -45,7 +45,6 @@ export function nGramTokenFilterV2Serializer(item: NGramTokenFilterV2): any {
     name: item["name"],
     minGram: item["minGram"],
     maxGram: item["maxGram"],
-    "@odata.type": item["odataType"],
   };
 }
 
@@ -81,15 +80,11 @@ export interface SearchIndexFieldReference {
   name: string;
 }
 
-export function searchIndexFieldReferenceSerializer(
-  item: SearchIndexFieldReference,
-): any {
+export function searchIndexFieldReferenceSerializer(item: SearchIndexFieldReference): any {
   return { name: item["name"] };
 }
 
-export function searchIndexFieldReferenceDeserializer(
-  item: any,
-): SearchIndexFieldReference {
+export function searchIndexFieldReferenceDeserializer(item: any): SearchIndexFieldReference {
   return {
     name: item["name"],
   };
@@ -138,9 +133,7 @@ export function knowledgeSourceIngestionParametersSerializer(
           return p;
         }),
     contentExtractionMode: item["contentExtractionMode"],
-    aiServices: !item["aiServices"]
-      ? item["aiServices"]
-      : aiServicesSerializer(item["aiServices"]),
+    aiServices: !item["aiServices"] ? item["aiServices"] : aiServicesSerializer(item["aiServices"]),
   };
 }
 
@@ -180,15 +173,11 @@ export interface KnowledgeSourceVectorizer {
   kind: VectorSearchVectorizerKind;
 }
 
-export function knowledgeSourceVectorizerSerializer(
-  item: KnowledgeSourceVectorizer,
-): any {
+export function knowledgeSourceVectorizerSerializer(item: KnowledgeSourceVectorizer): any {
   return { kind: item["kind"] };
 }
 
-export function knowledgeSourceVectorizerDeserializer(
-  item: any,
-): KnowledgeSourceVectorizer {
+export function knowledgeSourceVectorizerDeserializer(item: any): KnowledgeSourceVectorizer {
   return {
     kind: item["kind"],
   };
@@ -228,8 +217,7 @@ export function knowledgeSourceVectorizerUnionDeserializer(
 }
 
 /** Specifies the Azure OpenAI resource used to vectorize a query string. */
-export interface KnowledgeSourceAzureOpenAIVectorizer
-  extends KnowledgeSourceVectorizer {
+export interface KnowledgeSourceAzureOpenAIVectorizer extends KnowledgeSourceVectorizer {
   /** The discriminator value. */
   kind: "azureOpenAI";
   /** Contains the parameters specific to Azure OpenAI embedding vectorization. */
@@ -334,10 +322,9 @@ export function indexedSharePointKnowledgeSourceSerializer(
     encryptionKey: !item["encryptionKey"]
       ? item["encryptionKey"]
       : searchResourceEncryptionKeySerializer(item["encryptionKey"]),
-    indexedSharePointParameters:
-      indexedSharePointKnowledgeSourceParametersSerializer(
-        item["indexedSharePointParameters"],
-      ),
+    indexedSharePointParameters: indexedSharePointKnowledgeSourceParametersSerializer(
+      item["indexedSharePointParameters"],
+    ),
   };
 }
 
@@ -352,10 +339,9 @@ export function indexedSharePointKnowledgeSourceDeserializer(
     encryptionKey: !item["encryptionKey"]
       ? item["encryptionKey"]
       : searchResourceEncryptionKeyDeserializer(item["encryptionKey"]),
-    indexedSharePointParameters:
-      indexedSharePointKnowledgeSourceParametersDeserializer(
-        item["indexedSharePointParameters"],
-      ),
+    indexedSharePointParameters: indexedSharePointKnowledgeSourceParametersDeserializer(
+      item["indexedSharePointParameters"],
+    ),
   };
 }
 
@@ -399,9 +385,7 @@ export function indexedSharePointKnowledgeSourceParametersSerializer(
       : knowledgeBaseModelUnionSerializer(item["chatCompletionModel"]),
     ingestionParameters: !item["ingestionParameters"]
       ? item["ingestionParameters"]
-      : knowledgeSourceIngestionParametersSerializer(
-          item["ingestionParameters"],
-        ),
+      : knowledgeSourceIngestionParametersSerializer(item["ingestionParameters"]),
     disableImageVerbalization: item["disableImageVerbalization"],
   };
 }
@@ -424,9 +408,7 @@ export function indexedSharePointKnowledgeSourceParametersDeserializer(
       : knowledgeBaseModelUnionDeserializer(item["chatCompletionModel"]),
     ingestionParameters: !item["ingestionParameters"]
       ? item["ingestionParameters"]
-      : knowledgeSourceIngestionParametersDeserializer(
-          item["ingestionParameters"],
-        ),
+      : knowledgeSourceIngestionParametersDeserializer(item["ingestionParameters"]),
     createdResources: !item["createdResources"]
       ? item["createdResources"]
       : createdResourcesDeserializer(item["createdResources"]),
@@ -441,9 +423,7 @@ export interface IndexedOneLakeKnowledgeSource extends KnowledgeSource {
   indexedOneLakeParameters: IndexedOneLakeKnowledgeSourceParameters;
 }
 
-export function indexedOneLakeKnowledgeSourceSerializer(
-  item: IndexedOneLakeKnowledgeSource,
-): any {
+export function indexedOneLakeKnowledgeSourceSerializer(item: IndexedOneLakeKnowledgeSource): any {
   return {
     name: item["name"],
     description: item["description"],
@@ -469,10 +449,9 @@ export function indexedOneLakeKnowledgeSourceDeserializer(
     encryptionKey: !item["encryptionKey"]
       ? item["encryptionKey"]
       : searchResourceEncryptionKeyDeserializer(item["encryptionKey"]),
-    indexedOneLakeParameters:
-      indexedOneLakeKnowledgeSourceParametersDeserializer(
-        item["indexedOneLakeParameters"],
-      ),
+    indexedOneLakeParameters: indexedOneLakeKnowledgeSourceParametersDeserializer(
+      item["indexedOneLakeParameters"],
+    ),
   };
 }
 
@@ -499,9 +478,7 @@ export function indexedOneLakeKnowledgeSourceParametersSerializer(
     targetPath: item["targetPath"],
     ingestionParameters: !item["ingestionParameters"]
       ? item["ingestionParameters"]
-      : knowledgeSourceIngestionParametersSerializer(
-          item["ingestionParameters"],
-        ),
+      : knowledgeSourceIngestionParametersSerializer(item["ingestionParameters"]),
   };
 }
 
@@ -514,9 +491,7 @@ export function indexedOneLakeKnowledgeSourceParametersDeserializer(
     targetPath: item["targetPath"],
     ingestionParameters: !item["ingestionParameters"]
       ? item["ingestionParameters"]
-      : knowledgeSourceIngestionParametersDeserializer(
-          item["ingestionParameters"],
-        ),
+      : knowledgeSourceIngestionParametersDeserializer(item["ingestionParameters"]),
     createdResources: !item["createdResources"]
       ? item["createdResources"]
       : createdResourcesDeserializer(item["createdResources"]),
@@ -566,9 +541,7 @@ export interface WebKnowledgeSourceParameters {
   domains?: WebKnowledgeSourceDomains;
 }
 
-export function webKnowledgeSourceParametersSerializer(
-  item: WebKnowledgeSourceParameters,
-): any {
+export function webKnowledgeSourceParametersSerializer(item: WebKnowledgeSourceParameters): any {
   return {
     domains: !item["domains"]
       ? item["domains"]
@@ -576,9 +549,7 @@ export function webKnowledgeSourceParametersSerializer(
   };
 }
 
-export function webKnowledgeSourceParametersDeserializer(
-  item: any,
-): WebKnowledgeSourceParameters {
+export function webKnowledgeSourceParametersDeserializer(item: any): WebKnowledgeSourceParameters {
   return {
     domains: !item["domains"]
       ? item["domains"]
@@ -594,9 +565,7 @@ export interface WebKnowledgeSourceDomains {
   blockedDomains?: WebKnowledgeSourceDomain[];
 }
 
-export function webKnowledgeSourceDomainsSerializer(
-  item: WebKnowledgeSourceDomains,
-): any {
+export function webKnowledgeSourceDomainsSerializer(item: WebKnowledgeSourceDomains): any {
   return {
     allowedDomains: !item["allowedDomains"]
       ? item["allowedDomains"]
@@ -607,9 +576,7 @@ export function webKnowledgeSourceDomainsSerializer(
   };
 }
 
-export function webKnowledgeSourceDomainsDeserializer(
-  item: any,
-): WebKnowledgeSourceDomains {
+export function webKnowledgeSourceDomainsDeserializer(item: any): WebKnowledgeSourceDomains {
   return {
     allowedDomains: !item["allowedDomains"]
       ? item["allowedDomains"]
@@ -644,15 +611,11 @@ export interface WebKnowledgeSourceDomain {
   includeSubpages?: boolean;
 }
 
-export function webKnowledgeSourceDomainSerializer(
-  item: WebKnowledgeSourceDomain,
-): any {
+export function webKnowledgeSourceDomainSerializer(item: WebKnowledgeSourceDomain): any {
   return { address: item["address"], includeSubpages: item["includeSubpages"] };
 }
 
-export function webKnowledgeSourceDomainDeserializer(
-  item: any,
-): WebKnowledgeSourceDomain {
+export function webKnowledgeSourceDomainDeserializer(item: any): WebKnowledgeSourceDomain {
   return {
     address: item["address"],
     includeSubpages: item["includeSubpages"],
@@ -677,10 +640,9 @@ export function remoteSharePointKnowledgeSourceSerializer(
     encryptionKey: !item["encryptionKey"]
       ? item["encryptionKey"]
       : searchResourceEncryptionKeySerializer(item["encryptionKey"]),
-    remoteSharePointParameters:
-      remoteSharePointKnowledgeSourceParametersSerializer(
-        item["remoteSharePointParameters"],
-      ),
+    remoteSharePointParameters: remoteSharePointKnowledgeSourceParametersSerializer(
+      item["remoteSharePointParameters"],
+    ),
   };
 }
 
@@ -695,10 +657,9 @@ export function remoteSharePointKnowledgeSourceDeserializer(
     encryptionKey: !item["encryptionKey"]
       ? item["encryptionKey"]
       : searchResourceEncryptionKeyDeserializer(item["encryptionKey"]),
-    remoteSharePointParameters:
-      remoteSharePointKnowledgeSourceParametersDeserializer(
-        item["remoteSharePointParameters"],
-      ),
+    remoteSharePointParameters: remoteSharePointKnowledgeSourceParametersDeserializer(
+      item["remoteSharePointParameters"],
+    ),
   };
 }
 
@@ -752,9 +713,7 @@ export interface ServiceIndexersRuntime {
   endingTime: Date;
 }
 
-export function serviceIndexersRuntimeDeserializer(
-  item: any,
-): ServiceIndexersRuntime {
+export function serviceIndexersRuntimeDeserializer(item: any): ServiceIndexersRuntime {
   return {
     usedSeconds: item["usedSeconds"],
     remainingSeconds: item["remainingSeconds"],
@@ -867,9 +826,7 @@ export interface KnowledgeSourceStatus {
   statistics?: KnowledgeSourceStatistics;
 }
 
-export function knowledgeSourceStatusSerializer(
-  item: KnowledgeSourceStatus,
-): any {
+export function knowledgeSourceStatusSerializer(item: KnowledgeSourceStatus): any {
   return {
     synchronizationStatus: item["synchronizationStatus"],
     synchronizationInterval: item["synchronizationInterval"],
@@ -878,9 +835,7 @@ export function knowledgeSourceStatusSerializer(
       : synchronizationStateSerializer(item["currentSynchronizationState"]),
     lastSynchronizationState: !item["lastSynchronizationState"]
       ? item["lastSynchronizationState"]
-      : completedSynchronizationStateSerializer(
-          item["lastSynchronizationState"],
-        ),
+      : completedSynchronizationStateSerializer(item["lastSynchronizationState"]),
     statistics: !item["statistics"]
       ? item["statistics"]
       : knowledgeSourceStatisticsSerializer(item["statistics"]),
@@ -920,9 +875,7 @@ export interface SynchronizationState {
   itemsSkipped: number;
 }
 
-export function synchronizationStateSerializer(
-  item: SynchronizationState,
-): any {
+export function synchronizationStateSerializer(item: SynchronizationState): any {
   return {
     startTime: item["startTime"].toISOString(),
     itemsUpdatesProcessed: item["itemsUpdatesProcessed"],
@@ -945,9 +898,7 @@ export interface CompletedSynchronizationState {
   itemsSkipped: number;
 }
 
-export function completedSynchronizationStateSerializer(
-  item: CompletedSynchronizationState,
-): any {
+export function completedSynchronizationStateSerializer(item: CompletedSynchronizationState): any {
   return {
     startTime: item["startTime"].toISOString(),
     endTime: item["endTime"].toISOString(),
@@ -967,14 +918,11 @@ export interface KnowledgeSourceStatistics {
   averageItemsProcessedPerSynchronization: number;
 }
 
-export function knowledgeSourceStatisticsSerializer(
-  item: KnowledgeSourceStatistics,
-): any {
+export function knowledgeSourceStatisticsSerializer(item: KnowledgeSourceStatistics): any {
   return {
     totalSynchronization: item["totalSynchronization"],
     averageSynchronizationDuration: item["averageSynchronizationDuration"],
-    averageItemsProcessedPerSynchronization:
-      item["averageItemsProcessedPerSynchronization"],
+    averageItemsProcessedPerSynchronization: item["averageItemsProcessedPerSynchronization"],
   };
 }
 
