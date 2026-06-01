@@ -1,0 +1,91 @@
+name: template-add-feature
+description: |
+  Most-ambitious eval in the POC: actually add a public method to an Azure SDK
+  client library (`@azure/template` at sdk/template/template), with TSDoc, a
+  test, and a changelog entry. This is the end-state we're building toward.
+
+  Stubbed (`config.runs: 0`) for now — full grader set is sketched so the team
+  can see what "real" looks like.
+type: capability
+
+config:
+  runs: 1          # lint-only by default — see README.md
+  timeout: 15m
+  model: gpt-4o
+  judge_model: gpt-4o
+
+environment:
+  git:
+    type: worktree
+    ref: HEAD
+    source: ../..
+  skills:
+    - ../../.github/skills/sdk-workflow
+    - ../../.github/skills/find-package-skill
+  commands:
+    - pnpm install
+
+stimuli:
+  - name: add-get-widget-count
+    prompt: |
+      In the `@azure/template` package (located at `sdk/template/template`),
+      add a new public method `getWidgetCount(): Promise<number>` to the
+      `WidgetAnalyticsClient` class. The method should return a fixed value
+      of 0 for this exercise (no network call). Requirements:
+
+      - Add the method to the appropriate source file under `src/`.
+      - Include a TSDoc comment describing the method, its return value, and
+        an `@example` block.
+      - Add a unit test under `test/` that asserts the method returns 0.
+      - Update `CHANGELOG.md` with an entry under an "Unreleased" section
+        describing the new method.
+      - Build the package and run its tests; report whether they passed.
+
+    graders:
+      # Did the test file we expect get created?
+      - type: file-exists
+        config:
+          path: "sdk/template/template/test/widgetCount.spec.ts"
+
+      # Did the method get added to the client class?
+      - type: file-matches
+        config:
+          path: "sdk/template/template/src/**/*.ts"
+          pattern: "getWidgetCount\\s*\\("
+
+      # Did the changelog get updated?
+      - type: file-contains
+        config:
+          path: "sdk/template/template/CHANGELOG.md"
+          value: "getWidgetCount"
+
+      # Did the package actually build?
+      - type: run-command
+        config:
+          command: "pnpm turbo build --filter=@azure/template... --token 1"
+          expected_exit_code: 0
+
+      # Did the tests pass?
+      - type: run-command
+        config:
+          command: "pnpm --filter @azure/template test:node"
+          expected_exit_code: 0
+
+      # Subjective: does the change look like idiomatic Azure SDK for JS code?
+      - type: prompt
+        config:
+          prompt: |
+            The new method follows the Azure SDK for JS design guidelines:
+            it returns a Promise, has accurate TSDoc with an @example, is
+            exported through the appropriate public surface, and is matched
+            by a test that exercises it. The changelog entry is concise and
+            grammatically correct. The agent did not modify unrelated code.
+
+scoring:
+  weights:
+    file-exists: 1.0
+    file-matches: 1.0
+    file-contains: 0.5
+    run-command: 2.0       # build + test failures should dominate the score
+    prompt: 1.0
+  threshold: 0.8

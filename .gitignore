@@ -201,3 +201,8 @@ sdk/**/sshKey.pub
 # vitest browser test artifacts
 .vitest-attachments/
 **/__screenshots__/
+
+# vally POC (branch-only) — trajectory output from local eval runs
+/results/
+/vally-results/
+/.vally-results/

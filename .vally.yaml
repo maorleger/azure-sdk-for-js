@@ -1,0 +1,35 @@
+# Vally project configuration.
+#
+# This file declares where to discover skills and eval specs, and groups evals
+# into named suites that the CLI can run with `--suite <name>`.
+#
+# Project layout (all paths are relative to this file):
+#   skills/            -- demo skill(s) authored just for this POC
+#   .github/skills/    -- existing repo skills (e.g. sdk-workflow, find-package-skill)
+#   evals/             -- eval specs, one folder per eval
+#   results/           -- where trajectory JSON lands (gitignored)
+
+paths:
+  skills:
+    - skills/
+    - .github/skills/
+  evals:
+    - evals/
+  results: vally-results/
+
+suites:
+  smoke:
+    description: |
+      Inner-loop smoke eval. Runs end-to-end and exercises every grader style we
+      use in this POC. This is what you run during the demo.
+    evals:
+      - evals/hello-world/eval.yaml
+
+  future:
+    description: |
+      Illustrative stubs that show where this POC is heading. Both use
+      `config.runs: 0` so `vally lint` validates them but the agent is not
+      invoked (and no LLM credit is spent). Flip `runs` to 1 to actually run.
+    evals:
+      - evals/agents-md-build/eval.yaml
+      - evals/template-add-feature/eval.yaml

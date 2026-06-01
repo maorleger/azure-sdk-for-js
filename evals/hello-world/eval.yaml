@@ -1,0 +1,68 @@
+name: hello-world
+description: |
+  Smoke eval for the vally POC. Proves the full pipeline is wired up by asking
+  the agent to create a single tiny TypeScript file, then grading the result
+  with every category of grader we plan to use:
+    - file-exists      : did the agent create the file?
+    - file-contains    : does the file contain the expected export?
+    - output-contains  : did the agent mention what it did?
+    - prompt           : LLM judge for code quality (subjective check)
+type: capability
+
+config:
+  runs: 1
+  timeout: 90s
+  # Models are resolved through the Copilot CLI executor. Defaults to whatever
+  # Copilot CLI uses (currently `gpt-5.2`). Override here, or pass
+  # `--model <name>` / `--judge-model <name>` on the CLI to A/B compare.
+  model: claude-sonnet-4.5
+  judge_model: claude-sonnet-4.5
+
+stimuli:
+  - name: greet-function
+    prompt: |
+      Create a file named `hello.ts` in the current working directory that
+      exports a function `greet(name: string): string` returning the string
+      "Hello, <name>!" (where <name> is the argument).
+
+      Do not create any other files. Do not add tests or comments.
+
+    environment:
+      skills:
+        - ../../skills/hello-writer
+
+    graders:
+      # Tier 1: did the agent actually produce the file?
+      - type: file-exists
+        config:
+          path: hello.ts
+
+      # Tier 2: does the file contain the expected export signature?
+      - type: file-contains
+        config:
+          path: hello.ts
+          value: "export function greet"
+
+      # Tier 3: did the agent narrate what it did in its final output?
+      - type: output-contains
+        config:
+          substring: "greet"
+          case_sensitive: false
+
+      # Tier 4: subjective code-quality check via LLM judge.
+      - type: prompt
+        config:
+          prompt: |
+            The agent produced a single TypeScript file named hello.ts that
+            exports exactly one named function `greet` taking a string and
+            returning a string containing "Hello, <name>!". The code is
+            idiomatic TypeScript with no unused imports, no tests, and no
+            stray files.
+
+scoring:
+  weights:
+    file-exists: 1.0
+    file-contains: 1.0
+    output-contains: 0.5
+    prompt: 1.0
+  threshold: 0.7

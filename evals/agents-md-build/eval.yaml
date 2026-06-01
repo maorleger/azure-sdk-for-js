@@ -1,0 +1,71 @@
+name: agents-md-build
+description: |
+  Regression eval for agent-facing documentation. AGENTS.md and the skills in
+  .github/skills/ teach agents how to build packages in this repo (the
+  documented command is `pnpm turbo build --filter=<package>... --token 1`).
+  If we edit that guidance, we want to know whether agents still do the
+  right thing.
+
+  This eval is stubbed (`config.runs: 0`) so `vally lint` validates it but the
+  agent is not invoked. Flip `runs` to 1 to actually run.
+type: regression
+
+config:
+  runs: 0          # lint-only by default — see README.md
+  timeout: 5m
+  model: gpt-4o
+  judge_model: gpt-4o
+
+environment:
+  # Spin up an isolated git worktree from HEAD of this repo so AGENTS.md and
+  # .github/skills/*/SKILL.md are visible to the agent without us copying
+  # them around. `source` is relative to this eval.yaml file.
+  git:
+    type: worktree
+    ref: HEAD
+    source: ../..
+  skills:
+    - ../../.github/skills/sdk-workflow
+  commands:
+    - pnpm install
+
+stimuli:
+  - name: build-template-package
+    prompt: |
+      Build the `@azure/template` package (located at
+      `sdk/template/template`). Report back whether the build succeeded.
+      Do not run tests, do not run lint — just build.
+
+    graders:
+      # Required: the agent invoked the documented build command.
+      # AGENTS.md / sdk-workflow skill says to use `pnpm turbo build
+      # --filter=<package>... --token 1`.
+      - type: tool-calls
+        config:
+          required:
+            - name: "^(bash|shell|run_command|terminal)$"
+              command: "pnpm turbo build --filter=@azure/template"
+
+      # Anti-pattern guard: AGENTS.md explicitly warns that
+      # `npm run build` does not work in a turborepo with workspace linking.
+      # If the agent fell back to it and reported success, that's a regression.
+      - type: output-not-contains
+        config:
+          substring: "npm run build"
+
+      # Subjective: did the agent follow what the docs said?
+      - type: prompt
+        config:
+          prompt: |
+            The agent followed the build command documented in AGENTS.md and
+            the sdk-workflow skill (i.e. `pnpm turbo build --filter=...`).
+            The agent did not invent its own command or fall back to
+            `npm run build` / `npm install && tsc`. The final report is
+            accurate about whether the build succeeded.
+
+scoring:
+  weights:
+    tool-calls: 1.0
+    output-not-contains: 1.0
+    prompt: 1.0
+  threshold: 0.7
