@@ -98,9 +98,11 @@ A successful run looks like:
   the demo skill is at `../../skills/hello-writer`.
 - `environment.git.source` is also resolved relative to `eval.yaml`. From the
   stub evals it points at `../..` (the repo root).
-- Models flow through Copilot CLI. Default is `gpt-5.2`. The smoke eval pins
-  `claude-sonnet-4.5` because it's reliably available; override with
-  `pnpm exec ... eval --model <name>` to A/B compare.
+- Models flow through Copilot CLI's model registry. Copilot CLI's own default
+  is `gpt-5.2`. **Names are case-sensitive** — use `gpt-5.5`, not `GPT-5.5`
+  (the latter errors with "Model not available"). All three evals currently
+  pin `claude-sonnet-4.5` (verified working). Override per-run with
+  `pnpm exec ... eval --model <name>` to A/B compare models.
 
 > **Why `npx` instead of a `devDependency`?** `@microsoft/vally-cli` is not
 > yet cached in the repo's Azure DevOps npm feed (anonymous access only

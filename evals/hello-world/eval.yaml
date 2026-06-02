@@ -15,8 +15,8 @@ config:
   # Models are resolved through the Copilot CLI executor. Defaults to whatever
   # Copilot CLI uses (currently `gpt-5.2`). Override here, or pass
   # `--model <name>` / `--judge-model <name>` on the CLI to A/B compare.
-  model: claude-sonnet-4.5
-  judge_model: claude-sonnet-4.5
+  # model: claude-sonnet-4.5
+  # judge_model: claude-sonnet-4.5
 
 stimuli:
   - name: greet-function

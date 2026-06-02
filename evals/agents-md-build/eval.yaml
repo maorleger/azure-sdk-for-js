@@ -13,8 +13,12 @@ type: regression
 config:
   runs: 0          # lint-only by default — see README.md
   timeout: 5m
-  model: gpt-4o
-  judge_model: gpt-4o
+  # Both `model` and `judge_model` must be names the Copilot SDK executor's
+  # model registry knows. `claude-sonnet-4.5` is verified working; override
+  # with `--model <name>` to compare. Names are case-sensitive (use
+  # `gpt-5.2`, not `GPT-5.2`).
+  # model: claude-sonnet-4.5
+  # judge_model: claude-sonnet-4.5
 
 environment:
   # Spin up an isolated git worktree from HEAD of this repo so AGENTS.md and
