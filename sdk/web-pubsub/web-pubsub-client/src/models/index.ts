@@ -9,7 +9,6 @@ import type {
   JSONTypes,
   ServerDataMessage,
   StreamDataError,
-  StreamInfo,
   StreamEndError,
   WebPubSubDataType,
 } from "./messages.js";
@@ -196,6 +195,10 @@ export interface OpenGroupStreamOptions {
    * Optional stream idle timeout in milliseconds.
    */
   idleTimeoutInMs?: number;
+  /**
+   * The abort signal used to cancel opening the stream.
+   */
+  abortSignal?: AbortSignalLike;
 }
 
 /**
@@ -229,9 +232,13 @@ export interface AbortGroupStreamOptions {
 }
 
 /**
- * Group stream abstraction for sending one logical stream to a group.
+ * Outbound group stream: a handle for writing one logical stream to a group.
+ *
+ * Returned by {@link WebPubSubClient.openGroupStream}. This is the *sending*
+ * side of streaming. The *receiving* side is the async-iterable
+ * {@link GroupStream} surfaced by {@link WebPubSubClient.onGroupStream}.
  */
-export interface GroupStream {
+export interface GroupStreamWriter {
   /**
    * Stream identifier.
    */
@@ -327,121 +334,155 @@ export interface OnRejoinGroupFailedArgs {
 }
 
 /**
- * Stream message delivered to a stream handler.
+ * A single inbound fragment of a group stream, yielded while iterating a
+ * {@link GroupStream}. Each message corresponds to one data frame of the
+ * stream. Iteration completes normally when the sender ends the stream, so a
+ * terminal frame is never surfaced as a message.
  */
-export interface OnGroupStreamDataArgs {
-  /**
-   * Group name.
-   */
-  group: string;
-  /**
-   * Sender user id.
-   */
-  fromUserId: string;
-  /**
-   * Connection-scoped reliable sequence id.
-   */
-  sequenceId?: number;
-  /**
-   * Message data type.
-   */
-  dataType: WebPubSubDataType;
-  /**
-   * Message payload.
-   */
-  data: JSONTypes | ArrayBuffer;
-  /**
-   * Stream metadata.
-   */
-  stream: StreamInfo;
-}
-
-/**
- * Stream terminal event.
- */
-export interface OnGroupStreamEndArgs {
-  /**
-   * Stream identifier.
-   */
-  streamId: string;
-  /**
-   * Group name.
-   */
-  group: string;
-  /**
-   * Optional terminal error.
-   */
-  error?: StreamDataError;
-}
-
-/**
- * Per-stream value object passed to a factory registered via
- * `client.onGroupStream(...)`. A fresh `GroupStreamHandler` is created per
- * observed stream lifecycle, and its callbacks consume only that single stream.
- */
-export interface OnGroupStreamArgs {
+export interface GroupStreamMessage {
   /**
    * The group this stream belongs to.
    */
-  readonly group: string;
+  readonly groupName: string;
   /**
-   * The stream identifier assigned when the outbound stream is opened.
+   * The user id of the sender.
+   */
+  readonly fromUserId: string;
+  /**
+   * Connection-scoped reliable sequence id. Only present on reliable protocols.
+   */
+  readonly sequenceId?: number;
+  /**
+   * The payload data type.
+   */
+  readonly dataType: WebPubSubDataType;
+  /**
+   * The payload.
+   */
+  readonly data: JSONTypes | ArrayBuffer;
+}
+
+/**
+ * Inbound group stream: the *receiving* side of streaming. A `GroupStream` is
+ * surfaced once per newly observed inbound stream, either to the callback
+ * registered with {@link WebPubSubClient.onGroupStream} or, one specific group
+ * at a time, from {@link WebPubSubClient.openGroupStream}.
+ *
+ * The object is itself async-iterable, so the entire lifecycle of a stream maps
+ * onto a single `for await` loop:
+ *
+ * - each iteration yields the next {@link GroupStreamMessage} fragment in order;
+ * - the loop ends normally when the sender ends the stream;
+ * - the loop throws if the stream terminates with an error or its idle timeout
+ *   elapses.
+ *
+ * Per-stream state is just the closure scope around the loop — there is no
+ * separate handler object to register or retain.
+ *
+ * @example
+ * ```ts
+ * using subscription = client.onGroupStream(async (stream) => {
+ *   const parts: string[] = [];
+ *   try {
+ *     for await (const message of stream) {
+ *       parts.push(message.data as string); // onData
+ *     }
+ *     console.log(`stream ${stream.streamId} completed: ${parts.join("")}`); // onEnd
+ *   } catch (err) {
+ *     console.error(`stream ${stream.streamId} failed`, err); // onError
+ *   }
+ * });
+ * ```
+ */
+export interface GroupStream extends AsyncIterable<GroupStreamMessage> {
+  /**
+   * The group this stream belongs to.
+   */
+  readonly groupName: string;
+  /**
+   * The stream identifier assigned when the outbound stream was opened.
    */
   readonly streamId: string;
+  /**
+   * Signals that the stream is no longer active. It aborts when the sender ends
+   * the stream, when the stream's idle timeout elapses, or when the owning
+   * {@link GroupStreamSubscription} is disposed. Use it to cancel any work tied
+   * to the stream's lifetime.
+   */
+  readonly abortSignal: AbortSignal;
 }
 
 /**
- * Callbacks attached to a single inbound group stream. Returned by the factory
- * registered via `client.onGroupStream(factory)`. All callbacks are optional.
- */
-export interface GroupStreamHandler {
-  /**
-   * Called for each non-terminal data fragment.
-   */
-  onMessage?: (args: OnGroupStreamDataArgs) => void;
-  /**
-   * Called once when the stream completes successfully.
-   */
-  onComplete?: (args: OnGroupStreamEndArgs) => void;
-  /**
-   * Called once when the stream terminates with an error (including `IdleTimeout`).
-   */
-  onError?: (args: OnGroupStreamEndArgs) => void;
-}
-
-/**
- * Options controlling how inbound group streams are tracked and dispatched for a
- * single factory registered via `client.onGroupStream(factory, options)`.
+ * Options controlling a single {@link WebPubSubClient.onGroupStream}
+ * subscription.
  *
  * Granularity is two-level:
- * - The option *values* are scoped to the registration (i.e. per handler): each
- *   `onGroupStream` call carries its own values, and different handlers may use
- *   different values.
- * - The option *effects* are applied independently to each stream, identified by
- *   its `(group, streamId)` pair. Concurrent streams — even two streams in the
- *   same group observed by the same handler — each get their own idle timer and
- *   their own `handleFromStart` gate. Nothing is shared or aggregated across
- *   streams or across groups.
+ * - The option *values* are scoped to the subscription: each `onGroupStream`
+ *   call carries its own values, and different subscriptions may use different
+ *   values.
+ * - The option *effects* are applied independently to each stream, identified
+ *   by its `(groupName, streamId)` pair. Concurrent streams — even two streams
+ *   in the same group observed by the same subscription — each get their own
+ *   idle timer and their own `handleFromStart` gate.
  */
-export interface OnGroupStreamOptions {
+export interface GroupStreamSubscribeOptions {
   /**
    * Inactivity timeout in milliseconds, applied independently to each stream
-   * (identified by its `(group, streamId)` pair). Every stream has its own timer
-   * that is reset whenever a fragment for that stream arrives. If no fragment
-   * arrives within this duration, only that stream is terminated with an
-   * `IdleTimeout` error; sibling streams of the same handler are unaffected.
+   * (identified by its `(groupName, streamId)` pair). Every stream has its own
+   * timer that is reset whenever a fragment for that stream arrives. If no
+   * fragment arrives within this window, that stream's
+   * {@link GroupStream.abortSignal} is aborted and its async iteration throws an
+   * `IdleTimeout` error; sibling streams are unaffected.
    * Default: 300000 (5 minutes).
    */
   idleTimeoutInMs?: number;
   /**
-   * Whether to require the first observed fragment of a stream to start at
-   * `streamSequenceId === 1`, evaluated independently per stream (identified by
-   * its `(group, streamId)` pair). If true and the first observed fragment for a
-   * stream is mid-stream, that stream is ignored until its terminal frame
-   * arrives, without affecting any other concurrent stream.
+   * When true, only streams whose first observed fragment starts the stream
+   * (`streamSequenceId === 1`) are surfaced; a stream first observed mid-flight
+   * is ignored until its terminal frame arrives. Evaluated independently per
+   * stream.
    * Default: false.
    */
   handleFromStart?: boolean;
+  /**
+   * Restricts the subscription to streams in the given groups. When omitted,
+   * streams from every joined group are surfaced.
+   */
+  groupNames?: string[];
+  /**
+   * Signal used to tear down the entire subscription. Aborting it is equivalent
+   * to calling {@link GroupStreamSubscription.dispose}.
+   */
+  abortSignal?: AbortSignalLike;
+}
+
+/**
+ * Handle returned by {@link WebPubSubClient.onGroupStream}. Disposing it stops
+ * the callback from receiving new streams and aborts the
+ * {@link GroupStream.abortSignal} of every stream the subscription is still
+ * tracking, which in turn ends any in-flight `for await` loops.
+ *
+ * Callers do not need to retain the original callback reference to unsubscribe —
+ * they hold this handle instead. It implements {@link Disposable}, so it can be
+ * scoped with `using`:
+ *
+ * @example
+ * ```ts
+ * using subscription = client.onGroupStream((stream) => {
+ *   // ...
+ * });
+ * // subscription.dispose() is called automatically at end of scope
+ * ```
+ */
+export interface GroupStreamSubscription extends Disposable {
+  /**
+   * Stop receiving new streams and tear down any in-flight ones.
+   */
+  dispose(): void;
+  /**
+   * Same as {@link GroupStreamSubscription.dispose}. Enables `using` scoping.
+   */
+  [Symbol.dispose](): void;
 }
 
 /**

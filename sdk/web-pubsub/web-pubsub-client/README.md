@@ -115,16 +115,21 @@ import { WebPubSubClient } from "@azure/web-pubsub-client";
 
 const client = new WebPubSubClient("<client-access-url>");
 
-// Receiving side: register a factory invoked once per inbound stream. The returned
-// handler consumes that single stream. Option effects apply independently per stream.
-client.onGroupStream(
-  (stream) => {
+// Receiving side: subscribe once; the callback runs per inbound stream. The
+// GroupStream is async-iterable, so onData/onEnd/onError become the body,
+// normal completion, and catch of a single `for await` loop. `using` ties
+// the subscription's lifetime to this scope.
+using subscription = client.onGroupStream(
+  async (stream) => {
     const parts: string[] = [];
-    return {
-      onMessage: (e) => parts.push(e.data as string),
-      onComplete: () => console.log(`Stream ${stream.streamId} completed: ${parts.join("")}`),
-      onError: (e) => console.log(`Stream ${stream.streamId} failed: ${e.error?.name}`),
-    };
+    try {
+      for await (const message of stream) {
+        parts.push(message.data as string);
+      }
+      console.log(`Stream ${stream.streamId} completed: ${parts.join("")}`);
+    } catch (err) {
+      console.log(`Stream ${stream.streamId} failed:`, err);
+    }
   },
   { handleFromStart: true },
 );
@@ -140,7 +145,7 @@ await stream.write("world", "text");
 await stream.end();
 ```
 
-`onGroupStream` registers a factory that returns a `GroupStreamHandler` for every observed stream; pass the same factory reference to `offGroupStream` to unregister it. `openGroupStream` returns a `GroupStream` you use to `write` fragments, `end` the stream successfully, or `abort` it with an error.
+`onGroupStream` invokes your callback once per inbound stream with a `GroupStream` that is itself async-iterable: iterate it with `for await` to receive fragments, let the loop end on completion, and `catch` to handle errors or idle timeout. It returns a `GroupStreamSubscription` (a `Disposable`) — `dispose()` it (or scope it with `using`) to unsubscribe; you never need to retain the callback reference. `openGroupStream` returns a `GroupStreamWriter` you use to `write` fragments, `end` the stream successfully, or `abort` it with an error.
 
 ---
 

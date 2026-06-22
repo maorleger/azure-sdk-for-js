@@ -29,10 +29,10 @@ import type {
   GroupStreamWriteOptions,
   EndGroupStreamOptions,
   AbortGroupStreamOptions,
-  OnGroupStreamArgs,
-  GroupStreamHandler,
-  OnGroupStreamOptions,
   GroupStream,
+  GroupStreamSubscribeOptions,
+  GroupStreamSubscription,
+  GroupStreamWriter,
 } from "./models/index.js";
 import type {
   ConnectedMessage,
@@ -321,22 +321,46 @@ export class WebPubSubClient {
   }
 
   /**
-   * Register a factory invoked once for each newly observed inbound group stream
-   * (across all groups). The factory receives a per-stream `OnGroupStreamArgs`
-   * value (`{ group, streamId }`) and must return a `GroupStreamHandler` whose
-   * callbacks consume that single stream. Returning a fresh closure per call
-   * gives every stream its own independent state.
+   * Subscribe to inbound group streams. The `callback` is invoked once for each
+   * newly observed inbound stream (across all joined groups, or the subset named
+   * in {@link GroupStreamSubscribeOptions.groupNames}). It receives a
+   * {@link GroupStream} that is itself async-iterable, so the whole lifecycle of
+   * a stream maps onto a single `for await` loop: each iteration yields the next
+   * fragment, the loop ends when the sender ends the stream, and it throws if
+   * the stream errors or times out. Per-stream state is just the callback's
+   * closure — there is no handler object to register.
    *
-   * The optional `options` apply only to this registration, so different
-   * handlers may use different `idleTimeoutInMs` / `handleFromStart` values.
-   * @param factory - Per-stream factory returning a `GroupStreamHandler`.
-   * @param options - Per-handler options controlling how this handler's streams are tracked.
+   * The optional `options` apply only to this subscription, so different
+   * subscriptions may use different `idleTimeoutInMs` / `handleFromStart`
+   * values.
+   *
+   * Unlike an event handler, you do not unsubscribe by passing the same callback
+   * back in. Instead, dispose the returned {@link GroupStreamSubscription} (it
+   * implements {@link Disposable}, so it also works with `using`).
+   *
+   * @param callback - Invoked once per newly observed inbound stream.
+   * @param options - Per-subscription options controlling how its streams are tracked.
+   * @returns A disposable handle that stops the subscription when disposed.
+   *
+   * @example
+   * ```ts
+   * using subscription = client.onGroupStream(async (stream) => {
+   *   try {
+   *     for await (const message of stream) {
+   *       console.log(`[${stream.groupName}] ${message.data}`);
+   *     }
+   *     console.log(`stream ${stream.streamId} completed`);
+   *   } catch (err) {
+   *     console.error(`stream ${stream.streamId} failed`, err);
+   *   }
+   * });
+   * ```
    */
   public onGroupStream(
-    factory: (args: OnGroupStreamArgs) => GroupStreamHandler,
-    options?: OnGroupStreamOptions,
-  ): void {
-    this._inboundStreams.register(factory, options);
+    callback: (stream: GroupStream) => void,
+    options?: GroupStreamSubscribeOptions,
+  ): GroupStreamSubscription {
+    return this._inboundStreams.subscribe(callback, options);
   }
 
   /**
@@ -386,15 +410,6 @@ export class WebPubSubClient {
     listener: (e: any) => void,
   ): void {
     this._emitter.removeListener(event, listener);
-  }
-
-  /**
-   * Remove a previously registered group stream factory. Pass the same factory
-   * reference that was supplied to {@link onGroupStream}.
-   * @param factory - The factory reference originally registered via {@link onGroupStream}.
-   */
-  public offGroupStream(factory: (args: OnGroupStreamArgs) => GroupStreamHandler): void {
-    this._inboundStreams.unregister(factory);
   }
 
   private _emitEvent(event: "connected", args: OnConnectedArgs): void;
@@ -692,7 +707,7 @@ export class WebPubSubClient {
   public async openGroupStream(
     groupName: string,
     options?: OpenGroupStreamOptions,
-  ): Promise<GroupStream> {
+  ): Promise<GroupStreamWriter> {
     const streamId = options?.streamId ?? this._generateOutboundStreamId();
     if (this._outboundStreams.has(streamId)) {
       throw new Error(`Stream '${streamId}' already exists.`);

@@ -140,24 +140,47 @@ export interface GroupStateUpdateMessage extends WebPubSubMessageBase {
 }
 
 // @public
-export interface GroupStream {
-    abort(error: StreamEndError, options?: AbortGroupStreamOptions): Promise<void>;
-    end(options?: EndGroupStreamOptions): Promise<void>;
-    onError(listener: (error: StreamDataError) => void): () => void;
+export interface GroupStream extends AsyncIterable<GroupStreamMessage> {
+    readonly abortSignal: AbortSignal;
+    readonly groupName: string;
     readonly streamId: string;
-    write(content: JSONTypes | ArrayBuffer, dataType: WebPubSubDataType, options?: GroupStreamWriteOptions): Promise<void>;
 }
 
 // @public
-export interface GroupStreamHandler {
-    onComplete?: (args: OnGroupStreamEndArgs) => void;
-    onError?: (args: OnGroupStreamEndArgs) => void;
-    onMessage?: (args: OnGroupStreamDataArgs) => void;
+export interface GroupStreamMessage {
+    readonly data: JSONTypes | ArrayBuffer;
+    readonly dataType: WebPubSubDataType;
+    readonly fromUserId: string;
+    readonly groupName: string;
+    readonly sequenceId?: number;
+}
+
+// @public
+export interface GroupStreamSubscribeOptions {
+    abortSignal?: AbortSignalLike;
+    groupNames?: string[];
+    handleFromStart?: boolean;
+    idleTimeoutInMs?: number;
+}
+
+// @public
+export interface GroupStreamSubscription extends Disposable {
+    [Symbol.dispose](): void;
+    dispose(): void;
 }
 
 // @public
 export interface GroupStreamWriteOptions {
     abortSignal?: AbortSignalLike;
+}
+
+// @public
+export interface GroupStreamWriter {
+    abort(error: StreamEndError, options?: AbortGroupStreamOptions): Promise<void>;
+    end(options?: EndGroupStreamOptions): Promise<void>;
+    onError(listener: (error: StreamDataError) => void): () => void;
+    readonly streamId: string;
+    write(content: JSONTypes | ArrayBuffer, dataType: WebPubSubDataType, options?: GroupStreamWriteOptions): Promise<void>;
 }
 
 // @public
@@ -259,35 +282,6 @@ export interface OnGroupDataMessageArgs {
 }
 
 // @public
-export interface OnGroupStreamArgs {
-    readonly group: string;
-    readonly streamId: string;
-}
-
-// @public
-export interface OnGroupStreamDataArgs {
-    data: JSONTypes | ArrayBuffer;
-    dataType: WebPubSubDataType;
-    fromUserId: string;
-    group: string;
-    sequenceId?: number;
-    stream: StreamInfo;
-}
-
-// @public
-export interface OnGroupStreamEndArgs {
-    error?: StreamDataError;
-    group: string;
-    streamId: string;
-}
-
-// @public
-export interface OnGroupStreamOptions {
-    handleFromStart?: boolean;
-    idleTimeoutInMs?: number;
-}
-
-// @public
 export interface OnRejoinGroupFailedArgs {
     error: Error;
     group: string;
@@ -304,6 +298,7 @@ export interface OnStoppedArgs {
 
 // @public
 export interface OpenGroupStreamOptions {
+    abortSignal?: AbortSignalLike;
     idleTimeoutInMs?: number;
     noEcho?: boolean;
     streamId?: string;
@@ -549,15 +544,14 @@ export class WebPubSubClient {
     off(event: "server-message", listener: (e: OnServerDataMessageArgs) => void): void;
     off(event: "group-message", listener: (e: OnGroupDataMessageArgs) => void): void;
     off(event: "rejoin-group-failed", listener: (e: OnRejoinGroupFailedArgs) => void): void;
-    offGroupStream(factory: (args: OnGroupStreamArgs) => GroupStreamHandler): void;
     on(event: "connected", listener: (e: OnConnectedArgs) => void): void;
     on(event: "disconnected", listener: (e: OnDisconnectedArgs) => void): void;
     on(event: "stopped", listener: (e: OnStoppedArgs) => void): void;
     on(event: "server-message", listener: (e: OnServerDataMessageArgs) => void): void;
     on(event: "group-message", listener: (e: OnGroupDataMessageArgs) => void): void;
     on(event: "rejoin-group-failed", listener: (e: OnRejoinGroupFailedArgs) => void): void;
-    onGroupStream(factory: (args: OnGroupStreamArgs) => GroupStreamHandler, options?: OnGroupStreamOptions): void;
-    openGroupStream(groupName: string, options?: OpenGroupStreamOptions): Promise<GroupStream>;
+    onGroupStream(callback: (stream: GroupStream) => void, options?: GroupStreamSubscribeOptions): GroupStreamSubscription;
+    openGroupStream(groupName: string, options?: OpenGroupStreamOptions): Promise<GroupStreamWriter>;
     sendEvent(eventName: string, content: JSONTypes | ArrayBuffer, dataType: WebPubSubDataType, options?: SendEventOptions): Promise<WebPubSubResult>;
     sendToGroup(groupName: string, content: JSONTypes | ArrayBuffer, dataType: WebPubSubDataType, options?: SendToGroupOptions): Promise<WebPubSubResult>;
     start(options?: StartOptions): Promise<void>;

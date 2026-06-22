@@ -4,10 +4,8 @@
 import type {
   DisconnectedMessage,
   GroupDataMessage,
-  GroupStreamHandler,
   JoinGroupOptions,
   LeaveGroupOptions,
-  OnGroupStreamArgs,
   ServerDataMessage,
 } from "../src/models/index.js";
 import { WebPubSubClient } from "../src/webPubSubClient.js";
@@ -474,17 +472,15 @@ describe("WebPubSubClient", () => {
       });
     });
 
-    it("keeps inbound streams distinct when group and streamId contain separators", () => {
+    it("keeps inbound streams distinct when group and streamId contain separators", async () => {
       const client = new WebPubSubClient("wss://service.com");
       const messages: string[] = [];
 
-      client.onGroupStream(
-        (stream: OnGroupStreamArgs): GroupStreamHandler => ({
-          onMessage: (args) => {
-            messages.push(`${stream.group}/${stream.streamId}:${args.data}`);
-          },
-        }),
-      );
+      client.onGroupStream(async (stream) => {
+        for await (const message of stream) {
+          messages.push(`${stream.groupName}/${stream.streamId}:${message.data}`);
+        }
+      });
 
       client["_handleStreamGroupMessage"]({
         kind: "groupData",
@@ -509,7 +505,11 @@ describe("WebPubSubClient", () => {
         },
       } as GroupDataMessage);
 
-      expect(messages).toEqual(["a|b/c:first", "a/b|c:second"]);
+      // Fragments are delivered through async iteration, so wait for the
+      // per-stream loops to drain their buffers before asserting.
+      await vi.waitFor(() =>
+        expect(messages).toEqual(["a|b/c:first", "a/b|c:second"]),
+      );
     });
 
     it("add server message event", () => {
