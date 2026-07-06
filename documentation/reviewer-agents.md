@@ -1,6 +1,6 @@
 # Reviewer Agents
 
-This repository includes seven specialized AI reviewer agents that can review
+This repository includes specialized AI reviewer agents that can review
 pull requests for specific quality dimensions. Each agent is an expert in its
 domain and produces targeted, actionable feedback.
 
@@ -12,6 +12,7 @@ domain and produces targeted, actionable feedback.
 | **Dash** | `performance-review-needed` | Runtime performance — latency, memory, bundle size, async patterns |
 | **Dexter** | `dependency-review-needed` | Dependency management — version ranges, workspace protocol, new deps |
 | **Mgmt-review** | `mgmt-review-needed` | Management-plane SDKs — API design guidelines, tooling validation |
+| **Mgmt-breaking-change-analysis** | _(on-demand)_ | Breaking-change analysis for ARM SDK PRs migrating from Swagger/AutoRest to TypeSpec |
 | **Scribe** | `docs-review-needed` | Documentation — README, CHANGELOG, TSDoc, snippets, samples |
 | **Sentinel** | `security-review-needed` | Security — credential exposure, injection, unsafe patterns, supply chain |
 | **Tester** | `test-review-needed` | Testing — coverage, recorder setup, test quality, browser tests |
@@ -125,7 +126,7 @@ In the Copilot Chat panel, use the `@` prefix to summon an agent by name:
   explore the codebase to answer questions.
 - You can ask an agent to review specific files, a git diff, or the entire
   branch.
-- Agents follow the detailed guidelines in `.github/prompts/*-review-guidelines.md`.
+- Agents follow the detailed guidelines in `.github/prompts/` (e.g. `*-review-guidelines.md` and related prompt files).
 - Agents respect the same scoping rules as in CI: they ignore `src/generated/`,
   `snippets.spec.ts`, formatting issues, and domains outside their expertise.
 
@@ -136,20 +137,25 @@ Agent definitions and their detailed review guidelines are stored in:
 ```
 .github/
 ├── agents/                          # Agent identity and checklist
+│   ├── agentic-workflows.md
 │   ├── archie.agent.md
 │   ├── dash.agent.md
 │   ├── dexter.agent.md
+│   ├── mgmt-breaking-change-analysis.agent.md
 │   ├── mgmt-review.agent.md
 │   ├── scribe.agent.md
 │   ├── sentinel.agent.md
 │   └── tester.agent.md
 ├── prompts/                         # Detailed review guidelines
 │   ├── architecture-review-guidelines.md
-│   ├── performance-review-guidelines.md
 │   ├── dependency-review-guidelines.md
-│   ├── mgmt-review-guidelines.md
 │   ├── documentation-review-guidelines.md
+│   ├── mgmt-breaking-change-analysis-guidelines.md
+│   ├── mgmt-breaking-change-patterns.md
+│   ├── mgmt-review-guidelines.md
+│   ├── performance-review-guidelines.md
 │   ├── security-review-guidelines.md
+│   ├── test-recording.prompt.md
 │   └── test-review-guidelines.md
 └── workflows/                       # CI workflow triggers
     ├── archie.md / archie.lock.yml
