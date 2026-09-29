@@ -50,6 +50,7 @@ It provides a place to centralize scripts, resources, and processes for developm
   - `test:vitest`	runs tests using vitest with the default and the provided options; starts the proxy-tool in - record and playback modes
   - `check-api`	ensure API features are compatible with minimum supported TypeScript version
   - `extract-api`	Runs api-extractor multiple times for all exports.
+  - `generate-api-review` generate prototype API review artifacts from built declarations
   - `build-test` build a package for testing
   - `start-browser-relay`	Start the browser credential relay, used for authenticating browser tests.
   - `update-snippets`	find README and TSDoc snippets throughout the package and update their contents.
@@ -60,6 +61,114 @@ It provides a place to centralize scripts, resources, and processes for developm
   - `apply` applies existing customizations to new generated code
 
 The `dev-tool about` command will print some information about how to use the command. All commands additionally accept the `--help` argument, which will print information about the usage of that specific command. For example, to show help information for the `run` command above, issue the command `npx dev-tool package run --help`.
+
+## Declaration review prototype
+
+`generate-api-review` produces an API review of a package's public surface without API Extractor.
+It reads an existing package manifest and its built declaration files.
+It writes `api.md` and `api.metadata.yml` to the requested artifact directory.
+The output is for review only, not a publishable declaration bundle.
+
+After dependency installation, run these commands from the repository root:
+
+```sh
+# Build dependencies through the existing build system.
+pnpm turbo build --filter="@azure/keyvault-keys^..." --token 1
+
+# Build this package without its extract-api step.
+pnpm --dir sdk/keyvault/keyvault-keys exec dev-tool run build-package
+
+node common/tools/dev-tool/launch.ts run generate-api-review \
+  --package-root sdk/keyvault/keyvault-keys \
+  --output-dir /tmp/keyvault-api-review
+```
+
+`--package-root` defaults to the current directory.
+`--output-dir` is required.
+The command replaces only `api.md` and `api.metadata.yml` in that directory.
+A failed rerun removes the previous metadata, so it cannot leave a usable stale hash.
+Use a separate output directory for each invocation; concurrent writers are not supported.
+
+### Prototype contract
+
+The prototype reads every explicit public subpath in the exports map.
+Each subpath must declare an `import` condition.
+The supported conditions are `import`, `require`, `browser`, `react-native`, and `workerd`.
+Each condition must contain a `types` path and an optional `default` path.
+A condition that some subpaths declare must be declared by every subpath.
+The prototype also supports a top-level `types` path when the manifest has no exports map.
+It rejects other conditions, wildcard exports, arrays, and `typesVersions`.
+
+Each condition gets its own TypeScript program.
+`import` and `require` use NodeNext resolution from an ESM or CommonJS consumer.
+`browser`, `react-native`, and `workerd` use bundler resolution with that custom condition.
+The compiler resolves each package export and verifies that it selects the declared type entry.
+Every program uses ESNext and DOM libraries.
+Node typings participate when they resolve from the input package's dependency environment.
+Declaration files are not type-checked (`skipLibCheck`), because runtime shims can conflict with ambient libraries.
+Instead, every module specifier and every imported or re-exported name in package declarations must resolve.
+
+### Review format
+
+The `import` condition is the primary view.
+Each declaration appears once, under the first export path that exposes it (`.` first).
+Other export paths list it in an `export { ... } from "<package>"` statement.
+Declarations are sorted by name; file paths do not appear, so moving a declaration between files does not change the review.
+
+Only exported declarations and the package-local declarations they reference appear.
+Referenced declarations that no export path exposes appear under "Reachable, not exported".
+Each declaration and reference uses one canonical name: its public export name, or its declared name when unexported.
+A `_2` suffix distinguishes different declarations that would share a name.
+External types appear in a "References" import block with the module specifier that the package imports them from.
+External re-exports appear as `export { ... } from "<dependency>"` statements.
+Package-owned `declare global` blocks appear under "Global augmentations".
+
+Private class members are omitted, except constructors.
+Classes print as `export class`; other ambient declarations keep `declare`.
+Prose documentation and comments are omitted.
+Declaration and member `@alpha`, `@beta`, `@internal`, and `@deprecated` tags remain as `// @tag` comments.
+Status on an overload identifies that overload rather than every overload.
+A `// type-only export` comment marks a class, function, or value exported only as a type.
+The command does not apply a new `@internal` or `@beta` trimming policy.
+
+Other conditions appear under "Runtime differences".
+Conditions whose view matches the `import` view are listed as identical.
+Otherwise, each changed, added, or missing declaration appears as a `diff` hunk against the `import` view.
+
+The command rejects module augmentations (`declare module "x"`), global scripts, and `export =`.
+Unresolved modules or names and implementation-source leakage also fail generation.
+
+A "Dependencies" table lists `dependencies`, `peerDependencies`, and `optionalDependencies` with their package.json specifiers verbatim.
+The generator does not resolve `workspace:` or `catalog:` specifiers.
+
+The SHA-256 covers the complete `api.md`, except that each dependency specifier is replaced by its release line before hashing.
+The release line is the major version, or the leading zero components for `0.x` ranges.
+Specifiers other than simple `^`, `~`, or exact versions are hashed verbatim.
+Adding or removing a dependency, or changing its release line, changes the hash; a minor or patch range bump does not.
+Because the hash input differs from `api.md` when dependencies exist, consumers must recompute it with the same rule.
+Prose-only documentation edits and file moves do not change the hash.
+The TypeScript printer normalizes declaration syntax; line endings use LF.
+Literal content remains intact, including comment-like text inside a literal type.
+Package and tool versions reside in metadata, outside the review hash.
+The hash identifies review text, not semantic compatibility or the complete dependency API.
+Parser version `0.3.0` identifies this format; comparisons must use the same generator and TypeScript versions.
+
+### Current limitations
+
+Module augmentations of other packages, such as matcher extensions of `vitest`, are unsupported.
+Namespace re-exports of external modules show their names, not their members.
+Renamed references use checker resolution; a local alias whose resolution fails keeps its source text.
+
+This command does not change publishing, checked-in reports, APIView token generation, or release gates.
+The existing build scripts and dependency builds can still use API Extractor.
+The generator itself imports only TypeScript and Node built-ins; the dev-tool command adds the existing CLI framework.
+No API Review Hub server integration is included.
+
+Focused tests:
+
+```sh
+pnpm --dir common/tools/dev-tool exec vitest run test/apiReview.spec.ts
+```
 
 ## Extending the Tool
 
