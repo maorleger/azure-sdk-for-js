@@ -6,7 +6,7 @@ import { existsSync, mkdirSync, readFileSync, realpathSync, rmSync, writeFileSyn
 import path from "node:path";
 import ts from "typescript";
 
-const parserVersion = "0.3.0";
+const parserVersion = "0.4.0";
 const profiles = ["import", "require", "browser", "react-native", "workerd"] as const;
 type Profile = (typeof profiles)[number];
 const statusTags = new Set(["alpha", "beta", "internal", "deprecated"]);
@@ -34,6 +34,8 @@ interface ExternalReference {
 
 interface Item {
   section: string;
+  /** `code`, `own`, `differs`, or `also\0<home subpath>`; see renderSections. */
+  group: string;
   key: string;
   text: string;
 }
@@ -697,15 +699,48 @@ function buildSurface(pkg: PackageContext, profile: Profile): Surface {
     taken.add(name);
     return name;
   };
+  // Each export path is its own scope, so an exported declaration keeps its public name in its
+  // home section. Helpers and external names stay unique across the whole document.
   const names = new Map<ts.Symbol, string>();
+  const sectionNames = new Map<string, Set<string>>();
   for (const symbol of [...rendered].sort(
     (a, b) =>
       compare(sortKey(a).slice(0, 1), sortKey(b).slice(0, 1)) ||
       compareNames(desiredName(a), desiredName(b)) ||
       compare(sortKey(a), sortKey(b)),
   )) {
-    names.set(symbol, unique(desiredName(symbol)));
+    const location = primary.get(symbol);
+    if (!location) {
+      names.set(symbol, unique(desiredName(symbol)));
+      continue;
+    }
+    const used = sectionNames.get(location.subpath) ?? new Set<string>();
+    sectionNames.set(location.subpath, used);
+    const base = desiredName(symbol);
+    let name = base;
+    for (let index = 2; used.has(name); index++) name = `${base}_${index}`;
+    used.add(name);
+    taken.add(name);
+    names.set(symbol, name);
   }
+  const rootSection = pkg.entries[0].subpath;
+  const specifierFor = (subpath: string): string =>
+    pkg.name + (subpath === "." ? "" : subpath.slice(1));
+  const exportedOwners = new Map<string, number>();
+  for (const symbol of locations.keys()) {
+    const name = names.get(symbol)!;
+    exportedOwners.set(name, (exportedOwners.get(name) ?? 0) + 1);
+  }
+  const aliasBase = (subpath: string): string => {
+    const words = (subpath === "." ? pkg.name.replace(/^@[^/]+\//, "") : subpath.slice(2))
+      .split(/[^A-Za-z0-9]+/)
+      .filter(Boolean);
+    const text = words
+      .map((word, index) => (index === 0 ? word : word[0].toUpperCase() + word.slice(1)))
+      .join("");
+    return /^[A-Za-z_$]/.test(text) ? text : `_${text}`;
+  };
+  let currentSection = rootSection;
 
   const imports = new Map<string, Map<string, string>>();
   const externalName = (reference: ExternalReference, localText: string): string => {
@@ -720,13 +755,29 @@ function buildSurface(pkg: PackageContext, profile: Profile): Surface {
     bySpecifier.set(reference.name, display);
     return display;
   };
+  // A name that several exported declarations share is qualified with its home export path
+  // whenever it is referenced from another section, e.g. `models.TypeTwo`.
+  const displayName = (target: ts.Symbol): string | undefined => {
+    const canonical = names.get(target);
+    const home = primary.get(target)?.subpath;
+    if (
+      canonical === undefined ||
+      home === undefined ||
+      home === currentSection ||
+      (exportedOwners.get(canonical) ?? 0) < 2
+    ) {
+      return canonical;
+    }
+    const alias = externalName({ specifier: specifierFor(home), name: "*" }, aliasBase(home));
+    return `${alias}.${canonical}`;
+  };
   const referenceName = (identifier: ts.Identifier): string | undefined => {
     const symbol = checker.getSymbolAtLocation(identifier);
     if (!symbol) return undefined;
     const external = symbol.flags & ts.SymbolFlags.Alias ? externalOf(symbol) : undefined;
     if (external) return externalName(external, identifier.text);
     const target = normalize(symbol);
-    const canonical = names.get(target);
+    const canonical = displayName(target);
     if (canonical) return canonical;
     if (localDeclarations(target).length || (target.declarations ?? []).some(isGlobalDeclaration)) {
       return undefined;
@@ -748,7 +799,7 @@ function buildSurface(pkg: PackageContext, profile: Profile): Surface {
   };
   const localCanonical = (identifier: ts.Identifier): string | undefined => {
     const symbol = checker.getSymbolAtLocation(identifier);
-    return symbol && names.get(normalize(symbol));
+    return symbol && displayName(normalize(symbol));
   };
 
   const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
@@ -762,45 +813,61 @@ function buildSurface(pkg: PackageContext, profile: Profile): Surface {
     const nameNode = ts.getNameOfDeclaration(declaration);
     const transformer: ts.TransformerFactory<ts.Statement> = (context) => {
       const { factory } = context;
-      const rewriteEntity = (entity: ts.EntityName): ts.EntityName => {
-        if (ts.isIdentifier(entity)) {
-          const name = referenceName(entity);
-          return name && name !== entity.text ? factory.createIdentifier(name) : entity;
+      const entity = (name: string): ts.EntityName =>
+        name
+          .split(".")
+          .map((part) => factory.createIdentifier(part) as ts.EntityName)
+          .reduce((left, right) => factory.createQualifiedName(left, right as ts.Identifier));
+      const expression = (name: string): ts.Expression =>
+        name
+          .split(".")
+          .map((part) => factory.createIdentifier(part) as ts.Expression)
+          .reduce((left, right) =>
+            factory.createPropertyAccessExpression(left, right as ts.Identifier),
+          );
+      const rewriteEntity = (entityName: ts.EntityName): ts.EntityName => {
+        if (ts.isIdentifier(entityName)) {
+          const name = referenceName(entityName);
+          return name && name !== entityName.text ? entity(name) : entityName;
         }
-        const namespace = namespaceImport(entity.left);
+        const entity_ = entityName;
+        const namespace = namespaceImport(entity_.left);
         if (namespace) {
-          assertMember(entity.left, entity.right);
+          assertMember(entity_.left, entity_.right);
           return factory.createIdentifier(
             externalName(
-              { specifier: namespace.specifier, name: entity.right.text },
-              entity.right.text,
+              { specifier: namespace.specifier, name: entity_.right.text },
+              entity_.right.text,
             ),
           );
         }
-        const local = localCanonical(entity.right);
-        if (local) return factory.createIdentifier(local);
-        return factory.updateQualifiedName(entity, rewriteEntity(entity.left), entity.right);
+        const local = localCanonical(entity_.right);
+        if (local) return entity(local);
+        return factory.updateQualifiedName(entity_, rewriteEntity(entity_.left), entity_.right);
       };
-      const rewriteExpression = (expression: ts.Expression): ts.Expression => {
-        if (ts.isIdentifier(expression)) return rewriteEntity(expression) as ts.Identifier;
-        if (ts.isPropertyAccessExpression(expression) && ts.isIdentifier(expression.name)) {
-          const namespace = namespaceImport(expression.expression);
-          const local = localCanonical(expression.name);
+      const rewriteExpression = (node: ts.Expression): ts.Expression => {
+        if (ts.isIdentifier(node)) {
+          const name = referenceName(node);
+          return name && name !== node.text ? expression(name) : node;
+        }
+        if (ts.isPropertyAccessExpression(node) && ts.isIdentifier(node.name)) {
+          const namespace = namespaceImport(node.expression);
+          const local = localCanonical(node.name);
           if (namespace) {
-            assertMember(expression.expression, expression.name);
-            const name = expression.name.text;
+            assertMember(node.expression, node.name);
+            const name = node.name.text;
             return factory.createIdentifier(
               externalName({ specifier: namespace.specifier, name }, name),
             );
           }
-          if (local) return factory.createIdentifier(local);
+          if (local) return expression(local);
           return factory.updatePropertyAccessExpression(
-            expression,
-            rewriteExpression(expression.expression),
-            expression.name,
+            node,
+            rewriteExpression(node.expression),
+            node.name,
           );
         }
-        return ts.visitNode(expression, visit) as ts.Expression;
+        return ts.visitNode(node, visit) as ts.Expression;
       };
       const visitTypes = (types: ts.NodeArray<ts.TypeNode> | undefined) =>
         types && ts.visitNodes(types, visit, ts.isTypeNode);
@@ -846,10 +913,9 @@ function buildSurface(pkg: PackageContext, profile: Profile): Surface {
               ? undefined
               : externalName({ specifier, name: node.qualifier.text }, node.qualifier.text));
           if (!name) return ts.visitEachChild(node, visit, context);
-          const identifier = factory.createIdentifier(name);
           result = node.isTypeOf
-            ? factory.createTypeQueryNode(identifier, visitTypes(node.typeArguments))
-            : factory.createTypeReferenceNode(identifier, visitTypes(node.typeArguments));
+            ? factory.createTypeQueryNode(entity(name), visitTypes(node.typeArguments))
+            : factory.createTypeReferenceNode(entity(name), visitTypes(node.typeArguments));
         } else {
           result = ts.visitEachChild(node, visit, context);
         }
@@ -897,6 +963,7 @@ function buildSurface(pkg: PackageContext, profile: Profile): Surface {
   }
 
   function renderSymbol(symbol: ts.Symbol, section: string): string {
+    currentSection = section;
     const canonical = names.get(symbol)!;
     const exported = (locations.get(symbol) ?? []).some(
       (location) => location.subpath === section && location.name === canonical,
@@ -941,25 +1008,75 @@ function buildSurface(pkg: PackageContext, profile: Profile): Surface {
 
   const items: Item[] = [];
   for (const augmentation of globalAugmentations) {
+    currentSection = globalSection;
     const text = renderStatement(augmentation, augmentation, "global", false, []);
-    items.push({ section: globalSection, key: text, text });
+    items.push({ section: globalSection, group: "code", key: text, text });
   }
   const sectionOf = (symbol: ts.Symbol): string => primary.get(symbol)?.subpath ?? helperSection;
+
+  // What each root export name refers to, to tell "also exported" from "same name, different".
+  const identities = new Map<string, unknown>();
+  const externalKey = (specifier: string, name: string): string => `${specifier}\0${name}`;
+  for (const [symbol, list] of locations) {
+    for (const location of list) {
+      if (location.subpath === rootSection) identities.set(location.name, symbol);
+    }
+  }
+  for (const external of externalExports) {
+    if (external.subpath === rootSection) {
+      identities.set(external.name, externalKey(external.specifier, external.importedName));
+    }
+  }
+  const differsFromRoot = (section: string, name: string, identity: unknown): boolean =>
+    section !== rootSection && identities.has(name) && identities.get(name) !== identity;
+  const ownGroup = (section: string, name: string, identity: unknown): string =>
+    section === rootSection || section === helperSection
+      ? "code"
+      : differsFromRoot(section, name, identity)
+        ? "differs"
+        : "own";
+
   for (const symbol of [...rendered].sort((a, b) => compareNames(names.get(a)!, names.get(b)!))) {
+    const section = sectionOf(symbol);
+    const canonical = names.get(symbol)!;
     items.push({
-      section: sectionOf(symbol),
-      key: names.get(symbol)!,
-      text: renderSymbol(symbol, sectionOf(symbol)),
+      section,
+      group: ownGroup(section, canonical, symbol),
+      key: canonical,
+      text: renderSymbol(symbol, section),
     });
   }
 
-  const specifierFor = (subpath: string): string =>
-    pkg.name + (subpath === "." ? "" : subpath.slice(1));
-  const reexports = new Map<string, Map<string, string[]>>();
-  const addReexport = (section: string, group: string, name: string): void => {
-    const groups = reexports.get(section) ?? new Map<string, string[]>();
-    reexports.set(section, groups);
-    groups.set(group, [...(groups.get(group) ?? []), name]);
+  // Re-export statements stay as code in the section that shows the definition. Other sections
+  // list the name under "Also exported from <home>".
+  const statements = new Map<string, Map<string, string[]>>();
+  const addStatement = (section: string, group: string, kind: string, binding: string): void => {
+    const key = `${section}\0${group}`;
+    const byKind = statements.get(key) ?? new Map<string, string[]>();
+    statements.set(key, byKind);
+    byKind.set(kind, [...(byKind.get(kind) ?? []), binding]);
+  };
+  const addAlso = (
+    section: string,
+    home: string,
+    name: string,
+    shownAs: string,
+    typeOnly: boolean,
+    identity: unknown,
+  ): void => {
+    const notes = [
+      ...(name === shownAs ? [] : [`shown as ${inline(shownAs)}`]),
+      ...(typeOnly ? ["type only"] : []),
+      ...(home !== rootSection && differsFromRoot(section, name, identity)
+        ? [`differs from Export ${inline(rootSection)}`]
+        : []),
+    ];
+    items.push({
+      section,
+      group: `also\0${home}`,
+      key: name,
+      text: `- ${inline(name)}${notes.length ? ` (${notes.join("; ")})` : ""}`,
+    });
   };
   for (const [symbol, list] of locations) {
     const canonical = names.get(symbol)!;
@@ -967,62 +1084,68 @@ function buildSurface(pkg: PackageContext, profile: Profile): Surface {
     for (const location of list) {
       if (location.name.includes(".")) continue;
       if (location.subpath === home && location.name === canonical) continue;
-      const from = location.subpath === home ? "" : specifierFor(home);
-      const binding = location.name === canonical ? canonical : `${canonical} as ${location.name}`;
-      addReexport(location.subpath, `${location.typeOnly ? "type" : "value"}\0${from}`, binding);
+      if (location.subpath !== home) {
+        addAlso(location.subpath, home, location.name, canonical, location.typeOnly, symbol);
+        continue;
+      }
+      addStatement(
+        home,
+        ownGroup(home, location.name, symbol),
+        `${location.typeOnly ? "type" : "value"}\0`,
+        `${canonical} as ${location.name}`,
+      );
     }
   }
-  const starExports: Item[] = [];
+  const externalHomes = new Map<string, { subpath: string; name: string }>();
+  for (const external of externalExports) {
+    const key = externalKey(external.specifier, external.importedName);
+    if (!externalHomes.has(key) && !external.name.includes(".")) {
+      externalHomes.set(key, { subpath: external.subpath, name: external.name });
+    }
+  }
   for (const external of externalExports) {
     if (external.name.includes(".")) continue;
-    const group = `${external.typeOnly ? "type" : "value"}\0${external.specifier}`;
-    if (external.importedName === "*") {
-      starExports.push({
-        section: external.subpath,
-        key: group,
-        text: `export * as ${external.name} from ${JSON.stringify(external.specifier)};`,
-      });
+    const identity = externalKey(external.specifier, external.importedName);
+    const home = externalHomes.get(identity)!;
+    if (external.subpath !== home.subpath) {
+      addAlso(
+        external.subpath,
+        home.subpath,
+        external.name,
+        home.name,
+        external.typeOnly,
+        identity,
+      );
       continue;
     }
-    addReexport(
+    addStatement(
       external.subpath,
-      group,
-      external.importedName === external.name
-        ? external.name
-        : `${external.importedName} as ${external.name}`,
+      ownGroup(external.subpath, external.name, identity),
+      `${external.typeOnly ? "type" : "value"}\0${external.specifier}`,
+      external.importedName === "*"
+        ? `* as ${external.name}`
+        : external.importedName === external.name
+          ? external.name
+          : `${external.importedName} as ${external.name}`,
     );
   }
-  for (const [section, groups] of reexports) {
-    const lines = [...groups]
+  for (const [key, byKind] of statements) {
+    const [section, group] = key.split("\0");
+    const lines = [...byKind]
       .sort(([a], [b]) => compare(a, b))
-      .map(([group, bindings]) => {
-        const [kind, from] = group.split("\0");
-        return exportList(
-          kind === "type" ? "export type" : "export",
-          [...new Set(bindings)].sort(compareNames),
-          from === "" ? undefined : from,
-        );
+      .flatMap(([kind, bindings]) => {
+        const [type, from] = kind.split("\0");
+        const keyword = type === "type" ? "export type" : "export";
+        const target = from === "" ? undefined : from;
+        const unique_ = [...new Set(bindings)].sort(compareNames);
+        const stars = unique_.filter((binding) => binding.startsWith("* as "));
+        const named = unique_.filter((binding) => !binding.startsWith("* as "));
+        return [
+          ...(named.length ? [exportList(keyword, named, target)] : []),
+          ...stars.map((star) => `${keyword} ${star} from ${JSON.stringify(from)};`),
+        ];
       });
-    lines.push(
-      ...starExports
-        .filter((item) => item.section === section)
-        .sort((a, b) => compare(a.text, b.text))
-        .map((item) => item.text),
-    );
-    items.push({ section, key: "#reexports", text: lines.join("\n") });
-  }
-  for (const section of new Set(starExports.map((item) => item.section))) {
-    if (!reexports.has(section)) {
-      items.push({
-        section,
-        key: "#reexports",
-        text: starExports
-          .filter((item) => item.section === section)
-          .map((item) => item.text)
-          .sort(compare)
-          .join("\n"),
-      });
-    }
+    items.push({ section, group, key: "#reexports", text: lines.join("\n") });
   }
 
   const importLines = [...imports]
@@ -1040,7 +1163,12 @@ function buildSurface(pkg: PackageContext, profile: Profile): Surface {
       return lines;
     });
   if (importLines.length)
-    items.push({ section: importSection, key: "#imports", text: importLines.join("\n") });
+    items.push({
+      section: importSection,
+      group: "code",
+      key: "#imports",
+      text: importLines.join("\n"),
+    });
   return {
     items,
     declarationCount: locations.size,
@@ -1055,17 +1183,23 @@ function sectionTitle(section: string): string {
   return `Export ${inline(section)}`;
 }
 
-function sectionItems(items: Item[], section: string): Item[] {
-  const selected = items.filter((item) => item.section === section);
-  return [
-    ...selected
-      .filter((item) => !item.key.startsWith("#"))
-      .sort((a, b) => compareNames(a.key, b.key)),
-    ...selected.filter((item) => item.key.startsWith("#")),
-  ];
+function groupRank(group: string): number {
+  return group === "code" ? 0 : group === "own" ? 1 : group === "differs" ? 2 : 3;
 }
 
-function renderSections(items: Item[], order: string[]): string[] {
+function sectionItems(items: Item[], section: string): Item[] {
+  return items
+    .filter((item) => item.section === section)
+    .sort(
+      (a, b) =>
+        groupRank(a.group) - groupRank(b.group) ||
+        compare(a.group, b.group) ||
+        Number(a.key.startsWith("#")) - Number(b.key.startsWith("#")) ||
+        compareNames(a.key, b.key),
+    );
+}
+
+function renderSections(items: Item[], order: string[], root: string): string[] {
   const output: string[] = [];
   for (const section of order) {
     const selected = sectionItems(items, section);
@@ -1076,12 +1210,28 @@ function renderSections(items: Item[], order: string[]): string[] {
         "Package-local declarations that exported declarations reference, but that no export path exposes.",
       );
     }
-    output.push(
-      codeBlock(
-        selected.length ? selected.map((item) => item.text).join("\n\n") : "export {};",
-        "ts",
-      ),
-    );
+    if (selected.length === 0) output.push(codeBlock("export {};", "ts"));
+    for (const group of [...new Set(selected.map((item) => item.group))]) {
+      const texts = selected.filter((item) => item.group === group).map((item) => item.text);
+      if (group === "code") {
+        output.push(codeBlock(texts.join("\n\n"), "ts"));
+      } else if (group === "own") {
+        output.push(`### Not exported from ${inline(root)}`, codeBlock(texts.join("\n\n"), "ts"));
+      } else if (group === "differs") {
+        output.push(
+          `### Differs from ${inline(root)}`,
+          `Same name as an Export ${inline(root)} export, but a different declaration.`,
+          codeBlock(texts.join("\n\n"), "ts"),
+        );
+      } else {
+        const home = group.split("\0")[1];
+        output.push(
+          `### Also exported from ${inline(home)}`,
+          `Definitions are shown under Export ${inline(home)}.`,
+          texts.join("\n"),
+        );
+      }
+    }
   }
   return output;
 }
@@ -1130,7 +1280,7 @@ function lineDiff(before: string[], after: string[]): string[] {
 }
 
 function runtimeDifferences(base: Item[], view: Item[], order: string[]): string[] {
-  const key = (item: Item): string => `${item.section}\0${item.key}`;
+  const key = (item: Item): string => `${item.section}\0${item.group}\0${item.key}`;
   const baseItems = new Map(base.map((item) => [key(item), item]));
   const viewItems = new Map(view.map((item) => [key(item), item]));
   const output: string[] = [];
@@ -1279,7 +1429,7 @@ export function generateApiReview(packageRoot: string): ApiReview {
     `# API review: ${inline(name)}`,
     [
       "ESM (`import`) view.",
-      "Each declaration appears under the first export path that exposes it; other paths re-export it by name.",
+      'Each declaration appears under the first export path that exposes it; other paths list it under "Also exported from".',
       "Only exported declarations and the package-local declarations they reference appear.",
       "Comments are omitted except status tags.",
       "Other runtime conditions appear as differences from this view.",
@@ -1293,7 +1443,7 @@ export function generateApiReview(packageRoot: string): ApiReview {
       ),
     ].join("\n"),
   ];
-  const sections = [...renderSections(base.items, order)];
+  const sections = [...renderSections(base.items, order, entries[0].subpath)];
   if (declaredProfiles.length > 1) {
     sections.push("## Runtime differences");
     if (identical.length) {

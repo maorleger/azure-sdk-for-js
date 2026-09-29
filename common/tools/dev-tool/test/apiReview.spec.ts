@@ -499,12 +499,154 @@ describe("generateApiReview", () => {
       "// @beta\nexport class Client {\n    // @deprecated\n    old(): void;\n}",
     );
     expect(section(review.markdown, "Export `./models`")).toContain(
-      'export {\n    Client,\n    Model,\n} from "@example/review";',
+      "### Also exported from `.`\n\nDefinitions are shown under Export `.`.\n\n- `Client`\n- `Model`",
     );
     expect(section(review.markdown, "Export `./compat`")).toContain(
-      'export type { Client as LegacyClient } from "@example/review";',
+      "- `LegacyClient` (shown as `Client`; type only)",
     );
     expect(review.markdown).not.toContain("Old prose");
+  });
+
+  describe("subpath sections", () => {
+    const subpaths = (paths: Record<string, string>) => ({
+      exports: Object.fromEntries(
+        Object.entries(paths).map(([subpath, types]) => [subpath, { import: { types } }]),
+      ),
+    });
+
+    it("groups subpath exports relative to the root and qualifies ambiguous references", () => {
+      const root = fixture(
+        {
+          "dist/esm/models.d.ts": [
+            "export interface TypeOne { id: string }",
+            "export interface TypeTwo { Foo: string }",
+            "export interface TypeThree { only: boolean }",
+          ].join("\n"),
+          "dist/esm/index.d.ts": [
+            'import type { TypeTwo as ModelsTypeTwo } from "./models.js";',
+            'import type { TypeOne } from "./models.js";',
+            'export type { TypeOne } from "./models.js";',
+            "export interface TypeTwo extends ModelsTypeTwo { Bar: string }",
+            'export declare function send(one: TypeOne, two: TypeTwo, three: import("./models.js").TypeThree): void;',
+          ].join("\n"),
+        },
+        subpaths({ ".": "./dist/esm/index.d.ts", "./models": "./dist/esm/models.d.ts" }),
+      );
+      const markdown = generateApiReview(root).markdown;
+      expect(section(markdown, "References")).toContain(
+        'import * as models from "@example/review/models";',
+      );
+      const rootSection = section(markdown, "Export `.`");
+      expect(rootSection).toContain(
+        "export interface TypeTwo extends models.TypeTwo {\n    Bar: string;\n}",
+      );
+      expect(rootSection).toContain("export interface TypeOne {\n    id: string;\n}");
+      expect(rootSection).toContain("two: TypeTwo, three: TypeThree");
+      expect(rootSection).not.toContain("###");
+      expect(section(markdown, "Export `./models`")).toBe(
+        [
+          "## Export `./models`",
+          "",
+          "### Not exported from `.`",
+          "",
+          "```ts\nexport interface TypeThree {\n    only: boolean;\n}\n```",
+          "",
+          "### Differs from `.`",
+          "",
+          "Same name as an Export `.` export, but a different declaration.",
+          "",
+          "```ts\nexport interface TypeTwo {\n    Foo: string;\n}\n```",
+          "",
+          "### Also exported from `.`",
+          "",
+          "Definitions are shown under Export `.`.",
+          "",
+          "- `TypeOne`",
+          "",
+        ].join("\n"),
+      );
+      expect(markdown).not.toContain("TypeTwo_2");
+    });
+
+    it("reuses a public name in different sections and qualifies references across them", () => {
+      const root = fixture(
+        {
+          "dist/esm/index.d.ts": "export interface Options { a: string }\nexport {};",
+          "dist/esm/api.d.ts":
+            'import type { Options as Root } from "./index.js";\nexport interface Options { b: string }\nexport declare function run(options: Options, root: Root): void;',
+        },
+        subpaths({ ".": "./dist/esm/index.d.ts", "./api": "./dist/esm/api.d.ts" }),
+      );
+      const markdown = generateApiReview(root).markdown;
+      const api = section(markdown, "Export `./api`");
+      expect(api).toContain("export interface Options {\n    b: string;\n}");
+      expect(api).toContain("run(options: Options, root: review.Options)");
+      expect(section(markdown, "References")).toContain(
+        'import * as review from "@example/review";',
+      );
+      expect(markdown).not.toContain("Options_2");
+    });
+
+    it("names the subpath that shows the definition when it is not the root", () => {
+      const root = fixture(
+        {
+          "dist/esm/index.d.ts": "export declare const value: string;",
+          "dist/esm/models.d.ts": "export interface Sku { name: string }",
+          "dist/esm/compute.d.ts": 'export type { Sku } from "./models.js";',
+        },
+        subpaths({
+          ".": "./dist/esm/index.d.ts",
+          "./models": "./dist/esm/models.d.ts",
+          "./models/compute": "./dist/esm/compute.d.ts",
+        }),
+      );
+      const markdown = generateApiReview(root).markdown;
+      expect(section(markdown, "Export `./models`")).toContain(
+        "### Not exported from `.`\n\n```ts\nexport interface Sku {",
+      );
+      expect(section(markdown, "Export `./models/compute`")).toContain(
+        "### Also exported from `./models`\n\nDefinitions are shown under Export `./models`.\n\n- `Sku`",
+      );
+    });
+
+    it("qualifies class heritage with a property access", () => {
+      const root = fixture(
+        {
+          "dist/esm/models.d.ts": "export declare class Client { base(): void; }",
+          "dist/esm/index.d.ts":
+            'import { Client as Base } from "./models.js";\nexport declare class Client extends Base { extra(): void; }',
+        },
+        subpaths({ ".": "./dist/esm/index.d.ts", "./models": "./dist/esm/models.d.ts" }),
+      );
+      const markdown = generateApiReview(root).markdown;
+      expect(section(markdown, "Export `.`")).toContain(
+        "export class Client extends models.Client {",
+      );
+      expect(section(markdown, "Export `./models`")).toContain("### Differs from `.`");
+    });
+
+    it("lists shared external re-exports and keeps subpath-only ones as code", () => {
+      const root = fixture(
+        {
+          "dist/esm/index.d.ts": 'export { RestError } from "dep";',
+          "dist/esm/errors.d.ts": 'export { RestError, isRestError } from "dep";',
+        },
+        subpaths({ ".": "./dist/esm/index.d.ts", "./errors": "./dist/esm/errors.d.ts" }),
+      );
+      writeDependency(
+        root,
+        "dep",
+        "export declare class RestError {}\nexport declare function isRestError(e: unknown): e is RestError;",
+      );
+      const markdown = generateApiReview(root).markdown;
+      expect(section(markdown, "Export `.`")).toContain('export { RestError } from "dep";');
+      const errors = section(markdown, "Export `./errors`");
+      expect(errors).toContain(
+        '### Not exported from `.`\n\n```ts\nexport { isRestError } from "dep";\n```',
+      );
+      expect(errors).toContain("### Also exported from `.`");
+      expect(errors).toContain("- `RestError`");
+    });
   });
 
   it("excludes prose comments from the review and hash while retaining status metadata", () => {
@@ -540,7 +682,7 @@ describe("generateApiReview", () => {
     expect(parse(first.metadata).packageVersion).toBe("1.0.0");
     expect(parse(second.metadata).packageVersion).toBe("2.0.0");
     expect(parse(first.metadata).apiMdSha256).toBe(first.apiMdSha256);
-    expect(parse(first.metadata).parserVersion).toBe("0.3.0");
+    expect(parse(first.metadata).parserVersion).toBe("0.4.0");
   });
 
   it("changes the hash when an export location is removed or a signature changes", () => {
@@ -555,13 +697,15 @@ describe("generateApiReview", () => {
     );
     const original = generateApiReview(root);
     expect(section(original.markdown, "Export `./models`")).toContain(
-      'export { Model } from "@example/review";',
+      "### Also exported from `.`\n\nDefinitions are shown under Export `.`.\n\n- `Model`",
     );
     write(root, "dist/esm/index.d.ts", "export {};");
     const removed = generateApiReview(root);
     expect(removed.apiMdSha256).not.toBe(original.apiMdSha256);
     expect(section(removed.markdown, "Export `.`")).toContain("export {};");
-    expect(section(removed.markdown, "Export `./models`")).toContain("export interface Model");
+    expect(section(removed.markdown, "Export `./models`")).toContain(
+      "### Not exported from `.`\n\n```ts\nexport interface Model",
+    );
     write(root, "dist/esm/models.d.ts", "export interface Model { value: number }");
     expect(generateApiReview(root).apiMdSha256).not.toBe(removed.apiMdSha256);
   }, 20_000);
@@ -799,7 +943,7 @@ describe("generateApiReview", () => {
       "// type-only export\nexport class Shared {",
     );
     expect(section(review.markdown, "Export `./values`")).toContain(
-      'export { Shared } from "@example/review";',
+      "### Also exported from `.`\n\nDefinitions are shown under Export `.`.\n\n- `Shared`",
     );
     expect(review.markdown.match(/export class Shared/g)).toHaveLength(1);
   });

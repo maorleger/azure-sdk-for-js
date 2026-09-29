@@ -112,13 +112,22 @@ Instead, every module specifier and every imported or re-exported name in packag
 
 The `import` condition is the primary view.
 Each declaration appears once, under the first export path that exposes it (`.` first).
-Other export paths list it in an `export { ... } from "<package>"` statement.
 Declarations are sorted by name; file paths do not appear, so moving a declaration between files does not change the review.
+
+The root section (`.`) is one code block.
+Every other export path is grouped relative to the root:
+
+- "Not exported from `.`": declarations and re-exports that this path is the first to expose.
+- "Differs from `.`": exports whose name the root also exports, but for a different declaration.
+- "Also exported from `<path>`": a list of names whose definitions appear under an earlier export path.
+  The list notes a different public name (`shown as`), a type-only export, and a name that differs from the root export of the same name.
 
 Only exported declarations and the package-local declarations they reference appear.
 Referenced declarations that no export path exposes appear under "Reachable, not exported".
-Each declaration and reference uses one canonical name: its public export name, or its declared name when unexported.
-A `_2` suffix distinguishes different declarations that would share a name.
+Each exported declaration uses its public name in the section that shows it.
+Unexported declarations use their declared name, with a `_2` suffix if that name is already in use.
+When several exported declarations share a name, a reference from another section qualifies it with a namespace alias for its export path, such as `models.TypeTwo`.
+The "References" block declares that alias as `import * as models from "<package>/models";`.
 External types appear in a "References" import block with the module specifier that the package imports them from.
 External re-exports appear as `export { ... } from "<dependency>"` statements.
 Package-owned `declare global` blocks appear under "Global augmentations".
@@ -151,7 +160,7 @@ The TypeScript printer normalizes declaration syntax; line endings use LF.
 Literal content remains intact, including comment-like text inside a literal type.
 Package and tool versions reside in metadata, outside the review hash.
 The hash identifies review text, not semantic compatibility or the complete dependency API.
-Parser version `0.3.0` identifies this format; comparisons must use the same generator and TypeScript versions.
+Parser version `0.4.0` identifies this format; comparisons must use the same generator and TypeScript versions.
 
 ### Current limitations
 
