@@ -4,7 +4,7 @@
     "paths": {
       "@azure/iot-device-update": ["../src/index.ts"],
       "@azure/iot-device-update/*": ["../src/*"],
-      "$internal/*": ["../src/*"]
+      "$internal/*": ["../src/generated/*"]
     }
   }
 }

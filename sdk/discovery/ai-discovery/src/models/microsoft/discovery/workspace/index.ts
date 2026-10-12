@@ -1,46 +1,4 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-export type {
-  Investigation,
-  InvestigationStatus,
-  InvestigationOperationStatus,
-  DiscoveryEngine,
-  DiscoveryEngineStatus,
-  WorkingMemoryEntry,
-  WorkingMemoryEntryType,
-  DiscoveryEngineUpdate,
-  Conversation,
-  RunResult,
-  OutputDataUri,
-  InlineFile,
-  InputDataMount,
-  StorageMountProtocol,
-  OutputDataMount,
-  InfraOverrides,
-  Operation,
-  RunStatus,
-  ComputeUsage,
-  SupercomputerUsage,
-  NodepoolUsage,
-  Task,
-  TaskPriority,
-  TaskAssignee,
-  TaskComment,
-  TaskStatus,
-  ExecutionHistoryEntry,
-  TaskResult,
-  StartTaskRequest,
-  TaskCreateOrUpdateContent,
-  ConversationCreateOrUpdateContent,
-  InvestigationCreateOrUpdateContent,
-} from "./models.js";
-export {
-  KnownInvestigationStatus,
-  KnownDiscoveryEngineStatus,
-  KnownWorkingMemoryEntryType,
-  KnownStorageMountProtocol,
-  KnownRunStatus,
-  KnownTaskPriority,
-  KnownTaskStatus,
-} from "./models.js";
+export * from "../../../../generated/models/microsoft/discovery/workspace/index.js";

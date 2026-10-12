@@ -16,11 +16,12 @@ import { PollerLike } from '@azure/core-lro';
 import { RestError } from '@azure/core-rest-pipeline';
 import { TokenCredential } from '@azure/core-auth';
 
+// Warning: (ae-forgotten-export) The symbol "BookshelfClient_2" needs to be exported by the entry point index.d.ts
+//
 // @public
-export class BookshelfClient {
+export class BookshelfClient extends BookshelfClient_2 {
     constructor(endpointParam: string, credential: TokenCredential, options?: BookshelfClientOptionalParams);
     readonly knowledgeBases: KnowledgeBasesOperations;
-    readonly pipeline: Pipeline;
 }
 
 // @public
@@ -28,7 +29,7 @@ export interface BookshelfClientOptionalParams extends ClientOptions {
 }
 
 // @public
-export function bookshelfClientRestorePoller<TResponse extends PathUncheckedResponse, TResult>(client: BookshelfClient, serializedState: string, sourceOperation: (...args: any[]) => PollerLike<OperationState_2<TResult>, TResult>, options?: BookshelfClientRestorePollerOptions<TResult>): PollerLike<OperationState_2<TResult>, TResult>;
+export function bookshelfClientRestorePoller<TResponse extends PathUncheckedResponse, TResult>(client: BookshelfClient_2, serializedState: string, sourceOperation: (...args: any[]) => PollerLike<OperationState_2<TResult>, TResult>, options?: BookshelfClientRestorePollerOptions<TResult>): PollerLike<OperationState_2<TResult>, TResult>;
 
 // @public (undocumented)
 export interface BookshelfClientRestorePollerOptions<TResult, TResponse extends PathUncheckedResponse = PathUncheckedResponse> extends OperationOptions {
@@ -377,16 +378,11 @@ export interface KnowledgeBasesGetOptionalParams extends OperationOptions {
 export interface KnowledgeBasesListOptionalParams extends OperationOptions {
 }
 
+// Warning: (ae-forgotten-export) The symbol "KnowledgeBasesOperations_2" needs to be exported by the entry point index.d.ts
+//
 // @public
-export interface KnowledgeBasesOperations {
-    cancelIndexing: (knowledgeBaseName: string, options?: KnowledgeBasesCancelIndexingOptionalParams) => PollerLike<OperationState_2<void>, void>;
-    createOrUpdate: (knowledgeBaseName: string, resource: KnowledgeBaseCreateOrUpdateContent, options?: KnowledgeBasesCreateOrUpdateOptionalParams) => PollerLike<OperationState_2<KnowledgeBase>, KnowledgeBase>;
-    deleteKnowledgeBase: (knowledgeBaseName: string, options?: KnowledgeBasesDeleteOptionalParams) => PollerLike<OperationState_2<void>, void>;
-    get: (knowledgeBaseName: string, options?: KnowledgeBasesGetOptionalParams) => Promise<KnowledgeBase>;
-    getOperationStatus: (knowledgeBaseName: string, operationId: string, options?: KnowledgeBasesGetOperationStatusOptionalParams) => Promise<KnowledgeBaseOperationResponseUnion>;
-    list: (options?: KnowledgeBasesListOptionalParams) => PagedAsyncIterableIterator<KnowledgeBase>;
-    search: (knowledgeBaseName: string, body: SearchRequest, options?: KnowledgeBasesSearchOptionalParams) => PollerLike<OperationState_2<KnowledgeBaseSearchOperationResponse>, KnowledgeBaseSearchOperationResponse>;
-    startIndexing: (knowledgeBaseName: string, options?: KnowledgeBasesStartIndexingOptionalParams) => PollerLike<OperationState_2<void>, void>;
+export interface KnowledgeBasesOperations extends KnowledgeBasesOperations_2 {
+    delete: (knowledgeBase: string | KnowledgeBase, options?: KnowledgeBasesDeleteOptionalParams) => PollerLike<OperationState_2<void>, void>;
 }
 
 // @public

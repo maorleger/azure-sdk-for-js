@@ -4,6 +4,8 @@
 
 ### Features Added
 
+- Added `BookshelfClient.knowledgeBases.delete`, which accepts a knowledge-base name or a `KnowledgeBase` model.
+
 ### Breaking Changes
 
 ### Bugs Fixed

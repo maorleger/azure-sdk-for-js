@@ -178,11 +178,11 @@
   "//metadata": {
     "constantPaths": [
       {
-        "path": "src/workspace/api/workspaceContext.ts",
+        "path": "src/generated/workspace/api/workspaceContext.ts",
         "prefix": "userAgentInfo"
       },
       {
-        "path": "src/bookshelf/api/bookshelfContext.ts",
+        "path": "src/generated/bookshelf/api/bookshelfContext.ts",
         "prefix": "userAgentInfo"
       }
     ]
