@@ -13,6 +13,9 @@ Before customizing generated code, consider whether your change should be made i
 Use this command only when `src/` contains generated source without handwritten customizations.
 The package must use Warp with explicit public source entry points.
 Existing handwritten clients do not need this setup.
+Commit the package before initialization.
+The command assumes no symlinks in `src/` and named ESM exports from TypeScript entry points.
+Generated relative imports must stay inside `src/`, except for imports of the package's `package.json`.
 
 Run the command from the package directory:
 
@@ -27,25 +30,28 @@ The command preserves the public `package.json` exports and the Warp source mapp
 
 The command also updates private references:
 
-- Relative imports to files outside the moved source.
+- Relative imports of the package's `package.json`.
 - Direct imports of private source from tests and other package files.
 - Private `package.json` imports, including platform-specific paths.
 - Supported compiler paths, including `$internal` aliases.
 - Paths for version constants in `//metadata.constantPaths`.
 
-Each Warp target explicitly includes all public barrels as compiler roots.
+The command adds missing public barrels as compiler roots in package-local Warp target configurations.
 This prevents a root-only compiler configuration from omitting public subpath files.
+Configurations that already include every public entry point stay unchanged.
 Broad `src/` includes and public package aliases keep their original paths.
+Shared compiler configurations stay unchanged if they already include every public entry point.
 
-If the package has no `customize` script, the command adds `"customize": "echo skipped"`.
-An existing script, including an empty script, keeps its value.
+The command does not add or change a `customize` script.
+Automation uses `npm run --if-present customize`, so no script is necessary.
 The separate source layout does not need a three-way merge.
 
-If `src/generated/` already exists as a directory, the command makes no changes.
-The command rejects legacy root-level `generated/` layouts and unsupported source mappings.
-Symbolic links and target compiler configurations outside the package require manual migration.
-The command stages the new layout before it changes the original files.
-If installation fails, it attempts to restore the original files.
+If `generated/` or `src/generated/` already exists, the command fails before it changes files.
+The command rejects unsupported source mappings.
+Shared compiler configurations that omit public entry points require package-local configurations first.
+The command plans edits before it moves source, but does not create backups or restore files on failure.
+After a failed installation, restore the committed package files.
+Remove newly created migration files before retrying.
 
 ## Folder Structure
 

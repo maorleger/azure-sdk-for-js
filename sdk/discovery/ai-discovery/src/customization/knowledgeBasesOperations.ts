@@ -24,8 +24,9 @@ export interface KnowledgeBasesOperations extends GeneratedKnowledgeBasesOperati
 export function createKnowledgeBasesOperations(
   generated: GeneratedKnowledgeBasesOperations,
 ): KnowledgeBasesOperations {
+  const { deleteKnowledgeBase, ...rest } = generated;
   return {
-    ...generated,
+    ...rest,
     delete: (knowledgeBase, options) =>
       generated.deleteKnowledgeBase(
         typeof knowledgeBase === "string" ? knowledgeBase : knowledgeBase.name,

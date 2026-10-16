@@ -166,8 +166,6 @@ describe("customization init generated-subdirectory layout", () => {
     expect(ts.parseConfigFileTextToJson("tsconfig.json", config).config.files).toEqual([
       "../src/generated/client.ts",
       "../src/api/index.ts",
-      "../src/index.ts",
-      "../src/models/index.ts",
     ]);
     expect(config).toContain('"include": ["../src/**/*"]');
   });
@@ -191,8 +189,12 @@ describe("customization init generated-subdirectory layout", () => {
     ]);
   });
 
-  it.each(["{}", '{"include": ["../src/index.ts"],\n// Preserve this trailing comment.\n}'])(
-    "adds compiler roots to an empty or trailing-comma configuration: %s",
+  it.each([
+    "{}",
+    '{"include":["../src/index.ts"]}',
+    '{"include": ["../src/index.ts"],\n// Preserve this trailing comment.\n}',
+  ])(
+    "adds compiler roots to an empty, compact, or trailing-comma configuration: %s",
     async (content) => {
       const directory = await createFixture();
       await write(directory, "config/tsconfig.src.json", content);
@@ -212,7 +214,22 @@ describe("customization init generated-subdirectory layout", () => {
     },
   );
 
-  it("adds a no-op customize script only when no script is present", async () => {
+  it.each([
+    '{"include":["../src/**/*.ts"]}',
+    '{"include":["../src/index.ts","../src/api/index.ts","../src/models/index.ts"]}',
+  ])(
+    "does not rewrite a compiler configuration that already includes all public roots: %s",
+    async (content) => {
+      const directory = await createFixture();
+      await write(directory, "config/tsconfig.src.json", content);
+
+      await initializeCustomization(directory);
+
+      expect(await read(directory, "config/tsconfig.src.json")).toBe(content);
+    },
+  );
+
+  it("does not add a customize script when no script is present", async () => {
     const directory = await createFixture();
     const manifest = JSON.parse(await read(directory, "package.json"));
     delete manifest.scripts.customize;
@@ -220,8 +237,8 @@ describe("customization init generated-subdirectory layout", () => {
 
     await initializeCustomization(directory);
 
-    expect(JSON.parse(await read(directory, "package.json")).scripts.customize).toBe(
-      "echo skipped",
+    expect(JSON.parse(await read(directory, "package.json")).scripts).not.toHaveProperty(
+      "customize",
     );
   });
 
@@ -236,14 +253,16 @@ describe("customization init generated-subdirectory layout", () => {
     expect(JSON.parse(await read(directory, "package.json")).scripts.customize).toBe("");
   });
 
-  it("is idempotent and does not overwrite handwritten barrel changes", async () => {
+  it("fails fast on a second invocation and does not overwrite handwritten barrel changes", async () => {
     const directory = await createFixture();
     await initializeCustomization(directory);
     await write(directory, "src/index.ts", 'export const customization = "keep";\n');
     const manifest = await read(directory, "package.json");
     const generated = await read(directory, "src/generated/client.ts");
 
-    await expect(initializeCustomization(directory)).resolves.toBe(true);
+    await expect(initializeCustomization(directory)).rejects.toThrow(
+      /only initializes newly generated packages/,
+    );
 
     expect(await read(directory, "src/index.ts")).toBe('export const customization = "keep";\n');
     expect(await read(directory, "package.json")).toBe(manifest);
@@ -256,19 +275,21 @@ describe("customization init generated-subdirectory layout", () => {
     const source = await read(directory, "src/index.ts");
     const manifest = await read(directory, "package.json");
 
-    await expect(initializeCustomization(directory)).rejects.toThrow(/root generated/);
+    await expect(initializeCustomization(directory)).rejects.toThrow(
+      /only initializes newly generated packages/,
+    );
 
     expect(await read(directory, "src/index.ts")).toBe(source);
     expect(await read(directory, "package.json")).toBe(manifest);
   });
 
-  it("rejects a non-directory generated location without reporting initialization success", async () => {
+  it("rejects any existing generated location without reporting initialization success", async () => {
     const directory = await createFixture();
     await write(directory, "src/generated", "not a directory");
     const source = await read(directory, "src/index.ts");
 
     await expect(initializeCustomization(directory)).rejects.toThrow(
-      /Generated source location is not a directory/,
+      /only initializes newly generated packages/,
     );
 
     expect(await read(directory, "src/index.ts")).toBe(source);
@@ -304,54 +325,94 @@ describe("customization init generated-subdirectory layout", () => {
     expect(await read(directory, "src/index.ts")).toBe(source);
   });
 
-  it("forwards default exports from implementation entry points", async () => {
+  it("leaves shared recursive compiler configurations untouched", async () => {
     const directory = await createFixture();
+    const shared = await fs.mkdtemp(path.join(os.tmpdir(), "azsdk-shared-tsconfig-test-"));
+    fixtures.push(shared);
+    const sharedConfig = path.join(shared, "tsconfig.src.json");
+    const content = JSON.stringify({
+      compilerOptions: { rootDir: "${configDir}/src", outDir: "${configDir}/dist/esm" },
+      include: ["${configDir}/src/**/*.ts"],
+    });
+    await fs.writeFile(sharedConfig, content);
     const config = JSON.parse(await read(directory, "warp.config.json"));
-    config.exports["./client"] = "./src/client.ts";
+    config.targets[0].tsconfig = sharedConfig;
     await write(directory, "warp.config.json", JSON.stringify(config));
-    const manifest = JSON.parse(await read(directory, "package.json"));
-    manifest.exports["./client"] = { import: "./dist/esm/client.js" };
-    await write(directory, "package.json", JSON.stringify(manifest));
-    await write(
-      directory,
-      "src/client.ts",
-      "export class Client {}\nexport default class DefaultClient {}\n",
-    );
 
     await initializeCustomization(directory);
 
-    const barrel = await read(directory, "src/client.ts");
-    expect(barrel).toContain('export * from "./generated/client.js";');
-    expect(barrel).toContain('export { default } from "./generated/client.js";');
+    expect(await fs.readFile(sharedConfig, "utf8")).toBe(content);
+    expect(await read(directory, "src/api/index.ts")).toContain(
+      'export * from "../generated/api/index.js";',
+    );
   });
 
-  it("updates static dynamic imports, import types, require calls, and package assets", async () => {
+  it("fails before moving source if a shared config omits public compiler roots", async () => {
+    const directory = await createFixture();
+    const shared = await fs.mkdtemp(path.join(os.tmpdir(), "azsdk-shared-tsconfig-test-"));
+    fixtures.push(shared);
+    const sharedConfig = path.join(shared, "tsconfig.src.json");
+    await fs.writeFile(sharedConfig, JSON.stringify({ include: ["${configDir}/src/index.ts"] }));
+    const config = JSON.parse(await read(directory, "warp.config.json"));
+    config.targets[0].tsconfig = sharedConfig;
+    await write(directory, "warp.config.json", JSON.stringify(config));
+    const source = await read(directory, "src/index.ts");
+
+    await expect(initializeCustomization(directory)).rejects.toThrow(/manual localization/);
+
+    expect(await read(directory, "src/index.ts")).toBe(source);
+    await expect(fs.stat(path.join(directory, "src/generated"))).rejects.toMatchObject({
+      code: "ENOENT",
+    });
+  });
+
+  it("rebases relative package.json imports and leaves package self-imports and other strings unchanged", async () => {
     const directory = await createFixture();
     await write(
       directory,
       "src/references.ts",
-      `/// <reference path="../shared.d.ts" />
-import type { Model } from "./models/index.js";
-export type PackageInfo = typeof import("../package.json");
-export const load = () => import("../external.js");
-export const legacy = () => require("../external.js");
-export const asset = new URL("../assets/example.txt", import.meta.url);
+      `import pkg from "../package.json" with { type: "json" };
+import self from "@azure/customization-init-fixture/package.json" with { type: "json" };
+export { Model } from "./models/index.js";
+export const text = "../package.json";
+export const version = [pkg.version, self.version];
 `,
     );
-    await write(directory, "shared.d.ts", "export {};\n");
 
     await initializeCustomization(directory);
 
     const generated = await read(directory, "src/generated/references.ts");
-    expect(generated).toContain('path="../../shared.d.ts"');
     expect(generated).toContain('from "./models/index.js"');
-    expect(generated).toContain('import("../../package.json")');
-    expect(generated).toContain('import("../../external.js")');
-    expect(generated).toContain('require("../../external.js")');
-    expect(generated).toContain('new URL("../../assets/example.txt", import.meta.url)');
+    expect(generated).toContain('from "../../package.json"');
+    expect(generated).toContain('from "@azure/customization-init-fixture/package.json"');
+    expect(generated).toContain('text = "../package.json"');
   });
 
-  it("restores the source and metadata if installation fails", async () => {
+  it("updates built-output private test aliases without redirecting public package aliases", async () => {
+    const directory = await createFixture();
+    await write(
+      directory,
+      "tsconfig.browser.config.json",
+      JSON.stringify({
+        compilerOptions: {
+          paths: {
+            "@azure/customization-init-fixture/*": ["./dist/browser/*"],
+            "$internal/*": ["./dist/browser/*"],
+          },
+        },
+      }),
+    );
+
+    await initializeCustomization(directory);
+
+    const config = JSON.parse(await read(directory, "tsconfig.browser.config.json"));
+    expect(config.compilerOptions.paths["$internal/*"]).toEqual(["./dist/browser/generated/*"]);
+    expect(config.compilerOptions.paths["@azure/customization-init-fixture/*"]).toEqual([
+      "./dist/browser/*",
+    ]);
+  });
+
+  it("propagates installation failures without a backup transaction or automatic recovery", async () => {
     const directory = await createFixture();
     const source = await read(directory, "src/index.ts");
     const manifest = await read(directory, "package.json");
@@ -371,12 +432,15 @@ export const asset = new URL("../assets/example.txt", import.meta.url);
       /simulated manifest write failure/,
     );
 
-    expect(await read(directory, "src/index.ts")).toBe(source);
+    expect(await read(directory, "src/generated/index.ts")).toBe(source);
+    expect(await read(directory, "src/index.ts")).toContain(
+      'export * from "./generated/index.js";',
+    );
     expect(await read(directory, "package.json")).toBe(manifest);
-    expect(await read(directory, "test/reference.ts")).toBe(test);
-    expect(await read(directory, "config/tsconfig.src.json")).toBe(config);
-    await expect(fs.stat(path.join(directory, "src/generated"))).rejects.toMatchObject({
-      code: "ENOENT",
-    });
+    expect(await read(directory, "test/reference.ts")).not.toBe(test);
+    expect(await read(directory, "config/tsconfig.src.json")).not.toBe(config);
+    expect(
+      (await fs.readdir(directory)).some((name) => name.startsWith(".customization-init-")),
+    ).toBe(false);
   });
 });

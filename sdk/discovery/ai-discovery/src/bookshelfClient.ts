@@ -29,6 +29,7 @@ export class BookshelfClient extends GeneratedBookshelfClient {
     options: BookshelfClientOptionalParams = {},
   ) {
     super(endpointParam, credential, options);
+    this.pipeline.policies.addPolicy();
     this.knowledgeBases = createKnowledgeBasesOperations(this.knowledgeBases);
   }
 }
