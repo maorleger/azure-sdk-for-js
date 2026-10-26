@@ -68,7 +68,7 @@ Run the test command such as `pnpm unit-test:node` to run the test
 
 ## [Method 2] --testNamePattern
 ```bash
-pnpm integration-test:node -- --testNamePattern "simple"
+pnpm test:node -- --testNamePattern "simple"
 ```
 Reference - [Filtering Tests — Introduction to Testing JavaScript with Vitest](https://stevekinney.net/courses/testing/filtering-tests)
 
