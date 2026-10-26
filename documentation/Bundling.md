@@ -191,7 +191,7 @@ Next we need to configure Rollup to take the above code and turn it into a bundl
 // rollup.config.mjs
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 export default {
-  input: "src/main.js",
+  input: "src/index.js",
   output: {
     file: "dist/bundle.js",
     format: "esm",
