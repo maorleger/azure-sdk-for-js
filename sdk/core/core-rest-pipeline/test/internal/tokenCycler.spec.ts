@@ -72,4 +72,99 @@ describe("tokenCycler", function () {
     assert.equal(token2.token, "refreshed-token");
     expect(getToken).toHaveBeenCalledTimes(3);
   });
+
+  describe("concurrent refreshes", function () {
+    const expiresOnTimestamp = (): number => Date.now() + 1000 * 60 * 60;
+
+    function createDeferredCredential(): {
+      getToken: ReturnType<typeof vi.fn<TokenCredential["getToken"]>>;
+      resolve: (index: number, token: string) => void;
+      reject: (index: number, error: Error) => void;
+    } {
+      const pending: {
+        resolve: (token: { token: string; expiresOnTimestamp: number }) => void;
+        reject: (error: Error) => void;
+      }[] = [];
+      const getToken = vi.fn<TokenCredential["getToken"]>(
+        () => new Promise((resolve, reject) => pending.push({ resolve, reject })),
+      );
+      return {
+        getToken,
+        resolve: (index, token) =>
+          pending[index].resolve({ token, expiresOnTimestamp: expiresOnTimestamp() }),
+        reject: (index, error) => pending[index].reject(error),
+      };
+    }
+
+    it("does not share an in-flight refresh without claims with a claims request", async function () {
+      const credential = createDeferredCredential();
+      const getAccessToken = createTokenCycler(credential);
+
+      const ordinary = getAccessToken(["scope"], {});
+      const challenged = getAccessToken(["scope"], { claims: "claims-a" });
+
+      expect(credential.getToken).toHaveBeenCalledTimes(2);
+      expect(credential.getToken.mock.calls[1][1]).toMatchObject({ claims: "claims-a" });
+
+      credential.resolve(1, "claims-token");
+      credential.resolve(0, "ordinary-token");
+      assert.equal((await ordinary).token, "ordinary-token");
+      assert.equal((await challenged).token, "claims-token");
+
+      // The latest refresh (with claims) owns the cache.
+      assert.equal((await getAccessToken(["scope"], {})).token, "claims-token");
+      expect(credential.getToken).toHaveBeenCalledTimes(2);
+    });
+
+    it("shares an in-flight refresh only between requests with the same claims", async function () {
+      const credential = createDeferredCredential();
+      const getAccessToken = createTokenCycler(credential);
+
+      const firstA = getAccessToken(["scope"], { claims: "claims-a" });
+      const secondA = getAccessToken(["scope"], { claims: "claims-a" });
+      const b = getAccessToken(["scope"], { claims: "claims-b" });
+
+      expect(credential.getToken).toHaveBeenCalledTimes(2);
+
+      credential.resolve(0, "token-a");
+      credential.resolve(1, "token-b");
+      assert.equal((await firstA).token, "token-a");
+      assert.equal((await secondA).token, "token-a");
+      assert.equal((await b).token, "token-b");
+    });
+
+    it("does not share an in-flight refresh across tenants", async function () {
+      const credential = createDeferredCredential();
+      const getAccessToken = createTokenCycler(credential);
+
+      const tenantA = getAccessToken(["scope"], { tenantId: "tenant-a" });
+      const tenantB = getAccessToken(["scope"], { tenantId: "tenant-b" });
+
+      expect(credential.getToken).toHaveBeenCalledTimes(2);
+
+      credential.resolve(0, "token-a");
+      credential.resolve(1, "token-b");
+      assert.equal((await tenantA).token, "token-a");
+      assert.equal((await tenantB).token, "token-b");
+    });
+
+    it("does not let a superseded refresh failure reset the latest refresh", async function () {
+      const credential = createDeferredCredential();
+      const getAccessToken = createTokenCycler(credential);
+
+      const ordinary = getAccessToken(["scope"], {});
+      const challenged = getAccessToken(["scope"], { claims: "claims-a" });
+
+      credential.reject(0, new Error("superseded failure"));
+      await expect(ordinary).rejects.toThrow("superseded failure");
+
+      // Still shares the latest refresh rather than starting a new one.
+      const joined = getAccessToken(["scope"], {});
+      expect(credential.getToken).toHaveBeenCalledTimes(2);
+
+      credential.resolve(1, "claims-token");
+      assert.equal((await challenged).token, "claims-token");
+      assert.equal((await joined).token, "claims-token");
+    });
+  });
 });

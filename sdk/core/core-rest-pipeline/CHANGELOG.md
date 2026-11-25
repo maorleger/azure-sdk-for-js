@@ -10,6 +10,8 @@
 
 ### Bugs Fixed
 
+- Fix a race in `bearerTokenAuthenticationPolicy` where a request with a claims challenge or a different tenant could reuse an in-flight token refresh started for other claims or another tenant. [#40087](https://github.com/Azure/azure-sdk-for-js/issues/40087)
+
 ### Other Changes
 
 ## 1.25.1 (2026-11-06)

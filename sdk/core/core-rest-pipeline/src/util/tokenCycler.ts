@@ -109,6 +109,8 @@ export function createTokenCycler(
   tokenCyclerOptions?: Partial<TokenCyclerOptions>,
 ): AccessTokenGetter {
   let refreshWorker: Promise<AccessToken> | null = null;
+  let refreshTenantId: string | undefined;
+  let refreshClaims: string | undefined;
   let token: AccessToken | null = null;
   let tenantId: string | undefined;
 
@@ -157,41 +159,57 @@ export function createTokenCycler(
   };
 
   /**
-   * Starts a refresh job or returns the existing job if one is already
-   * running.
+   * Starts a refresh job or returns the existing job if it can satisfy the
+   * request.
    */
   function refresh(
     scopes: string | string[],
     getTokenOptions: GetTokenOptions,
   ): Promise<AccessToken> {
-    if (!cycler.isRefreshing) {
+    // A request may only share an in-flight refresh started for the same tenant and,
+    // if the request carries claims, the same claims. Requests without claims may share
+    // a claims refresh, since a token satisfying the claims is valid for them too.
+    const canShareRefresh =
+      cycler.isRefreshing &&
+      getTokenOptions.tenantId === refreshTenantId &&
+      (!getTokenOptions.claims || getTokenOptions.claims === refreshClaims);
+
+    if (!canShareRefresh) {
       // We bind `scopes` here to avoid passing it around a lot
       const tryGetAccessToken = (): Promise<AccessToken | null> =>
         credential.getToken(scopes, getTokenOptions);
 
       // Take advantage of promise chaining to insert an assignment to `token`
-      // before the refresh can be considered done.
-      refreshWorker = beginRefresh(
+      // before the refresh can be considered done. Only the latest refresh may
+      // update the cycler state; superseded refreshes still resolve for their callers.
+      const worker: Promise<AccessToken> = beginRefresh(
         tryGetAccessToken,
         options.retryIntervalInMs,
         // If we don't have a token, then we should timeout immediately
         token?.expiresOnTimestamp ?? Date.now(),
       )
         .then((_token) => {
-          refreshWorker = null;
-          token = _token;
-          tenantId = getTokenOptions.tenantId;
-          return token;
+          if (refreshWorker === worker) {
+            refreshWorker = null;
+            token = _token;
+            tenantId = getTokenOptions.tenantId;
+          }
+          return _token;
         })
         .catch((reason) => {
           // We also should reset the refresher if we enter a failed state.  All
           // existing awaiters will throw, but subsequent requests will start a
           // new retry chain.
-          refreshWorker = null;
-          token = null;
-          tenantId = undefined;
+          if (refreshWorker === worker) {
+            refreshWorker = null;
+            token = null;
+            tenantId = undefined;
+          }
           throw reason;
         });
+      refreshWorker = worker;
+      refreshTenantId = getTokenOptions.tenantId;
+      refreshClaims = getTokenOptions.claims;
     }
 
     return refreshWorker as Promise<AccessToken>;
